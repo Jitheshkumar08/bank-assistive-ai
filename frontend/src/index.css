@@ -1,0 +1,99 @@
+@import 'tailwindcss';
+
+/* ---------------------------------------------------------------
+   Design tokens.
+
+   Mobile-first and accessibility-led: this is used standing up, in a
+   bank, sometimes by people who find screens hard. Type stays large,
+   contrast stays high, and every control is at least 48px tall.
+   --------------------------------------------------------------- */
+
+@theme {
+  /* Brand: a deep teal that reads as institutional without the
+     coldness of corporate navy. Passes AA on white at 600+. */
+  --color-brand-50: #eef7f6;
+  --color-brand-100: #d3ebe8;
+  --color-brand-200: #a8d7d2;
+  --color-brand-300: #71bcb5;
+  --color-brand-400: #429c95;
+  --color-brand-500: #24807a;
+  --color-brand-600: #0f5f5a;
+  --color-brand-700: #0d4d49;
+  --color-brand-800: #0d3e3b;
+  --color-brand-900: #0c3331;
+
+  /* Neutrals carry a slight teal bias so they sit with the brand
+     rather than looking like an unrelated grey. */
+  --color-ink-50: #f6f8f8;
+  --color-ink-100: #eceff0;
+  --color-ink-200: #d9dfe0;
+  --color-ink-300: #b6c1c3;
+  --color-ink-400: #8b9a9d;
+  --color-ink-500: #6b7b7e;
+  --color-ink-600: #536164;
+  --color-ink-700: #414d4f;
+  --color-ink-800: #2b3436;
+  --color-ink-900: #1a2123;
+
+  --color-danger-50: #fdf0ee;
+  --color-danger-500: #c0392b;
+  --color-danger-600: #a5372e;
+  --color-danger-700: #85291f;
+
+  --color-success-50: #edf6f0;
+  --color-success-600: #2f6b4f;
+
+  --font-sans: 'Inter var', 'Segoe UI', system-ui, -apple-system, sans-serif;
+
+  /* Minimum comfortable touch target. */
+  --spacing-touch: 3rem;
+}
+
+/* ---------------------------------------------------------------
+   Base
+   --------------------------------------------------------------- */
+
+@layer base {
+  html {
+    -webkit-text-size-adjust: 100%;
+    /* Stops iOS zooming the page when an input is focused. */
+    text-size-adjust: 100%;
+  }
+
+  body {
+    @apply bg-ink-50 text-ink-900 font-sans antialiased;
+    /* Respects the notch and the home indicator on modern phones. */
+    padding: env(safe-area-inset-top) env(safe-area-inset-right)
+      env(safe-area-inset-bottom) env(safe-area-inset-left);
+  }
+
+  /* A visible focus ring is the difference between usable and unusable
+     for keyboard and switch-control users. Never remove it. */
+  :focus-visible {
+    @apply outline-2 outline-offset-2 outline-brand-600;
+  }
+
+  /* 16px minimum on form controls, or mobile Safari zooms on focus. */
+  input,
+  textarea,
+  select,
+  button {
+    font-size: max(1rem, inherit);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* Screen-reader-only text that stays reachable on focus. */
+@utility sr-only-focusable {
+  @apply sr-only focus:not-sr-only focus:absolute focus:top-2 focus:left-2 focus:z-50
+    focus:rounded-md focus:bg-white focus:px-4 focus:py-2 focus:shadow-lg;
+}

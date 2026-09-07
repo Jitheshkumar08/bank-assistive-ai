@@ -1,0 +1,83 @@
+import { useCallback, useEffect, useRef } from 'react';
+import { composeGreeting } from '@/lib/greeting';
+import { useAuth } from '@/context/useAuth';
+import { useSession } from '@/context/useSession';
+import { useVoice } from '@/context/useVoice';
+
+export interface WelcomeGreeting {
+  /** The exact words being spoken, or null when there is nothing to say. */
+  text: string | null;
+  /** True when the customer has opted into hearing it. */
+  canSpeak: boolean;
+  /** Says it again on demand -- the way back from a refused autoplay. */
+  replay: () => void;
+}
+
+/**
+ * Speaks a welcome on arrival.
+ *
+ * Driven by the act of arriving, not by a memory of having arrived
+ * before. An earlier version remembered which branch had been greeted
+ * and stayed silent the second time -- which meant a customer who
+ * changed their language in settings and typed the same code again got
+ * nothing, at exactly the moment they were checking whether the change
+ * had worked.
+ *
+ * So: every scan and every typed code speaks. Walking to the assistant
+ * and back does not, because that is not an arrival, and neither is
+ * reloading the page onto an existing visit.
+ *
+ * Deliberately not a blocking step. The written welcome is on screen
+ * before this hook does anything, and every failure path here leaves
+ * that screen exactly as it is.
+ */
+export function useWelcomeGreeting(): WelcomeGreeting {
+  const { user } = useAuth();
+  const { session, arrivalAt, acknowledgeArrival } = useSession();
+  const { speak, isEnabled } = useVoice();
+
+  const text =
+    user && session
+      ? composeGreeting({
+          language: session.language,
+          fullName: user.fullName,
+          branchName: session.branch.name,
+        })
+      : null;
+
+  const say = useCallback(
+    (line: string) => {
+      // Failure is already swallowed inside the voice provider; this
+      // only stops an unhandled rejection escaping the effect.
+      void speak(line).catch(() => {});
+    },
+    [speak],
+  );
+
+  // The arrival already acted on. Clearing the signal is a state update
+  // and does not take effect until the next render, so an effect that
+  // runs twice before then -- which StrictMode does on purpose -- would
+  // fetch and pay for the same speech twice.
+  const handledRef = useRef<number | null>(null);
+
+  useEffect(() => {
+    if (arrivalAt === null || handledRef.current === arrivalAt) return;
+
+    handledRef.current = arrivalAt;
+
+    // Consumed whether or not it is spoken. Leaving the signal set would
+    // mean a customer who turns voice on later in the visit is suddenly
+    // greeted for an arrival that happened minutes ago.
+    acknowledgeArrival();
+
+    if (!isEnabled || !text) return;
+
+    say(text);
+  }, [arrivalAt, acknowledgeArrival, isEnabled, text, say]);
+
+  const replay = useCallback(() => {
+    if (text) say(text);
+  }, [say, text]);
+
+  return { text, canSpeak: isEnabled, replay };
+}
