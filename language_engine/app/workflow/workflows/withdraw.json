@@ -1,0 +1,25 @@
+{
+  "workflow": "withdraw money",
+  "steps": [
+    {
+      "step": 1,
+      "instruction": "Please take a withdrawal slip."
+    },
+    {
+      "step": 2,
+      "instruction": "Fill in your account number."
+    },
+    {
+      "step": 3,
+      "instruction": "Enter the withdrawal amount."
+    },
+    {
+      "step": 4,
+      "instruction": "Sign the withdrawal slip."
+    },
+    {
+      "step": 5,
+      "instruction": "Submit the slip to the cashier."
+    }
+  ]
+}

@@ -1,0 +1,17 @@
+{
+  "workflow": "apply for loan",
+  "steps": [
+    {
+      "step": 1,
+      "instruction": "Please proceed to the loan assistance desk."
+    },
+    {
+      "step": 2,
+      "instruction": "Collect the loan application form."
+    },
+    {
+      "step": 3,
+      "instruction": "Keep your identity documents ready."
+    }
+  ]
+}

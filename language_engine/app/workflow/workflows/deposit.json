@@ -1,0 +1,21 @@
+{
+  "workflow": "deposit money",
+  "steps": [
+    {
+      "step": 1,
+      "instruction": "Please take a deposit slip."
+    },
+    {
+      "step": 2,
+      "instruction": "Fill in your account number."
+    },
+    {
+      "step": 3,
+      "instruction": "Enter the amount to deposit."
+    },
+    {
+      "step": 4,
+      "instruction": "Submit the slip along with the cash."
+    }
+  ]
+}

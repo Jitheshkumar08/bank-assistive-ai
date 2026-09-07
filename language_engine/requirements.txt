@@ -1,0 +1,46 @@
+# Smart Banking Voice Assistant — Python AI engine
+#
+# Versions are pinned to the set the engine is known to work with.
+# Target interpreter: Python 3.13. Newer interpreters are not
+# recommended -- torch and openai-whisper do not reliably publish
+# wheels for them, and a source build of torch is not something you
+# want between you and a working demo.
+#
+#   py -3.13 -m venv venv
+#   venv\Scripts\activate
+#   pip install -r requirements.txt
+#
+# The Groq key is read from the environment, never from this file:
+#   $env:GROQ_API_KEY = "..."
+
+# --- Speech to text -------------------------------------------------
+openai-whisper==20250625
+
+# --- Microphone capture and WAV writing (CLI path only; the web
+#     path receives audio from the browser instead) -----------------
+sounddevice==0.5.5
+scipy==1.17.1
+
+# --- Embeddings: intent detection and knowledge retrieval -----------
+sentence-transformers==5.3.0
+scikit-learn==1.8.0
+numpy==2.4.3
+
+# --- Large language model -------------------------------------------
+groq==1.6.0
+
+# --- Text to speech and playback ------------------------------------
+edge-tts==7.2.8
+pygame==2.6.1
+
+# --- Pinned because it is the heaviest transitive dependency and the
+#     one most likely to resolve differently on another machine ------
+torch==2.11.0
+
+# --- Web service layer (service/) -----------------------------------
+# Needed only by the FastAPI wrapper that the web app calls; the CLI
+# engine in app/ does not import any of these.
+fastapi==0.135.2
+uvicorn==0.42.0
+# FastAPI needs this to parse the multipart upload a recording arrives in.
+python-multipart==0.0.20
