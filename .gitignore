@@ -1,0 +1,59 @@
+# ---------------------------------------------------------
+# Secrets — never commit real values, only *.example files
+# ---------------------------------------------------------
+.env
+.env.*
+!.env.example
+
+# ---------------------------------------------------------
+# Node / JavaScript  (frontend/, backend/ — future phases)
+# ---------------------------------------------------------
+node_modules/
+dist/
+build/
+coverage/
+*.tsbuildinfo
+npm-debug.log*
+yarn-error.log*
+
+# ---------------------------------------------------------
+# Python — language_engine/
+# language_engine/.gitignore also covers these at its own
+# level; repeated here so the root repo is protected even
+# if that file is ever moved or edited.
+#
+# venv/ MUST stay ignored: it contains torch_cpu.dll (254 MB)
+# and llvmlite.dll (102 MB), both above GitHub's 100 MB hard
+# limit. Committing it would cause the push to be rejected.
+# ---------------------------------------------------------
+venv/
+.venv/
+__pycache__/
+*.py[cod]
+*.egg-info/
+.claude/
+
+# ---------------------------------------------------------
+# Generated audio and transcription scratch
+# ---------------------------------------------------------
+*.wav
+*.mp3
+temp_recording.wav
+
+# ---------------------------------------------------------
+# Engine scratch output (kept on disk, never versioned)
+# ---------------------------------------------------------
+language_engine/project_structure.txt
+language_engine/PROBE2_OUT
+language_engine/temp.txt
+language_engine/out1.txt
+language_engine/outA.txt
+
+# ---------------------------------------------------------
+# Editors and OS
+# ---------------------------------------------------------
+.vscode/
+.idea/
+*.swp
+.DS_Store
+Thumbs.db
