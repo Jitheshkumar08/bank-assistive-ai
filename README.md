@@ -16,6 +16,7 @@ Bank-assistive-ai/
 
 ## Architecture
 
+
 ```
 Frontend  ──HTTPS──▶  NestJS API  ──internal HTTP──▶  Python AI engine
                           │                                │
