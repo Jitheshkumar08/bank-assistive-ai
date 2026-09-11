@@ -1,4 +1,22 @@
-from app.pipeline.voice_pipeline import VoiceAssistantPipeline
+from dotenv import load_dotenv
+
+# Loads language_engine/.env into the process environment before
+# anything reads it.
+#
+# Every Groq client is built downstream of this module and reads
+# GROQ_API_KEY inside its own __init__ (not at import time), so
+# loading here is early enough for all of them.
+#
+# load_dotenv() does NOT override variables that are already set,
+# so a real shell or CI value still wins over the file. The value
+# itself is never read, printed or logged here -- only placed in
+# the environment for os.getenv() to find.
+
+load_dotenv(override=True)
+
+
+
+from app.pipeline.voice_pipeline import VoiceAssistantPipeline  # noqa: E402
 
 
 def print_header():

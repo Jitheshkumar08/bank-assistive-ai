@@ -2,6 +2,10 @@ import os
 import json
 from groq import Groq
 from app.knowledge.retriever import KnowledgeRetriever
+from app.dialogue.side_question_context import (
+    format_recent_context,
+    retrieval_query,
+)
 
 
 # =========================================================
@@ -63,6 +67,23 @@ UNDERSTANDING_RESPONSE_FORMAT = {
                         "none"
                     ]
                 },
+                "step_completed": {
+                    "type": "boolean"
+                },
+                # The workflow the customer NAMED, when they named
+                # one other than the current request ("step 4 of
+                # the deposit process"). Null whenever they named
+                # none, which is the overwhelmingly common case.
+                #
+                # Top-level rather than inside `entities` on
+                # purpose: entities are values the CUSTOMER
+                # supplied about themselves and are persisted by
+                # ConversationManager.add_entities(). A reference
+                # target is neither, and must never be stored as
+                # if the customer had provided it.
+                "target_workflow": {
+                    "type": ["string", "null"]
+                },
                 "entities": {
                     "type": "object",
                     "properties": {
@@ -95,6 +116,8 @@ UNDERSTANDING_RESPONSE_FORMAT = {
             "required": [
                 "type",
                 "action",
+                "step_completed",
+                "target_workflow",
                 "entities"
             ],
             "additionalProperties": False
@@ -111,8 +134,78 @@ def fallback_understanding():
     return {
         "type": "unknown",
         "action": "none",
+        "step_completed": False,
+        "target_workflow": None,
         "entities": dict(EMPTY_ENTITIES)
     }
+
+
+# =========================================================
+# SAFE step_number COERCION
+#
+# entities["step_number"] chooses WHICH banking instruction is
+# read back to the customer, so the value is compared against
+# the workflow length with `1 <= step_number <= len(steps)`.
+# That comparison assumes an int. The schema asks for
+# ["integer", "null"], but the schema is a request, not a
+# guarantee: a model that ignores it -- or an older/partial
+# reply, or an injected fake in a test -- can return "3", 3.0,
+# True, or an empty string, and every one of those either
+# raises TypeError inside the comparison (killing the turn) or,
+# in the case of True, silently reads back step 1 because bool
+# is a subclass of int.
+#
+# This coerces to a real int or None. It deliberately does NOT
+# range-check: whether a step exists is a property of the loaded
+# workflow, so that check stays at the use site in
+# DialogueManager, which already reports "That step is not
+# available in the current workflow."
+#
+# Anything unrecognisable becomes None, which the manager reads
+# as "no specific step requested" and answers by repeating the
+# CURRENT step. That is the safe direction -- the customer hears
+# the instruction they are actually on rather than an arbitrary
+# one, and never a crash.
+# =========================================================
+
+def coerce_step_number(value):
+    """
+    Coerces an LLM-supplied step_number into an int, or None.
+    """
+
+    if value is None:
+        return None
+
+    # bool before int: True/False are ints in Python, and a
+    # boolean is never a step number.
+    if isinstance(value, bool):
+        return None
+
+    if isinstance(value, int):
+        return value
+
+    if isinstance(value, str):
+
+        text = value.strip()
+
+        if not text:
+            return None
+
+        try:
+            value = float(text)
+        except (TypeError, ValueError):
+            return None
+
+    if isinstance(value, float):
+
+        # Rejects NaN and infinity as well as 3.5 -- is_integer()
+        # is False for all three.
+        if value.is_integer():
+            return int(value)
+
+        return None
+
+    return None
 
 
 
@@ -338,6 +431,216 @@ Rules:
     step_number = null.
 
 48. Never invent or guess a step number.
+
+49. Distinguish an INTENTION to act from a COMPLETED action.
+    This distinction decides whether a required banking step is
+    marked done, so it must never be guessed.
+
+50. A message saying the customer is about to do, is currently
+    doing, or intends to do the current instruction is
+    type = acknowledgement with action = none. It must NEVER be
+    classified as complete.
+
+51. Intention examples, all acknowledgement + none:
+
+    "I need to fill this."
+    "I'll fill it."
+    "Let me fill this."
+    "I am filling it."
+    "I'll do it."
+    "Okay, I'll fill it."
+    "I will take the slip."
+
+52. Completion examples, all action = complete:
+
+    "I filled it."
+    "I completed it."
+    "I entered it."
+    "I have filled the account number."
+    "I submitted it."
+    "Yes, I entered it."
+
+53. The difference is whether the customer reports the action as
+    already carried out, not which particular words they use.
+    Future or in-progress means acknowledgement. Reported as
+    finished means complete.
+
+54. A statement of intention that refers to the CURRENT
+    INSTRUCTION is an acknowledgement, not unknown. Do not
+    classify it as unknown merely because it does not repeat the
+    banking term used in the instruction. While the current
+    instruction is "Fill in your account number.", the message
+    "I need to fill this" refers to that step and is an
+    acknowledgement.
+
+55. "next", "what's next", "what should I do next" and "what is
+    the next step" are requests for direction: action =
+    next_step. They are never evidence that the current step has
+    been completed.
+
+56. "yes, next", "okay next", "okay, continue" and similar
+    messages are requests to proceed or acknowledgements. Use
+    next_step or acknowledgement. Never use complete for them,
+    because the customer has not said the current instruction was
+    carried out.
+
+57. Use complete only when the customer's own message reports
+    that the current instruction has been carried out, or
+    supplies, as the customer's own answer, the information the
+    current instruction asked for. A value that appears only
+    inside a question is NOT supplied information.
+
+58. When you are unsure whether a message means intention or
+    completion, choose acknowledgement with action = none. Never
+    guess complete.
+
+SPELLING, WORDING AND PRONUNCIATION REQUESTS
+
+59. A request to spell something, write it out, say it letter by
+    letter, pronounce it, read it aloud, or confirm its wording is
+    a request for help with language. It is type = question or
+    type = help with action = none. It is NEVER complete.
+
+60. Spelling and wording examples, all question or help with
+    action = none:
+
+    "Can you spell 20000 rupees?"
+    "Can you say the exact spelling?"
+    "Spell it like T-W-E-N-T-Y-T-H-O-U-S-A-N-D-R-U-P-E-E-S."
+    "How do I write twenty thousand?"
+    "How do you pronounce this?"
+    "What is the word for 20000?"
+    "How do I say this amount in words?"
+
+61. Mentioning a value inside such a request is NOT providing that
+    value. "Can you spell 20000 rupees?" does not mean the
+    customer entered 20000. Do not treat a number as supplied
+    information, and do not mark the step complete, when the
+    number appears only inside a question about how to write, say
+    or spell it.
+
+62. Rules 35, 36 and 37 apply only when the customer is SUPPLYING
+    the requested information as their own answer. They do not
+    apply when the value appears inside a question about spelling,
+    wording or pronunciation.
+
+63. The customer can still complete the amount step normally.
+    "I entered 20000", "I have written the amount", "I filled in
+    the amount" and "Yes, I entered the amount" are still
+    complete, because the customer is reporting what they did
+    rather than asking how to write it.
+
+STEP_COMPLETED -- THE COMPLETION SIGNAL
+
+64. step_completed is a separate true/false signal, independent of
+    type and action. It answers exactly one question:
+
+      Has the customer stated that they carried out the CURRENT
+      INSTRUCTION?
+
+65. Set step_completed = true ONLY when the customer's own message
+    reports the current instruction as already done. Examples:
+
+    "I filled it."
+    "I completed it."
+    "I entered the amount."
+    "I signed the withdrawal slip."
+    "I submitted the form."
+    "Yes, I have written my account number."
+
+66. Set step_completed = false in every other case, including:
+
+    - intentions: "I need to fill this", "I'll do it", "let me
+      fill it", "I am filling it"
+    - direction requests: "what should I do next?", "next",
+      "yes, next", "okay continue"
+    - acknowledgements: "ok", "okay", "hmm", "alright"
+    - any question, including one that mentions a value
+    - spelling, wording and pronunciation requests (rules 59-63)
+    - anything you are unsure about
+
+67. Merely mentioning an entity or a value NEVER sets
+    step_completed = true on its own. The customer must say they
+    did the thing.
+
+68. A question NEVER sets step_completed = true, even when the
+    question contains a number or refers to the current step.
+    "Can you spell 20000 rupees?" is step_completed = false.
+
+69. "What should I do next?" on its own is step_completed = false.
+    It is a request for direction, not a report of work done.
+
+COMPOUND MESSAGES
+
+70. A single message may carry BOTH a completion report AND a
+    separate request. step_completed exists so neither signal is
+    lost. Set step_completed = true for the completion, and use
+    type and action for the rest of the message.
+
+71. Compound examples:
+
+    "Yes, I completed by filling my account number. Next what
+    should I do?"
+        step_completed = true
+        type = workflow_action
+        action = next_step
+
+    "I signed the withdrawal slip. Where should I submit the
+    slip?"
+        step_completed = true
+        type = question
+        action = none
+
+    "I entered 20000. Why is this required?"
+        step_completed = true
+        type = help
+        action = none
+        entities.amount = 20000
+
+72. When a message is ONLY a completion report, set
+    step_completed = true and action = complete.
+
+73. Report the completion once. step_completed refers to the
+    CURRENT INSTRUCTION only, never to a step already finished
+    and never to a step not yet reached.
+
+TARGET_WORKFLOW -- WHICH PROCESS A STEP BELONGS TO
+
+74. target_workflow is the name of a banking process the customer
+    NAMED, when it is not the request they are currently in. Use
+    null whenever they named none. Null is the normal answer.
+
+75. Set it to the name exactly as the customer said it. Do not
+    translate it, do not correct it, and do not invent a name.
+
+76. Examples, while the CURRENT WORKFLOW is "withdraw money":
+
+    "Tell me step 4."
+        target_workflow = null
+        (they mean the withdrawal they are in)
+
+    "Tell me step 4 of the deposit process."
+        target_workflow = "deposit"
+        action = repeat, step_number = 4
+
+    "Step 4 of loan application."
+        target_workflow = "loan application"
+        action = repeat, step_number = 4
+
+    "What is step 2?"
+        target_workflow = null
+
+77. Naming another process is INFORMATIONAL. It is never a
+    request to start, switch to, resume or cancel anything. Do
+    not set action = complete, cancel or next_step because
+    another process was mentioned, and never set
+    step_completed = true.
+
+78. "I want to deposit money" is a request to START a workflow,
+    not a step reference: target_workflow = null, step_number =
+    null. Only set target_workflow when the customer is asking
+    ABOUT a named process, not asking to begin one.
+
 Return only the structured result required by the schema.
 """
 
@@ -464,11 +767,51 @@ Return only the structured result required by the schema.
         # on a partial reply.
         result["entities"] = {**EMPTY_ENTITIES, **entities}
 
+        # step_number is coerced to a real int (or None) here, so
+        # every caller reads a value it can compare against the
+        # workflow length without a type check of its own. See
+        # coerce_step_number() for why a raw schema value cannot
+        # be trusted.
+        result["entities"]["step_number"] = coerce_step_number(
+            result["entities"].get("step_number")
+        )
+
         if not result.get("type"):
             result["type"] = "unknown"
 
         if not result.get("action"):
             result["action"] = "none"
+
+        # Completion is the one signal that can advance a banking
+        # step, so it is coerced to a real bool here and defaults
+        # to False. A missing, null or unparseable value therefore
+        # means "not completed" -- the safe direction, since the
+        # worst outcome of a false negative is repeating a step,
+        # while a false positive silently skips one.
+
+        result["step_completed"] = (
+            result.get("step_completed") is True
+        )
+
+        # target_workflow is a NAME the customer spoke, not an
+        # identity. It is normalized to a non-empty string or
+        # None here; resolving it to a workflow that actually
+        # exists is WorkflowLoader.resolve_workflow_name()'s job,
+        # and a name that resolves to nothing produces a safe
+        # reply rather than a guess.
+        target_workflow = result.get("target_workflow")
+
+        if isinstance(target_workflow, str):
+
+            target_workflow = target_workflow.strip()
+
+            if not target_workflow or target_workflow.lower() == "null":
+                target_workflow = None
+
+        else:
+            target_workflow = None
+
+        result["target_workflow"] = target_workflow
 
         return result
 
@@ -480,17 +823,37 @@ Return only the structured result required by the schema.
         self,
         question,
         workflow_context,
-        current_instruction
+        current_instruction,
+        recent_context=None
     ):
+
+        """
+        `recent_context` is an optional RecentSideQuestion holding
+        AT MOST ONE preceding side-question exchange, used only to
+        resolve a simple reference ("spell IT letter by letter").
+
+        It defaults to None, so every existing caller keeps
+        working unchanged and behaves exactly as before.
+        """
 
         # -------------------------------------------------
         # Retrieve relevant banking knowledge
+        #
+        # RAG is neither replaced nor bypassed -- it is given the
+        # referent it would otherwise be missing. "Spell it letter
+        # by letter" retrieves nothing useful as a query on its
+        # own. retrieval_query() returns the question UNCHANGED
+        # whenever there is no reference to resolve or no subject
+        # to resolve it to, so retrieval behaviour is untouched in
+        # every other case.
         # -------------------------------------------------
+
+        search_query = retrieval_query(question, recent_context)
 
         try:
 
             results = self.knowledge_retriever.search(
-                question,
+                search_query,
                 top_k=2
             )
 
@@ -519,6 +882,20 @@ Return only the structured result required by the schema.
         # Question answering prompt
         # -------------------------------------------------
 
+        # The bounded context block. Empty string when there is
+        # nothing remembered, so the prompt is byte-identical to
+        # the previous phase's for every non-referential question.
+        recent_block = format_recent_context(recent_context)
+
+        recent_section = (
+            f"""
+IMMEDIATELY PRECEDING SIDE QUESTION:
+{recent_block}
+"""
+            if recent_block
+            else ""
+        )
+
         prompt = f"""
 You are a conversational banking assistant.
 
@@ -527,7 +904,7 @@ CURRENT WORKFLOW:
 
 CURRENT STEP:
 {current_instruction}
-
+{recent_section}
 USER QUESTION:
 {question}
 
@@ -538,41 +915,89 @@ Answer the user's question naturally.
 
 Rules:
 
-1. Use the retrieved banking knowledge as the primary source.
+1. Use the retrieved banking knowledge as the primary source
+   for banking information.
 
-2. Use the current workflow context when relevant.
+2. The current workflow and the current step are a source in
+   their own right. When the customer asks about "this",
+   "here", "this form", or the field they are filling in now,
+   answer against the current step's instruction.
 
-3. Do not invent, infer, assume, or add banking rules,
-   fees, limits, documents, procedures, branch policies,
-   locations, counters, or other facts.
+3. You may explain general, widely applicable banking concepts
+   -- for example what a cheque book is, what a deposit slip is
+   used for, or what an account number identifies -- even when
+   the retrieved knowledge is thin, as long as the explanation
+   is generic banking knowledge that holds anywhere.
 
-4. Every factual claim in your answer must be directly
-   supported by the retrieved banking knowledge or the
-   current workflow.
+4. Never state bank-specific or branch-specific facts unless
+   they appear in the retrieved banking knowledge or in the
+   current workflow. This covers fees, charges, interest rates,
+   limits, timings, eligibility rules, required document lists,
+   form layouts, field positions, counter or desk locations,
+   and branch procedures.
 
-5. If the requested information is not explicitly available,
-   say that you do not have enough information.
+5. If the customer asks exactly where on a form, or where in
+   the branch, something is, and that detail is not available,
+   say what you can guide them through and state plainly that
+   you do not have the exact layout. For example: "I can guide
+   you through the account-number field, but I don't have the
+   exact form layout for this branch."
 
-6. If the retrieved information does not contain the answer,
-   clearly say that you do not have enough information.
+6. Never invent a form layout, a field position, a counter, or
+   a branch rule in order to sound helpful.
 
-7. Keep the answer short and suitable for voice output.
+7. If you genuinely have nothing usable -- no retrieved
+   knowledge, no relevant workflow context, and no safe general
+   banking explanation -- say that you do not have that
+   information.
 
-8. Do not advance or modify the workflow.
+8. Do not advance or modify the workflow. The customer stays on
+   the current step, and your answer must not tell them to move
+   on to a later step.
 
-9. Do not mention the retrieval system, prompt, or AI model.
+9. Keep the answer short and suitable for voice output.
 
-10. If the user's question is general knowledge and not
-    related to banking (for example "What is ChatGPT?" or
-    "What is artificial intelligence?"), you may answer it
-    directly using your own general knowledge, clearly and
-    concisely -- rules 1-6 apply only to banking-specific
-    claims, not to unrelated general knowledge.
+10. Do not mention the retrieval system, prompt, or AI model.
 
-11. Regardless of the topic, never state banking-specific
-    facts, rules, fees, limits, documents, procedures, or
-    branch policies unless they are explicitly supported by
-    the retrieved banking knowledge or the current workflow.
+11. If the user's question is general knowledge and not related
+    to banking (for example "What is ChatGPT?" or "What is
+    artificial intelligence?"), answer it directly using your
+    own general knowledge, clearly and concisely. Rules 1-7
+    constrain banking claims only.
+
+THE IMMEDIATELY PRECEDING SIDE QUESTION
+
+12. When that section is present, it is the ONE exchange that
+    came just before this question. Use it for exactly one
+    purpose: working out what a bare reference refers to --
+    "it", "this", "that", "the amount", "the number", "the word".
+
+13. Example. The preceding exchange was "Spell 20000 rupees." and
+    the customer now asks "Spell it letter by letter." "It" is
+    20000 rupees, so spell out that amount. Do not switch to some
+    other amount and do not ask which amount they meant.
+
+14. It is a REFERENCE AID, NOT a source of banking facts. Never
+    treat your own previous answer as evidence for a fee, rate,
+    limit, document list or procedure. Rules 1-7 still decide
+    every banking claim.
+
+15. The customer's own words WIN. If this question names its own
+    subject, answer about that subject and ignore the preceding
+    exchange entirely.
+
+16. The CURRENT STEP also wins over it. "Where do I submit this?"
+    while filling in a form is about the form in front of them
+    (rule 2), not about whatever was asked previously.
+
+17. If a reference still cannot be resolved -- the preceding
+    exchange does not explain what "it" is -- ASK which thing
+    they mean, in one short question. Do not pick something and
+    do not invent a subject.
+
+18. Never mention the preceding exchange as a mechanism. Do not
+    say "you previously asked" or refer to remembered context.
+    Just answer.
 
 Return only the answer to the customer.
 """

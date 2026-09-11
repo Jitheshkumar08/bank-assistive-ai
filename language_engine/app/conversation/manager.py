@@ -36,6 +36,21 @@ class ConversationManager:
 
         self.history = []
 
+        # Bounded recent side-question context (Phase 3.2B-3).
+        #
+        # AT MOST ONE remembered exchange, held here rather than
+        # on DialogueManager because DialogueManager takes
+        # `conversation` in every method and is otherwise
+        # conversation-agnostic: session state kept on it would be
+        # shared by every conversation using that instance. This
+        # attribute belongs to THIS session and nothing else can
+        # see it.
+        #
+        # It is deliberately NOT workflow state. No workflow
+        # transition reads it, and it can never advance, complete,
+        # cancel, suspend or resume anything.
+        self.recent_side_question = None
+
 
     # =====================================================
     # SESSION STATE
@@ -83,6 +98,9 @@ class ConversationManager:
 
         self.history = []
 
+        # A new session starts with no remembered side question.
+        self.recent_side_question = None
+
         self.update_workflow_state(WorkflowState.NONE)
         self.update_session_state(SessionState.READY)
 
@@ -128,6 +146,11 @@ class ConversationManager:
 
         self.entities = {}
 
+        # Starting a workflow is a topic change: a side question
+        # asked before it must not become the referent for a
+        # pronoun asked inside it.
+        self.recent_side_question = None
+
         self.update_workflow_state(WorkflowState.ACTIVE)
 
         print(
@@ -152,6 +175,8 @@ class ConversationManager:
         self.current_step = 0
 
         self.entities = {}
+
+        self.recent_side_question = None
 
         self.update_workflow_state(WorkflowState.NONE)
 
@@ -217,6 +242,34 @@ class ConversationManager:
             "speaker": speaker,
             "message": message
         })
+
+
+    # =====================================================
+    # RECENT SIDE-QUESTION CONTEXT  (Phase 3.2B-3)
+    #
+    # One slot, one exchange. Storing a new exchange REPLACES the
+    # old one -- there is no list, so nothing can accumulate and
+    # no bound has to be enforced.
+    #
+    # Cleared whenever the topic genuinely changes: a new session
+    # (start_conversation), a workflow being loaded (load_workflow)
+    # and the workflow slot being released (release_workflow). A
+    # spelling question asked during a withdrawal must not still be
+    # the referent for "what does this mean?" three requests later.
+    #
+    # Deliberately NOT cleared by pause, resume, repeat, step
+    # references or acknowledgements: those keep the customer on
+    # the same task, so the side interaction they just had is still
+    # the relevant one.
+    # =====================================================
+
+    def remember_side_question(self, recent_side_question):
+
+        self.recent_side_question = recent_side_question
+
+    def clear_side_question_context(self):
+
+        self.recent_side_question = None
 
 
     # =====================================================

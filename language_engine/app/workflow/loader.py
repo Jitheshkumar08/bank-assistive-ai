@@ -69,6 +69,160 @@ class WorkflowLoader:
         return path is not None and path.exists()
 
     # =====================================================
+    # ENUMERATION AND SPOKEN-NAME RESOLUTION
+    #
+    # Added for cross-workflow step references ("tell me step 4
+    # of the deposit process"). Both methods are READ-ONLY and
+    # purely additive -- nothing above them changed.
+    #
+    # This is the ONE place that knows which workflows exist and
+    # what they are called, so no caller ever has to hardcode
+    # "deposit" / "withdraw" / "loan". Adding a JSON file to the
+    # workflows folder is enough to make it referenceable.
+    # =====================================================
+
+    # Words that carry no identifying information when matching a
+    # spoken workflow name. "money" is here on purpose: it is
+    # shared by "deposit money" and "withdraw money", so matching
+    # on it could only ever be ambiguous.
+    MATCH_STOPWORDS = frozenset({
+        "money", "the", "a", "an", "of", "for", "my", "to",
+        "process", "processes", "procedure", "procedures",
+        "workflow", "workflows", "request", "form", "step",
+        "steps", "please",
+    })
+
+    # A spoken token matches a workflow token when one is a
+    # prefix of the other and the overlap is at least this long.
+    # It is what lets "withdrawal" match "withdraw money" without
+    # a stemmer. Kept at 4 so short words must match exactly.
+    MIN_PREFIX_MATCH = 4
+
+    def available_workflows(self):
+        """
+        Canonical names of every workflow definition on disk, in
+        a stable order.
+
+        The name comes from each file's own "workflow" field, so
+        the JSON stays the single source of truth. A file whose
+        field is missing or unreadable falls back to its filename
+        ("apply_for_loan.json" -> "apply for loan"), so a
+        malformed definition can never make this raise.
+        """
+
+        names = []
+
+        if not self.workflow_folder.exists():
+            return names
+
+        for path in sorted(self.workflow_folder.glob("*.json")):
+
+            name = None
+
+            try:
+
+                with open(path, "r", encoding="utf-8") as file:
+                    definition = json.load(file)
+
+                if isinstance(definition, dict):
+
+                    declared = definition.get("workflow")
+
+                    if isinstance(declared, str) and declared.strip():
+                        name = declared.strip()
+
+            except (json.JSONDecodeError, OSError):
+
+                name = None
+
+            if name is None:
+                name = path.stem.replace("_", " ")
+
+            if name not in names:
+                names.append(name)
+
+        return names
+
+    @staticmethod
+    def _match_tokens(text):
+        """Identifying lowercase tokens of a workflow name."""
+
+        return [
+            token
+            for token in str(text).lower().replace("_", " ").split()
+            if token and token not in WorkflowLoader.MATCH_STOPWORDS
+        ]
+
+    @classmethod
+    def _tokens_match(cls, spoken_token, workflow_token):
+
+        if spoken_token == workflow_token:
+            return True
+
+        shorter, longer = sorted(
+            (spoken_token, workflow_token),
+            key=len
+        )
+
+        if len(shorter) < cls.MIN_PREFIX_MATCH:
+            return False
+
+        return longer.startswith(shorter)
+
+    def resolve_workflow_name(self, spoken_name):
+        """
+        Resolves a workflow name as the customer said it into the
+        canonical name of a definition that actually exists.
+
+            "deposit"             -> "deposit money"
+            "the deposit process" -> "deposit money"
+            "withdrawal"          -> "withdraw money"
+            "loan application"    -> "apply for loan"
+
+        Returns None when nothing matches, when the definition
+        does not exist, or when the phrase is AMBIGUOUS (matches
+        more than one workflow). Ambiguity resolves to None on
+        purpose: reading out the wrong workflow's banking steps is
+        worse than admitting the name was unclear.
+        """
+
+        if not spoken_name or not str(spoken_name).strip():
+            return None
+
+        spoken_tokens = self._match_tokens(spoken_name)
+
+        if not spoken_tokens:
+            return None
+
+        candidates = self.available_workflows()
+
+        # An exact name is authoritative and skips token matching.
+        normalized = " ".join(str(spoken_name).lower().split())
+
+        for candidate in candidates:
+
+            if candidate.lower() == normalized:
+                return candidate
+
+        matches = []
+
+        for candidate in candidates:
+
+            candidate_tokens = self._match_tokens(candidate)
+
+            if any(
+                self._tokens_match(spoken, existing)
+                for spoken in spoken_tokens
+                for existing in candidate_tokens
+            ):
+                matches.append(candidate)
+
+        if len(matches) != 1:
+            return None
+
+        return matches[0] if self.has_workflow(matches[0]) else None
+
+    # =====================================================
     # LOAD
     # =====================================================
 

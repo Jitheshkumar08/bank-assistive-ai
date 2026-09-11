@@ -6,6 +6,7 @@ from app.intent.detector import IntentDetector
 from app.conversation.manager import ConversationManager
 from app.conversation.state import SessionState, WorkflowState
 from app.dialogue.manager import DialogueManager
+from app.dialogue.term_normalizer import normalize_banking_terms
 
 
 LANGUAGES = {
@@ -96,6 +97,21 @@ class VoiceAssistantPipeline:
         try:
             audio_file = self.recorder.record()
 
+            # The recorder returns None when the VAD heard no
+            # meaningful speech -- plain silence, or a noise burst
+            # too short to be a word. That is a recording-layer
+            # outcome only: it is reported as empty input, exactly
+            # like an empty transcription, and the loop below
+            # simply listens again.
+            #
+            # Whisper is deliberately not run on silence. Besides
+            # being wasted work, it is what makes Whisper invent
+            # filler text ("Thank you.") that could then be read
+            # as a real banking utterance.
+
+            if audio_file is None:
+                return ""
+
             stt_result = self.stt.transcribe(
                 audio_file,
                 language=language_code
@@ -150,12 +166,33 @@ class VoiceAssistantPipeline:
 
             self.conversation.update_session_state(SessionState.LISTENING)
 
-            user_input = self.listen(mode, language_code)
+            raw_input_text = self.listen(mode, language_code)
 
-            if not user_input:
+            if not raw_input_text:
                 print("🎤 No speech detected. Listening again...")
                 self.conversation.update_session_state(SessionState.READY)
                 continue
+
+            # -----------------------------
+            # Domain terminology normalization
+            #
+            # Whisper mishears a small, known set of banking
+            # terms ("cheque book" -> "Chuck Book"). Only those
+            # listed phrases are rewritten; everything else --
+            # including Kannada and Hindi -- passes through
+            # untouched.
+            #
+            # The RAW transcript is what gets recorded in the
+            # conversation history, so debugging always shows
+            # what was actually heard. The normalized form is
+            # used only for control detection, understanding,
+            # retrieval and intent detection.
+            # -----------------------------
+
+            user_input = normalize_banking_terms(raw_input_text)
+
+            if user_input != raw_input_text:
+                print("🔤 Normalized Text:", user_input)
 
             # -----------------------------
             # Control Command Detection
@@ -182,7 +219,7 @@ class VoiceAssistantPipeline:
 
             self.conversation.update_session_state(SessionState.PROCESSING)
 
-            self.conversation.add_history("User", user_input)
+            self.conversation.add_history("User", raw_input_text)
 
             # -----------------------------
             # PER-TURN EXCEPTION BOUNDARY
