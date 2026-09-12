@@ -10,11 +10,11 @@ const prisma = new PrismaClient();
  * intentionally well-known so the team can sign in while building the
  * frontend, and it must never be seeded into a deployed environment.
  */
-const DEMO_EMAIL = 'demo@bankassist.local';
-const DEMO_PASSWORD = 'DemoPass123!';
+const DEMO_EMAIL = 'jeethu@gmail.com';
+const DEMO_PASSWORD = 'jeethu@12345';
 
-const ADMIN_EMAIL = process.env.ADMIN_EMAIL || 'admin@bankassist.local';
-const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || 'AdminPassword123!';
+const ADMIN_EMAIL = process.env.ADMIN_EMAIL || 'test@gmail.com';
+const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || 'test@12345';
 
 async function main(): Promise<void> {
   // Every write is an upsert keyed on a natural unique column, so the
