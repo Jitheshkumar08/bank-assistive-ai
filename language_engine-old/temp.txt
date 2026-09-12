@@ -1,0 +1,1969 @@
+# Complete Project Context & Development Handoff
+
+Below is the **master context** for the project and this conversation. A new AI should be able to read this and understand the project's architecture, decisions, current implementation status, constraints, development methodology, and next steps without needing the previous conversation.
+
+---
+
+# 1. Project Identity
+
+### Project title
+
+**Multimodal Assistive AI System for Context-Aware Guidance**
+
+The project is a final-year major project intended to demonstrate a practical, modular AI system that provides **context-aware, step-by-step assistance**, particularly for banking interactions.
+
+The system is intended to be extendable toward:
+
+* banking branches/kiosks
+* wearable devices
+* multimodal interaction
+* multilingual assistance
+* speech-based interaction
+* QR-based contextual awareness
+* eventually web/mobile interfaces
+
+The current implementation focus is the **language/speech engine and banking workflow assistant**.
+
+---
+
+# 2. Core Project Objective
+
+The assistant should allow a user to enter a banking environment and receive contextual guidance through natural speech.
+
+The intended high-level pipeline is:
+
+```text
+QR Scan
+   ↓
+Context
+(branch / area)
+   ↓
+Speech Input
+   ↓
+Speech-to-Text
+   ↓
+Intent / Dialogue Routing
+   ↓
+Workflow Engine OR Knowledge/RAG
+   ↓
+Response
+   ↓
+Translation when required
+   ↓
+Text-to-Speech
+```
+
+However, the architecture has evolved to include a proper routing layer:
+
+```text
+User Speech
+    ↓
+STT / Whisper
+    ↓
+Speech/domain normalization
+    ↓
+Dialogue Router
+    ├── Control
+    ├── Knowledge Question
+    └── Banking Workflow
+             ↓
+        Intent Detection
+             ↓
+        Workflow Engine
+    ↓
+Response
+    ↓
+Display + TTS
+```
+
+---
+
+# 3. Critical Architectural Rules
+
+These rules must be preserved throughout development.
+
+## QR module
+
+QR is **ONLY for context awareness**.
+
+It should provide things such as:
+
+```text
+branch_id
+area
+location/context
+```
+
+It must NOT contain:
+
+* workflow logic
+* instructions
+* translation
+* banking procedure logic
+
+---
+
+## Workflow Engine
+
+The workflow engine owns:
+
+* step-by-step banking instructions
+* current step
+* workflow progression
+* workflow completion
+* workflow suspension
+* workflow cancellation
+
+It should be dynamically selected based on user intent.
+
+---
+
+## AI / Intent Module
+
+The intent detector identifies the user's banking task:
+
+Examples:
+
+```text
+deposit money
+withdraw money
+apply for loan
+open new account
+```
+
+The intent system should remain:
+
+* scalable
+* modular
+* as language-independent as practical
+* separate from workflow logic
+
+Do not hardcode workflow procedures into the intent detector.
+
+---
+
+## Translation
+
+Kannada ↔ Tulu translation is a **separate module**.
+
+Tulu is intentionally being kept aside for now.
+
+Do not mix Tulu into the current speech/workflow implementation until the core system is stable.
+
+---
+
+## Database
+
+The eventual database should be normalized and support relationships such as:
+
+```text
+Context
+   ↓
+Service
+   ↓
+Workflow
+```
+
+Avoid hardcoding these relationships into Python.
+
+---
+
+# 4. Current Technology Stack
+
+Current project work includes:
+
+### Speech-to-Text
+
+**Whisper** is currently being used.
+
+It successfully recognizes English speech and is intended to support Indian languages where applicable.
+
+Current concern:
+
+Whisper can misrecognize domain terms, e.g.:
+
+```text
+cheque book
+    ↓
+chat book
+chut book
+chuck book
+```
+
+This is a known issue to address later through speech/domain normalization and/or better STT configuration.
+
+---
+
+### Text-to-Speech
+
+Current implementation uses:
+
+**Edge TTS (`edge_tts`)**
+
+Current voices include:
+
+```text
+English → en-IN-NeerjaNeural
+Kannada → kn-IN-SapnaNeural
+Hindi → hi-IN-SwaraNeural
+```
+
+TTS is currently functioning.
+
+A previous implementation used generated MP3 filenames such as:
+
+```text
+tts_<uuid>.mp3
+```
+
+The current TTS implementation works, and Claude later added/verified speech-finished behavior in the pipeline.
+
+Important future issue:
+
+LLM responses can contain Markdown such as:
+
+```text
+**Deposit**
+```
+
+and TTS can read the asterisks aloud as "asterisk".
+
+Therefore a future **TTS response sanitization layer** is required:
+
+```text
+LLM response
+    ↓
+display version
+    +
+TTS-clean version
+    ↓
+TTS
+```
+
+The screen may retain Markdown formatting while TTS receives plain speech text.
+
+---
+
+### Intent Detection
+
+Current intent detection uses a multilingual embedding model:
+
+```text
+sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2
+```
+
+It currently supports the project's banking intent detection.
+
+A major finding:
+
+English intent confidence was approximately:
+
+```text
+0.69 – 0.94
+```
+
+while genuine Kannada/Hindi phrases could score:
+
+```text
+0.08 – 0.35
+```
+
+Example:
+
+```text
+mujhe paise nikalna hai
+→ approximately 0.079
+```
+
+A general banking side question could score around:
+
+```text
+0.71
+```
+
+Therefore:
+
+### DO NOT introduce a simple global confidence threshold.
+
+It could incorrectly reject genuine Kannada/Hindi banking requests while accepting unrelated English questions.
+
+This decision is explicitly important.
+
+---
+
+### LLM
+
+The project currently uses **Groq API** for LLM-based dialogue understanding.
+
+The current dialogue understanding model call uses:
+
+```text
+openai/gpt-oss-20b
+```
+
+through Groq's API interface.
+
+The LLM is used for:
+
+* workflow dialogue understanding
+* action interpretation
+* questions
+* side questions
+* general knowledge questions
+* contextual responses
+
+The Groq API key must be stored in an environment variable:
+
+```text
+GROQ_API_KEY
+```
+
+Never hardcode the key in source code.
+
+One old Groq key was accidentally exposed in a traceback during development. That key was subsequently revoked and replaced with a new key.
+
+The new key should never be pasted into chat or screenshots.
+
+---
+
+# 5. RAG Architecture
+
+The project already contains:
+
+```text
+KnowledgeRetriever
+```
+
+and knowledge documents.
+
+Current startup shows:
+
+```text
+Knowledge Retriever Ready ✅ (4 documents)
+```
+
+The current architecture is:
+
+```text
+User question
+    ↓
+KnowledgeRetriever
+    ↓
+Relevant information
+    ↓
+LLM
+    ↓
+Natural language response
+```
+
+Important:
+
+### RAG and LLM are NOT alternatives.
+
+They have different roles.
+
+```text
+RAG
+= retrieves relevant project/banking information
+
+LLM
+= understands/formulates the response
+```
+
+For example:
+
+```text
+"What is a cheque book?"
+        ↓
+Question routing
+        ↓
+RAG
+        ↓
+Relevant banking knowledge
+        ↓
+LLM
+        ↓
+Answer
+```
+
+For general harmless questions:
+
+```text
+"What is ChatGPT?"
+```
+
+the LLM can answer using its general knowledge.
+
+However, bank-specific information should not be hallucinated.
+
+If the system does not have authoritative information about something such as a specific bank's current interest rate, it should state that the information is unavailable rather than inventing it.
+
+---
+
+# 6. RAG / Knowledge Routing Problem
+
+Originally, this happened:
+
+```text
+"What all things do you know about banking system?"
+        ↓
+Intent Detector
+        ↓
+deposit money
+confidence 0.386
+        ↓
+Deposit workflow ❌
+```
+
+This was incorrect.
+
+Phase 2 corrective work introduced:
+
+```text
+User input
+    ↓
+Question-shape check
+    ↓
+LLM determines whether it is a question/help request
+    ↓
+RAG + LLM
+```
+
+The live test confirmed this now works.
+
+Example:
+
+```text
+"What all do you know about banking system?"
+```
+
+successfully produced a banking knowledge response instead of starting a deposit workflow.
+
+Also:
+
+```text
+"What is Chat JPTJ?"
+```
+
+was routed to general knowledge and the LLM recognized it as likely meaning ChatGPT.
+
+---
+
+# 7. Current Knowledge Routing Limitation
+
+The current question-shape prefilter is primarily English-oriented.
+
+Examples like:
+
+```text
+What is...
+What are...
+Why...
+How...
+```
+
+are easily recognized.
+
+Kannada/Hindi questions currently fall through to the existing intent system.
+
+This is intentionally preserved for now because we do not want a simplistic confidence threshold to damage multilingual intent recognition.
+
+This will need a **proper multilingual routing strategy later**, not a random threshold.
+
+---
+
+# 8. Banking Workflow Examples
+
+Current workflow examples include:
+
+### Withdrawal
+
+Typical sequence:
+
+```text
+1. Take withdrawal slip
+2. Fill account number
+3. Enter withdrawal amount
+4. Sign withdrawal slip
+5. Submit slip to cashier
+6. Workflow completed
+```
+
+### Deposit
+
+Typical sequence:
+
+```text
+1. Take deposit slip
+2. Fill account information
+3. Enter amount
+4. Submit according to workflow
+```
+
+Exact workflow content is stored in workflow JSON and should remain separate from the dialogue/intent code.
+
+---
+
+# 9. Important Amount Requirement
+
+The user specifically requires that the assistant **must not force users to speak the amount**.
+
+Example:
+
+Assistant:
+
+> Enter the withdrawal amount.
+
+User physically enters:
+
+```text
+₹2000
+```
+
+Then simply says:
+
+> Yes, I entered the amount.
+
+The system should accept that as **completion of the workflow step**.
+
+It should NOT require:
+
+> "I entered 2000."
+
+However, if the user does say:
+
+> I entered 2000.
+
+the system should extract:
+
+```json
+{
+  "amount": 2000
+}
+```
+
+Therefore:
+
+### Step completion and entity extraction are independent.
+
+```text
+"I entered the amount"
+→ complete = true
+→ amount = null
+
+"I entered 2000"
+→ complete = true
+→ amount = 2000
+```
+
+This behavior is currently improved by persisting entities even on the `complete` branch.
+
+Do not redesign this requirement into "amount is mandatory to advance."
+
+---
+
+# 10. Conversation State Architecture
+
+This was one of the major Phase 2 architectural improvements.
+
+The assistant and workflow are **not the same state**.
+
+We use two logical state dimensions.
+
+## Session state
+
+Conceptually:
+
+```text
+IDLE
+READY
+LISTENING
+PROCESSING
+SPEAKING
+EXITED
+```
+
+The assistant session can remain alive.
+
+---
+
+## Workflow state
+
+```text
+NONE
+ACTIVE
+SUSPENDED
+COMPLETED
+CANCELLED
+```
+
+These are independent.
+
+For example:
+
+```text
+Session = READY
+Workflow = SUSPENDED
+```
+
+is valid.
+
+Also:
+
+```text
+Session = READY
+Workflow = COMPLETED
+```
+
+is valid.
+
+---
+
+# 11. Workflow Suspension
+
+"Pause" does NOT mean the whole assistant stops.
+
+This is extremely important.
+
+Example:
+
+```text
+Assistant:
+Please take a deposit slip.
+
+User:
+Pause, I need to fill this.
+```
+
+Then:
+
+```text
+Workflow = SUSPENDED
+Session = READY
+```
+
+The assistant remains available.
+
+The following are preserved:
+
+* workflow
+* current step
+* intent
+* history
+* entities
+
+---
+
+# 12. Silence Is Different From Explicit Pause
+
+The user may physically perform a task without speaking.
+
+Example:
+
+```text
+Assistant:
+Please fill the deposit slip.
+
+User:
+[Silent for several minutes while filling it]
+```
+
+Silence should NOT mean:
+
+```text
+cancel
+exit
+complete
+new intent
+```
+
+The workflow should remain intact.
+
+Later:
+
+> What should I do next?
+
+should use the current workflow context.
+
+This is a major reason Phase 3 needs intelligent VAD/silence handling.
+
+---
+
+# 13. Side Questions During Workflow
+
+The assistant should support temporary interruptions.
+
+Example:
+
+```text
+Withdrawal workflow
+Step 2: Fill account number
+
+User:
+What is a cheque book?
+```
+
+The assistant should:
+
+```text
+Answer the question
+        ↓
+Return to withdrawal
+        ↓
+Step 2 remains unchanged
+```
+
+The workflow must not restart.
+
+Similarly, while paused:
+
+```text
+Workflow = SUSPENDED
+
+User:
+What documents are needed for a deposit?
+
+→ answer
+→ remain SUSPENDED
+→ preserve exact workflow step
+```
+
+Then:
+
+> Continue.
+
+should resume the workflow.
+
+---
+
+# 14. "What Should I Do Next?"
+
+This is a special but important interaction.
+
+If the workflow is currently:
+
+```text
+withdrawal
+step 2
+```
+
+and user says:
+
+> What should I do next?
+
+the assistant should use the existing workflow context rather than starting a new banking intent.
+
+It should determine the appropriate next instruction without blindly skipping a required step.
+
+---
+
+# 15. Control Command Semantics
+
+Current intended semantics:
+
+### Session exit
+
+```text
+exit
+quit
+goodbye
+end session
+close assistant
+```
+
+→ terminate the assistant session.
+
+### Workflow cancellation
+
+```text
+stop
+cancel
+```
+
+→ cancel the current workflow only.
+
+The assistant remains alive.
+
+### Pause
+
+```text
+pause
+```
+
+→ suspend the workflow only.
+
+### Resume
+
+```text
+resume
+continue
+```
+
+→ resume the suspended workflow at the same step.
+
+### Repeat
+
+```text
+repeat
+```
+
+→ repeat current instruction without advancing.
+
+### Next
+
+```text
+next
+```
+
+→ must NOT blindly skip a workflow step.
+
+The workflow/dialogue logic determines what should happen.
+
+---
+
+# 16. Control Command Priority
+
+Control commands must be detected **before intent detection**.
+
+Correct priority:
+
+```text
+User input
+   ↓
+empty/no-speech
+   ↓
+session exit
+   ↓
+workflow control
+   ↓
+knowledge question
+   ↓
+workflow dialogue
+   ↓
+new intent detection
+```
+
+This prevents:
+
+```text
+"Exit."
+    ↓
+withdraw money
+    ↓
+new workflow ❌
+```
+
+The old system had exactly this bug.
+
+It has now been fixed in the code.
+
+---
+
+# 17. Real Voice Test After Phase 2
+
+The actual microphone test produced:
+
+```text
+Exit.
+```
+
+and after the corrective patch it correctly terminated the session.
+
+The previous failure was caused by exact matching:
+
+```text
+"exit"
+```
+
+not matching:
+
+```text
+"Exit."
+```
+
+because Whisper added punctuation.
+
+The corrective implementation introduced a shared normalization/classification mechanism.
+
+It also specifically protects against substring mistakes:
+
+```text
+"don't exit"
+```
+
+must NOT be interpreted as:
+
+```text
+exit
+```
+
+---
+
+# 18. Current Live Test Results
+
+The latest live test showed:
+
+### Working
+
+```text
+"What is chat jptj?"
+→ general LLM answer
+
+"What is chat book?"
+→ general question
+
+"What all do you know about banking system?"
+→ RAG/LLM banking response
+
+"Exit."
+→ session exits correctly
+```
+
+The banking knowledge question no longer incorrectly starts a deposit workflow.
+
+---
+
+# 19. Current Problems Identified
+
+## Problem A — fixed 6-second recording
+
+Still present.
+
+Current recorder behaves approximately:
+
+```text
+Get ready
+↓
+Record
+↓
+fixed duration
+↓
+Whisper
+```
+
+This is not suitable for a real assistive system.
+
+It can:
+
+* cut off slow speakers
+* record too long for short utterances
+* create awkward waiting
+* fail during long silent physical tasks
+* cause microphone timing issues
+
+---
+
+# 20. Phase 3 — VAD / Intelligent Speech Capture
+
+This is the next major implementation phase.
+
+Do NOT simply increase:
+
+```text
+6 seconds → 15 seconds
+```
+
+Instead implement proper voice activity detection.
+
+Desired architecture:
+
+```text
+Microphone
+   ↓
+Listening
+   ↓
+Speech detected
+   ↓
+Capture speech
+   ↓
+Sustained silence detected
+   ↓
+Stop utterance
+   ↓
+Whisper
+```
+
+But there is a deeper requirement:
+
+### Initial silence should NOT kill the assistant.
+
+The user may spend several minutes filling a form.
+
+Therefore:
+
+```text
+No speech
+    ↓
+keep assistant/session/workflow alive
+```
+
+rather than treating silence as cancellation.
+
+The recorder/VAD design must distinguish:
+
+```text
+no speech yet
+```
+
+from:
+
+```text
+speech finished
+```
+
+This is one of the most important upcoming engineering tasks.
+
+---
+
+# 21. Speech Robustness Requirements
+
+The final speech system should handle:
+
+* low voice
+* unclear speech
+* fast speech
+* slow speech
+* short utterances
+* long utterances
+* pauses within speech
+* background noise
+* Indian accents
+* multilingual speech
+* domain-specific banking terms
+
+Do not solve these through random trial-and-error.
+
+Use a planned speech-processing architecture.
+
+---
+
+# 22. Speech Domain Normalization
+
+The live test showed:
+
+```text
+cheque book
+```
+
+being transcribed as:
+
+```text
+chat book
+chut book
+chuck book
+```
+
+This should eventually be addressed by a domain-aware normalization layer.
+
+Conceptually:
+
+```text
+Whisper
+ ↓
+Raw transcript
+ ↓
+Banking speech normalization
+ ↓
+Canonical text
+ ↓
+Router / Intent / RAG
+```
+
+It should handle common banking-domain transcription variants.
+
+But:
+
+### Do NOT build a huge hardcoded typo dictionary.
+
+Use a controlled, modular domain-normalization mechanism.
+
+---
+
+# 23. Low-Confidence Intent Handling
+
+Another live problem:
+
+A phrase such as:
+
+```text
+"Present our hand"
+```
+
+was transcribed and classified as:
+
+```text
+deposit money
+confidence 0.216
+```
+
+That is dangerous.
+
+But we already established:
+
+### Do not solve this with a global confidence threshold.
+
+Instead, eventually use an **ambiguity/clarification mechanism**.
+
+For example:
+
+```text
+Low-confidence / ambiguous request
+        ↓
+Clarification
+        ↓
+"Did you want to deposit, withdraw, transfer, or ask a question?"
+```
+
+This should be designed so legitimate Kannada/Hindi intents are not silently rejected.
+
+---
+
+# 24. TTS Sanitization
+
+Current LLM responses can contain Markdown.
+
+Example:
+
+```text
+**Account opening**
+**Deposit**
+```
+
+The display can show Markdown correctly.
+
+But TTS may say:
+
+> asterisk asterisk Account opening...
+
+Therefore implement:
+
+```text
+LLM response
+    ↓
+Response formatter
+    ├── UI/display response
+    └── TTS-clean response
+```
+
+The TTS version should remove Markdown syntax while preserving readable speech.
+
+---
+
+# 25. Model Loading / Performance Problem
+
+Current startup loads the multilingual embedding model twice.
+
+Startup showed approximately:
+
+```text
+Loading multilingual model...
+```
+
+then:
+
+```text
+Loading knowledge retrieval model...
+```
+
+Both use:
+
+```text
+paraphrase-multilingual-MiniLM-L12-v2
+```
+
+Therefore:
+
+```text
+IntentDetector
+      ↓
+Embedding model instance #1
+
+KnowledgeRetriever
+      ↓
+Embedding model instance #2
+```
+
+This is wasteful.
+
+Future architecture:
+
+```text
+              Shared Embedding Provider
+                     ↓
+              one model instance
+                 /        \
+                /          \
+        IntentDetector    RAG
+```
+
+This should reduce startup memory and model duplication.
+
+---
+
+# 26. Model Lifetime Requirement
+
+Expensive models should load **once per application session**.
+
+Correct:
+
+```text
+Application start
+ ↓
+Load Whisper
+Load embedding model
+Load RAG
+Load Groq client
+Load TTS
+ ↓
+READY
+ ↓
+Deposit
+ ↓
+COMPLETED
+ ↓
+READY
+ ↓
+Withdrawal
+ ↓
+COMPLETED
+ ↓
+READY
+```
+
+Incorrect:
+
+```text
+Deposit
+ ↓
+reload models
+ ↓
+Withdrawal
+ ↓
+reload models
+```
+
+Workflow changes should only change lightweight state.
+
+---
+
+# 27. Phase 1 — Completed
+
+Phase 1 was **Orchestrator Consolidation**.
+
+Before Phase 1:
+
+* `test_full_pipeline.py` was effectively the only working multi-turn path.
+* `voice_pipeline.py` reset state incorrectly.
+* user input was not correctly passed into dialogue.
+* STT language was hardcoded to English.
+* TTS was not properly integrated.
+* application path was not equivalent to the debugging path.
+
+Phase 1 changed:
+
+```text
+app/pipeline/voice_pipeline.py
+app/main.py
+```
+
+The official application became:
+
+```powershell
+python -m app.main
+```
+
+The pipeline now keeps the conversation alive across turns.
+
+Phase 1 is considered complete.
+
+---
+
+# 28. Phase 2 — Completed
+
+Phase 2 introduced:
+
+* independent session/workflow state
+* pause/resume
+* cancellation
+* control commands
+* side-question support
+* post-completion new workflows
+* entity persistence
+* control priority
+* knowledge-question routing
+
+Then a corrective patch fixed:
+
+* `"Exit."`
+* knowledge question routing
+* entity persistence for completion
+* Markdown/general knowledge handling
+
+Claude reported:
+
+```text
+104/104 offline assertions passed
+```
+
+and the subsequent real microphone test confirmed that `Exit.` now works.
+
+Phase 2 is therefore considered **implemented and functionally validated**, with known limitations.
+
+---
+
+# 29. Phase 2 Known Limitations
+
+1. Fixed-duration recorder still exists.
+2. English control commands are optimized first.
+3. Multilingual knowledge-question routing is not yet fully optimized.
+4. STT domain-word normalization is not yet implemented.
+5. Low-confidence intent clarification is not yet implemented.
+6. RAG knowledge base is still small.
+7. TTS Markdown sanitization remains to be implemented.
+8. Embedding model duplication remains.
+9. Full production API/frontend architecture has not yet been built.
+10. Tulu is intentionally deferred.
+
+---
+
+# 30. Phase 3 — Planned
+
+## Phase 3 goal
+
+**Robust, low-latency, silence-aware voice interaction.**
+
+Main work:
+
+```text
+VAD
++
+dynamic recording
++
+speech start/stop detection
++
+silence handling
++
+low-volume support
++
+fast/slow speech
++
+noise robustness
++
+Whisper optimization
+```
+
+Do not implement this by simply changing the recorder timeout.
+
+---
+
+# 31. Phase 4 — QR + Context
+
+After speech stability:
+
+```text
+QR scan
+ ↓
+branch_id
+area
+context
+ ↓
+assistant session
+```
+
+The QR module should remain pure context.
+
+Example:
+
+```json
+{
+  "branch_id": "BR001",
+  "area": "cash_counter"
+}
+```
+
+It should not contain:
+
+```text
+withdraw workflow
+deposit instructions
+translation
+```
+
+---
+
+# 32. Phase 5 — Model / Performance Optimization
+
+Planned:
+
+* shared embedding model
+* model singleton/provider
+* startup optimization
+* avoid duplicate initialization
+* reduce unnecessary Groq calls
+* cache suitable results
+* evaluate streaming where beneficial
+* minimize latency between user speech and response
+
+Important performance goal:
+
+```text
+Models loaded once
+      ↓
+User interactions remain lightweight
+```
+
+---
+
+# 33. Phase 6 — Workflow / Intent Expansion
+
+Expand banking workflows systematically.
+
+Potential workflows:
+
+```text
+Deposit
+Withdrawal
+Account Opening
+Loan
+Balance enquiry
+Fund transfer
+Cheque-related services
+Other branch services
+```
+
+But workflow JSON should remain data-driven.
+
+Don't hardcode workflow steps inside Python.
+
+---
+
+# 34. Phase 7 — Backend/API Layer
+
+Eventually separate:
+
+```text
+AI Engine
+    ↓
+Service/API Layer
+    ↓
+Frontend
+```
+
+Potential API concepts:
+
+```text
+POST /context
+POST /session
+POST /speech
+POST /message
+GET  /workflow/current
+POST /workflow/action
+POST /session/pause
+POST /session/resume
+POST /session/exit
+```
+
+Exact API routes are not finalized yet.
+
+---
+
+# 35. Phase 8 — Frontend
+
+The web interface should be built **after the backend/core engine is stable**.
+
+The frontend should not duplicate:
+
+* intent logic
+* workflow logic
+* RAG logic
+* translation logic
+
+Instead:
+
+```text
+Web UI
+   ↓
+API
+   ↓
+AI engine
+```
+
+Potential UI:
+
+```text
+Branch/context
+Language
+Microphone
+Recognized speech
+Assistant response
+Current workflow step
+Progress
+Pause/resume
+```
+
+The same engine should eventually be usable by:
+
+* web
+* mobile
+* kiosk
+* wearable
+
+---
+
+# 36. Phase 9 — Testing & Evaluation
+
+Systematic tests should include:
+
+### Workflow
+
+* deposit
+* withdrawal
+* loan
+* account opening
+* future workflows
+
+### Control
+
+* pause
+* resume
+* continue
+* repeat
+* stop
+* cancel
+* exit
+
+### Conversation
+
+* side questions
+* questions during workflow
+* questions while suspended
+* return to workflow
+* new workflow after completion
+
+### Speech
+
+* low voice
+* fast speech
+* slow speech
+* silence
+* background noise
+* accents
+* STT errors
+
+### Language
+
+* English
+* Kannada
+* Hindi
+* later Tulu
+
+### Performance
+
+* model startup
+* inference latency
+* repeated workflows
+* memory usage
+
+---
+
+# 37. Phase 10 — Tulu
+
+Tulu remains a **separate module**.
+
+There is some Kaggle/data work available and potentially recorded voice data.
+
+The intended future pipeline is:
+
+```text
+Tulu speech
+ ↓
+Tulu/Kannada language handling
+ ↓
+existing intent/dialogue system
+ ↓
+Kannada/Tulu response
+ ↓
+TTS
+```
+
+But do NOT prematurely integrate it into the current core.
+
+First stabilize:
+
+```text
+English
+Kannada
+Hindi
+```
+
+and the architecture.
+
+---
+
+# 38. Three-Way Communication Requirement
+
+The project may eventually require a three-way communication capability.
+
+Conceptually:
+
+```text
+User
+ ↕
+AI Assistant
+ ↕
+Bank staff / third party
+```
+
+The exact implementation is not finalized.
+
+This should be treated as an extension after the core assistant is stable, not mixed into the current workflow engine.
+
+---
+
+# 39. Development Methodology
+
+A very important project rule was established:
+
+### Claude is the developer.
+
+Claude has access to the project folder and is responsible for implementing approved changes.
+
+### This AI is the architect/reviewer.
+
+The workflow is:
+
+```text
+User requirement
+      ↓
+Architectural planning
+      ↓
+Prompt to Claude
+      ↓
+Claude inspects/implements
+      ↓
+Claude reports changes/tests
+      ↓
+User runs real tests
+      ↓
+Results sent here
+      ↓
+Architecture/code review
+      ↓
+Approval
+      ↓
+Next phase
+```
+
+Do not blindly accept Claude's claim that something works.
+
+Real microphone testing caught problems that offline tests missed.
+
+---
+
+# 40. Why Real Testing Matters
+
+Claude's offline tests passed:
+
+```text
+104/104
+```
+
+but real Whisper produced:
+
+```text
+Exit.
+```
+
+instead of:
+
+```text
+exit
+```
+
+which previously exposed the actual bug.
+
+Therefore:
+
+### Offline tests ≠ complete system validation.
+
+Always perform real:
+
+```text
+Microphone
+→ Whisper
+→ LLM
+→ RAG
+→ Workflow
+→ TTS
+```
+
+testing before declaring a phase complete.
+
+---
+
+# 41. "No Trial-and-Error" Rule
+
+The user explicitly requested that development should **not proceed through random trial and error**.
+
+Every change should have:
+
+1. identified problem
+2. architectural reason
+3. defined scope
+4. expected behavior
+5. implementation
+6. test
+7. review
+8. approval
+
+Do not randomly change multiple modules simultaneously.
+
+---
+
+# 42. Current File/Module Situation
+
+Known relevant modules include:
+
+```text
+app/
+├── main.py
+├── pipeline/
+│   └── voice_pipeline.py
+├── speech/
+│   ├── stt.py
+│   ├── recorder.py
+│   └── tts.py
+├── intent/
+│   └── detector.py
+├── conversation/
+│   ├── manager.py
+│   └── state.py
+├── dialogue/
+│   ├── manager.py
+│   └── llm/
+│       └── dialogue_understanding.py
+├── knowledge/
+│   ├── loader.py
+│   └── retriever.py
+├── workflow/
+│   └── workflows/
+└── translation/
+    └── translator.py
+```
+
+Exact current tree should always be inspected before modifying it.
+
+---
+
+# 43. Files Claude Has Modified in Recent Phases
+
+### Phase 1
+
+```text
+app/pipeline/voice_pipeline.py
+app/main.py
+```
+
+### Phase 2
+
+```text
+app/conversation/state.py
+app/conversation/manager.py
+app/dialogue/manager.py
+app/pipeline/voice_pipeline.py
+```
+
+Then corrective Phase 2 patch modified:
+
+```text
+app/dialogue/manager.py
+app/pipeline/voice_pipeline.py
+app/dialogue/llm/dialogue_understanding.py
+```
+
+Recent report states:
+
+```text
+recorder.py        untouched
+tts.py             untouched
+stt                untouched
+translation        untouched
+QR/context         untouched
+workflow JSON      untouched
+intent/detector.py untouched
+knowledge          untouched
+```
+
+These claims should still be verified from the actual repository when continuing.
+
+---
+
+# 44. Current Exact Status
+
+At the end of this conversation:
+
+```text
+Phase 1 — Orchestrator
+        ✅ Complete
+
+Phase 2 — State/control
+        ✅ Implemented
+
+Phase 2 corrective patch
+        ✅ Implemented
+        ✅ Offline tests pass
+        ✅ Real Exit test passes
+
+Phase 3 — VAD
+        ⏳ Not started
+
+QR/context
+        ⏳ Not started
+
+Embedding optimization
+        ⏳ Not started
+
+Speech-domain normalization
+        ⏳ Not started
+
+TTS sanitization
+        ⏳ Not started
+
+Low-confidence clarification
+        ⏳ Not started
+
+Backend API
+        ⏳ Not started
+
+Frontend
+        ⏳ Not started
+
+Tulu
+        ⏳ Separate future module
+```
+
+---
+
+# 45. Immediate Next Step
+
+The immediate next step should be:
+
+## **Phase 3 — VAD / intelligent voice capture**
+
+But before Claude modifies it, the exact current `recorder.py` should be inspected.
+
+We should design it first around:
+
+```text
+speech start
+speech continuation
+speech end
+initial silence
+long task silence
+low volume
+fast speech
+slow speech
+noise
+```
+
+Then Claude implements it.
+
+**Do not simply tell Claude "increase the recording time."**
+
+---
+
+# 46. Final Target Architecture
+
+The eventual complete system should look approximately like:
+
+```text
+                         ┌─────────────────────┐
+                         │      QR CONTEXT     │
+                         │ branch_id / area    │
+                         └──────────┬──────────┘
+                                    ↓
+                         ┌─────────────────────┐
+                         │   ASSISTANT SESSION │
+                         └──────────┬──────────┘
+                                    ↓
+                              Microphone
+                                    ↓
+                              VAD / Recorder
+                                    ↓
+                                Whisper
+                                    ↓
+                         Speech/Domain Normalizer
+                                    ↓
+                         ┌─────────────────────┐
+                         │    DIALOGUE ROUTER  │
+                         └──────────┬──────────┘
+                                    │
+                 ┌──────────────────┼──────────────────┐
+                 ↓                  ↓                  ↓
+             CONTROL            QUESTION          WORKFLOW
+                 │                  │                  │
+        pause/resume/etc.       RAG + LLM       Intent Detector
+                                    │                  │
+                                    │             Workflow Engine
+                                    │                  │
+                                    └────────┬─────────┘
+                                             ↓
+                                      Response Manager
+                                             ↓
+                                    ┌────────┴────────┐
+                                    ↓                 ↓
+                                  Display             TTS
+                                                      ↓
+                                                   Speaker
+```
+
+With:
+
+```text
+Session lifetime
+        ≠
+Workflow lifetime
+```
+
+and:
+
+```text
+Workflow completion
+        ≠
+Assistant termination
+```
+
+and:
+
+```text
+RAG
++
+LLM
+```
+
+working together rather than being treated as competing technologies.
+
+---
+
+# 47. Non-Negotiable Principles Going Forward
+
+1. **No random trial-and-error changes.**
+2. **One phase at a time.**
+3. **Claude implements; this AI reviews.**
+4. **Never expose API keys.**
+5. **Do not use global confidence thresholds that damage multilingual intent detection.**
+6. **Do not put workflow logic inside QR/context.**
+7. **Do not put Tulu into the core prematurely.**
+8. **Do not reload expensive models for every banking task.**
+9. **Workflow completion must leave the assistant ready for another task.**
+10. **Workflow pause must not stop the assistant from answering questions.**
+11. **Silence while physically performing a task must not cancel the workflow.**
+12. **Control commands must be intercepted before intent detection.**
+13. **Amount extraction is optional; step completion is independent.**
+14. **RAG retrieves; LLM formulates.**
+15. **Real microphone testing is mandatory before phase approval.**
+16. **Don't modify unrelated modules while implementing a phase.**
+17. **Keep Tulu as a separate module until the core system is stable.**
+18. **The eventual frontend must consume the backend rather than duplicate AI logic.**
+
+This is the **current master context and development baseline** for continuing the project.

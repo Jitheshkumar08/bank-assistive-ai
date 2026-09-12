@@ -7,12 +7,16 @@ from dotenv import load_dotenv
 # GROQ_API_KEY inside its own __init__ (not at import time), so
 # loading here is early enough for all of them.
 #
-# load_dotenv() does NOT override variables that are already set,
+# override=False does NOT replace variables that are already set,
 # so a real shell or CI value still wins over the file. The value
 # itself is never read, printed or logged here -- only placed in
 # the environment for os.getenv() to find.
+#
+# Stated explicitly because it is the same rule service/config.py
+# applies: a checked-out .env must never override the secret a
+# deployment exported for itself.
 
-load_dotenv(override=True)
+load_dotenv(override=False)
 
 
 

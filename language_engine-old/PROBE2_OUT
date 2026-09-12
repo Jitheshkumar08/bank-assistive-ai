@@ -1,0 +1,64 @@
+[baseline] voice=en-IN-NeerjaNeural
+  IN='Deposit money today.'
+  TOKENS(3)=['Deposit', 'money', 'today']
+  bytes=14400 dur=1.51s
+[rupee_symbol] voice=en-IN-NeerjaNeural
+  IN='Please deposit ₹2000 today.'
+  TOKENS(3)=['Please', 'deposit', '₹2000 today']
+  bytes=19008 dur=2.24s
+[rupee_comma] voice=en-IN-NeerjaNeural
+  IN='Please deposit ₹2,000 today.'
+  TOKENS(3)=['Please', 'deposit', '₹2,000 today']
+  bytes=19008 dur=2.24s
+[rs_nodot] voice=en-IN-NeerjaNeural
+  IN='Please deposit Rs 2000 today.'
+  TOKENS(4)=['Please', 'deposit', 'Rs 2000 ', 'today']
+  bytes=20304 dur=2.42s
+[indian_grouping] voice=en-IN-NeerjaNeural
+  IN='Your balance is 1,25,000 rupees.'
+  TOKENS(5)=['Your', 'balance', 'is', '1,25,000', 'rupees']
+  bytes=24768 dur=3.24s
+[west_grouping] voice=en-IN-NeerjaNeural
+  IN='Your balance is 125,000 rupees.'
+  TOKENS(5)=['Your', 'balance', 'is', '125,000', 'rupees']
+  bytes=25344 dur=3.35s
+[emoji_bank] voice=en-IN-NeerjaNeural
+  IN='Deposit 🏦 money today.'
+  TOKENS(4)=['Deposit', '🏦', 'money', 'today']
+  bytes=16128 dur=1.81s
+[emoji_check] voice=en-IN-NeerjaNeural
+  IN='Step complete ✅'
+  TOKENS(3)=['Step', 'complete', '✅']
+  bytes=19728 dur=2.42s
+[emoji_alone] voice=en-IN-NeerjaNeural
+  IN='🏦'
+  TOKENS(1)=['🏦']
+  bytes=10656 dur=0.72s
+[emoji_mic] voice=en-IN-NeerjaNeural
+  IN='🎤 Listening now.'
+  TOKENS(3)=['🎤', 'Listening', 'now']
+  bytes=15552 dur=1.73s
+[italic_star] voice=en-IN-NeerjaNeural
+  IN='Please *take* the slip.'
+  TOKENS(6)=['Please', '*', 'take', '*', 'the', 'slip']
+  bytes=20880 dur=2.61s
+[italic_us] voice=en-IN-NeerjaNeural
+  IN='Please _take_ the slip.'
+  TOKENS(4)=['Please', '_take_', 'the', 'slip']
+  bytes=19728 dur=2.40s
+[fence] voice=en-IN-NeerjaNeural
+  IN='Run this:\n```\nprint(1)\n```\nDone.'
+  TOKENS(5)=['Run', 'this', 'print', '1', 'Done']
+  bytes=31104 dur=4.30s
+[kn_voice_rupee] voice=en-IN-NeerjaNeural
+  IN='₹2000'
+  TOKENS(1)=['₹2000']
+  bytes=13248 dur=1.32s
+[kn_rupee_kannada_voice] voice=kn-IN-SapnaNeural
+  IN='₹2000 ಜಮಾ ಮಾಡಿ'
+  TOKENS(3)=['₹2000', 'ಜಮಾ', 'ಮಾಡಿ']
+  bytes=16992 dur=1.90s
+[hi_rupee_hindi_voice] voice=hi-IN-SwaraNeural
+  IN='₹2000 जमा करें'
+  TOKENS(3)=['₹2000 ', 'जमा', 'करें']
+  bytes=17856 dur=2.11s

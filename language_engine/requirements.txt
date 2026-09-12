@@ -56,4 +56,16 @@ pygame==2.6.1
 #     one most likely to resolve differently on another machine ------
 torch==2.11.0
 
+# --- Web service layer (service/) -----------------------------------
+# Needed only by the FastAPI wrapper that the web app calls; the CLI
+# engine in app/ does not import any of these.
+#
+# Without them `pip install -r requirements.txt` produces an engine
+# that cannot serve a single HTTP request, which is how the whole web
+# path came to be uninstallable.
+fastapi==0.135.2
+uvicorn==0.42.0
+# FastAPI needs this to parse the multipart upload a recording arrives in.
+python-multipart==0.0.20
+
 
