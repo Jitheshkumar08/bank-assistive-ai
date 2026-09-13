@@ -1,7 +1,11 @@
 import { act, renderHook, waitFor } from '@testing-library/react';
 import type { ReactNode } from 'react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { ConversationContext, type ConversationState } from './ConversationContext';
+import {
+  ConversationContext,
+  type ConversationState,
+  type ReplyListener,
+} from './ConversationContext';
 import { SessionContext, type SessionContextValue } from './SessionContext';
 import { VoiceProvider } from './VoiceContext';
 import { useVoice } from './useVoice';
@@ -24,6 +28,14 @@ vi.mock('@/services/assistant', () => ({
 const send = vi.fn();
 const sendVoice = vi.fn();
 
+/** Whoever subscribed to the fake conversation's replies. */
+const replyListeners = new Set<ReplyListener>();
+
+/** Plays the part of the conversation delivering a reply. */
+function deliverReply(text: string, input: 'text' | 'voice' = 'text'): void {
+  for (const listener of replyListeners) listener({ text, input });
+}
+
 function conversation(overrides: Partial<ConversationState> = {}): ConversationState {
   return {
     messages: [],
@@ -34,6 +46,12 @@ function conversation(overrides: Partial<ConversationState> = {}): ConversationS
     send: (...args) => send(...args),
     sendVoice: (...args) => sendVoice(...args),
     retry: async () => {},
+    subscribeToReplies: (listener) => {
+      replyListeners.add(listener);
+      return () => {
+        replyListeners.delete(listener);
+      };
+    },
     ...overrides,
   };
 }
@@ -76,6 +94,7 @@ describe('VoiceProvider', () => {
   beforeEach(() => {
     sessionStorage.clear();
     fakeMicrophoneControls.reset();
+    replyListeners.clear();
     send.mockReset().mockResolvedValue(undefined);
     sendVoice.mockReset().mockResolvedValue(null);
     speak.mockReset().mockResolvedValue(new Blob([], { type: 'audio/mpeg' }));
@@ -393,6 +412,201 @@ describe('VoiceProvider', () => {
       act(() => result.current.stopSpeaking());
 
       expect(result.current.activity).toBe('idle');
+    });
+  });
+
+  describe('speaking typed replies', () => {
+    it('reads a typed reply aloud while voice is on', async () => {
+      const { result } = renderVoice();
+      act(() => result.current.enable());
+
+      act(() => deliverReply('Please take a deposit slip.'));
+
+      await waitFor(() => expect(speak).toHaveBeenCalledTimes(1));
+      // Typed, a suggestion, or a retry: all arrive as text, and all are
+      // read out exactly the way a spoken question's answer is.
+      expect(speak.mock.calls[0][0]).toEqual({
+        sessionId: 'sess-1',
+        text: 'Please take a deposit slip.',
+      });
+      await waitFor(() => expect(result.current.activity).toBe('idle'));
+    });
+
+    it('stays silent while voice is off', async () => {
+      const { result } = renderVoice();
+      act(() => result.current.disable());
+
+      act(() => deliverReply('Please take a deposit slip.'));
+
+      await new Promise((resolve) => setTimeout(resolve, 30));
+      expect(speak).not.toHaveBeenCalled();
+    });
+
+    it('stays silent before the customer has chosen', async () => {
+      renderVoice();
+
+      act(() => deliverReply('Please take a deposit slip.'));
+
+      await new Promise((resolve) => setTimeout(resolve, 30));
+      expect(speak).not.toHaveBeenCalled();
+    });
+
+    it('reads a spoken reply exactly once', async () => {
+      // The real conversation announces every reply, spoken ones
+      // included, and a voice turn also reads its own reply. Only one of
+      // them may speak.
+      sendVoice.mockImplementation(async () => {
+        deliverReply('Please take a withdrawal slip.', 'voice');
+        return 'Please take a withdrawal slip.';
+      });
+
+      const { result } = renderVoice();
+      act(() => result.current.enable());
+      act(() => result.current.startListening());
+      act(() => result.current.stopListening());
+
+      await waitFor(() => expect(speak).toHaveBeenCalledTimes(1));
+      await new Promise((resolve) => setTimeout(resolve, 30));
+      expect(speak).toHaveBeenCalledTimes(1);
+    });
+
+    it('does not read out a spoken reply the customer pressed past', async () => {
+      // As the real conversation does: the reply is announced to every
+      // listener, spoken turns included, just before the turn resolves.
+      let settle!: () => void;
+      sendVoice.mockImplementation(
+        () =>
+          new Promise<string>((resolve) => {
+            settle = () => {
+              deliverReply('Please take a withdrawal slip.', 'voice');
+              resolve('Please take a withdrawal slip.');
+            };
+          }),
+      );
+
+      const { result } = renderVoice();
+      act(() => result.current.enable());
+      act(() => result.current.startListening());
+      act(() => result.current.stopListening());
+      await waitFor(() => expect(result.current.activity).toBe('processing'));
+
+      // Pressing the control mid-thought. Voice stays on -- only this
+      // answer is no longer wanted.
+      act(() => result.current.reset());
+
+      await act(async () => {
+        settle();
+      });
+      await new Promise((resolve) => setTimeout(resolve, 30));
+
+      expect(speak).not.toHaveBeenCalled();
+      expect(result.current.isEnabled).toBe(true);
+    });
+
+    it('never talks over a customer who is recording', async () => {
+      const { result } = renderVoice();
+      act(() => result.current.enable());
+      act(() => result.current.startListening());
+      await waitFor(() => expect(result.current.activity).toBe('listening'));
+
+      act(() => deliverReply('Please take a deposit slip.'));
+      await new Promise((resolve) => setTimeout(resolve, 30));
+
+      // Playing now would be picked up by the microphone and sent back as
+      // the customer's own words -- and the control would stop showing
+      // that it is still recording.
+      expect(result.current.activity).toBe('listening');
+    });
+
+    it('drops a reply still being fetched once the customer starts recording', async () => {
+      let settle!: (audio: Blob) => void;
+      speak.mockReturnValue(new Promise<Blob>((resolve) => (settle = resolve)));
+
+      const { result } = renderVoice();
+      act(() => result.current.enable());
+
+      act(() => deliverReply('Please take a deposit slip.'));
+      await waitFor(() => expect(speak).toHaveBeenCalledTimes(1));
+
+      act(() => result.current.startListening());
+      await waitFor(() => expect(result.current.activity).toBe('listening'));
+
+      await act(async () => {
+        settle(new Blob([], { type: 'audio/mpeg' }));
+      });
+
+      expect(result.current.activity).toBe('listening');
+    });
+  });
+
+  describe('permission to play sound', () => {
+    it('is bought from the first tap after a remembered opt-in', () => {
+      const played: Array<string | null> = [];
+      const playSpy = vi
+        .spyOn(HTMLMediaElement.prototype, 'play')
+        .mockImplementation(function (this: HTMLMediaElement) {
+          played.push(this.getAttribute('src'));
+          return Promise.resolve();
+        });
+
+      try {
+        // Chosen earlier in the visit, then the page reloaded: there will
+        // be no opt-in tap and no microphone tap before the first typed
+        // question, so any tap has to count.
+        voicePreferenceStorage.write('enabled');
+        renderVoice();
+
+        act(() => document.body.click());
+
+        expect(played).toHaveLength(1);
+        expect(played[0]).toMatch(/^data:audio\/wav/);
+
+        // Once is enough; later taps must not keep re-priming.
+        act(() => document.body.click());
+        expect(played).toHaveLength(1);
+      } finally {
+        playSpy.mockRestore();
+      }
+    });
+
+    it('keeps the silent clip it plays when voice is switched on', () => {
+      const seen: { primed: HTMLMediaElement | null } = { primed: null };
+      const playSpy = vi
+        .spyOn(HTMLMediaElement.prototype, 'play')
+        .mockImplementation(function (this: HTMLMediaElement) {
+          if ((this.getAttribute('src') ?? '').startsWith('data:audio/wav')) seen.primed = this;
+          return Promise.resolve();
+        });
+
+      try {
+        const { result } = renderVoice();
+
+        act(() => result.current.enable());
+
+        // Switching voice on also resets any turn in progress. Resetting
+        // after priming stopped the silent clip mid-play -- a real browser
+        // reported it as aborted -- and a strict browser may then treat the
+        // element as never having been allowed to play.
+        expect(seen.primed).not.toBeNull();
+        expect(seen.primed?.getAttribute('src')).toMatch(/^data:audio\/wav/);
+      } finally {
+        playSpy.mockRestore();
+      }
+    });
+
+    it('is not sought while voice is off', () => {
+      const playSpy = vi.spyOn(HTMLMediaElement.prototype, 'play').mockResolvedValue(undefined);
+
+      try {
+        voicePreferenceStorage.write('disabled');
+        renderVoice();
+
+        act(() => document.body.click());
+
+        expect(playSpy).not.toHaveBeenCalled();
+      } finally {
+        playSpy.mockRestore();
+      }
     });
   });
 

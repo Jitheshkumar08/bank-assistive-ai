@@ -26,33 +26,59 @@ interface LanguageChoiceProps {
   disabled?: boolean;
 }
 
+function CheckIcon() {
+  return (
+    <svg
+      className="size-2.5"
+      viewBox="0 0 12 12"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2.25"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden="true"
+    >
+      <path d="M2.5 6.5 5 9l4.5-5.5" />
+    </svg>
+  );
+}
+
 /**
- * Radio buttons, not a dropdown.
+ * Three visible choices, not a dropdown.
  *
  * A `select` hides the options behind a tap and renders as a native
  * picker that is hard to read and harder to explain to someone being
- * helped at a counter. Three visible targets, each big enough to hit
- * without aiming, cost one extra inch of screen and remove the whole
- * interaction.
+ * helped at a counter. Each language is one short word, so the three sit
+ * side by side and read as a single decision.
+ *
+ * The radios are real inputs, visually hidden inside their cards: the
+ * group still announces "1 of 3", the arrow keys still move between
+ * choices, and a card shows focus whenever the radio inside it has it.
  */
 export function LanguageChoice({ value, onChange, disabled }: LanguageChoiceProps) {
   const groupId = useId();
   const labelId = `${groupId}-label`;
+  const hintId = `${groupId}-hint`;
 
   return (
     <div className="flex flex-col gap-1.5">
-      <span id={labelId} className="text-sm font-semibold text-ink-800">
+      <span id={labelId} className="text-sm font-medium text-ink-800">
         Language
         <span className="ml-1 text-danger-600" aria-hidden="true">
           *
         </span>
       </span>
 
-      <p className="text-sm text-ink-500">The assistant will speak and reply in this language.</p>
+      <p id={hintId} className="text-sm text-ink-600">
+        The assistant will speak and reply in this language.
+      </p>
 
-      {/* A radiogroup rather than three loose radios, so a screen reader
-          announces "1 of 3" and the arrow keys move between them. */}
-      <div role="radiogroup" aria-labelledby={labelId} className="mt-1 flex flex-col gap-2">
+      <div
+        role="radiogroup"
+        aria-labelledby={labelId}
+        aria-describedby={hintId}
+        className="mt-1 grid grid-cols-3 gap-2"
+      >
         {LANGUAGES.map((language) => {
           const selected = language.code === value;
 
@@ -60,11 +86,12 @@ export function LanguageChoice({ value, onChange, disabled }: LanguageChoiceProp
             <label
               key={language.code}
               className={cn(
-                'flex min-h-touch cursor-pointer items-center gap-3 rounded-xl border px-4 py-3',
-                'text-base transition-colors',
+                'relative flex min-h-touch cursor-pointer flex-col items-center justify-center rounded-xl border px-2 py-3 text-center',
+                'transition-[border-color,background-color,box-shadow] duration-150',
+                'has-[:focus-visible]:ring-4 has-[:focus-visible]:ring-brand-500/25',
                 selected
-                  ? 'border-brand-600 bg-brand-50 text-ink-900'
-                  : 'border-ink-300 bg-white text-ink-800 hover:bg-ink-50',
+                  ? 'border-brand-600 bg-brand-50 shadow-[0_1px_2px_rgb(15_95_90/0.12)]'
+                  : 'border-ink-200 bg-white hover:border-ink-300 hover:bg-ink-50',
                 disabled && 'cursor-not-allowed opacity-60',
               )}
             >
@@ -75,18 +102,28 @@ export function LanguageChoice({ value, onChange, disabled }: LanguageChoiceProp
                 checked={selected}
                 disabled={disabled}
                 onChange={() => onChange(language.code)}
-                className="size-5 accent-brand-600"
+                className="sr-only"
               />
 
-              <span>
-                <span className="block font-semibold">{language.native}</span>
-                {/* The English name is a second line, not a replacement:
-                    branch staff helping someone read the screen may not
-                    read the script themselves. */}
-                {language.native !== language.name && (
-                  <span className="block text-sm text-ink-500">{language.name}</span>
-                )}
+              <span lang={language.code} className="block text-base font-semibold text-ink-900">
+                {language.native}
               </span>
+
+              {/* The English name is a second line, not a replacement:
+                  branch staff helping someone read the screen may not
+                  read the script themselves. */}
+              {language.native !== language.name && (
+                <span className="mt-0.5 block text-xs text-ink-600">{language.name}</span>
+              )}
+
+              {selected && (
+                <span
+                  aria-hidden="true"
+                  className="absolute top-1.5 right-1.5 flex size-4 items-center justify-center rounded-full bg-brand-600 text-white"
+                >
+                  <CheckIcon />
+                </span>
+              )}
             </label>
           );
         })}

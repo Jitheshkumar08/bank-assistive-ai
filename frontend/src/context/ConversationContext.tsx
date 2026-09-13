@@ -5,6 +5,15 @@ import { useSession } from '@/context/useSession';
 import { ApiError } from '@/types/api';
 import type { AssistantInput, ConversationMessage } from '@/types/assistant';
 
+/** A reply the assistant has just delivered, and how its turn began. */
+export interface DeliveredReply {
+  text: string;
+  /** Typed text or a recording -- whoever listens may treat them differently. */
+  input: AssistantInput['type'];
+}
+
+export type ReplyListener = (reply: DeliveredReply) => void;
+
 /** Stable enough for React keys; ids never leave the browser. */
 function messageId(): string {
   if (typeof crypto !== 'undefined' && 'randomUUID' in crypto) {
@@ -38,6 +47,15 @@ export interface ConversationState {
    */
   sendVoice: (audio: Blob, mimeType: string) => Promise<string | null>;
   retry: () => Promise<void>;
+  /**
+   * Hears about every reply the assistant delivers, however the turn
+   * began: typed, a suggestion, a retry, or speech.
+   *
+   * The conversation still knows nothing about voice. It announces that
+   * a reply arrived and what kind of turn produced it; whoever cares
+   * decides what to do with that. Returns the unsubscribe function.
+   */
+  subscribeToReplies: (listener: ReplyListener) => () => void;
 }
 
 export const ConversationContext = createContext<ConversationState | null>(null);
@@ -69,6 +87,18 @@ export function ConversationProvider({ children }: { children: ReactNode }) {
   // Held so a failed send can be retried without the customer retyping.
   const pendingRef = useRef<{ id: string; content: string } | null>(null);
   const abortRef = useRef<AbortController | null>(null);
+
+  // A ref, not state: subscribing must never re-render the conversation,
+  // and the set has to survive every render in between.
+  const listenersRef = useRef(new Set<ReplyListener>());
+
+  const subscribeToReplies = useCallback((listener: ReplyListener): (() => void) => {
+    listenersRef.current.add(listener);
+
+    return () => {
+      listenersRef.current.delete(listener);
+    };
+  }, []);
 
   useEffect(() => {
     return () => abortRef.current?.abort();
@@ -119,8 +149,19 @@ export function ConversationProvider({ children }: { children: ReactNode }) {
           },
         ]);
 
-        // Handed back so voice can read it aloud. The conversation still
-        // owns the messages; this is only the text of this turn's reply.
+        // Announced after the update is queued, never inside the updater
+        // above: React may run an updater twice, and a listener called
+        // from in there would read the same reply aloud twice.
+        for (const listener of listenersRef.current) {
+          try {
+            listener({ text: reply, input: input.type });
+          } catch {
+            // A listener's failure is its own. The reply is delivered and
+            // on screen either way.
+          }
+        }
+
+        // Also handed back directly, for the caller that started the turn.
         return reply;
       } catch (caught) {
         // Unmounting mid-request is not a failure the customer should see.
@@ -223,6 +264,7 @@ export function ConversationProvider({ children }: { children: ReactNode }) {
     send,
     sendVoice,
     retry,
+    subscribeToReplies,
   };
 
   return <ConversationContext.Provider value={value}>{children}</ConversationContext.Provider>;

@@ -1,11 +1,15 @@
 import { Link } from 'react-router-dom';
 import type { ReactNode } from 'react';
 import { cn } from '@/lib/cn';
+import { buttonClasses, type ButtonSize, type ButtonVariant } from './buttonStyles';
 
 interface LinkButtonProps {
   to: string;
   children: ReactNode;
-  variant?: 'primary' | 'secondary';
+  variant?: ButtonVariant;
+  size?: ButtonSize;
+  /** Fills the container, as on a phone. Off for calls to action side by side. */
+  fullWidth?: boolean;
   className?: string;
 }
 
@@ -16,19 +20,16 @@ interface LinkButtonProps {
  * in a new tab on middle-click, and is announced as a link. Wrapping a
  * Link inside a <button> would break all three and is invalid HTML.
  */
-export function LinkButton({ to, children, variant = 'primary', className }: LinkButtonProps) {
+export function LinkButton({
+  to,
+  children,
+  variant = 'primary',
+  size = 'lg',
+  fullWidth = true,
+  className,
+}: LinkButtonProps) {
   return (
-    <Link
-      to={to}
-      className={cn(
-        'inline-flex min-h-touch w-full items-center justify-center rounded-xl px-5',
-        'text-base font-semibold transition-colors',
-        variant === 'primary'
-          ? 'bg-brand-600 text-white hover:bg-brand-700 active:bg-brand-800'
-          : 'border border-ink-200 bg-white text-brand-700 hover:bg-brand-50',
-        className,
-      )}
-    >
+    <Link to={to} className={cn(buttonClasses({ variant, size, fullWidth }), className)}>
       {children}
     </Link>
   );

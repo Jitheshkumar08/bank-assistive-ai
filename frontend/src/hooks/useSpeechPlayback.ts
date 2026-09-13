@@ -117,6 +117,12 @@ export function useSpeechPlayback(): SpeechPlayback {
       if (started && typeof started.then === 'function') {
         started
           .then(() => {
+            // Only if the element is still holding the silence. A real
+            // reply can reach play() between the tap and the moment the
+            // browser confirms the silent clip started, and pausing then
+            // would cut that reply off before its first word.
+            if (audio.getAttribute('src') !== SILENCE) return;
+
             audio.pause();
             audio.currentTime = 0;
           })

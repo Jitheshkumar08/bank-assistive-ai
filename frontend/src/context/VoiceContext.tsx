@@ -100,7 +100,7 @@ export const VoiceContext = createContext<VoiceContextValue | null>(null);
  * the conversation knows nothing about voice.
  */
 export function VoiceProvider({ children }: { children: ReactNode }) {
-  const { send, sendVoice } = useConversation();
+  const { send, sendVoice, subscribeToReplies } = useConversation();
   const { session } = useSession();
   const playback = useSpeechPlayback();
 
@@ -121,6 +121,11 @@ export function VoiceProvider({ children }: { children: ReactNode }) {
   // waiting for, instead of a stale reply dragging the UI back into
   // 'speaking' after the customer switched voice off.
   const turnRef = useRef(0);
+
+  // Read at the moment speech is about to start, which always happens in
+  // a callback that closed over an earlier render.
+  const activityRef = useRef<VoiceActivity>('idle');
+  activityRef.current = activity;
 
   /**
    * Reads a reply aloud.
@@ -147,6 +152,11 @@ export function VoiceProvider({ children }: { children: ReactNode }) {
       // The customer stopped or switched voice off while the audio was
       // being fetched; playing it now would be a reply to nothing.
       if (turnRef.current !== turn) return;
+
+      // The customer is talking. Playing now would talk over them, and
+      // the microphone would record the assistant's own voice as their
+      // question.
+      if (activityRef.current === 'listening') return;
 
       setActivity('speaking');
       await playback.play(audio);
@@ -222,6 +232,12 @@ export function VoiceProvider({ children }: { children: ReactNode }) {
   }, [micCancel, playback]);
 
   const enable = useCallback((): void => {
+    // Enabling never starts a turn: the customer opts in to the control
+    // being available, not to being recorded. Reset first, because reset
+    // stops playback -- done after unlocking, it cut the silent clip off
+    // mid-play, and a real browser reported that clip as aborted.
+    reset();
+
     // This runs inside the tap that turned voice on, which is the only
     // moment a browser will grant permission to play sound. Miss it and
     // the first spoken reply is refused with nothing the customer did
@@ -229,9 +245,6 @@ export function VoiceProvider({ children }: { children: ReactNode }) {
     playback.unlock();
 
     applyPreference('enabled');
-    // Enabling never starts a turn: the customer opts in to the control
-    // being available, not to being recorded.
-    reset();
   }, [applyPreference, playback, reset]);
 
   const disable = useCallback((): void => {
@@ -244,6 +257,13 @@ export function VoiceProvider({ children }: { children: ReactNode }) {
     // Disabled voice cannot start a turn, so a stale control or a stray
     // key press can never open a microphone.
     if (preference !== 'enabled') return;
+
+    // The customer has something to say first. A reply still being
+    // fetched is discarded and one already playing is stopped, rather
+    // than either ending up inside the recording. Done before unlocking,
+    // so stopping cannot interrupt the silent clip that buys permission.
+    turnRef.current += 1;
+    playback.stop();
 
     // Also a tap, and for someone who chose voice earlier in the visit
     // it is the first one this page load has seen -- their opt-in was
@@ -269,7 +289,8 @@ export function VoiceProvider({ children }: { children: ReactNode }) {
   }, [playback]);
 
   /**
-   * Speaks something the customer did not ask a question to receive.
+   * Speaks a line outside a voice turn: the arrival greeting, and the
+   * reply to anything typed while voice is on.
    *
    * Shares speakReply's turn counter, so switching voice off or starting
    * a real turn discards this the same way it discards a stale reply.
@@ -284,11 +305,76 @@ export function VoiceProvider({ children }: { children: ReactNode }) {
       try {
         await speakReply(text, turn);
       } finally {
-        if (turnRef.current === turn) setActivity('idle');
+        // Undo only what speaking did. The customer may have started
+        // recording in the meantime, and dropping that to idle would show
+        // a resting microphone while it is still listening.
+        if (turnRef.current === turn) {
+          setActivity((current) => (current === 'speaking' ? 'idle' : current));
+        }
       }
     },
     [preference, speakReply],
   );
+
+  // The latest speak(), so the subscription below is made once rather
+  // than torn down and re-made whenever the preference changes.
+  const speakRef = useRef(speak);
+  speakRef.current = speak;
+
+  /**
+   * Reads every typed reply aloud while voice is on.
+   *
+   * Voice being on is the customer saying they want to hear the
+   * assistant, and that does not depend on how they asked this one
+   * question. Someone who types because the branch is noisy still wants
+   * the answer read out; someone who cannot read the screen needs it.
+   *
+   * Only text-input replies are taken here. A spoken turn reads its own
+   * reply inside handleRecorded, and that turn tracking is what lets a
+   * customer who presses the control mid-thought discard the answer.
+   * The conversation announces that reply regardless, so taking spoken
+   * replies here as well would read out an answer they had abandoned.
+   */
+  useEffect(
+    () =>
+      subscribeToReplies(({ text, input }) => {
+        if (input !== 'text') return;
+
+        // speak() checks the preference itself, so voice being off or
+        // not yet chosen stays silent here as well.
+        void speakRef.current(text);
+      }),
+    [subscribeToReplies],
+  );
+
+  const unlockAudio = playback.unlock;
+
+  /**
+   * Buys audio permission from the first tap of a page load.
+   *
+   * A customer who turned voice on earlier in the visit and then
+   * reloaded keeps their choice, but not the browser's permission to
+   * play sound. If they only type they never press the voice button
+   * that would re-grant it, and on iOS every reply is then refused in
+   * silence. Any tap will do -- Send, a suggestion, anything -- so the
+   * first one is used and the listeners are removed.
+   */
+  useEffect(() => {
+    if (preference !== 'enabled') return;
+
+    const events = ['click', 'touchend', 'keydown'] as const;
+
+    const handleGesture = (): void => {
+      unlockAudio();
+      for (const name of events) document.removeEventListener(name, handleGesture, true);
+    };
+
+    for (const name of events) document.addEventListener(name, handleGesture, true);
+
+    return () => {
+      for (const name of events) document.removeEventListener(name, handleGesture, true);
+    };
+  }, [preference, unlockAudio]);
 
   const submitUtterance = useCallback(
     async (text: string): Promise<void> => {

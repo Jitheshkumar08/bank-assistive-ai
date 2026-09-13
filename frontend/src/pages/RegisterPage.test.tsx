@@ -249,12 +249,4 @@ describe('RegisterPage', () => {
       expect(await screen.findByRole('alert')).toHaveTextContent(/something went wrong/i);
     });
   });
-
-  it('offers a way back to signing in', async () => {
-    renderRegister();
-
-    await userEvent.click(screen.getByRole('link', { name: /sign in/i }));
-
-    expect(await screen.findByText('login screen')).toBeInTheDocument();
-  });
 });

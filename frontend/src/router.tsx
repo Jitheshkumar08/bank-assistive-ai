@@ -1,10 +1,12 @@
-import { createBrowserRouter, Navigate } from 'react-router-dom';
+import { createBrowserRouter } from 'react-router-dom';
 import { RootLayout } from '@/routes/RootLayout';
 import { RequireAuth } from '@/routes/RequireAuth';
 import { RequireContext } from '@/routes/RequireContext';
 import { RedirectIfAuthenticated } from '@/routes/RedirectIfAuthenticated';
+import { AccountLayout } from '@/layouts/AccountLayout';
 import { AuthLayout } from '@/layouts/AuthLayout';
 import { AppLayout } from '@/layouts/AppLayout';
+import { HomePage } from '@/pages/HomePage';
 import { LoginPage } from '@/pages/LoginPage';
 import { RegisterPage } from '@/pages/RegisterPage';
 import { ScanPage } from '@/pages/ScanPage';
@@ -24,11 +26,17 @@ export const router = createBrowserRouter([
   {
     element: <RootLayout />,
     children: [
+      // The public home page. A signed-in customer can see it too: its
+      // header offers them the way back into the assistant instead of a
+      // sign-in they do not need.
+      { path: '/', element: <HomePage /> },
       {
         element: <RedirectIfAuthenticated />,
         children: [
           {
-            element: <AuthLayout />,
+            // Both forms share one frame, so the toggle between them stays
+            // in place while only the form beneath it changes.
+            element: <AccountLayout />,
             children: [
               { path: '/login', element: <LoginPage /> },
               { path: '/register', element: <RegisterPage /> },
@@ -61,10 +69,7 @@ export const router = createBrowserRouter([
       },
       {
         element: <AuthLayout />,
-        children: [
-          { path: '/', element: <Navigate to="/login" replace /> },
-          { path: '*', element: <NotFoundPage /> },
-        ],
+        children: [{ path: '*', element: <NotFoundPage /> }],
       },
     ],
   },

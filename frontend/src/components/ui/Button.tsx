@@ -1,26 +1,20 @@
 import type { ButtonHTMLAttributes, ReactNode } from 'react';
 import { cn } from '@/lib/cn';
+import { buttonClasses, type ButtonSize, type ButtonVariant } from './buttonStyles';
 import { Spinner } from './Spinner';
 
-type Variant = 'primary' | 'secondary' | 'ghost' | 'danger';
-
 interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
-  variant?: Variant;
+  variant?: ButtonVariant;
+  size?: ButtonSize;
   /** Fills the container. The default on mobile, where buttons are thumb targets. */
   fullWidth?: boolean;
   loading?: boolean;
   children: ReactNode;
 }
 
-const VARIANTS: Record<Variant, string> = {
-  primary: 'bg-brand-600 text-white hover:bg-brand-700 active:bg-brand-800',
-  secondary: 'bg-white text-brand-700 border border-ink-200 hover:bg-brand-50 active:bg-brand-100',
-  ghost: 'bg-transparent text-brand-700 hover:bg-brand-50 active:bg-brand-100',
-  danger: 'bg-danger-600 text-white hover:bg-danger-700',
-};
-
 export function Button({
   variant = 'primary',
+  size = 'lg',
   fullWidth = true,
   loading = false,
   disabled,
@@ -32,16 +26,7 @@ export function Button({
 
   return (
     <button
-      // min-h-touch keeps every button at 48px, the smallest target that
-      // stays reliable for someone standing in a queue holding a phone.
-      className={cn(
-        'inline-flex min-h-touch items-center justify-center gap-2 rounded-xl px-5',
-        'text-base font-semibold transition-colors',
-        'disabled:cursor-not-allowed disabled:opacity-50',
-        VARIANTS[variant],
-        fullWidth && 'w-full',
-        className,
-      )}
+      className={cn(buttonClasses({ variant, size, fullWidth }), className)}
       disabled={isDisabled}
       aria-busy={loading || undefined}
       {...props}

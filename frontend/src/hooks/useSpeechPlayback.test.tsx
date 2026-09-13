@@ -14,7 +14,9 @@ let counter = 0;
 
 /** The audio elements the hook constructed, in order. */
 let elements: HTMLAudioElement[] = [];
-let playBehaviour: 'resolve' | 'reject' = 'resolve';
+let playBehaviour: 'resolve' | 'reject' | 'deferred' = 'resolve';
+/** Resolvers for play() calls made while playBehaviour is 'deferred'. */
+let pendingPlays: Array<() => void> = [];
 
 beforeEach(() => {
   created = [];
@@ -22,6 +24,7 @@ beforeEach(() => {
   elements = [];
   counter = 0;
   playBehaviour = 'resolve';
+  pendingPlays = [];
 
   vi.stubGlobal('URL', {
     ...URL,
@@ -37,6 +40,9 @@ beforeEach(() => {
     this: HTMLAudioElement,
   ) {
     elements.push(this);
+    if (playBehaviour === 'deferred') {
+      return new Promise<void>((resolve) => pendingPlays.push(resolve));
+    }
     return playBehaviour === 'resolve'
       ? Promise.resolve()
       : Promise.reject(new DOMException('NotAllowedError', 'NotAllowedError'));
@@ -268,6 +274,30 @@ describe('useSpeechPlayback', () => {
       expect(elements).toHaveLength(1);
       expect(result.current.isSpeaking).toBe(true);
       expect(revoked).not.toContain(created[0]);
+    });
+
+    it('never cuts off a reply that started before the silence was confirmed', async () => {
+      playBehaviour = 'deferred';
+
+      const { result } = renderHook(() => useSpeechPlayback());
+
+      // A tap primes the element, and a reply claims it before the
+      // browser has confirmed the silent clip started.
+      act(() => result.current.unlock());
+      act(() => void result.current.play(audio()));
+      await waitFor(() => expect(elements).toHaveLength(2));
+
+      const pause = vi.mocked(HTMLMediaElement.prototype.pause);
+      const pausesBefore = pause.mock.calls.length;
+
+      // The confirmation finally arrives. It belongs to the silence, which
+      // is gone; pausing now would stop the reply mid-word.
+      await act(async () => {
+        pendingPlays[0]();
+      });
+
+      expect(pause.mock.calls.length).toBe(pausesBefore);
+      expect(result.current.isSpeaking).toBe(true);
     });
 
     it('survives a browser that refuses even the silent source', () => {

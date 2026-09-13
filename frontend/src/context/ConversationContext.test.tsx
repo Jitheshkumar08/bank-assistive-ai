@@ -1,7 +1,7 @@
 import { act, renderHook, waitFor } from '@testing-library/react';
-import type { ReactNode } from 'react';
+import { StrictMode, type ReactNode } from 'react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { ConversationProvider } from './ConversationContext';
+import { ConversationProvider, type DeliveredReply } from './ConversationContext';
 import { useConversation } from './useConversation';
 import { SessionContext, type SessionContextValue } from './SessionContext';
 import { ApiError } from '@/types/api';
@@ -138,6 +138,106 @@ describe('ConversationProvider', () => {
       // The audio is gone, so there is nothing to retry -- the customer
       // speaks again instead.
       expect(result.current.canRetry).toBe(false);
+    });
+  });
+
+  describe('announcing replies', () => {
+    it('announces a typed reply, and says it was typed', async () => {
+      const { result } = render();
+      const heard: DeliveredReply[] = [];
+      act(() => {
+        result.current.subscribeToReplies((reply) => heard.push(reply));
+      });
+
+      await act(() => result.current.send('I want to withdraw money'));
+
+      expect(heard).toEqual([{ text: 'Please take a withdrawal slip.', input: 'text' }]);
+    });
+
+    it('announces a spoken reply, and says it was spoken', async () => {
+      const { result } = render();
+      const heard: DeliveredReply[] = [];
+      act(() => {
+        result.current.subscribeToReplies((reply) => heard.push(reply));
+      });
+
+      await act(() => result.current.sendVoice(audio(), 'audio/webm'));
+
+      // Voice decides for itself what to do with a spoken turn's reply,
+      // and can only do that if it is told which kind of turn this was.
+      expect(heard).toEqual([{ text: 'Please take a withdrawal slip.', input: 'voice' }]);
+    });
+
+    it('announces nothing for a failed turn, then the reply once a retry succeeds', async () => {
+      sendMessage.mockRejectedValueOnce(new ApiError('Service unavailable.', 503));
+
+      const { result } = render();
+      const heard: DeliveredReply[] = [];
+      act(() => {
+        result.current.subscribeToReplies((reply) => heard.push(reply));
+      });
+
+      await act(() => result.current.send('I want to withdraw money'));
+      expect(heard).toEqual([]);
+
+      await act(() => result.current.retry());
+      expect(heard).toEqual([{ text: 'Please take a withdrawal slip.', input: 'text' }]);
+    });
+
+    it('stops announcing once unsubscribed', async () => {
+      const { result } = render();
+      const heard: DeliveredReply[] = [];
+      let unsubscribe!: () => void;
+      act(() => {
+        unsubscribe = result.current.subscribeToReplies((reply) => heard.push(reply));
+      });
+
+      act(() => unsubscribe());
+      await act(() => result.current.send('I want to withdraw money'));
+
+      expect(heard).toEqual([]);
+    });
+
+    it('announces each reply exactly once, even under StrictMode', async () => {
+      function strictWrapper({ children }: { children: ReactNode }) {
+        return (
+          <StrictMode>
+            <SessionContext.Provider value={session}>
+              <ConversationProvider>{children}</ConversationProvider>
+            </SessionContext.Provider>
+          </StrictMode>
+        );
+      }
+
+      const { result } = renderHook(() => useConversation(), { wrapper: strictWrapper });
+      const heard: DeliveredReply[] = [];
+      act(() => {
+        result.current.subscribeToReplies((reply) => heard.push(reply));
+      });
+
+      await act(() => result.current.send('I want to withdraw money'));
+
+      // StrictMode runs state updaters twice on purpose. A listener called
+      // from inside one would read the same reply aloud twice.
+      expect(heard).toHaveLength(1);
+    });
+
+    it('still delivers the reply when a listener throws', async () => {
+      const { result } = render();
+      act(() => {
+        result.current.subscribeToReplies(() => {
+          throw new Error('listener broke');
+        });
+      });
+
+      let reply: string | null = null;
+      await act(async () => {
+        reply = await result.current.send('I want to withdraw money');
+      });
+
+      expect(reply).toBe('Please take a withdrawal slip.');
+      const messages = result.current.messages;
+      expect(messages[messages.length - 1].content).toBe('Please take a withdrawal slip.');
     });
   });
 

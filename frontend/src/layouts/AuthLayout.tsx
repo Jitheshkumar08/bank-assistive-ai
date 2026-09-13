@@ -1,19 +1,17 @@
 import { Outlet } from 'react-router-dom';
+import { AuthShell } from '@/components/auth/AuthShell';
 
 /**
- * Frame for screens shown before sign-in. Deliberately sparse: one
- * task, nothing to navigate away to.
+ * Frame for standalone public screens -- a page that does not exist, for
+ * instance. Sign-in and registration have their own frame, AccountLayout,
+ * which adds the toggle between them.
  */
 export function AuthLayout() {
   return (
-    <div className="flex min-h-dvh flex-col bg-ink-50">
-      <main className="mx-auto flex w-full max-w-md flex-1 flex-col justify-center px-5 py-10">
+    <AuthShell>
+      <div className="relative w-full max-w-md animate-rise rounded-3xl bg-white p-8 shadow-[0_1px_2px_rgb(16_24_40/0.04),0_32px_64px_-32px_rgb(16_24_40/0.28)] ring-1 ring-ink-200/70">
         <Outlet />
-      </main>
-
-      <footer className="pb-6 text-center text-xs text-ink-400">
-        Branch assistance &middot; demonstration build
-      </footer>
-    </div>
+      </div>
+    </AuthShell>
   );
 }

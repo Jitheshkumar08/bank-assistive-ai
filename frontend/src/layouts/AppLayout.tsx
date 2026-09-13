@@ -1,4 +1,5 @@
 import { Link, Outlet, useNavigate } from 'react-router-dom';
+import { BrandMark } from '@/components/brand/BrandMark';
 import { BranchBadge } from '@/components/context/BranchBadge';
 import { useAuth } from '@/context/useAuth';
 import { useSession } from '@/context/useSession';
@@ -39,23 +40,30 @@ export function AppLayout() {
         Skip to main content
       </a>
 
-      <header className="z-10 shrink-0 bg-brand-600 text-white shadow-sm">
-        <div className="mx-auto flex w-full max-w-2xl items-start justify-between gap-4 px-5 py-3">
-          <div className="min-w-0">
-            <p className="truncate text-base font-semibold leading-tight">
-              {user ? user.fullName : 'Banking Assistant'}
-            </p>
-            <BranchBadge
-              branchName={session ? session.branch.name : 'Scan a code to begin'}
-              city={session?.branch.city}
-              className="mt-1 text-white/90"
-            />
+      <header className="z-10 shrink-0 border-b border-ink-200/70 bg-white/90 backdrop-blur-md">
+        <div className="mx-auto flex w-full max-w-2xl items-center justify-between gap-3 px-5 py-2.5">
+          <div className="flex min-w-0 items-center gap-3">
+            {/* Hidden on the narrowest phones, where the name and branch
+                need the width more than the mark does. */}
+            <span className="hidden sm:block">
+              <BrandMark size="sm" />
+            </span>
+            <div className="min-w-0">
+              <p className="truncate text-[0.95rem] leading-tight font-semibold tracking-tight text-ink-900">
+                {user ? user.fullName : 'Banking Assistant'}
+              </p>
+              <BranchBadge
+                branchName={session ? session.branch.name : 'Scan a code to begin'}
+                city={session?.branch.city}
+                className="mt-0.5 text-ink-600"
+              />
+            </div>
           </div>
 
-          <div className="flex shrink-0 items-center">
+          <div className="flex shrink-0 items-center gap-1">
             <Link
               to="/settings"
-              className="min-h-touch flex items-center rounded-xl px-3 text-sm font-semibold text-white/90 transition-colors hover:bg-white/10 active:bg-white/20"
+              className="flex min-h-touch items-center rounded-xl px-3 text-sm font-medium text-ink-700 transition-colors hover:bg-ink-100 hover:text-ink-900"
             >
               Settings
             </Link>
@@ -63,7 +71,7 @@ export function AppLayout() {
             <button
               type="button"
               onClick={() => void handleSignOut()}
-              className="min-h-touch shrink-0 rounded-xl px-3 text-sm font-semibold text-white/90 transition-colors hover:bg-white/10 active:bg-white/20"
+              className="min-h-touch shrink-0 rounded-xl px-3 text-sm font-medium text-ink-700 transition-colors hover:bg-ink-100 hover:text-ink-900"
             >
               Sign out
             </button>

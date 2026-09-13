@@ -69,6 +69,7 @@ const conversation: ConversationState = {
   send: (...args) => send(...args),
   sendVoice: (...args) => sendVoice(...args),
   retry: async () => {},
+  subscribeToReplies: () => () => {},
 };
 
 /** Speaks into the conversation from a screen that is not the assistant. */

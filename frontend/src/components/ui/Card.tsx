@@ -10,7 +10,14 @@ interface CardProps {
 
 export function Card({ children, className, id }: CardProps) {
   return (
-    <div id={id} className={cn('rounded-2xl border border-ink-200 bg-white p-5 shadow-sm', className)}>
+    <div
+      id={id}
+      className={cn(
+        'rounded-2xl border border-ink-200/70 bg-white p-5',
+        'shadow-[0_1px_2px_rgb(16_24_40/0.04),0_4px_12px_-4px_rgb(16_24_40/0.06)]',
+        className,
+      )}
+    >
       {children}
     </div>
   );
