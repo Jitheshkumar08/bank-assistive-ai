@@ -1,13 +1,19 @@
-import { Navigate } from 'react-router-dom';
-import { Card } from '@/components/ui/Card';
+import type { ReactNode } from 'react';
+import { Link, Navigate } from 'react-router-dom';
 import { LinkButton } from '@/components/ui/LinkButton';
 import { useAuth } from '@/context/useAuth';
 import { useSession } from '@/context/useSession';
 import { useWelcomeGreeting } from '@/hooks/useWelcomeGreeting';
+import { RequestIcon } from '@/components/requests/RequestIcon';
+import { COMMON_REQUESTS } from '@/lib/commonRequests';
 import { firstName } from '@/lib/greeting';
 
 /**
  * Confirmation screen shown once branch context exists.
+ *
+ * Three things, in the order someone standing at a counter needs them:
+ * that they are checked in and where, a one-tap start on the usual
+ * requests, and the way into the assistant for anything else.
  *
  * Everything here is read from the signed-in account and the active
  * visit. Refreshing this page re-reads the existing visit rather than
@@ -31,57 +37,162 @@ export function WelcomePage() {
   }
 
   return (
-    <div className="flex flex-col gap-6">
-      <div>
-        <h1 className="text-2xl font-bold text-ink-900">
+    <div className="sm:pt-4 lg:pt-10">
+      <div className="mx-auto flex w-full max-w-md flex-col">
+        <div className="flex items-center gap-2">
+          <span
+            aria-hidden="true"
+            className="flex size-5 items-center justify-center rounded-full bg-brand-600 text-white"
+          >
+            <CheckIcon />
+          </span>
+          <p className="text-xs font-semibold tracking-[0.14em] text-brand-600 uppercase">
+            Checked in
+          </p>
+        </div>
+
+        <h1 className="mt-3 text-3xl leading-[1.1] font-semibold tracking-[-0.035em] text-ink-900 sm:text-4xl">
           Welcome, {firstName(user.fullName)}
         </h1>
-        <p className="mt-1 text-base text-ink-600">
-          You are checked in. I can guide you through deposits, withdrawals and loan
-          applications, or answer questions about banking services.
+        <p className="mt-3 text-base leading-relaxed text-ink-500">
+          What would you like to do today? Pick a common request, or ask in your own words.
         </p>
-      </div>
 
-      <Card className="flex flex-col gap-5">
-        <dl className="flex flex-col gap-3">
-          <div>
-            <dt className="text-sm font-semibold text-ink-500">Branch</dt>
-            <dd className="text-lg font-semibold text-ink-900">
-              {session.branch.name}
-              {session.branch.city && (
-                <span className="block text-base font-normal text-ink-600">
-                  {session.branch.city}
-                </span>
-              )}
-            </dd>
-          </div>
-        </dl>
-
-        <LinkButton to="/assistant">Continue to Assistant</LinkButton>
-
-        {/* The greeting is spoken automatically, but a browser may
-            refuse audio it did not see anyone ask for. This is the way
-            back from that, and doubles as "say it again" for anyone who
-            missed it. */}
+        {/* The greeting is spoken automatically, but a browser may refuse
+            audio it did not see anyone ask for. This is the way back from
+            that, and doubles as "say it again" for anyone who missed it. */}
         {greeting.canSpeak && (
           <button
             type="button"
             onClick={greeting.replay}
-            className="min-h-touch text-sm font-semibold text-brand-700 underline"
+            className="mt-4 inline-flex min-h-touch items-center gap-2 self-start rounded-full bg-white px-4 text-sm font-medium text-ink-700 shadow-[0_1px_2px_rgb(16_24_40/0.04)] ring-1 ring-ink-200/80 transition-colors hover:bg-ink-50 hover:text-ink-900"
           >
+            <SpeakerIcon />
             Hear this again
           </button>
         )}
-      </Card>
 
-      <div className="flex flex-col gap-2">
-        <LinkButton to="/scan" variant="secondary">
-          Change location
+        <section
+          aria-labelledby="welcome-branch"
+          className="mt-8 flex items-center gap-4 rounded-2xl bg-white p-4 shadow-[0_1px_2px_rgb(16_24_40/0.04)] ring-1 ring-ink-200/70"
+        >
+          <span
+            aria-hidden="true"
+            className="flex size-12 shrink-0 items-center justify-center rounded-xl bg-brand-50 text-brand-700 ring-1 ring-brand-100"
+          >
+            <PinIcon />
+          </span>
+
+          <div className="min-w-0 flex-1">
+            <h2
+              id="welcome-branch"
+              className="text-xs font-medium tracking-[0.1em] text-ink-500 uppercase"
+            >
+              Your branch
+            </h2>
+            <p className="mt-0.5 truncate text-base font-medium text-ink-900">{session.branch.name}</p>
+            {session.branch.city && (
+              <p className="truncate text-sm text-ink-500">{session.branch.city}</p>
+            )}
+          </div>
+
+          {/* Short on screen; the full label is what a screen reader hears
+              and what voice control users say. */}
+          <Link
+            to="/scan"
+            aria-label="Change location"
+            className="inline-flex min-h-touch shrink-0 items-center rounded-xl px-3 text-sm font-medium text-brand-700 transition-colors hover:bg-brand-50"
+          >
+            Change
+          </Link>
+        </section>
+
+        <section aria-labelledby="welcome-start" className="mt-8">
+          <h2 id="welcome-start" className="text-sm font-medium text-ink-900">
+            Start with a common request
+          </h2>
+
+          <ul className="mt-3 grid grid-cols-3 gap-2.5">
+            {COMMON_REQUESTS.map((item) => (
+              <li key={item.id}>
+                {/* Opens the assistant with the request already on its way,
+                    so the usual visit takes one tap instead of typing. */}
+                <Link
+                  to="/assistant"
+                  state={{ request: item.request }}
+                  className="flex h-full min-h-28 flex-col items-center justify-center gap-2.5 rounded-2xl bg-white px-2 py-4 text-center shadow-[0_1px_2px_rgb(16_24_40/0.04)] ring-1 ring-ink-200/70 transition-[box-shadow,background-color] hover:bg-ink-50/60 hover:ring-ink-300"
+                >
+                  <span
+                    aria-hidden="true"
+                    className="flex size-10 items-center justify-center rounded-xl bg-ink-50 text-ink-700 ring-1 ring-ink-200/70"
+                  >
+                    <RequestIcon id={item.id} />
+                  </span>
+                  <span className="text-[0.8125rem] leading-tight font-medium text-ink-900">
+                    {item.label}
+                  </span>
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </section>
+
+        <LinkButton to="/assistant" className="group mt-8">
+          Continue to assistant
+          <ArrowIcon />
         </LinkButton>
-        <p className="text-center text-sm text-ink-500">
-          Moved to a different counter? Scan the code there to update your guidance.
-        </p>
       </div>
     </div>
+  );
+}
+
+function Icon({ children, className = 'size-5' }: { children: ReactNode; className?: string }) {
+  return (
+    <svg
+      className={className}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.9"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden="true"
+    >
+      {children}
+    </svg>
+  );
+}
+
+function CheckIcon() {
+  return (
+    <Icon className="size-3">
+      <path d="m5 12.5 4.5 4.5L19 7.5" strokeWidth="3" />
+    </Icon>
+  );
+}
+
+function SpeakerIcon() {
+  return (
+    <Icon className="size-4 text-ink-500">
+      <path d="M11 5 6.5 9H4v6h2.5L11 19z" />
+      <path d="M15.5 9a4 4 0 0 1 0 6M18.5 6.5a8 8 0 0 1 0 11" />
+    </Icon>
+  );
+}
+
+function PinIcon() {
+  return (
+    <Icon>
+      <path d="M12 21s-7-5.5-7-11a7 7 0 1 1 14 0c0 5.5-7 11-7 11Z" />
+      <circle cx="12" cy="10" r="2.5" />
+    </Icon>
+  );
+}
+
+function ArrowIcon() {
+  return (
+    <Icon className="size-5 transition-transform duration-150 group-hover:translate-x-0.5">
+      <path d="M5 12h14M13 6l6 6-6 6" />
+    </Icon>
   );
 }

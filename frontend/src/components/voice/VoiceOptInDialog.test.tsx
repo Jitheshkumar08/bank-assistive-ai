@@ -61,7 +61,7 @@ describe('VoiceOptInDialog', () => {
 
       // Consent needs the terms attached to it, not just a yes button.
       expect(screen.getByRole('dialog')).toHaveAccessibleDescription(
-        /microphone is only used while you are holding/i,
+        /microphone only turns on when you press the voice button/i,
       );
     });
 

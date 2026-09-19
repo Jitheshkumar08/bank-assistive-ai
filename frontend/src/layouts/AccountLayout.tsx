@@ -15,13 +15,13 @@ export function AccountLayout() {
 
   return (
     <AuthShell showcase>
-      <div className="relative w-full max-w-[26rem]">
-        <div className="rounded-3xl bg-white p-6 shadow-[0_1px_2px_rgb(16_24_40/0.04),0_32px_64px_-32px_rgb(16_24_40/0.28)] ring-1 ring-ink-200/70 sm:p-8">
+      <div className="relative w-full max-w-[26rem] lg:max-w-[34rem]">
+        <div className="rounded-3xl bg-white p-5 shadow-[0_1px_2px_rgb(16_24_40/0.04),0_32px_64px_-32px_rgb(16_24_40/0.28)] ring-1 ring-ink-200/70 sm:p-7">
           <AccountToggle />
 
           {/* Keyed by path, so switching forms replays a short entrance
               rather than swapping the content abruptly. */}
-          <div key={location.pathname} className="mt-7 animate-rise">
+          <div key={location.pathname} className="mt-6 animate-rise">
             <Outlet />
           </div>
         </div>

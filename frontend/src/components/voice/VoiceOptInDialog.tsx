@@ -16,8 +16,8 @@ const FOCUSABLE =
  *
  * Every way out of this dialog is a real answer:
  *
- *   Enable Voice        voice on
- *   Continue with Text  voice off
+ *   Enable voice        voice on
+ *   Continue with text  voice off
  *   close / Escape      voice off, reachable again from the toggle
  *
  * Nothing leaves the preference unset, because an unanswered question
@@ -86,7 +86,7 @@ export function VoiceOptInDialog() {
     <div
       // z-30: above the page, below nothing else -- the voice overlay is
       // hidden while this is open, so they can never overlap.
-      className="fixed inset-0 z-30 flex items-center justify-center bg-ink-900/60 p-5"
+      className="fixed inset-0 z-30 flex animate-fade items-center justify-center bg-ink-900/50 p-5 backdrop-blur-[3px]"
       // Clicking the backdrop dismisses, the way every other dialog
       // behaves. Guarded on the target so a click inside the panel that
       // bubbles up here does not close it.
@@ -101,45 +101,84 @@ export function VoiceOptInDialog() {
         aria-labelledby="voice-opt-in-title"
         aria-describedby="voice-opt-in-description"
         tabIndex={-1}
-        className="relative w-full max-w-sm rounded-2xl bg-white p-6 shadow-xl outline-none"
+        className="relative w-full max-w-[26rem] animate-rise rounded-3xl bg-white p-6 shadow-[0_24px_64px_-16px_rgb(16_24_40/0.4)] ring-1 ring-ink-900/5 outline-none sm:p-7"
       >
-        <button
-          type="button"
-          onClick={dismiss}
-          // Says what it does, not what it looks like. "Close" alone
-          // leaves a screen-reader user guessing what closing means.
-          aria-label="Close, and continue without voice"
-          className="absolute right-2 top-2 flex size-11 items-center justify-center rounded-full text-ink-500 transition-colors hover:bg-ink-100 hover:text-ink-800"
-        >
-          <svg
-            className="size-5"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-            strokeLinecap="round"
+        <div className="flex items-center justify-between">
+          <span
             aria-hidden="true"
+            className="flex size-12 items-center justify-center rounded-2xl bg-brand-50 text-brand-700 ring-1 ring-brand-100"
           >
-            <path d="M6 6l12 12M18 6L6 18" />
-          </svg>
-        </button>
+            <MicIcon />
+          </span>
 
-        <h2 id="voice-opt-in-title" className="pr-10 text-lg font-bold text-ink-900">
-          Would you like Voice Assistance?
+          {/* First in the panel, so Tab wraps from the last answer back
+              to here rather than out to the page behind. */}
+          <button
+            type="button"
+            onClick={dismiss}
+            // Says what it does, not what it looks like. "Close" alone
+            // leaves a screen-reader user guessing what closing means.
+            aria-label="Close, and continue without voice"
+            className="-mr-2 flex size-11 items-center justify-center rounded-full text-ink-500 transition-colors hover:bg-ink-100 hover:text-ink-800"
+          >
+            <svg
+              className="size-5"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              aria-hidden="true"
+            >
+              <path d="M6 6l12 12M18 6L6 18" />
+            </svg>
+          </button>
+        </div>
+
+        <h2
+          id="voice-opt-in-title"
+          className="mt-5 text-xl leading-snug font-semibold tracking-[-0.02em] text-ink-900"
+        >
+          Would you like voice assistance?
         </h2>
 
-        <p id="voice-opt-in-description" className="mt-2 text-base text-ink-700">
-          You can speak to the assistant instead of typing, and have replies read aloud. Your
-          microphone is only used while you are holding the voice button.
+        {/* The microphone is opened only by pressing the voice control --
+            enabling voice never starts a recording -- so this is the
+            promise the dialog can actually keep. */}
+        <p id="voice-opt-in-description" className="mt-2 text-[0.95rem] leading-relaxed text-ink-600">
+          Speak to the assistant instead of typing, and hear its replies read aloud. Your microphone
+          only turns on when you press the voice button.
         </p>
 
-        <div className="mt-5 flex flex-col gap-2">
-          <Button onClick={enable}>Enable Voice</Button>
+        <div className="mt-6 flex flex-col gap-2.5">
+          <Button onClick={enable}>Enable voice</Button>
           <Button variant="secondary" onClick={disable}>
-            Continue with Text
+            Continue with text
           </Button>
         </div>
+
+        <p className="mt-4 text-center text-[0.8125rem] leading-5 text-ink-500">
+          You can turn voice on or off at any time from your account menu.
+        </p>
       </div>
     </div>
+  );
+}
+
+function MicIcon() {
+  return (
+    <svg
+      className="size-6"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.9"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden="true"
+    >
+      <rect x="9" y="3" width="6" height="11" rx="3" />
+      <path d="M5 11a7 7 0 0 0 14 0M12 18v3" />
+    </svg>
   );
 }

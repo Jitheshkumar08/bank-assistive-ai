@@ -19,14 +19,23 @@ vi.mock('@/api/context.api', () => ({
 /**
  * Stands in for the camera.
  *
- * The real component is covered by useQrScanner's tests; here it is
- * replaced so a scan can be simulated deterministically. The button
- * labels carry the payload the "camera" decoded.
+ * The real component is covered by its own tests and useQrScanner's; here
+ * it is replaced so a scan can be simulated deterministically. The button
+ * labels carry the payload the "camera" decoded, and the last stands in
+ * for the way on from a camera that cannot be used.
  */
 let scannerActive = true;
 
 vi.mock('@/components/scan/QrScanner', () => ({
-  QrScanner: ({ onScan, active }: { onScan: (raw: string) => void; active: boolean }) => {
+  QrScanner: ({
+    onScan,
+    active,
+    onEnterCode,
+  }: {
+    onScan: (raw: string) => void;
+    active: boolean;
+    onEnterCode?: () => void;
+  }) => {
     scannerActive = active;
     return (
       <div data-testid="scanner" data-active={String(active)}>
@@ -48,6 +57,9 @@ vi.mock('@/components/scan/QrScanner', () => ({
         </button>
         <button type="button" onClick={() => onScan('not-json-at-all')}>
           simulate malformed scan
+        </button>
+        <button type="button" onClick={() => onEnterCode?.()}>
+          simulate a camera that cannot be used
         </button>
       </div>
     );
@@ -160,6 +172,19 @@ describe('ScanPage', () => {
       await userEvent.click(screen.getByRole('button', { name: /enter the code manually/i }));
 
       expect(screen.getByLabelText(/branch code/i)).toBeInTheDocument();
+    });
+
+    it('says whether manual entry is open', async () => {
+      renderScan();
+
+      const toggle = screen.getByRole('button', { name: /enter the code manually/i });
+      expect(toggle).toHaveAttribute('aria-expanded', 'false');
+
+      await userEvent.click(toggle);
+
+      // The label stays the same, so the state has to be carried by the
+      // attribute a screen reader announces.
+      expect(toggle).toHaveAttribute('aria-expanded', 'true');
     });
   });
 
@@ -292,6 +317,16 @@ describe('ScanPage', () => {
       // Codes are printed uppercase; typing them in lower case still works.
       await waitFor(() => expect(establish).toHaveBeenCalledWith('BR002'));
       expect(await screen.findByText('welcome screen')).toBeInTheDocument();
+    });
+
+    it('goes straight to the code box when the camera cannot be used', async () => {
+      renderScan();
+
+      await userEvent.click(screen.getByRole('button', { name: /camera that cannot be used/i }));
+
+      // From a blocked or missing camera, typing the code is the only way
+      // on -- so the box opens with the cursor already in it.
+      expect(screen.getByLabelText(/branch code/i)).toHaveFocus();
     });
   });
 });

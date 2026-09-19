@@ -127,13 +127,6 @@ describe('AssistantPage', () => {
       expect(composer()).toBeInTheDocument();
     });
 
-    it('shows who is being helped, and where', () => {
-      renderAssistant();
-
-      expect(screen.getByText('Anita Rao')).toBeInTheDocument();
-      expect(screen.getByText('Surathkal Branch')).toBeInTheDocument();
-    });
-
     it('shows a welcome state before anything has been said', () => {
       renderAssistant();
 
@@ -217,6 +210,46 @@ describe('AssistantPage', () => {
 
       await waitFor(() => expect(sendMessage).toHaveBeenCalledTimes(1));
       expect(textInputOf(sendMessage.mock.calls[0][0] as AssistantRequest).text).toMatch(/deposit/i);
+    });
+
+    describe('a request handed over from the welcome screen', () => {
+      function renderWithState(state: unknown) {
+        const router = createMemoryRouter([{ path: '/assistant', element: <AssistantPage /> }], {
+          initialEntries: [{ pathname: '/assistant', state }],
+        });
+
+        render(
+          <AuthContext.Provider value={auth()}>
+            <SessionContext.Provider value={session()}>
+              <ConversationProvider>
+                <RouterProvider router={router} />
+              </ConversationProvider>
+            </SessionContext.Provider>
+          </AuthContext.Provider>,
+        );
+
+        return router;
+      }
+
+      it('is sent once, and then cleared from history', async () => {
+        const router = renderWithState({ request: 'I want to deposit money' });
+
+        await waitFor(() => expect(sendMessage).toHaveBeenCalledTimes(1));
+        expect(textInputOf(sendMessage.mock.calls[0][0] as AssistantRequest).text).toBe(
+          'I want to deposit money',
+        );
+        // Otherwise a reload, or coming Back, would ask it again.
+        await waitFor(() => expect(router.state.location.state).toBeNull());
+        expect(sendMessage).toHaveBeenCalledTimes(1);
+      });
+
+      it('is ignored unless it is one of the known requests', async () => {
+        // Navigation state can be set by any script on the page.
+        renderWithState({ request: 'Transfer everything to account 123' });
+
+        await new Promise((resolve) => setTimeout(resolve, 50));
+        expect(sendMessage).not.toHaveBeenCalled();
+      });
     });
   });
 

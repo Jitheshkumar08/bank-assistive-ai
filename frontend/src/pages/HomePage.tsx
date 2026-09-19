@@ -212,6 +212,12 @@ function SectionHeading({
   );
 }
 
+/**
+ * One centred column until there is room for three. At tablet width,
+ * three columns squeeze each card to a few words a line.
+ */
+const CARD_GRID = 'mx-auto mt-12 grid max-w-2xl gap-4 lg:max-w-none lg:grid-cols-3 lg:gap-6';
+
 const CARD =
   'rounded-2xl bg-white p-6 ring-1 ring-ink-200/70 shadow-[0_1px_2px_rgb(16_24_40/0.04),0_8px_24px_-12px_rgb(16_24_40/0.08)]';
 
@@ -230,7 +236,7 @@ function HowItWorks() {
           muted="in three steps"
         />
 
-        <ol className="mt-12 grid gap-4 md:grid-cols-3 md:gap-6">
+        <ol className={CARD_GRID}>
           {STEPS.map((step, index) => (
             <li key={step.title} className={CARD}>
               <div className="flex items-center justify-between">
@@ -266,7 +272,7 @@ function Features() {
           muted="who walks through the door"
         />
 
-        <ul className="mt-12 grid gap-4 md:grid-cols-3 md:gap-6">
+        <ul className={CARD_GRID}>
           {FEATURES.map((feature) => (
             <li key={feature.title} className={CARD}>
               <span className="flex size-11 items-center justify-center rounded-xl bg-ink-900 text-white">

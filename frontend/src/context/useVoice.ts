@@ -10,3 +10,13 @@ export function useVoice(): VoiceContextValue {
 
   return context;
 }
+
+/**
+ * The voice controls when a provider is present, or null.
+ *
+ * For a screen that works with or without voice -- the conversation can
+ * be typed in whether or not a VoiceProvider sits above it.
+ */
+export function useOptionalVoice(): VoiceContextValue | null {
+  return useContext(VoiceContext);
+}

@@ -1,6 +1,6 @@
 import { cn } from '@/lib/cn';
 
-export type ButtonVariant = 'primary' | 'secondary' | 'ghost' | 'danger' | 'inverse';
+export type ButtonVariant = 'primary' | 'secondary' | 'ghost' | 'danger' | 'inverse' | 'overlay';
 export type ButtonSize = 'md' | 'lg';
 
 /**
@@ -27,6 +27,10 @@ const VARIANTS: Record<ButtonVariant, string> = {
     'bg-danger-600 text-white shadow-[0_1px_2px_rgb(133_41_31/0.3)] hover:bg-danger-700 active:bg-danger-700',
   // For use on a dark surface.
   inverse: 'bg-white text-ink-900 hover:bg-ink-100 active:bg-ink-200',
+  // The quieter partner to inverse on a dark surface. Its focus ring is
+  // white, because the brand ring all but vanishes against the dark.
+  overlay:
+    'bg-white/10 text-white ring-1 ring-white/20 ring-inset hover:bg-white/15 focus-visible:outline-white active:bg-white/20',
 };
 
 const SIZES: Record<ButtonSize, string> = {

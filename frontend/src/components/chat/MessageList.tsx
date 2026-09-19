@@ -1,6 +1,5 @@
 import { useEffect, useRef } from 'react';
 import { MessageBubble } from './MessageBubble';
-import { Spinner } from '@/components/ui/Spinner';
 import type { ConversationMessage } from '@/types/assistant';
 
 interface MessageListProps {
@@ -25,7 +24,9 @@ export function MessageList({ messages, isSending }: MessageListProps) {
     <div
       // min-h-0 lets this shrink inside its flex parent; without it the
       // list grows instead of scrolling and pushes the composer away.
-      className="min-h-0 flex-1 overflow-y-auto"
+      // overscroll-contain keeps a fling at the end of the conversation
+      // from dragging the whole page on a phone.
+      className="min-h-0 flex-1 overflow-y-auto overscroll-contain"
       // A log announces additions without stealing focus, which is what
       // a conversation needs: the customer stays in the text box while
       // replies are read out.
@@ -34,16 +35,32 @@ export function MessageList({ messages, isSending }: MessageListProps) {
       aria-live="polite"
       aria-relevant="additions"
     >
-      <ul className="flex flex-col gap-3 pb-2">
-        {messages.map((message) => (
-          <MessageBubble key={message.id} message={message} />
+      <ul className="flex flex-col py-3">
+        {messages.map((message, index) => (
+          <MessageBubble
+            key={message.id}
+            message={message}
+            // Runs of messages from the same side sit close together, and
+            // only the last one of a run gets the pointed corner.
+            startsGroup={messages[index - 1]?.author !== message.author}
+            endsGroup={messages[index + 1]?.author !== message.author}
+          />
         ))}
 
         {isSending && (
-          <li className="flex items-center gap-2 text-ink-500" aria-label="Assistant is replying">
-            <span className="flex items-center gap-2 rounded-2xl rounded-bl-sm border border-ink-200 bg-white px-4 py-3 shadow-sm">
-              <Spinner className="size-4 text-brand-600" label={null} />
-              <span className="text-base">Thinking</span>
+          <li
+            className={messages.length > 0 ? 'mt-4 flex' : 'flex'}
+            aria-label="Assistant is replying"
+          >
+            <span className="flex items-center gap-1.5 rounded-[1.25rem] rounded-bl-md bg-white px-4 py-4 shadow-[0_1px_2px_rgb(16_24_40/0.04)] ring-1 ring-ink-200/70">
+              {[0, 160, 320].map((delay) => (
+                <span
+                  key={delay}
+                  aria-hidden="true"
+                  className="size-1.5 animate-typing rounded-full bg-ink-400"
+                  style={{ animationDelay: `${delay}ms` }}
+                />
+              ))}
             </span>
           </li>
         )}

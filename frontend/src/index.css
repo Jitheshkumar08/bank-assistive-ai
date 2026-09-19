@@ -82,6 +82,60 @@
       transform: translateY(-10px);
     }
   }
+
+  /* A light sweeping down the scanner's aiming frame, so a live camera
+     reads as actively looking. Hidden outright for reduced motion. */
+  --animate-scan: scan 2.4s cubic-bezier(0.45, 0, 0.55, 1) infinite;
+
+  @keyframes scan {
+    0% {
+      transform: translateY(0);
+      opacity: 0;
+    }
+    15%,
+    85% {
+      opacity: 1;
+    }
+    100% {
+      transform: translateY(100%);
+      opacity: 0;
+    }
+  }
+
+  /* A dialog's backdrop settling in behind it. */
+  --animate-fade: fade 200ms ease-out both;
+
+  @keyframes fade {
+    from {
+      opacity: 0;
+    }
+  }
+
+  /* The assistant's typing dots: each rises and brightens in turn. */
+  --animate-typing: typing 1.2s ease-in-out infinite;
+
+  @keyframes typing {
+    0%,
+    60%,
+    100% {
+      opacity: 0.35;
+      transform: translateY(0);
+    }
+    30% {
+      opacity: 1;
+      transform: translateY(-3px);
+    }
+  }
+
+  /* A small menu dropping into place from the control that opened it. */
+  --animate-pop: pop 160ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
+
+  @keyframes pop {
+    from {
+      opacity: 0;
+      transform: translateY(-4px) scale(0.97);
+    }
+  }
 }
 
 /* ---------------------------------------------------------------

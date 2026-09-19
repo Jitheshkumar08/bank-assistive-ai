@@ -5,7 +5,7 @@ import { RequireContext } from '@/routes/RequireContext';
 import { RedirectIfAuthenticated } from '@/routes/RedirectIfAuthenticated';
 import { AccountLayout } from '@/layouts/AccountLayout';
 import { AuthLayout } from '@/layouts/AuthLayout';
-import { AppLayout } from '@/layouts/AppLayout';
+import { AppLayout, type AppRouteHandle } from '@/layouts/AppLayout';
 import { HomePage } from '@/pages/HomePage';
 import { LoginPage } from '@/pages/LoginPage';
 import { RegisterPage } from '@/pages/RegisterPage';
@@ -50,7 +50,13 @@ export const router = createBrowserRouter([
           {
             element: <AppLayout />,
             children: [
-              { path: '/scan', element: <ScanPage /> },
+              {
+                path: '/scan',
+                element: <ScanPage />,
+                // On a wide screen the camera sits beside the ways to use
+                // it, which needs more than the usual reading column.
+                handle: { width: 'wide' } satisfies AppRouteHandle,
+              },
               // Account settings need a signed-in customer, but not a
               // branch: someone should be able to fix their language
               // before scanning anything.
@@ -60,7 +66,11 @@ export const router = createBrowserRouter([
                 element: <RequireContext />,
                 children: [
                   { path: '/welcome', element: <WelcomePage /> },
-                  { path: '/assistant', element: <AssistantPage /> },
+                  {
+                    path: '/assistant',
+                    element: <AssistantPage />,
+                    handle: { chat: true } satisfies AppRouteHandle,
+                  },
                 ],
               },
             ],

@@ -61,23 +61,22 @@ export function LanguageChoice({ value, onChange, disabled }: LanguageChoiceProp
   const hintId = `${groupId}-hint`;
 
   return (
-    <div className="flex flex-col gap-1.5">
+    <div className="flex flex-col gap-1">
       <span id={labelId} className="text-sm font-medium text-ink-800">
         Language
         <span className="ml-1 text-danger-600" aria-hidden="true">
           *
         </span>
+        <span id={hintId} className="ml-1 font-normal text-ink-500">
+          — spoken replies
+        </span>
       </span>
-
-      <p id={hintId} className="text-sm text-ink-600">
-        The assistant will speak and reply in this language.
-      </p>
 
       <div
         role="radiogroup"
         aria-labelledby={labelId}
         aria-describedby={hintId}
-        className="mt-1 grid grid-cols-3 gap-2"
+        className="mt-0.5 grid grid-cols-3 gap-2"
       >
         {LANGUAGES.map((language) => {
           const selected = language.code === value;
@@ -86,7 +85,7 @@ export function LanguageChoice({ value, onChange, disabled }: LanguageChoiceProp
             <label
               key={language.code}
               className={cn(
-                'relative flex min-h-touch cursor-pointer flex-col items-center justify-center rounded-xl border px-2 py-3 text-center',
+                'relative flex min-h-touch cursor-pointer flex-col items-center justify-center rounded-xl border px-2 py-2.5 text-center',
                 'transition-[border-color,background-color,box-shadow] duration-150',
                 'has-[:focus-visible]:ring-4 has-[:focus-visible]:ring-brand-500/25',
                 selected

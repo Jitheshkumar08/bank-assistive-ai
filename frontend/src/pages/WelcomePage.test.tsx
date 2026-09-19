@@ -307,6 +307,17 @@ describe('WelcomePage', () => {
       expect(await screen.findByText('assistant screen')).toBeInTheDocument();
     });
 
+    it('starts a common request in one tap', async () => {
+      renderWelcome();
+
+      const deposit = screen.getByRole('link', { name: /deposit money/i });
+      expect(deposit).toHaveAttribute('href', '/assistant');
+
+      await userEvent.click(deposit);
+
+      expect(await screen.findByText('assistant screen')).toBeInTheDocument();
+    });
+
     it('offers a way back to scanning without signing out', async () => {
       const logout = vi.fn();
       renderWelcome(auth({ logout }), session());
