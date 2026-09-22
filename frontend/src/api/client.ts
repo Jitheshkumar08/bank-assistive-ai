@@ -226,6 +226,8 @@ export const api = {
   /** Partial updates: send what changed, leave the rest untouched. */
   patch: <T>(path: string, body?: unknown, signal?: AbortSignal) =>
     request<T>(path, { method: 'PATCH', body, signal }),
+  delete: <T>(path: string, signal?: AbortSignal) =>
+    request<T>(path, { method: 'DELETE', signal }),
   /** For calls that legitimately take longer than an ordinary request. */
   postSlow: <T>(path: string, body: unknown, timeoutMs: number, signal?: AbortSignal) =>
     request<T>(path, { method: 'POST', body, signal, timeoutMs }),

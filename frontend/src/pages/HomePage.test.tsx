@@ -11,6 +11,7 @@ const USER: AuthenticatedUser = {
   email: 'anita@example.com',
   fullName: 'Anita Rao',
   preferredLanguage: 'en',
+  role: 'CUSTOMER',
 };
 
 function auth(user: AuthenticatedUser | null): AuthContextValue {
@@ -18,7 +19,7 @@ function auth(user: AuthenticatedUser | null): AuthContextValue {
     user,
     isAuthenticated: user !== null,
     isRestoring: false,
-    login: async () => {},
+    login: async () => USER,
     register: async () => {},
     updateProfile: async () => {},
     changePassword: async () => {},

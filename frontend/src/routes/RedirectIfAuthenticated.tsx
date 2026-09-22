@@ -4,7 +4,7 @@ import { Spinner } from '@/components/ui/Spinner';
 
 /** Keeps an already signed-in person off the login screen. */
 export function RedirectIfAuthenticated() {
-  const { isAuthenticated, isRestoring } = useAuth();
+  const { isAuthenticated, isRestoring, user } = useAuth();
 
   if (isRestoring) {
     return (
@@ -15,7 +15,7 @@ export function RedirectIfAuthenticated() {
   }
 
   if (isAuthenticated) {
-    return <Navigate to="/scan" replace />;
+    return <Navigate to={user?.role === 'ADMIN' ? '/admin' : '/scan'} replace />;
   }
 
   return <Outlet />;

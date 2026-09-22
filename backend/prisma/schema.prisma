@@ -22,6 +22,18 @@ datasource db {
 // User
 // ---------------------------------------------------------
 
+// Who a signed-in account is allowed to be.
+//
+// Customers are everyone who walks into a branch. ADMIN exists for the
+// staff screen that manages branches and their QR codes, and is granted
+// only by the boot-time sync of ADMIN_EMAIL -- never by registration.
+enum Role {
+  CUSTOMER
+  ADMIN
+
+  @@map("user_role")
+}
+
 model User {
   id String @id @default(uuid()) @db.Uuid
 
@@ -36,6 +48,7 @@ model User {
 
   preferredLanguage String  @default("en") @map("preferred_language")
   isActive          Boolean @default(true) @map("is_active")
+  role              Role    @default(CUSTOMER)
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")

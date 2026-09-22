@@ -17,7 +17,8 @@ export interface AuthContextValue {
   isAuthenticated: boolean;
   /** True while a stored token is being checked on first load. */
   isRestoring: boolean;
-  login: (credentials: LoginRequest) => Promise<void>;
+  /** Resolves with the account, so a caller can route by its role. */
+  login: (credentials: LoginRequest) => Promise<AuthenticatedUser>;
   /** Creates the account and signs straight in, as login does. */
   register: (details: RegisterRequest) => Promise<void>;
   /** Applies account changes and adopts the refreshed token. */
@@ -89,8 +90,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const login = useCallback(
-    async (credentials: LoginRequest): Promise<void> => {
-      adopt(await authApi.login(credentials));
+    async (credentials: LoginRequest): Promise<AuthenticatedUser> => {
+      const result = await authApi.login(credentials);
+      adopt(result);
+
+      return result.user;
     },
     [adopt],
   );

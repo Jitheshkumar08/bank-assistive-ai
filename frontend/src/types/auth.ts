@@ -1,8 +1,17 @@
+/**
+ * What an account may do.
+ *
+ * Only the staff account named by the API's ADMIN_EMAIL is ever ADMIN;
+ * registering always produces a CUSTOMER.
+ */
+export type UserRole = 'CUSTOMER' | 'ADMIN';
+
 export interface AuthenticatedUser {
   id: string;
   email: string;
   fullName: string;
   preferredLanguage: string;
+  role: UserRole;
 }
 
 export interface AuthResult {

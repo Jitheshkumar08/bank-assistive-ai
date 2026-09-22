@@ -3,8 +3,10 @@ import { RootLayout } from '@/routes/RootLayout';
 import { RequireAuth } from '@/routes/RequireAuth';
 import { RequireContext } from '@/routes/RequireContext';
 import { RedirectIfAuthenticated } from '@/routes/RedirectIfAuthenticated';
+import { RequireAdmin } from '@/routes/RequireAdmin';
 import { AccountLayout } from '@/layouts/AccountLayout';
 import { AuthLayout } from '@/layouts/AuthLayout';
+import { AdminLayout } from '@/layouts/AdminLayout';
 import { AppLayout, type AppRouteHandle } from '@/layouts/AppLayout';
 import { HomePage } from '@/pages/HomePage';
 import { LoginPage } from '@/pages/LoginPage';
@@ -13,6 +15,9 @@ import { ScanPage } from '@/pages/ScanPage';
 import { SettingsPage } from '@/pages/SettingsPage';
 import { WelcomePage } from '@/pages/WelcomePage';
 import { AssistantPage } from '@/pages/AssistantPage';
+import { AdminOverviewPage } from '@/pages/admin/AdminOverviewPage';
+import { AdminNewBranchPage } from '@/pages/admin/AdminNewBranchPage';
+import { AdminBranchPage } from '@/pages/admin/AdminBranchPage';
 import { NotFoundPage } from '@/pages/NotFoundPage';
 
 /**
@@ -47,6 +52,21 @@ export const router = createBrowserRouter([
       {
         element: <RequireAuth />,
         children: [
+          {
+            // Staff screens. Signed in like everyone else, then checked
+            // for the role the API also insists on.
+            element: <RequireAdmin />,
+            children: [
+              {
+                element: <AdminLayout />,
+                children: [
+                  { path: '/admin', element: <AdminOverviewPage /> },
+                  { path: '/admin/branches/new', element: <AdminNewBranchPage /> },
+                  { path: '/admin/branches/:id', element: <AdminBranchPage /> },
+                ],
+              },
+            ],
+          },
           {
             element: <AppLayout />,
             children: [

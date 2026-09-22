@@ -95,6 +95,7 @@ export class AuthService implements OnModuleInit {
       email: record.email,
       fullName: record.fullName,
       preferredLanguage: record.preferredLanguage,
+      role: record.role,
     });
   }
 
@@ -175,11 +176,15 @@ export class AuthService implements OnModuleInit {
       email: record.email,
       fullName: record.fullName,
       preferredLanguage: record.preferredLanguage,
+      role: record.role,
     });
   }
 
   private async issueToken(user: AuthenticatedUser): Promise<AuthResult> {
-    const payload: JwtPayload = { sub: user.id, email: user.email };
+    // The role travels in the token for readability, but nothing trusts
+    // it: every request re-reads the account, so a promotion or demotion
+    // takes effect immediately rather than when the token expires.
+    const payload: JwtPayload = { sub: user.id, email: user.email, role: user.role };
 
     return {
       accessToken: await this.jwtService.signAsync(payload),

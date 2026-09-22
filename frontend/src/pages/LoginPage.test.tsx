@@ -5,9 +5,19 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { AuthContext, type AuthContextValue } from '@/context/AuthContext';
 import { LoginPage } from './LoginPage';
 import { ApiError } from '@/types/api';
-import type { LoginRequest } from '@/types/auth';
+import type { AuthenticatedUser, LoginRequest } from '@/types/auth';
 
-const login = vi.fn<(credentials: LoginRequest) => Promise<void>>();
+const CUSTOMER: AuthenticatedUser = {
+  id: 'u1',
+  email: 'demo@bankassist.local',
+  fullName: 'Demo Customer',
+  preferredLanguage: 'en',
+  role: 'CUSTOMER',
+};
+
+const ADMIN: AuthenticatedUser = { ...CUSTOMER, id: 'a1', fullName: 'Administrator', role: 'ADMIN' };
+
+const login = vi.fn<(credentials: LoginRequest) => Promise<AuthenticatedUser>>();
 
 function auth(): AuthContextValue {
   return {
@@ -29,6 +39,7 @@ function renderLogin(from?: string) {
       { path: '/scan', element: <p>scan screen</p> },
       { path: '/welcome', element: <p>welcome screen</p> },
       { path: '/register', element: <p>register screen</p> },
+      { path: '/admin', element: <p>admin screen</p> },
     ],
     { initialEntries: [{ pathname: '/login', state: from ? { from } : null }] },
   );
@@ -51,7 +62,7 @@ async function fillIn(email = 'anita@example.com', password = 'StrongPass123!') 
 
 beforeEach(() => {
   login.mockReset();
-  login.mockResolvedValue(undefined);
+  login.mockResolvedValue(CUSTOMER);
 });
 
 describe('LoginPage', () => {
@@ -106,6 +117,18 @@ describe('LoginPage', () => {
   });
 
   describe('signing in', () => {
+    it('sends staff to the branch admin screen instead', async () => {
+      login.mockResolvedValue(ADMIN);
+      renderLogin();
+      await fillIn('admin@bankassist.local');
+
+      await userEvent.click(signInButton());
+
+      // Staff have no branch to scan into; their screen is the one that
+      // manages branches and their QR codes.
+      expect(await screen.findByText('admin screen')).toBeInTheDocument();
+    });
+
     it('sends the details and continues to the scan screen', async () => {
       renderLogin();
       await fillIn('  anita@example.com  ');
@@ -152,8 +175,8 @@ describe('LoginPage', () => {
     });
 
     it('cannot be sent twice while a sign-in is in flight', async () => {
-      let settle!: () => void;
-      login.mockReturnValue(new Promise<void>((resolve) => (settle = resolve)));
+      let settle!: (account: AuthenticatedUser) => void;
+      login.mockReturnValue(new Promise<AuthenticatedUser>((resolve) => (settle = resolve)));
 
       renderLogin();
       await fillIn();
@@ -165,7 +188,7 @@ describe('LoginPage', () => {
       await userEvent.click(busy);
       expect(login).toHaveBeenCalledTimes(1);
 
-      settle();
+      settle(CUSTOMER);
       expect(await screen.findByText('scan screen')).toBeInTheDocument();
     });
   });

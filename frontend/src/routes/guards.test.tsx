@@ -14,6 +14,7 @@ const USER: AuthenticatedUser = {
   email: 'demo@bankassist.local',
   fullName: 'Demo Customer',
   preferredLanguage: 'en',
+  role: 'CUSTOMER',
 };
 
 const SESSION: Session = {
@@ -31,7 +32,7 @@ function auth(overrides: Partial<AuthContextValue> = {}): AuthContextValue {
     user: null,
     isAuthenticated: false,
     isRestoring: false,
-    login: async () => {},
+    login: async () => USER,
     register: async () => {},
     updateProfile: async () => {},
     changePassword: async () => {},

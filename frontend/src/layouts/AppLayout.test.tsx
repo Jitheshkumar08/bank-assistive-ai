@@ -25,6 +25,7 @@ const USER: AuthenticatedUser = {
   email: 'demo@bankassist.local',
   fullName: 'Demo Customer',
   preferredLanguage: 'en',
+  role: 'CUSTOMER',
 };
 
 const SESSION: Session = {
@@ -41,7 +42,7 @@ const auth: AuthContextValue = {
   user: USER,
   isAuthenticated: true,
   isRestoring: false,
-  login: async () => {},
+  login: async () => USER,
   register: async () => {},
   updateProfile: async () => {},
   changePassword: async () => {},

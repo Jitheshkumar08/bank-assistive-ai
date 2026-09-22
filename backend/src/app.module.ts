@@ -9,9 +9,11 @@ import { BranchesModule } from './branches/branches.module';
 import { ContextModule } from './context/context.module';
 import { AssistantModule } from './assistant/assistant.module';
 import { SessionsModule } from './sessions/sessions.module';
+import { AdminModule } from './admin/admin.module';
 import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/users.module';
 import { JwtAuthGuard } from './auth/guards/jwt-auth.guard';
+import { RolesGuard } from './common/guards/roles.guard';
 import { ThrottlerBehindProxyGuard } from './common/guards/throttler-behind-proxy.guard';
 
 @Module({
@@ -34,6 +36,7 @@ import { ThrottlerBehindProxyGuard } from './common/guards/throttler-behind-prox
     ContextModule,
     SessionsModule,
     AssistantModule,
+    AdminModule,
   ],
   providers: [
     // Authentication is the default. A route is reachable without a
@@ -49,6 +52,12 @@ import { ThrottlerBehindProxyGuard } from './common/guards/throttler-behind-prox
     {
       provide: APP_GUARD,
       useClass: JwtAuthGuard,
+    },
+    // Last, so it runs with an authenticated account already on the
+    // request. It stands aside unless a route asks for a role.
+    {
+      provide: APP_GUARD,
+      useClass: RolesGuard,
     },
   ],
 })

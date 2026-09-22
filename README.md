@@ -16,7 +16,6 @@ Bank-assistive-ai/
 
 ## Architecture
 
-
 ```
 Frontend  ──HTTPS──▶  NestJS API  ──internal HTTP──▶  Python AI engine
                           │                                │
@@ -33,6 +32,7 @@ Three rules hold this together:
 3. **The engine is reached through one interface.** NestJS depends on an
    `AiEngineClient` abstraction, so a mock implementation can be swapped for the
    real engine without changing any controller, service, or component.
+
 
 ## `language_engine/`
 
