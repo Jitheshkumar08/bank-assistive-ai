@@ -30,10 +30,22 @@ const SESSION: Session = {
 };
 
 const AUTHENTICATED: AuthContextValue = {
-  user: { id: 'u1', email: 'demo@bankassist.local', fullName: 'Demo Customer', preferredLanguage: 'en' },
+  user: {
+    id: 'u1',
+    email: 'demo@bankassist.local',
+    fullName: 'Demo Customer',
+    preferredLanguage: 'en',
+    role: 'CUSTOMER',
+  },
   isAuthenticated: true,
   isRestoring: false,
-  login: async () => {},
+  login: async () => ({
+      id: 'u1',
+      email: 'demo@bankassist.local',
+      fullName: 'Demo Customer',
+      preferredLanguage: 'en',
+      role: 'CUSTOMER' as const,
+    }),
   register: async () => {},
   updateProfile: async () => {},
   changePassword: async () => {},

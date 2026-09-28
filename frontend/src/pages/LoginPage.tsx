@@ -77,8 +77,11 @@ export function LoginPage() {
     setSubmitting(true);
 
     try {
-      await login({ email: email.trim(), password });
-      navigate(destination, { replace: true });
+      const account = await login({ email: email.trim(), password });
+
+      // Staff have no branch to scan into; their screen is the one that
+      // manages branches.
+      navigate(account.role === 'ADMIN' ? '/admin' : destination, { replace: true });
     } catch (caught) {
       // The API already returns one message for every bad sign-in, so
       // this never reveals whether the email exists.

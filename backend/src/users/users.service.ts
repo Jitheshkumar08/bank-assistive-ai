@@ -1,5 +1,5 @@
 import { ConflictException, Injectable } from '@nestjs/common';
-import { Prisma, SessionStatus, User } from '@prisma/client';
+import { Prisma, Role, SessionStatus, User } from '@prisma/client';
 import { PrismaService } from '../prisma/prisma.service';
 import { AuthenticatedUser } from '../auth/types/jwt-payload.type';
 
@@ -9,6 +9,7 @@ export const PUBLIC_USER_FIELDS = {
   email: true,
   fullName: true,
   preferredLanguage: true,
+  role: true,
 } as const;
 
 @Injectable()
@@ -105,14 +106,19 @@ export class UsersService {
     passwordHash: string,
     fullName = 'Administrator',
   ): Promise<AuthenticatedUser> {
+    // The role is set on both paths: an account that existed before
+    // this column did -- or one created by registering with the admin
+    // address -- is promoted on the next boot rather than staying a
+    // customer for ever.
     return this.prisma.user.upsert({
       where: { email: email.toLowerCase() },
-      update: { passwordHash, isActive: true },
+      update: { passwordHash, isActive: true, role: Role.ADMIN },
       create: {
         email: email.toLowerCase(),
         fullName,
         passwordHash,
         preferredLanguage: 'en',
+        role: Role.ADMIN,
       },
       select: PUBLIC_USER_FIELDS,
     });

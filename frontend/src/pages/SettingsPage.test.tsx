@@ -13,6 +13,7 @@ const USER: AuthenticatedUser = {
   email: 'anita@example.com',
   fullName: 'Anita Rao',
   preferredLanguage: 'en',
+  role: 'CUSTOMER',
 };
 
 const updateProfile = vi.fn<(changes: UpdateProfileRequest) => Promise<void>>();
@@ -23,7 +24,7 @@ function auth(overrides: Partial<AuthContextValue> = {}): AuthContextValue {
     user: USER,
     isAuthenticated: true,
     isRestoring: false,
-    login: async () => {},
+    login: async () => USER,
     register: async () => {},
     updateProfile,
     changePassword,
