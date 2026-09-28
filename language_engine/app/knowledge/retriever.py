@@ -1,5 +1,5 @@
-from sentence_transformers import SentenceTransformer
 from app.knowledge.loader import KnowledgeLoader
+from app.knowledge.embedding_model import get_embedding_model
 
 
 class KnowledgeRetriever:
@@ -8,9 +8,7 @@ class KnowledgeRetriever:
 
         print("Loading knowledge retrieval model...")
 
-        self.model = SentenceTransformer(
-            "sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2"
-        )
+        self.model = get_embedding_model()
 
         self.loader = KnowledgeLoader()
 

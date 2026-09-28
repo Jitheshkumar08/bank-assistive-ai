@@ -5,6 +5,7 @@ from app.intent.detector import IntentDetector
 
 from app.conversation.manager import ConversationManager
 from app.conversation.state import SessionState, WorkflowState
+from app.dialogue.localization import ResponseLocalizer
 from app.dialogue.manager import DialogueManager
 from app.dialogue.term_normalizer import normalize_banking_terms
 
@@ -44,7 +45,20 @@ class VoiceAssistantPipeline:
         self.intent_detector = IntentDetector()
 
         self.conversation = ConversationManager()
-        self.dialogue = DialogueManager()
+
+        # The dialogue manager is given THE SAME detector, not one
+        # of its own (Phase 3.2B-14). It needs to ask one question
+        # -- "is this a request for a different banking service
+        # than the one in progress?" -- and this engine has exactly
+        # one intent classifier. Sharing it also means the model is
+        # loaded once.
+        self.dialogue = DialogueManager(
+            intent_detector=self.intent_detector
+        )
+
+        # Renders replies in the session language at the output
+        # boundary; see the turn loop for why it lives there.
+        self.localizer = ResponseLocalizer()
 
         print("System Ready ✅")
 
@@ -133,6 +147,23 @@ class VoiceAssistantPipeline:
     # SPEAK RESPONSE (VOICE MODE ONLY)
     # ===========================================================
 
+    def _get_localizer(self):
+        """The session's response localizer, created on first use.
+
+        Built lazily rather than assumed, because the debugging suites
+        construct a pipeline with object.__new__() to avoid loading models,
+        and a turn must still render correctly in that harness.
+        """
+
+        localizer = getattr(self, "localizer", None)
+
+        if localizer is None:
+            language = getattr(self.conversation, "language", None) or "en"
+            localizer = ResponseLocalizer(language)
+            self.localizer = localizer
+
+        return localizer
+
     def speak(self, mode, response, language_code):
 
         if mode != "1":
@@ -157,6 +188,7 @@ class VoiceAssistantPipeline:
 
         self.conversation.start_conversation()
         self.conversation.language = language_code
+        self._get_localizer().set_language(language_code)
 
         while True:
 
@@ -253,11 +285,35 @@ class VoiceAssistantPipeline:
                     "say that again."
                 )
 
+            # -----------------------------
+            # SELECTED-LANGUAGE RENDERING  (Phase 3.2B-12, K)
+            #
+            # The engine composes every reply in English. The
+            # session language was previously only handed to TTS,
+            # so a Kannada session heard English sentences in a
+            # Kannada voice.
+            #
+            # Rendering happens HERE, at the single output
+            # boundary, after the reply exists and before it is
+            # shown or spoken, so no handler needs to know about
+            # languages and the canonical English text is what
+            # goes into conversation history (and therefore into
+            # the LLM context) unchanged.
+            #
+            # The localizer also remembers the canonical reply,
+            # which is what lets "ಮತ್ತೆ ಹೇಳಿ" replay in Kannada
+            # instead of replaying stored English.
+            # -----------------------------
+
             self.conversation.add_history("Assistant", response)
+
+            spoken_response = self._get_localizer().render(response)
 
             print()
             print("🤖 Assistant:")
-            print(response)
+            print(spoken_response)
+
+            response = spoken_response
 
             # -----------------------------
             # Text To Speech
@@ -339,8 +395,35 @@ class VoiceAssistantPipeline:
         print()
         print(
             "🧠 Intent:", intent_result["intent"],
-            "| Confidence:", intent_result["confidence"]
+            "| Confidence:", intent_result["confidence"],
+            "| Category:", intent_result.get("category"),
+            "| Margin:", intent_result.get("margin")
         )
+
+        # ---------------------------------------------
+        # ABSTENTION GATE  (Phase 3.2B-12)
+        #
+        # The detector no longer has to answer with a banking
+        # label. When the utterance matches a non-banking anchor
+        # better than any banking intent -- a knowledge question,
+        # an acknowledgement, a control word, or a request the
+        # assistant must not serve such as "I want to rob the
+        # bank" -- NO workflow starts and conversation state is
+        # left exactly as it was.
+        #
+        # This is the invariant that stops "Thank you." from
+        # enrolling a customer in a loan, and it is enforced here
+        # rather than inside start_workflow() so the decision is
+        # visible at the routing layer.
+        # ---------------------------------------------
+
+        if not intent_result.get("is_banking_intent", True):
+
+            return self.dialogue.handle_non_banking_request(
+                intent_result.get("category"),
+                user_input,
+                self.conversation
+            )
 
         # ---------------------------------------------
         # Workflow activation

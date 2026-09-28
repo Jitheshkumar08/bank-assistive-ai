@@ -98,6 +98,7 @@ echo.
 REM ------------------------------------------------------------
 REM  2. NestJS API
 REM ------------------------------------------------------------
+set "NODE_OPTIONS=--max-old-space-size=512"
 call :is_listening 3000
 if not errorlevel 1 (
     echo [2/3] API already running on :3000 - leaving it alone.

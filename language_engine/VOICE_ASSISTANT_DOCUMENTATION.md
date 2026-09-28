@@ -1222,3 +1222,156 @@ This phase's own tests found that `"Spell 20000 rupees."` — the project's most
 - **English only**, like every other table in this tier.
 - **One exchange, one hop.** "What about the one before that?" is not supported and is not meant to be.
 - The reference vocabulary is a fixed list; over-detection is harmless (context is additive) but under-detection means the follow-up is answered without it.
+
+---
+
+## 19. Phase 3.2B-4 — Robust workflow completion semantics
+
+A customer who reports finished work must be moved forward. Four natural completion forms, all observed live, were not:
+
+| Utterance | Live reply before this phase |
+| --------- | ---------------------------- |
+| "I have filled in my account number." | `Sorry, I didn't catch that. Fill in your account number.` |
+| "I have entered 5000 rupees." | `I've noted that. Enter the withdrawal amount.` |
+| "The amount is entered." | `Sorry, I didn't catch that. Enter the withdrawal amount.` |
+| "I completed the account number." | `Sorry, I didn't catch that. Fill in your account number.` |
+
+Each one reported work already done and was answered by being asked to do it again — indefinitely, because nothing the customer could say in that phrasing would ever advance the step.
+
+### 19.1 Why it happened
+
+Completion was the **only workflow-affecting signal in the engine with no deterministic component**.
+
+Every other one has had one for phases: session exit, pause, resume, cancel, repeat and next are matched by phrase tables before the LLM is consulted (§15, §16.1); explicit step references have their own recognizer (§17.2); a control the tables cannot name is recovered from the customer's own words *after* classification (§16.4); even `step_number` is coerced rather than trusted (§16.5).
+
+Step completion — the single signal that can advance a required banking instruction — was one boolean from one model call:
+
+```python
+step_completed = (
+    understanding.get("step_completed") is True
+    or action == "complete"
+)
+```
+
+Nothing there read the customer's words. Nothing read the current instruction.
+
+The understanding prompt declares `step_completed` "independent of type and action" (rule 64), but `type`, `action`, `entities` and `step_completed` are emitted **together, in one structured object, in one pass**. Independence is a claim in prose, not a property of the mechanism. Two rule families pull against each other for exactly one sentence shape — a completion report that also names a value or a field:
+
+- **extraction** — rules 33–37, and rule 28 explicitly: *"I entered 20000" → information or workflow_action*
+- **completion** — rules 64–73
+
+Whenever a number or a field name is present the extraction rules win, the model commits to `type = information`, and then emits the internally consistent-looking `step_completed = false`. The turn falls to the information branch, which either banks the entity and restates the same step, or — with nothing extractable — issues the honest-but-maddening "Sorry, I didn't catch that."
+
+The prompt's own completion examples are all bare or anaphoric ("I filled it", "I entered it") or use the instruction's exact noun. The four failures each differ by one function word or by voice: a particle verb (`filled **in**`), a value where the field name was (`5000 rupees`), the passive with no first-person subject (`The amount **is** entered`), and a generic verb with an object noun (`completed **the account number**`). Adding more examples would have been a phrase list in prompt form.
+
+### 19.2 The fix — three-valued completion resolution
+
+`app/dialogue/completion_semantics.py` turns the trusted boolean into a resolution with a third outcome:
+
+| Value | Meaning |
+| ----- | ------- |
+| `True` | **Confirmed** — a clause reports the *current instruction* as carried out |
+| `False` | **Vetoed** — every clause is a question, a help request, a refusal or an intention |
+| `None` | **Undecided** — defer to the LLM, exactly as before this phase |
+
+`None` is the load-bearing value. It is what makes this a correction to the existing semantics rather than a replacement for them: anything the resolver cannot read structurally reaches dialogue understanding untouched.
+
+The call site in `DialogueManager.generate_response()` is six lines, in the same place as before:
+
+```python
+resolved_completion = resolve_step_completion(user_input, current_instruction)
+
+if resolved_completion is None:
+    step_completed = (
+        understanding.get("step_completed") is True
+        or action == "complete"
+    )
+else:
+    step_completed = resolved_completion
+```
+
+Placement is unchanged — still after cancel (branch 7), repeat (branch 8) and control (branch 8B) — so **control priority is preserved by position**, and the advancement body below it is untouched, so `current_step` is still incremented in exactly one place.
+
+### 19.3 The four gates
+
+Structural, not lexical. The only vocabularies are closed grammatical classes.
+
+**Gate 0 — clause splitting.** Completion and a request routinely arrive together: `"I entered the amount. Where should I submit the slip?"` ends in a question mark and has advanced the workflow since Phase 3.1. Every gate runs *per clause*, and one confirming clause outranks every request in the same message — the same precedence branch 9 already implements for compound turns. A whole-utterance question test would have destroyed that behaviour.
+
+**Gate 1 — reported-done form.** Past-tense and past-participle forms only: `filled, entered, completed, finished, done, signed, submitted, took, taken, wrote, written, gave, given, collected, paid, did, put, kept, handed`. The bare infinitives and the progressives are deliberately **absent**, and that single omission is what separates a report from an intention with no phrase table:
+
+```
+"I filled it"          -> report
+"I need to fill this"  -> intention
+"I'll fill this"       -> intention
+"I am filling it"      -> intention
+```
+
+**Gate 2 — clause-level veto.** A clause cannot be a report if it is interrogative (trailing `?` or a leading interrogative), fronted by a request-for-language verb (`spell`, `explain`, `read`, `pronounce`…), negated, or governed by an intention marker. Negation is scoped to **within two tokens of the completion verb** rather than clause-wide, so `"I haven't filled it"` is a refusal while `"I filled it, I don't know what's next"` stays a completion.
+
+A report also needs a **reporter** — first person, or the passive. This is what keeps a bare `"done"` undecided rather than confirmed, honouring the rule §15 already states: "yes" and "done" are excluded from the deterministic acknowledgement table because either can be evidence of completion, "and that judgement belongs to dialogue understanding against the current instruction — never to a flat phrase list."
+
+**Gate 3 — current-step relevance.** The authority gate. An instruction is an imperative, so its shape is known: the first identifying token is its **verb** and the last is its **object head**.
+
+```
+"Fill in your account number."   ->  fill  ... number
+"Enter the withdrawal amount."   ->  enter ... amount
+"Sign the withdrawal slip."      ->  sign  ... slip
+```
+
+A report qualifies three ways: a bare or pronominal object ("I filled **it**"); its completion verb agreeing with the instruction's verb (`entered`/`enter`, `took`/`take` via a small irregular-lemma table); or — for a *generic* completion verb that names no particular action ("I **completed** the account number") — a match on the object head.
+
+> **Why not plain token overlap.** The first implementation accepted any overlapping token, and its own suite caught `"I signed the withdrawal slip"` completing the **amount** step: `withdrawal` appears in four of the five withdrawal instructions. A workflow's qualifier word carries no step-identifying information — it is the instruction-level equivalent of the `money` that `WorkflowLoader.MATCH_STOPWORDS` already refuses to match names on. Anchoring to the verb and the object head ignores such middle modifiers without knowing which words they are, so nothing in this module is workflow-specific.
+
+A report matching none of the three resolves to `None`, **never `False`**. `"I completed step 3"` names a step number rather than the instruction's own words and has advanced through the LLM since §17; deferring leaves it exactly as it was.
+
+### 19.4 Entity extraction and completion are now genuinely independent
+
+The two signals finally come from two places. For `"I have entered 5000 rupees"` at the amount step the model still classifies it `information` and still extracts `amount = 5000`; the resolver independently confirms the completion; branch 9 persists the entity and advances. Neither can suppress the other.
+
+The converse still holds: a bare value is *not* a completion. `"twenty thousand"` has no reported-done verb, resolves to `None`, and is stored and re-asked exactly as in §16.6.
+
+### 19.5 What the veto buys
+
+An OR-floor over the LLM's flag could only add completions. The three-valued resolver also **subtracts** one: a model that wrongly reports `step_completed = true` for `"Can you spell 5000 rupees?"` can no longer advance a banking step. All six negative forms are vetoed deterministically at every step, regardless of what the model says.
+
+### 19.6 Tests
+
+`debugging/test_phase32b4.py` — 264 checks, fully offline.
+
+Covers: the four reported failures, driven with the **live model's actual reply** (`information` / `provide_information` / `step_completed=false`); completion-plus-entity independence in both directions; the six negatives at two different steps; current-step authority in both directions; the veto beating a wrong model `true`; `"I completed step 3"` and a bare `"done"` still deferring; the compound completion-plus-question and completion-plus-next_step turns; cancel / pause / repeat still outranking completion; `classify_turn()` byte-identical across control phrases, step references and all ten phase utterances; a whole withdrawal walked in natural completion forms with the model declining on every turn; a resolver truth table containing every completion text the earlier suites drive, at its own step; and unit coverage of all four gates.
+
+**Verified non-vacuous:** with the resolver neutralised at runtime — every call returning `None`, which *is* the pre-phase behaviour — all four headline cases regress to a stuck step. The suite asserts this explicitly rather than assuming it.
+
+| Suite                            | Checks   | Result   |
+| -------------------------------- | -------- | -------- |
+| `test_phase32b4`                 | 264      | pass     |
+| `test_phase32b3`                 | 148      | pass     |
+| `test_phase32b2`                 | 407      | pass     |
+| `test_phase32b1_control_routing` | 223      | pass     |
+| `test_phase32b1`                 | 286      | pass     |
+| `test_phase32`                   | 153      | pass     |
+| `test_phase31`                   | 89       | pass     |
+| `test_remediation`               | 145      | pass     |
+| `test_phase25`                   | 130      | pass     |
+| **Total**                        | **1845** | **pass** |
+
+`python -m compileall app debugging` — clean.
+
+> On Windows, run the suites with `PYTHONIOENCODING=utf-8` when redirecting output to a file. `test_phase25` and `test_remediation` print emoji and lack the `reconfigure(encoding="utf-8")` prologue the newer suites have, so a redirected run dies part-way through on the cp1252 console codec. Pre-existing, unrelated to this phase, and invisible when running straight to a terminal.
+
+### 19.7 Scope
+
+Untouched: the LLM prompt, VAD, STT, TTS, `IntentDetector`, translation, the knowledge base, `WorkflowLoader`, every workflow JSON, `ConversationManager`, `WorkflowState`, `VoiceAssistantPipeline`, `side_question_context`, `term_normalizer`, the service layer, frontend and backend. `service/engine.py` routes through `VoiceAssistantPipeline._respond`, so the service entry point inherits the fix with no edit of its own.
+
+Changed: one new module, one import and six lines in `app/dialogue/manager.py`, one new test suite.
+
+### 19.8 Known limitations
+
+- **English only**, like every deterministic tier in this engine. Kannada and Hindi completion reports resolve to `None` and depend entirely on the LLM, exactly as before. This is the largest gap in a trilingual product and the obvious candidate for a later phase.
+- **A cross-step completion defers rather than vetoes.** "I have entered 5000 rupees" at the account-number step resolves to `None`, so a model that wrongly says `true` could still advance it. Vetoing instead would break `"I completed step 3"`, which must keep deferring. The resolver never *confirms* a cross-step report, which is the half that matters.
+- **Gate 3 is coupled to instruction wording.** Rewording a workflow JSON instruction changes its verb and object head. The failure mode is a deferral, never a wrong answer.
+- **Reported speech and hypotheticals** — "My friend said he filled it", "If I had filled it" — are not distinguished from first-person reports. Both are vanishingly rare in a branch voice session.
+- **"The amount is entered wrongly"** confirms the step. The customer did enter it; the complaint is discarded. Accepted.
+- **An auxiliary-fronted clause with a dropped subject** ("have filled the account number", from a clipped transcript) is read as interrogative and vetoed. Costs one turn, in the safe direction. `have`/`has`/`had` are deliberately excluded from the interrogative lead words to shrink this class.
+- **Unreferenced modules.** `app/dialogue/action_detector.py` and `app/dialogue/llm_action_detector.py` are imported nowhere. A reader could mistake `ActionDetector` for the completion authority; it is not, and never was. Out of scope for this phase.

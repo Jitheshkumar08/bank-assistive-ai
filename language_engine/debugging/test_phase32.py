@@ -779,8 +779,14 @@ def test_phase31_regression():
           context["workflow"] == "apply for loan",
           context["workflow"])
 
-    # Kannada is not covered by this English phrase set. Asserted
-    # as a KNOWN LIMITATION, not as a fix.
+    # Kannada used to be outside this phrase set, and this suite asserted
+    # that as a KNOWN LIMITATION: "ಧನ್ಯವಾದಗಳು" reached IntentDetector and
+    # started a withdrawal workflow in a live session.
+    #
+    # Phase 3.2B-12 closed it by adding Kannada/Hindi phrasings to the same
+    # deterministic tier, so the expectation is inverted here: the phrase must
+    # now be caught BEFORE intent detection, exactly like "thank you".
+    # The English behaviour asserted above is unchanged.
 
     fake = FakeUnderstanding()
     dialogue = make_dialogue(fake)
@@ -788,9 +794,9 @@ def test_phase31_regression():
 
     run_session(dialogue, detector, ["ಧನ್ಯವಾದಗಳು"])
 
-    check("[I] KNOWN LIMITATION: Kannada thanks still reaches intent "
-          "detection (English-only scope)",
-          detector.calls == ["ಧನ್ಯವಾದಗಳು"],
+    check("[I] Kannada thanks is caught by the deterministic tier and never "
+          "reaches intent detection (fixed in 3.2B-12)",
+          detector.calls == [],
           detector.calls)
 
 

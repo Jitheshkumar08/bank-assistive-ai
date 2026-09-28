@@ -126,9 +126,30 @@ UNDERSTANDING_RESPONSE_FORMAT = {
 }
 
 
+#: Completion budget for the understanding call. See the call site for why.
+#: The JSON reply is a handful of short fields; the budget exists so the
+#: reasoning that precedes it cannot truncate the document.
+UNDERSTANDING_MAX_COMPLETION_TOKENS = 2048
+
+#: Completion budget for spoken answers: reasoning headroom plus a few
+#: sentences, since this reply is read aloud.
+ANSWER_MAX_COMPLETION_TOKENS = 1024
+
+
 def fallback_understanding():
     """
     Neutral classification used when the LLM result is unusable.
+
+    `understanding_failed` marks this as "the model did not answer", as
+    distinct from "the model answered and the meaning was unclear". The two
+    look identical in `type` but must be handled differently: a genuine
+    unknown may be carried on the current step, while a FAILURE must not be
+    allowed to drive any workflow action at all. Phase 3.2B-13 added the flag
+    after a live turn where understanding 400'd and the previous deposit
+    workflow simply carried on as though the customer had said nothing.
+
+    It is internal only: never sent to the model, never part of the response
+    schema, and absent from every successful classification.
     """
 
     return {
@@ -136,7 +157,8 @@ def fallback_understanding():
         "action": "none",
         "step_completed": False,
         "target_workflow": None,
-        "entities": dict(EMPTY_ENTITIES)
+        "entities": dict(EMPTY_ENTITIES),
+        "understanding_failed": True
     }
 
 
@@ -283,6 +305,34 @@ Rules:
 2. The customer may use natural language.
 3. The customer may make grammar mistakes.
 4. The customer may combine information and an action.
+
+4a. LANGUAGE. The customer may speak English, Kannada or
+    Hindi, and speech-to-text supplies no punctuation and no
+    capitalisation. Classify by MEANING in whatever language
+    the text is written in. Never classify a request as
+    acknowledgement or control merely because it is not in
+    English. Always reply with the same JSON schema and the
+    same English field values.
+
+    Kannada / Hindi examples:
+
+      "ನನಗೆ ಹಣ ತೆಗೆಯಬೇಕು" (I need to withdraw money)
+        -> type = workflow_action, a request to withdraw.
+           It is NOT an acknowledgement.
+
+      "मुझे पैसे जमा करने हैं" (I need to deposit money)
+        -> type = workflow_action, a request to deposit.
+
+      "ನಾನು ಐದು ಸಾವಿರ ರೂಪಾಯಿ ಜಮಾ ಮಾಡಬೇಕು"
+        -> a deposit request carrying amount = 5000.
+           "ಐದು ಸಾವಿರ" is five thousand; "ಎರಡು ಲಕ್ಷ" is
+           200000; Hindi "पाँच हज़ार" is 5000.
+
+      "ನಿಲ್ಲಿಸು" / "ಸಾಕು" / "रुको"  -> type = control.
+      "ಧನ್ಯವಾದಗಳು" / "धन्यवाद"      -> acknowledgement.
+      "ಮತ್ತೆ ಹೇಳಿ" / "फिर से बताइए" -> control, repeat.
+      "ನಾನು ಹಣ ಹಾಕಿದ್ದೇನೆ" (I have deposited the money)
+        -> completion of the current step, not a new request.
 
 5. "yes I took the slip" means complete if the current
    instruction was to take the slip.
@@ -663,7 +713,25 @@ Return only the structured result required by the schema.
                     }
                 ],
                 response_format=UNDERSTANDING_RESPONSE_FORMAT,
-                temperature=0
+                temperature=0,
+                # WHY THIS IS SET (Phase 3.2B-13)
+                #
+                # A live Kannada turn failed with a 400 whose
+                # failed_generation read "max completion tokens
+                # reached before generating a valid document".
+                # openai/gpt-oss-20b is a reasoning model: it
+                # spends completion tokens thinking BEFORE it
+                # emits the JSON, and with the provider default
+                # budget a long prompt could exhaust the budget
+                # mid-document. Structured output then fails as a
+                # whole -- there is no partial JSON to salvage.
+                #
+                # The reply itself is tiny (five short fields), so
+                # this budget is not about output size; it is
+                # headroom for the reasoning that precedes it.
+                # Nothing about the schema or the semantics
+                # changes, and a well-behaved turn uses far less.
+                max_completion_tokens=UNDERSTANDING_MAX_COMPLETION_TOKENS
             )
 
         except Exception as error:
@@ -1019,7 +1087,13 @@ Return only the answer to the customer.
                         "content": prompt
                     }
                 ],
-                temperature=0
+                temperature=0,
+                # Same reasoning-model headroom as the
+                # understanding call. A truncated answer here is
+                # less dangerous (it degrades to the unavailable
+                # message rather than a wrong classification) but
+                # the cause is identical.
+                max_completion_tokens=ANSWER_MAX_COMPLETION_TOKENS
             )
 
         except Exception as error:

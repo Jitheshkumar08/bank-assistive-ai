@@ -1,4 +1,8 @@
-from app.conversation.state import SessionState, WorkflowState
+from app.conversation.state import (
+    PausedWorkflow,
+    SessionState,
+    WorkflowState,
+)
 
 
 class ConversationManager:
@@ -51,6 +55,27 @@ class ConversationManager:
         # cancel, suspend or resume anything.
         self.recent_side_question = None
 
+        # An UNRESOLVED workflow conflict (Phase 3.2B-14): a
+        # request is in progress and the customer asked for a
+        # different banking service, so the assistant has asked
+        # which they want and is waiting for the answer.
+        #
+        # Held opaquely, exactly like recent_side_question: this
+        # module does not import the record type and never reads
+        # its fields to decide anything. A pending conflict is
+        # QUESTION state, not workflow state -- no transition
+        # here reads it, and its presence alone changes nothing
+        # about the workflow, which stays precisely as it was
+        # until the customer answers.
+        self.workflow_conflict = None
+
+        # A PausedWorkflow snapshot, or None. Written only when
+        # the customer chose to pause one request in order to
+        # start another, which is the one situation where the
+        # single workflow slot would otherwise lose a request the
+        # customer explicitly asked to keep.
+        self.paused_workflow = None
+
 
     # =====================================================
     # SESSION STATE
@@ -98,8 +123,11 @@ class ConversationManager:
 
         self.history = []
 
-        # A new session starts with no remembered side question.
+        # A new session starts with no remembered side question,
+        # no unresolved conflict and no paused request.
         self.recent_side_question = None
+        self.workflow_conflict = None
+        self.paused_workflow = None
 
         self.update_workflow_state(WorkflowState.NONE)
         self.update_session_state(SessionState.READY)
@@ -151,6 +179,14 @@ class ConversationManager:
         # pronoun asked inside it.
         self.recent_side_question = None
 
+        # A workflow being loaded is the RESOLUTION of any
+        # conflict there was, so the question is no longer
+        # pending. `paused_workflow` is deliberately NOT cleared:
+        # pausing one request in order to start another is
+        # precisely how a snapshot comes to exist, and this is
+        # the call that then reuses the slot.
+        self.workflow_conflict = None
+
         self.update_workflow_state(WorkflowState.ACTIVE)
 
         print(
@@ -177,6 +213,12 @@ class ConversationManager:
         self.entities = {}
 
         self.recent_side_question = None
+
+        # Nothing is in progress any more, so there is nothing
+        # for a conflict question to be about. A paused snapshot
+        # survives: releasing the slot is what makes room to go
+        # back to it.
+        self.workflow_conflict = None
 
         self.update_workflow_state(WorkflowState.NONE)
 
@@ -273,6 +315,108 @@ class ConversationManager:
 
 
     # =====================================================
+    # UNRESOLVED WORKFLOW CONFLICT  (Phase 3.2B-14)
+    #
+    # One slot, one pending question. Neither method touches
+    # workflow_state, current_step, current_intent,
+    # current_workflow or entities -- remembering that the
+    # customer was asked a question is not a workflow transition,
+    # and the whole safety property of the conflict path is that
+    # nothing moves until they answer.
+    # =====================================================
+
+    def remember_workflow_conflict(self, workflow_conflict):
+
+        self.workflow_conflict = workflow_conflict
+
+    def clear_workflow_conflict(self):
+
+        self.workflow_conflict = None
+
+
+    # =====================================================
+    # PAUSED-REQUEST SNAPSHOT  (Phase 3.2B-14)
+    #
+    # There is still exactly ONE workflow slot. These two methods
+    # move a request out of it and back into it; they never give
+    # the session a second live workflow, and at no point are two
+    # workflows ACTIVE.
+    #
+    # stash_paused_workflow() is a pure READ of the slot plus a
+    # write to the snapshot: it does not change workflow_state, so
+    # the caller decides (and is visible as deciding) whether the
+    # request is being suspended or cancelled.
+    # =====================================================
+
+    def stash_paused_workflow(self):
+        """
+        Snapshots the loaded workflow so it survives the slot
+        being reused for another request.
+
+        Returns the snapshot, or None when there is no workflow to
+        snapshot. Changes no workflow state.
+        """
+
+        if self.current_workflow is None:
+            return None
+
+        snapshot = PausedWorkflow(
+            intent=self.current_intent,
+            workflow=self.current_workflow,
+            step=self.current_step,
+            entities=dict(self.entities)
+        )
+
+        self.paused_workflow = snapshot
+
+        print(
+            f"Workflow snapshot stored: {snapshot.workflow} "
+            f"(step {snapshot.step})"
+        )
+
+        return snapshot
+
+    def restore_paused_workflow(self):
+        """
+        Moves the snapshotted request back into the workflow slot
+        as SUSPENDED, at the exact step and with the exact
+        entities it had when it was paused.
+
+        Returns the restored snapshot, or None when there was
+        none. SUSPENDED rather than ACTIVE on purpose: coming back
+        to a paused request is the customer's decision to make,
+        and `resume` is the one command that makes it.
+
+        Whatever was in the slot is overwritten, so the caller
+        must have finished or cancelled it first. There is still
+        only one slot.
+        """
+
+        snapshot = self.paused_workflow
+
+        if snapshot is None:
+            return None
+
+        self.current_intent = snapshot.intent
+        self.current_workflow = snapshot.workflow
+        self.current_step = snapshot.step
+        self.entities = dict(snapshot.entities)
+
+        self.paused_workflow = None
+        self.workflow_conflict = None
+        self.recent_side_question = None
+
+        self.update_workflow_state(WorkflowState.SUSPENDED)
+
+        print(
+            f"Workflow restored: {snapshot.workflow} "
+            f"(step {snapshot.step})"
+        )
+
+        return snapshot
+
+
+    # =====================================================
     # BACKWARD-COMPATIBLE STATUS FLAGS
     #
     # completed/cancelled used to be independent booleans.
@@ -326,5 +470,34 @@ class ConversationManager:
             "completed": self.completed,
             "cancelled": self.cancelled,
             "entities": self.entities,
-            "history": self.history
+            "history": self.history,
+
+            # Phase 3.2B-14. Both are read-only views, so a
+            # caller inspecting the context can see that a
+            # clarification is outstanding, or that a request is
+            # being held, without reaching into the records.
+            "workflow_conflict": (
+                None
+                if self.workflow_conflict is None
+                else {
+                    "current_workflow": getattr(
+                        self.workflow_conflict,
+                        "current_workflow",
+                        None
+                    ),
+                    "requested_workflow": getattr(
+                        self.workflow_conflict,
+                        "requested_workflow",
+                        None
+                    )
+                }
+            ),
+            "paused_workflow": (
+                None
+                if self.paused_workflow is None
+                else {
+                    "workflow": self.paused_workflow.workflow,
+                    "step": self.paused_workflow.step
+                }
+            )
         }

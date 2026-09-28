@@ -1,0 +1,4 @@
+{"started": "2026-09-23T07:04:45", "model_load_seconds": 3.458, "warmup_clip": "ivb_kn_001", "warmup_seconds_discarded": 129.378, "torch_threads": 6, "torch_seed_per_clip": 3208, "resumed_with_completed": 0}
+{"started": "2026-09-23T20:04:35", "model_load_seconds": 13.037, "warmup_clip": "ivb_kn_028", "warmup_seconds_discarded": 185.814, "torch_threads": 6, "torch_seed_per_clip": 3208, "resumed_with_completed": 27}
+{"started": "2026-09-23T20:44:09", "model_load_seconds": 6.783, "warmup_clip": "ivb_kn_042", "warmup_seconds_discarded": 105.771, "torch_threads": 6, "torch_seed_per_clip": 3208, "resumed_with_completed": 41}
+{"started": "2026-09-23T21:42:13", "model_load_seconds": 6.847, "warmup_clip": "ivb_kn_046", "warmup_seconds_discarded": 107.23, "torch_threads": 6, "torch_seed_per_clip": 3208, "resumed_with_completed": 45}

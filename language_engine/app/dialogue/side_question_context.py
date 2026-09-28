@@ -298,7 +298,7 @@ def next_context(previous, question, answer):
 
     subject = extract_subject(question)
 
-    if subject is None and previous is not None:
+    if subject is None and is_remembered_exchange(previous):
 
         if refers_to_recent_context(question):
             subject = previous.subject
@@ -319,13 +319,34 @@ def next_context(previous, question, answer):
 MAX_REMEMBERED_ANSWER_CHARS = 400
 
 
+def is_remembered_exchange(recent):
+    """
+    True when `recent` is a usable remembered exchange.
+
+    The slot is documented as RecentSideQuestion-or-None, and a caller that
+    passed "" instead of None crashed the whole question path with
+    `AttributeError: 'str' object has no attribute 'subject'` (Phase 3.2B-13).
+    That caller is fixed; this predicate makes the shape a precondition these
+    functions CHECK rather than assume, so a future mismatch degrades to "no
+    remembered context" instead of taking down an answer.
+
+    It is a type check, not an exception handler: anything that is not shaped
+    like the record simply is not one.
+    """
+
+    return (recent is not None
+            and hasattr(recent, "question")
+            and hasattr(recent, "answer")
+            and hasattr(recent, "subject"))
+
+
 def format_recent_context(recent):
     """
     Renders the single remembered exchange for the answering
     prompt, or "" when there is nothing to render.
     """
 
-    if recent is None:
+    if not is_remembered_exchange(recent):
         return ""
 
     question = str(recent.question).strip()
@@ -365,7 +386,7 @@ def retrieval_query(question, recent):
     if not question:
         return question
 
-    if recent is None or not recent.subject:
+    if not is_remembered_exchange(recent) or not recent.subject:
         return question
 
     if not refers_to_recent_context(question):

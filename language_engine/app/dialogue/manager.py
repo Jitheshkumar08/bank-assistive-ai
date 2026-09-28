@@ -1,6 +1,8 @@
 import re
 from typing import NamedTuple
 
+from app.dialogue import multilingual_phrases
+from app.dialogue.indic_numbers import extract_amount
 from app.workflow.loader import WorkflowLoader
 from app.dialogue.llm.dialogue_understanding import (
     DialogueUnderstanding,
@@ -10,6 +12,20 @@ from app.dialogue.llm.dialogue_understanding import (
 from app.dialogue.side_question_context import (
     accepts_recent_context,
     next_context,
+)
+from app.dialogue.completion_semantics import (
+    resolve_step_completion,
+)
+from app.dialogue.workflow_conflict import (
+    CHOICE_CANCEL,
+    CHOICE_CONTINUE,
+    CHOICE_PAUSE,
+    CONFLICT_CONTROL_CHOICES,
+    WorkflowConflict,
+    conflict_question,
+    display_name,
+    resolve_conflict_answer,
+    same_workflow,
 )
 from app.conversation.state import WorkflowState
 
@@ -122,6 +138,27 @@ ACKNOWLEDGEMENT_PHRASES = {
 }
 
 # The phrase each acknowledgement class opens its reply with.
+# ---------------------------------------------------------
+# Kannada / Hindi phrases (Phase 3.2B-12)
+#
+# The three tables above were English-only, which is why
+# "ಧನ್ಯವಾದಗಳು" reached IntentDetector and started a withdrawal
+# workflow. The Kannada/Hindi phrasings live in one data module
+# and are merged in here, so matching, ordering and the
+# exact-phrase rule are IDENTICAL for every language -- there is
+# no second matcher and no language-specific code path.
+# ---------------------------------------------------------
+
+SESSION_EXIT_PHRASES = SESSION_EXIT_PHRASES | multilingual_phrases.SESSION_EXIT_PHRASES
+
+WORKFLOW_CONTROL_PHRASES = multilingual_phrases.merge_phrase_sets(
+    WORKFLOW_CONTROL_PHRASES, multilingual_phrases.WORKFLOW_CONTROL_PHRASES
+)
+
+ACKNOWLEDGEMENT_PHRASES = multilingual_phrases.merge_phrase_sets(
+    ACKNOWLEDGEMENT_PHRASES, multilingual_phrases.ACKNOWLEDGEMENT_PHRASES
+)
+
 ACKNOWLEDGEMENT_OPENERS = {
     "thanks": "You're welcome.",
     "acknowledgement": "Okay.",
@@ -694,7 +731,32 @@ def classify_command(text):
     # which lands the utterance on the LLM path exactly as before.
     # ---------------------------------------------
 
-    return classify_polite_control(normalized)
+    polite = classify_polite_control(normalized)
+
+    if polite is not None:
+        return polite
+
+    # ---------------------------------------------
+    # Pass 3 -- realistic Indic ASR variants (3.2B-13).
+    #
+    # Runs LAST, so it can only classify utterances every earlier
+    # pass already declined. See multilingual_phrases for why
+    # both rules are safe: the stem rule needs the whole
+    # utterance to be one word, and the fragment rule retries the
+    # exact tables after dropping single-character debris.
+    # ---------------------------------------------
+
+    by_stem = multilingual_phrases.classify_by_stem(normalized)
+
+    if by_stem is not None:
+        return by_stem
+
+    without_fragments = multilingual_phrases.strip_trailing_fragments(normalized)
+
+    if without_fragments is not None and without_fragments != normalized:
+        return classify_command(without_fragments)
+
+    return None
 
 
 # =========================================================
@@ -1016,9 +1078,31 @@ def resolve_control_command(text):
 
 class DialogueManager:
 
-    def __init__(self):
+    def __init__(self, intent_detector=None):
         self.workflow_loader = WorkflowLoader()
         self.dialogue_understanding = DialogueUnderstanding()
+
+        # =============================================
+        # THE EXISTING INTENT DETECTOR, INJECTED
+        # (Phase 3.2B-14)
+        #
+        # Used for ONE question: is this turn a request for a
+        # DIFFERENT banking service than the one in progress? The
+        # detector is the engine's only intent classifier and
+        # stays that way -- there is deliberately no second
+        # classifier here, and this class never asks it to decide
+        # a workflow transition. It answers "which service",
+        # nothing more.
+        #
+        # INJECTED rather than constructed, for two reasons. It
+        # loads a sentence-transformer model, and the routing
+        # layer already owns one; building a second would double
+        # the start-up cost and the memory for no benefit. And it
+        # is OPTIONAL: when no detector is supplied, conflict
+        # detection is simply off and every other path in this
+        # file behaves exactly as it did before this phase.
+        # =============================================
+        self.intent_detector = intent_detector
 
         print("Dialogue Manager Ready ✅")
 
@@ -1063,6 +1147,54 @@ class DialogueManager:
         if isinstance(command, StepReference):
 
             return self._handle_step_reference(conversation, command)
+
+        # ---------------------------------------------
+        # AN OUTSTANDING WORKFLOW CONFLICT  (Phase 3.2B-14)
+        #
+        # The assistant has asked which of three named options the
+        # customer wants, and this turn is a control word. While a
+        # conflict is pending, a control word IS the answer:
+        # "cancel", "pause" and "resume"/"continue" are the words
+        # the question itself used, in every language the
+        # deterministic tier already knows, so the existing
+        # Kannada and Hindi control vocabulary resolves a conflict
+        # with no new phrase table.
+        #
+        # Dispatched AFTER the step reference above, which is
+        # read-only in every state and must keep working while the
+        # question is outstanding, and BEFORE everything below,
+        # because a pending question outranks the status of the
+        # workflow it is about.
+        #
+        # A control word that names no option -- `repeat`, `next`,
+        # an acknowledgement -- asks the question again and
+        # changes nothing. That is the required behaviour for
+        # repeat, and it is also the only safe reading of "okay":
+        # it is not one of the three options.
+        #
+        # `session_exit` never arrives here. The pipeline ends the
+        # session on it before any of this runs, which is exactly
+        # what should happen to an exit during a conflict.
+        # ---------------------------------------------
+
+        pending_conflict = self._pending_conflict(conversation)
+
+        if pending_conflict is not None:
+
+            choice = CONFLICT_CONTROL_CHOICES.get(command)
+
+            if choice is not None:
+
+                return self._resolve_workflow_conflict(
+                    conversation,
+                    pending_conflict,
+                    choice
+                )
+
+            return self._ask_conflict_question(
+                conversation,
+                pending_conflict
+            )
 
         # Acknowledgements are dispatched BEFORE the has_workflow
         # guard below. That guard answers "there is nothing to
@@ -1239,6 +1371,33 @@ class DialogueManager:
 
         workflow_state = conversation.workflow_state
 
+        # ---------------------------------------------
+        # REPEAT IN A RESTING STATE  (Phase 3.2B-13)
+        #
+        # Repeat is READ-ONLY: it asks to hear something again,
+        # and in a resting state there is no workflow step to
+        # read. There may still be a real replay target -- the
+        # last thing the assistant actually said -- and replaying
+        # that is what the customer asked for.
+        #
+        # Live failure: after cancelling, "ಮತ್ತೆ ಹೇಳಿ" answered
+        # "That request was cancelled. There's no active
+        # request..." because every command in this branch got
+        # the status message and `repeat` never reached its own
+        # case below.
+        #
+        # The target is never fabricated: with nothing in history
+        # the original wording is returned unchanged, and no
+        # state is touched in either case.
+        # ---------------------------------------------
+
+        if command == "repeat":
+
+            previous = self._last_assistant_message(conversation)
+
+            if previous:
+                return previous
+
         if workflow_state in (
             WorkflowState.COMPLETED,
             WorkflowState.CANCELLED
@@ -1272,6 +1431,33 @@ class DialogueManager:
             "There's no active request right now. "
             "What banking service would you like help with?"
         )
+
+    @staticmethod
+    def _last_assistant_message(conversation):
+        """
+        The most recent thing the assistant said, or None.
+
+        The replay target for `repeat` when no workflow step is
+        available. Reads history only -- it cannot fabricate a
+        target, and it changes nothing.
+        """
+
+        history = getattr(conversation, "history", None) or []
+
+        for entry in reversed(history):
+
+            if not isinstance(entry, dict):
+                continue
+
+            if entry.get("speaker") != "Assistant":
+                continue
+
+            message = (entry.get("message") or "").strip()
+
+            if message:
+                return message
+
+        return None
 
     # =====================================================
     # ACKNOWLEDGEMENT HANDLING (STATE-AWARE)
@@ -1545,6 +1731,344 @@ class DialogueManager:
         return None
 
     # =====================================================
+    # ACTIVE-WORKFLOW INTERRUPTION  (Phase 3.2B-14)
+    #
+    # THE DEFECT
+    #
+    # Once a workflow was ACTIVE, the routing layer sent every
+    # turn to generate_response(), which understands an utterance
+    # only as an action WITHIN the current request. Intent
+    # detection was never consulted again for the rest of the
+    # session. So a genuine new service request --
+    #
+    #     deposit ACTIVE, customer says "ನನಗೆ ಹಣ ತೆಗೆಯಬೇಕು"
+    #
+    # -- came back type=workflow_action / action=none /
+    # step_completed=false, fell to the default branch, and the
+    # deposit step was restated. The customer asked to withdraw
+    # and heard "Please take a deposit slip." again.
+    #
+    # THE SHAPE OF THE FIX
+    #
+    # Exactly one new question is asked of exactly one existing
+    # component: "is this a request for a DIFFERENT banking
+    # service?" IntentDetector answers it, as the engine's only
+    # intent classifier. Nothing here classifies intent, and
+    # nothing in IntentDetector knows about workflow state.
+    #
+    # DETECTION IS ONLY EVER ALLOWED TO ASK A QUESTION. It starts
+    # nothing, cancels nothing, suspends nothing and advances
+    # nothing. The transitions live in _resolve_workflow_conflict,
+    # which runs only after the customer has picked one of the
+    # three options by name.
+    #
+    # WHERE IT RUNS, AND WHY THAT IS THE SAFE PLACE
+    #
+    # generate_response() branches 7-13 handle every turn the
+    # engine positively understood as belonging to the current
+    # request: cancel, repeat, natural-language control, step
+    # completion, acknowledgement, question/help, next-step and
+    # information. All of them keep absolute priority -- the
+    # conflict check runs only on a turn that NONE of them
+    # claimed, which is exactly where the live failure landed.
+    #
+    # That ordering is what satisfies the hard requirement that a
+    # side question must not interrupt a workflow: "what is an
+    # education loan?" during a withdrawal is claimed by the
+    # question branch and never reaches this code at all.
+    # =====================================================
+
+    @staticmethod
+    def _pending_conflict(conversation):
+        """
+        The unresolved WorkflowConflict on `conversation`, or None.
+
+        getattr, not attribute access: a ConversationManager built
+        before this phase -- including the ones the debugging
+        suites construct directly -- simply has no such attribute,
+        and the correct reading of that is "no conflict".
+        """
+
+        return getattr(conversation, "workflow_conflict", None)
+
+    def _ask_conflict_question(self, conversation, conflict):
+        """
+        The clarification, phrased for the state the interrupted
+        request is actually in. Changes nothing.
+        """
+
+        return conflict_question(
+            conflict,
+            paused=(
+                conversation.workflow_state == WorkflowState.SUSPENDED
+            )
+        )
+
+    def _detect_workflow_conflict(self, conversation, user_input):
+        """
+        Recognises a request for a DIFFERENT banking service while
+        one is already in progress.
+
+        Returns a WorkflowConflict, or None. None means "not a
+        conflict", and the caller must continue with its existing
+        routing rather than guess. This method NEVER mutates
+        conversation state.
+        """
+
+        # ---------------------------------------------
+        # No detector -> the feature is simply off, and every
+        # caller behaves exactly as it did before this phase.
+        # ---------------------------------------------
+
+        detector = getattr(self, "intent_detector", None)
+
+        if detector is None or not user_input:
+            return None
+
+        # ---------------------------------------------
+        # There must be a request to interrupt. COMPLETED,
+        # CANCELLED and NONE are resting states: the routing layer
+        # already sends a fresh intent through the normal
+        # detection path there, so a conflict is impossible and
+        # this must not invent one.
+        # ---------------------------------------------
+
+        current = (
+            conversation.current_intent
+            or conversation.current_workflow
+        )
+
+        if not current:
+            return None
+
+        if conversation.workflow_state not in (
+            WorkflowState.ACTIVE,
+            WorkflowState.SUSPENDED
+        ):
+            return None
+
+        # ---------------------------------------------
+        # EXISTING PRE-FILTERS KEEP THEIR TURNS
+        #
+        # Each of these already owns a class of utterance, and a
+        # conflict must not be able to take one away:
+        #
+        #   looks_like_a_question       -- "how much can I
+        #       deposit?" during a withdrawal is a question about
+        #       banking, and the question path answers it. Measured:
+        #       IntentDetector scores it as a BANKING_INTENT at
+        #       margin +0.206, so without this guard a question
+        #       would raise a clarification.
+        #
+        #   looks_like_a_control_utterance -- the control family,
+        #       which branch 8B and the deterministic tier own.
+        #
+        #   contains_negation -- "I don't want to withdraw" is a
+        #       refusal, not a request. Same reasoning as the
+        #       NEGATION PROTECTION block at the top of this file:
+        #       reading a refusal as a request is the expensive
+        #       direction.
+        #
+        # All three are the engine's existing functions, used for
+        # the purpose they were written for. No new semantics.
+        # ---------------------------------------------
+
+        if looks_like_a_question(user_input):
+            return None
+
+        if looks_like_a_control_utterance(user_input):
+            return None
+
+        if contains_negation(user_input):
+            return None
+
+        # ---------------------------------------------
+        # THE ONE QUESTION FOR THE DETECTOR
+        #
+        # `is_banking_intent` must be explicitly true. Absent
+        # counts as false here -- deliberately the opposite of the
+        # routing layer's `.get("is_banking_intent", True)`,
+        # because an answer that does not carry the abstention
+        # signal is not evidence strong enough to interrupt a
+        # banking request in progress.
+        # ---------------------------------------------
+
+        result = detector.detect_intent(user_input) or {}
+
+        if result.get("is_banking_intent") is not True:
+            return None
+
+        requested = result.get("intent")
+
+        if not requested:
+            return None
+
+        # The same service is not a conflict: the customer is
+        # talking about the request they are already on, and the
+        # existing workflow handling continues untouched.
+
+        if same_workflow(requested, current):
+            return None
+
+        return WorkflowConflict(
+            current_workflow=current,
+            requested_workflow=requested
+        )
+
+    def _conflict_choice_from_text(self, user_input):
+        """
+        Which of the three options a free-text answer selects, or
+        None when it selects none of them.
+
+        The negation guard is applied HERE rather than inside
+        resolve_conflict_answer() so the resolver stays a pure
+        function of its vocabulary, and so the guard is the same
+        contains_negation() the rest of this file uses.
+        """
+
+        if not user_input:
+            return None
+
+        if contains_negation(user_input):
+            return None
+
+        return resolve_conflict_answer(user_input)
+
+    def _resolve_workflow_conflict(self, conversation, conflict, choice):
+        """
+        Carries out the option the customer picked.
+
+        `choice` is CHOICE_CANCEL, CHOICE_PAUSE, CHOICE_CONTINUE,
+        or None. None is not a failure -- it is "that did not
+        answer the question" -- and it asks the question again
+        WITHOUT touching a single piece of state, which is the
+        documented default for anything unclear.
+
+        Every transition here goes through the ConversationManager
+        method that already owns it (cancel_workflow,
+        suspend_workflow, resume_workflow, and start_workflow ->
+        load_workflow for activation). There is no second workflow
+        engine and at no point are two workflows ACTIVE.
+        """
+
+        current = conflict.current_workflow
+        requested = conflict.requested_workflow
+
+        current_name = display_name(current)
+        requested_name = display_name(requested)
+
+        # ---------------------------------------------
+        # NOT AN ANSWER -- ask again, change nothing.
+        # ---------------------------------------------
+
+        if choice is None:
+            return self._ask_conflict_question(conversation, conflict)
+
+        # ---------------------------------------------
+        # C. CONTINUE THE CURRENT REQUEST
+        #
+        # The conflict is resolved by DISCARDING the new request,
+        # which is the customer's call to make. current_step is
+        # not touched, so they are exactly where they were.
+        #
+        # resume_workflow() is a no-op unless the request was
+        # SUSPENDED; when it was, the customer saying "continue"
+        # is the explicit resume the engine already requires.
+        # ---------------------------------------------
+
+        if choice == CHOICE_CONTINUE:
+
+            conversation.clear_workflow_conflict()
+            conversation.resume_workflow()
+
+            current_instruction = self._resolve_current_instruction(
+                conversation
+            )
+
+            if current_instruction is None:
+                return f"Okay, we'll carry on with the {current_name}."
+
+            return (
+                f"Okay, let's continue with the {current_name}. "
+                + restate_current_step(current_instruction)
+            )
+
+        # ---------------------------------------------
+        # THE NEW REQUEST MUST ACTUALLY EXIST
+        #
+        # Checked BEFORE anything is cancelled or suspended, so a
+        # service with no guided procedure can never cost the
+        # customer the request they already had. The wording
+        # mirrors start_workflow()'s own honest message.
+        #
+        # Detection checks this too, so this is normally
+        # unreachable; it is here because the two sides of a
+        # transition must not depend on each other's ordering.
+        # ---------------------------------------------
+
+        if not self.workflow_loader.has_workflow(requested):
+
+            conversation.clear_workflow_conflict()
+
+            current_instruction = self._resolve_current_instruction(
+                conversation
+            )
+
+            message = (
+                "I don't have a guided procedure for "
+                f"{requested_name} yet, so I've left your "
+                f"{current_name} exactly as it was."
+            )
+
+            if current_instruction is None:
+                return message
+
+            return f"{message} {current_instruction}"
+
+        # ---------------------------------------------
+        # A. CANCEL THE CURRENT REQUEST, START THE NEW ONE
+        # ---------------------------------------------
+
+        if choice == CHOICE_CANCEL:
+
+            conversation.cancel_workflow()
+
+            opener = f"Okay, I've cancelled the {current_name}."
+
+        # ---------------------------------------------
+        # B. PAUSE THE CURRENT REQUEST, START THE NEW ONE
+        #
+        # The snapshot is taken AFTER suspend_workflow() so it
+        # records a request that is genuinely SUSPENDED, and
+        # BEFORE start_workflow() reuses the one workflow slot.
+        # Step and entities are both captured, so the paused
+        # request stays recoverable exactly where it was.
+        # ---------------------------------------------
+
+        else:
+
+            conversation.suspend_workflow()
+            conversation.stash_paused_workflow()
+
+            opener = (
+                f"Okay, I've paused the {current_name} and you can "
+                "come back to it later."
+            )
+
+        conversation.clear_workflow_conflict()
+
+        started, response = self.start_workflow(conversation, requested)
+
+        if not started:
+
+            # start_workflow() modified nothing on failure, so the
+            # interrupted request is still exactly as this method
+            # left it -- cancelled, or paused and snapshotted.
+            return f"{opener} {response}"
+
+        return f"{opener} Let's start the {requested_name}. {response}"
+
+    # =====================================================
     # WORKFLOW ACTIVATION
     #
     # The single entry point for starting a banking workflow.
@@ -1589,6 +2113,38 @@ class DialogueManager:
     # =====================================================
 
     def generate_response(self, conversation, user_input=None):
+
+        # =================================================
+        # 0. AN OUTSTANDING WORKFLOW CONFLICT  (Phase 3.2B-14)
+        #
+        # The assistant asked which of three named options the
+        # customer wants and is waiting for the answer, so this
+        # turn is that answer and nothing else. It is resolved
+        # BEFORE any workflow handling, because until it is
+        # resolved the workflow in the slot is not what the
+        # customer is talking about.
+        #
+        # The deterministic control words ("cancel", "pause",
+        # "continue", and their Kannada and Hindi equivalents)
+        # never arrive here -- the routing layer hands those to
+        # handle_control_command(), which resolves the conflict
+        # through the same _resolve_workflow_conflict(). One
+        # implementation, two entry points, exactly like the
+        # pause/resume contract above.
+        #
+        # An answer that selects no option -- including an empty
+        # turn -- asks the question again and changes nothing.
+        # =================================================
+
+        pending_conflict = self._pending_conflict(conversation)
+
+        if pending_conflict is not None:
+
+            return self._resolve_workflow_conflict(
+                conversation,
+                pending_conflict,
+                self._conflict_choice_from_text(user_input)
+            )
 
         # =================================================
         # 1. CHECK WHETHER THERE IS AN ACTIVE WORKFLOW
@@ -1670,6 +2226,37 @@ class DialogueManager:
 
             print("AI Understanding:", understanding)
 
+            # =============================================
+            # UNDERSTANDING FAILURE GUARD  (Phase 3.2B-13)
+            #
+            # `understanding_failed` means the model did not
+            # answer at all -- a 400, a timeout, or a reply that
+            # was not valid JSON. It is NOT the same as the model
+            # saying "I don't know what this is".
+            #
+            # Live failure this prevents: a Kannada withdrawal
+            # request 400'd with "max completion tokens reached
+            # before generating a valid document", and the turn
+            # fell through to the branches below, which restated
+            # the ACTIVE DEPOSIT step as though the customer had
+            # agreed to carry on with it. The customer had asked
+            # for something else entirely and was never told the
+            # request had not been understood.
+            #
+            # So: change nothing, advance nothing, complete
+            # nothing, switch to no other intent -- say plainly
+            # that it was not understood and leave the workflow
+            # exactly where it was. The next turn is unaffected.
+            # =============================================
+
+            if understanding.get("understanding_failed"):
+
+                return (
+                    "Sorry, I didn't catch that. "
+                    f"{status_message} "
+                    "Would you like help with anything else?"
+                )
+
             message_type = understanding.get("type", "unknown")
 
             if message_type in {"help", "question"}:
@@ -1739,6 +2326,33 @@ class DialogueManager:
             current_instruction=current_instruction
         )
 
+        # =================================================
+        # UNDERSTANDING FAILURE GUARD  (Phase 3.2B-13)
+        #
+        # The model did not answer (400 / timeout / unparseable
+        # JSON), so this turn carries NO information. Everything
+        # below -- completion, cancel, repeat, next, entity
+        # capture, step advance -- would be acting on a blank
+        # classification.
+        #
+        # Live failure: a Kannada withdrawal request 400'd with
+        # "max completion tokens reached before generating a
+        # valid document" while a DEPOSIT workflow was active,
+        # and the turn quietly restated the deposit step. The
+        # customer's actual request vanished without a word.
+        #
+        # Restating the current step is still the right thing to
+        # SAY (it keeps the customer oriented), but it must be
+        # preceded by an honest admission, and no state may move.
+        # =================================================
+
+        if understanding.get("understanding_failed"):
+
+            if current_instruction:
+                return f"Sorry, I didn't catch that. {current_instruction}"
+
+            return "Sorry, I didn't catch that. Could you say that again?"
+
         print(
             "AI Understanding:",
             understanding
@@ -1758,6 +2372,28 @@ class DialogueManager:
             "entities",
             {}
         )
+
+        # ---------------------------------------------
+        # Kannada / Hindi spoken amounts (Phase 3.2B-12)
+        #
+        # The understanding prompt extracts amounts from English
+        # and from digits. A Kannada amount spoken as WORDS
+        # ("ಐದು ಸಾವಿರ ರೂಪಾಯಿ") came back as None, so a deposit
+        # turn carried no amount at all.
+        #
+        # This only FILLS A GAP: an amount the model already
+        # extracted is never overwritten, and the parser returns
+        # None rather than guess, so the existing "tell me the
+        # amount" path still runs when nothing is certain.
+        # ---------------------------------------------
+
+        if isinstance(entities, dict) and entities.get("amount") is None:
+
+            spoken_amount = extract_amount(user_input)
+
+            if spoken_amount is not None:
+                entities = dict(entities)
+                entities["amount"] = spoken_amount
 
         # =================================================
         # 7. CANCEL
@@ -1935,12 +2571,56 @@ class DialogueManager:
         # current_step is incremented exactly ONCE per turn, on
         # this path only. There is deliberately no second
         # increment anywhere in this method.
+        #
+        # DETERMINISTIC COMPLETION RESOLUTION  (Phase 3.2B-4)
+        #
+        # Completion used to be one LLM field, and it was the only
+        # workflow-affecting signal in this file without a
+        # deterministic component -- exit, pause, resume, cancel,
+        # repeat, next and step references all have one, and even
+        # step_number is coerced rather than trusted.
+        #
+        # resolve_step_completion() reads the customer's own words
+        # against the CURRENT INSTRUCTION and returns three values:
+        #
+        #   True  -- a clause reports THIS step as carried out
+        #   False -- every clause is a question, a help request, a
+        #            refusal or an intention
+        #   None  -- unreadable structurally; the LLM decides,
+        #            exactly as it did before this phase
+        #
+        # The None case is what makes this a correction rather than
+        # a replacement. It covers a completion that names
+        # something other than the current step ("I completed step
+        # 3"), a bare "done", and every non-English utterance, all
+        # of which reach dialogue understanding untouched.
+        #
+        # Entity extraction is NOT involved. entities still come
+        # from the model, and are still persisted below, so
+        # "I have entered 5000 rupees" can now resolve to
+        # step_completed = True here while amount = 5000 arrives
+        # from the LLM -- the two signals are finally independent.
+        #
+        # Placement is unchanged: still AFTER cancel (7), repeat
+        # (8) and control (8B), so control priority is preserved by
+        # position, and the advancement body below is untouched.
         # =================================================
 
-        step_completed = (
-            understanding.get("step_completed") is True
-            or action == "complete"
+        resolved_completion = resolve_step_completion(
+            user_input,
+            current_instruction
         )
+
+        if resolved_completion is None:
+
+            step_completed = (
+                understanding.get("step_completed") is True
+                or action == "complete"
+            )
+
+        else:
+
+            step_completed = resolved_completion
 
         if step_completed:
 
@@ -2094,6 +2774,68 @@ class DialogueManager:
                 conversation,
                 current_instruction,
                 entities
+            )
+
+        # =================================================
+        # 13B. A NEW BANKING REQUEST DURING THIS ONE
+        #      (Phase 3.2B-14)
+        #
+        # Nothing above claimed this turn. It is not a completion,
+        # not a question, not a control, not information, not an
+        # acknowledgement and not a request for direction -- so
+        # before restating the current step as though the customer
+        # had said nothing, ask whether they have just asked for a
+        # different banking service.
+        #
+        # This placement is the whole safety argument. Branches
+        # 7-13 keep every turn they already handled, so no existing
+        # behaviour changes; only the turns that previously fell to
+        # branch 14 or 15 -- the two branches that restate the step
+        # with no reason of their own -- reach this check.
+        #
+        # PLACED BEFORE branch 14 on purpose. `unknown` is the
+        # model saying it could not classify the turn, and restating
+        # the deposit step on the strength of that is the same
+        # silent carry-on this phase exists to remove. A second
+        # opinion from the engine's own intent detector is worth
+        # more than "Take your time" -- and if the detector
+        # abstains too, branch 14 still answers, unchanged.
+        #
+        # THE ONLY OUTCOME IS A QUESTION. No workflow starts,
+        # stops, pauses or advances on this branch.
+        # =================================================
+
+        detected_conflict = self._detect_workflow_conflict(
+            conversation,
+            user_input
+        )
+
+        if detected_conflict is not None:
+
+            # A service with no guided procedure is not a choice
+            # between two workflows, so there is nothing to ask.
+            # Say so plainly and leave the current request exactly
+            # where it is -- which is the same honesty
+            # start_workflow() already applies in a resting state.
+
+            if not self.workflow_loader.has_workflow(
+                detected_conflict.requested_workflow
+            ):
+
+                return (
+                    "I understood you'd like help with "
+                    f"{display_name(detected_conflict.requested_workflow)}"
+                    ", but I don't have a guided procedure for that "
+                    "yet. Your "
+                    f"{display_name(detected_conflict.current_workflow)}"
+                    f" is still in progress. {current_instruction}"
+                )
+
+            conversation.remember_workflow_conflict(detected_conflict)
+
+            return self._ask_conflict_question(
+                conversation,
+                detected_conflict
             )
 
         # =================================================
@@ -2415,6 +3157,90 @@ class DialogueManager:
             )
 
         return answer
+
+    # =====================================================
+    # NON-BANKING REQUESTS  (Phase 3.2B-12)
+    #
+    # The terminus for everything IntentDetector abstained on.
+    # Reached only from the routing layer, only in a resting
+    # state, and it NEVER starts a workflow or mutates
+    # conversation state -- that is the whole point of it.
+    #
+    # Each branch delegates to the handler that already owns
+    # that kind of turn, so there is no second implementation of
+    # question answering or acknowledgement wording.
+    # =====================================================
+
+    def handle_non_banking_request(self, category, user_input,
+                                   conversation=None):
+        """
+        Answers an utterance that is not a banking service request.
+
+        `category` comes from IntentDetector: KNOWLEDGE_QUESTION,
+        ACKNOWLEDGEMENT, CONTROL, UNSUPPORTED or OUT_OF_DOMAIN.
+        Returns the reply string. Starts no workflow in any case.
+        """
+
+        if category == "ACKNOWLEDGEMENT":
+
+            if conversation is not None:
+                return self._handle_acknowledgement(
+                    conversation,
+                    "acknowledgement"
+                )
+
+            return "Okay. Let me know which banking service you'd like help with."
+
+        if category == "CONTROL":
+
+            # Controls are normally caught by the deterministic
+            # tier long before this. Arriving here means nothing
+            # is active to control, which is what this says.
+            return self._handle_resting_state_control(
+                user_input,
+                conversation
+            )
+
+        if category == "KNOWLEDGE_QUESTION":
+
+            # The existing RAG + LLM path answers it, and answers
+            # "I don't have that information" through its own
+            # graceful message when the knowledge base does not
+            # cover it. No banking data is invented here.
+            # recent_context must be a RecentSideQuestion or None --
+            # NOT "". format_recent_context()/retrieval_query() only
+            # guard against None, so an empty string reached
+            # `recent.subject` and raised
+            #   AttributeError: 'str' object has no attribute 'subject'
+            # on a live Kannada turn. Reading the remembered exchange
+            # off the conversation is also what the other two call
+            # sites do, so this path now behaves like them.
+            return self._ask_question_answerer(
+                question=user_input,
+                workflow_context=(
+                    "No banking workflow is currently active. "
+                    "Answer general banking questions helpfully."
+                ),
+                current_instruction="",
+                recent_context=getattr(
+                    conversation,
+                    "recent_side_question",
+                    None
+                )
+            )
+
+        # UNSUPPORTED / OUT_OF_DOMAIN.
+        #
+        # Deliberately one fixed, non-judgemental sentence rather
+        # than a lecture or a keyword-specific refusal: the
+        # assistant simply does not act on it and offers what it
+        # can do. Saying less here is also what keeps this from
+        # becoming a blacklist with opinions attached.
+        return (
+            "I can't help with that. I can help you deposit money, "
+            "withdraw money, check your balance, apply for a loan "
+            "or open an account. Which would you like?"
+        )
 
     # =====================================================
     # RESTING-STATE CONTROL  (the control guard's handler)
