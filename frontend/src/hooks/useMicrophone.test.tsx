@@ -1,5 +1,7 @@
 import { act, renderHook, waitFor } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import type { LevelMeter } from '@/lib/audioLevelMeter';
+import { DEFAULT_ENDPOINTING, type EndpointingConfig } from '@/lib/speechDetector';
 import { useMicrophone } from './useMicrophone';
 
 /**
@@ -13,6 +15,12 @@ class FakeMediaRecorder {
   static supported: string[] = ['audio/webm;codecs=opus', 'audio/webm'];
   static constructorThrows = false;
   static last: FakeMediaRecorder | null = null;
+  static instances = 0;
+  /**
+   * When set, onstop arrives this many ms after stop(), as it does in a
+   * real browser. Null keeps the original synchronous behaviour.
+   */
+  static asyncStopMs: number | null = null;
 
   static isTypeSupported = vi.fn((type: string) => FakeMediaRecorder.supported.includes(type));
 
@@ -31,6 +39,7 @@ class FakeMediaRecorder {
     this.stream = stream;
     this.options = options;
     FakeMediaRecorder.last = this;
+    FakeMediaRecorder.instances += 1;
   }
 
   get mimeType(): string {
@@ -44,9 +53,16 @@ class FakeMediaRecorder {
 
   stop(): void {
     this.state = 'inactive';
-    // The browser delivers the audio, then signals completion.
-    this.ondataavailable?.({ data: new Blob([new Uint8Array(1024)]) });
-    this.onstop?.();
+
+    // The browser delivers the audio, then signals completion. Handlers
+    // are read at delivery time, so a teardown in between is honoured.
+    const deliver = () => {
+      this.ondataavailable?.({ data: new Blob([new Uint8Array(1024)]) });
+      this.onstop?.();
+    };
+
+    if (FakeMediaRecorder.asyncStopMs === null) deliver();
+    else setTimeout(deliver, FakeMediaRecorder.asyncStopMs);
   }
 
   /** Fires onstop without going through stop(), as a late event would. */
@@ -86,6 +102,8 @@ describe('useMicrophone', () => {
     FakeMediaRecorder.supported = ['audio/webm;codecs=opus', 'audio/webm'];
     FakeMediaRecorder.constructorThrows = false;
     FakeMediaRecorder.last = null;
+    FakeMediaRecorder.instances = 0;
+    FakeMediaRecorder.asyncStopMs = null;
     FakeMediaRecorder.isTypeSupported.mockClear();
     setMediaRecorder(FakeMediaRecorder);
     Object.defineProperty(window, 'isSecureContext', { configurable: true, value: true });
@@ -375,6 +393,306 @@ describe('useMicrophone', () => {
       });
 
       expect(stop).toHaveBeenCalled();
+    });
+  });
+
+  /**
+   * End-of-speech detection, driven by a scripted level meter.
+   *
+   * The detector, the hook's timers and its teardown are all real; only
+   * the microphone LEVEL is scripted, one reading per 32 ms frame. Nothing
+   * here says how a real microphone in a real room behaves.
+   */
+  describe('end-of-speech detection', () => {
+    const FRAME = DEFAULT_ENDPOINTING.frameMs;
+    const QUIET = -70;
+    const SPEECH = -30;
+
+    /** Frame (1-based) on which a turn of `lead` quiet + `speech` frames ends. */
+    const endFrame = (lead: number, speech: number) => lead + speech + 25;
+
+    function scriptedMeter(script: (frame: number) => number | null, attaches = true) {
+      let frame = 0;
+      return {
+        attach: vi.fn(() => attaches),
+        read: vi.fn(() => script(frame++)),
+        close: vi.fn(),
+      } satisfies LevelMeter;
+    }
+
+    /** `lead` quiet frames, `speech` frames of speech, then quiet. */
+    const utterance = (lead: number, speech: number) => (f: number) =>
+      f >= lead && f < lead + speech ? SPEECH : QUIET;
+
+    let tracks: ReturnType<typeof fakeStream>;
+
+    beforeEach(() => {
+      // Promises stay real, so start() still resolves normally.
+      vi.useFakeTimers({ toFake: ['setInterval', 'clearInterval', 'setTimeout', 'clearTimeout'] });
+      tracks = fakeStream();
+      setGetUserMedia(() => Promise.resolve(tracks.stream));
+    });
+
+    afterEach(() => {
+      vi.useRealTimers();
+    });
+
+    function renderWith(meter: LevelMeter | null, endpointing?: Partial<EndpointingConfig> | false) {
+      const factory = vi.fn(() => meter);
+      const hook = renderHook(() =>
+        useMicrophone({ onRecorded, createLevelMeter: factory, endpointing }),
+      );
+      return { ...hook, factory };
+    }
+
+    const advance = (ms: number) =>
+      act(() => {
+        vi.advanceTimersByTime(ms);
+      });
+
+    it('submits exactly once when 800 ms of silence follows speech', async () => {
+      const meter = scriptedMeter(utterance(10, 20));
+      const { result } = renderWith(meter);
+      await act(() => result.current.start());
+
+      advance(endFrame(10, 20) * FRAME - 1);
+      expect(onRecorded).not.toHaveBeenCalled();
+      expect(result.current.status).toBe('recording');
+
+      advance(2);
+      expect(onRecorded).toHaveBeenCalledTimes(1);
+      expect(onRecorded.mock.calls[0][0].mimeType).toMatch(/^audio\//);
+      expect(result.current.lastEnd).toBe('speech_ended');
+      expect(result.current.status).toBe('idle');
+      expect(tracks.stop).toHaveBeenCalled();
+      expect(meter.close).toHaveBeenCalled();
+
+      const reads = meter.read.mock.calls.length;
+      advance(20_000);
+      expect(onRecorded).toHaveBeenCalledTimes(1);
+      expect(meter.read.mock.calls.length).toBe(reads);
+    });
+
+    it('rejects speech shorter than 300 ms and keeps listening', async () => {
+      const { result } = renderWith(scriptedMeter(utterance(10, 5)));
+      await act(() => result.current.start());
+
+      advance(3_000);
+
+      expect(onRecorded).not.toHaveBeenCalled();
+      expect(result.current.status).toBe('recording');
+      expect(result.current.lastEnd).toBeNull();
+    });
+
+    it('drops the recording when nothing is said for 15 s, without submitting', async () => {
+      const meter = scriptedMeter(() => QUIET);
+      const { result } = renderWith(meter);
+      await act(() => result.current.start());
+
+      const recorder = FakeMediaRecorder.last!;
+      const lateHandler = recorder.onstop;
+
+      advance(14_900);
+      expect(result.current.status).toBe('recording');
+
+      advance(200);
+      expect(onRecorded).not.toHaveBeenCalled();
+      expect(result.current.status).toBe('idle');
+      expect(result.current.lastEnd).toBe('no_speech');
+      expect(tracks.stop).toHaveBeenCalled();
+      expect(meter.close).toHaveBeenCalled();
+
+      // The browser may still deliver the discarded recorder's onstop.
+      act(() => recorder.fireLateStop(lateHandler));
+      expect(onRecorded).not.toHaveBeenCalled();
+    });
+
+    it('stops at 30 s of continuous speech and submits', async () => {
+      const { result } = renderWith(scriptedMeter((f) => (f >= 5 ? SPEECH : QUIET)));
+      await act(() => result.current.start());
+
+      advance(30_000);
+      expect(onRecorded).not.toHaveBeenCalled();
+      expect(result.current.status).toBe('recording');
+
+      advance(400);
+      expect(onRecorded).toHaveBeenCalledTimes(1);
+      expect(result.current.lastEnd).toBe('max_duration');
+    });
+
+    it('does not submit on background noise or isolated clicks', async () => {
+      // A steady -45 dB fan with a loud one-frame click every 10 frames.
+      const { result } = renderWith(scriptedMeter((f) => (f % 10 === 9 ? SPEECH : -45)));
+      await act(() => result.current.start());
+
+      advance(10_000);
+
+      expect(onRecorded).not.toHaveBeenCalled();
+      expect(result.current.status).toBe('recording');
+    });
+
+    it('lets a manual stop submit mid-utterance, once, and stops analysis', async () => {
+      const meter = scriptedMeter(utterance(10, 10_000));
+      const { result } = renderWith(meter);
+      await act(() => result.current.start());
+      advance(1_000);
+
+      act(() => result.current.stop());
+
+      expect(onRecorded).toHaveBeenCalledTimes(1);
+      expect(result.current.lastEnd).toBe('manual');
+      expect(meter.close).toHaveBeenCalled();
+      expect(tracks.stop).toHaveBeenCalled();
+
+      const reads = meter.read.mock.calls.length;
+      advance(40_000);
+      expect(meter.read.mock.calls.length).toBe(reads);
+      expect(onRecorded).toHaveBeenCalledTimes(1);
+    });
+
+    it('cancels without emitting, and releases every resource', async () => {
+      const meter = scriptedMeter(utterance(10, 20));
+      const { result } = renderWith(meter);
+      await act(() => result.current.start());
+      advance(500);
+
+      act(() => result.current.cancel());
+
+      expect(onRecorded).not.toHaveBeenCalled();
+      expect(result.current.lastEnd).toBe('cancelled');
+      expect(meter.close).toHaveBeenCalled();
+      expect(tracks.stop).toHaveBeenCalled();
+
+      const reads = meter.read.mock.calls.length;
+      advance(20_000);
+      expect(meter.read.mock.calls.length).toBe(reads);
+      expect(onRecorded).not.toHaveBeenCalled();
+    });
+
+    it('does not lose or duplicate an utterance when a tap lands during an automatic stop', async () => {
+      // Real browsers deliver onstop later; a tap can arrive in between.
+      FakeMediaRecorder.asyncStopMs = 50;
+      const { result } = renderWith(scriptedMeter(utterance(10, 20)));
+      await act(() => result.current.start());
+
+      advance(endFrame(10, 20) * FRAME + 1);
+      expect(onRecorded).not.toHaveBeenCalled(); // stop requested, audio not yet delivered
+
+      act(() => result.current.stop());
+      act(() => result.current.stop());
+      advance(100);
+
+      expect(onRecorded).toHaveBeenCalledTimes(1);
+      expect(result.current.lastEnd).toBe('speech_ended');
+      expect(result.current.status).toBe('idle');
+    });
+
+    it('emits nothing and frees the meter when unmounted mid-utterance', async () => {
+      const meter = scriptedMeter(utterance(10, 20));
+      const { result, unmount } = renderWith(meter);
+      await act(() => result.current.start());
+      advance(500);
+
+      unmount();
+
+      expect(meter.close).toHaveBeenCalled();
+      expect(tracks.stop).toHaveBeenCalled();
+      const reads = meter.read.mock.calls.length;
+      vi.advanceTimersByTime(20_000);
+      expect(meter.read.mock.calls.length).toBe(reads);
+      expect(onRecorded).not.toHaveBeenCalled();
+    });
+
+    it('opens one recorder and one meter however often start is pressed', async () => {
+      const { result, factory } = renderWith(scriptedMeter(() => QUIET));
+      await act(() => result.current.start());
+      await act(() => result.current.start());
+
+      expect(factory).toHaveBeenCalledTimes(1);
+      expect(FakeMediaRecorder.instances).toBe(1);
+    });
+
+    it('never discards speech as silence when the level cannot be measured', async () => {
+      // e.g. an audio context the browser kept suspended.
+      const { result } = renderWith(scriptedMeter(() => null));
+      await act(() => result.current.start());
+
+      advance(60_000);
+      expect(result.current.status).toBe('recording');
+      expect(onRecorded).not.toHaveBeenCalled();
+
+      act(() => result.current.stop());
+      expect(onRecorded).toHaveBeenCalledTimes(1);
+    });
+
+    it('builds the meter inside the tap, and closes it if cancelled while permission is pending', async () => {
+      let grant!: (value: MediaStream) => void;
+      setGetUserMedia(() => new Promise<MediaStream>((resolve) => (grant = resolve)));
+      const meter = scriptedMeter(() => QUIET);
+      const { result, factory } = renderWith(meter);
+
+      act(() => void result.current.start());
+      // Before permission resolves: still inside the customer's gesture.
+      expect(factory).toHaveBeenCalledTimes(1);
+
+      act(() => result.current.cancel());
+      expect(meter.close).toHaveBeenCalled();
+
+      await act(async () => {
+        grant(tracks.stream);
+        await Promise.resolve();
+      });
+
+      expect(tracks.stop).toHaveBeenCalled();
+      expect(FakeMediaRecorder.instances).toBe(0);
+    });
+
+    it('closes the meter when microphone permission is refused', async () => {
+      setGetUserMedia(() => Promise.reject(domError('NotAllowedError')));
+      const meter = scriptedMeter(() => QUIET);
+      const { result } = renderWith(meter);
+
+      await act(() => result.current.start());
+
+      expect(result.current.status).toBe('denied');
+      expect(meter.close).toHaveBeenCalled();
+    });
+
+    it('stays tap-to-stop, with no meter, when endpointing is off', async () => {
+      const { result, factory } = renderWith(scriptedMeter(() => QUIET), false);
+      await act(() => result.current.start());
+
+      advance(60_000);
+      expect(factory).not.toHaveBeenCalled();
+      expect(result.current.status).toBe('recording');
+
+      act(() => result.current.stop());
+      expect(onRecorded).toHaveBeenCalledTimes(1);
+    });
+
+    it('stays tap-to-stop when the stream cannot be analysed', async () => {
+      const meter = scriptedMeter(() => QUIET, false);
+      const { result } = renderWith(meter);
+      await act(() => result.current.start());
+
+      expect(meter.close).toHaveBeenCalled();
+      advance(20_000);
+      expect(result.current.status).toBe('recording');
+
+      act(() => result.current.stop());
+      expect(onRecorded).toHaveBeenCalledTimes(1);
+    });
+
+    it('stays tap-to-stop where the browser has no Web Audio', async () => {
+      const { result } = renderWith(null);
+      await act(() => result.current.start());
+
+      advance(60_000);
+      expect(result.current.status).toBe('recording');
+
+      act(() => result.current.stop());
+      expect(onRecorded).toHaveBeenCalledTimes(1);
+      expect(result.current.lastEnd).toBe('manual');
     });
   });
 });

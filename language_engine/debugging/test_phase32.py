@@ -594,6 +594,7 @@ def test_cancelled_state_acknowledgement():
     pipeline = make_pipeline(dialogue, detector, conversation)
 
     turn(pipeline, "cancel")
+    turn(pipeline, "cancel")   # cancel is confirmed before it is carried out
 
     check("[F] the workflow is CANCELLED",
           conversation.workflow_state is WorkflowState.CANCELLED,

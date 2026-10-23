@@ -1,9 +1,12 @@
 import {
   Body,
   Controller,
+  Get,
   Header,
   HttpCode,
   HttpStatus,
+  Param,
+  ParseUUIDPipe,
   Post,
   Res,
   StreamableFile,
@@ -14,7 +17,13 @@ import type { Response } from 'express';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { CurrentUser } from '../common/decorators/current-user.decorator';
 import type { AuthenticatedUser } from '../auth/types/jwt-payload.type';
-import { AssistantService, type AssistantReplyView } from './assistant.service';
+import {
+  AssistantService,
+  type AssistantReplyView,
+  type AssistantSnapshotView,
+} from './assistant.service';
+import type { EngineAssistance } from './engine/ai-engine.client';
+import { AssistanceDto } from './dto/assistance.dto';
 import { SendMessageDto } from './dto/send-message.dto';
 import { SendVoiceDto } from './dto/send-voice.dto';
 import { SpeakDto } from './dto/speak.dto';
@@ -45,6 +54,38 @@ const MAX_AUDIO_BYTES = 10 * 1024 * 1024;
 @Controller('assistant')
 export class AssistantController {
   constructor(private readonly assistant: AssistantService) {}
+
+  /**
+   * Where the visit's conversation stands, without changing it.
+   *
+   * For re-syncing the workflow progress after a turn whose reply never
+   * arrived -- the engine may have applied it anyway. Read-only, so a GET;
+   * never cached, because the answer changes with every turn.
+   */
+  @Get('sessions/:sessionId/snapshot')
+  @Header('Cache-Control', 'no-store')
+  snapshot(
+    @CurrentUser() user: AuthenticatedUser,
+    @Param('sessionId', ParseUUIDPipe) sessionId: string,
+  ): Promise<AssistantSnapshotView> {
+    return this.assistant.snapshot(user.id, sessionId);
+  }
+
+  /**
+   * An offer of help, asked for by the browser after the customer has been
+   * quiet on a step. A POST because the engine records the offer in the
+   * conversation; it never moves the workflow. Never cached.
+   */
+  @Post('sessions/:sessionId/assistance')
+  @HttpCode(HttpStatus.OK)
+  @Header('Cache-Control', 'no-store')
+  assistance(
+    @CurrentUser() user: AuthenticatedUser,
+    @Param('sessionId', ParseUUIDPipe) sessionId: string,
+    @Body() dto: AssistanceDto,
+  ): Promise<EngineAssistance> {
+    return this.assistant.assistance(user.id, sessionId, dto.avoid ?? null);
+  }
 
   @Post('message')
   @HttpCode(HttpStatus.OK)

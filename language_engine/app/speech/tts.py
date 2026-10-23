@@ -6,6 +6,12 @@ import edge_tts
 import pygame
 import time
 
+from app.speech.speech_plan import (
+    UnsupportedScriptError,
+    UnsupportedSpeechLanguageError,
+    plan_speech,
+)
+
 
 # =========================================================
 # MARKDOWN -> SPEECH SANITIZATION
@@ -148,16 +154,27 @@ class TextToSpeech:
         if not self._ensure_mixer():
             return
 
-        language = (language or "en").lower()
+        # -------------------------------------------------
+        # Voice per part of the reply (M8, speech_plan)
+        #
+        # The same policy as the web service: each sentence is read
+        # by the voice of its script. An unsupported session language
+        # or script is refused with a printed reason -- before M8 it
+        # fell back to the English voice without a word, which the
+        # web path never did.
+        # -------------------------------------------------
 
-        # Handle en-US / kn-IN / hi-IN
-        if "-" in language:
-            language = language.split("-")[0]
+        try:
+            segments = plan_speech(speech_text, language)
+        except (UnsupportedSpeechLanguageError, UnsupportedScriptError) as error:
+            print(f"[TTS] Not speaking this reply: {error}")
+            return
 
-        voice = self.VOICES.get(
-            language,
-            self.VOICES["en"]
-        )
+        for segment in segments:
+            self._play(segment.text, self.VOICES[segment.language])
+
+    def _play(self, speech_text, voice):
+        """Generates and plays one part of a reply, then deletes the file."""
 
         filename = f"tts_{uuid.uuid4().hex}.mp3"
 

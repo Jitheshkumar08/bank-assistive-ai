@@ -7,15 +7,18 @@
     },
     {
       "step": 2,
-      "instruction": "Fill in your account number."
+      "instruction": "Fill in your account number.",
+      "field": "account_number"
     },
     {
       "step": 3,
-      "instruction": "Enter the withdrawal amount."
+      "instruction": "Enter the withdrawal amount.",
+      "field": "amount"
     },
     {
       "step": 4,
-      "instruction": "Sign the withdrawal slip."
+      "instruction": "Sign the withdrawal slip.",
+      "field": "signature"
     },
     {
       "step": 5,

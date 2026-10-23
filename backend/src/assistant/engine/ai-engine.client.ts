@@ -53,8 +53,69 @@ export abstract class AiEngineClient {
   abstract sendAudio(turn: EngineAudioTurn): Promise<EngineReply>;
   /** Turns reply text into speech. Stateless: no conversation is touched. */
   abstract synthesize(request: EngineSpeechRequest): Promise<EngineSpeech>;
-  /** Releases the engine-side conversation when a visit ends. */
+  /**
+   * Releases the engine-side conversation when a visit ends.
+   *
+   * Rejects when the engine could not be told. Callers treat it as best
+   * effort: the database, not the engine, records whether a visit ended.
+   */
   abstract endSession(sessionId: string): Promise<void>;
+
+  /**
+   * Reads where a visit's conversation stands, changing nothing.
+   *
+   * For re-syncing after a turn whose reply never arrived. Not abstract,
+   * so engines that predate it (test fakes included) still compile; they
+   * report it as unsupported rather than inventing a state.
+   */
+  async getSnapshot(sessionId: string): Promise<EngineSnapshot> {
+    void sessionId;
+    throw new AiEngineError('Workflow snapshots are not available from this engine.', 501);
+  }
+
+  /**
+   * Asks whether a customer who has gone quiet should be offered help.
+   *
+   * The engine decides whether an offer fits (an active step, nothing
+   * pending) and words it in the visit's language; it moves no workflow.
+   * Not abstract, for the same reason as getSnapshot().
+   */
+  async requestAssistance(sessionId: string, avoid: string | null): Promise<EngineAssistance> {
+    void sessionId;
+    void avoid;
+    throw new AiEngineError('Assistance offers are not available from this engine.', 501);
+  }
+}
+
+/** An offer of help, or why there is none. */
+export interface EngineAssistance {
+  offered: boolean;
+  /** offered, ended, pending_question, paused, no_active_step, unknown_session. */
+  reason: string;
+  /** The current step's field type, from the workflow definition. */
+  field: string | null;
+  /** Stable id of the wording, passed back so the next offer differs. */
+  promptId: string | null;
+  /** Already in the visit's language. Null when nothing is offered. */
+  text: string | null;
+}
+
+/**
+ * Where a visit's conversation stands, as the engine reports it.
+ *
+ * Status only: never history, entities, or anything that was said.
+ */
+export interface EngineSnapshot {
+  /**
+   * False when the engine holds no conversation for this visit -- never
+   * spoken to, purged after idling, or lost to a restart. Progress is then
+   * unknown (`workflow` is null), which is not the same as "no workflow".
+   */
+  known: boolean;
+  /** True once the customer has said exit; no further turns are accepted. */
+  ended: boolean;
+  /** Same shape as a turn reply's workflow. Null only when `known` is false. */
+  workflow: EngineWorkflow | null;
 }
 
 /**

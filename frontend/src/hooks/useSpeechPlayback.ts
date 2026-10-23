@@ -8,15 +8,26 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 const SILENCE =
   'data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEAgD4AAAB9AAACABAAZGF0YQAAAAA=';
 
+/**
+ * How one clip's playback ended.
+ *
+ *   ended    the browser played it to the end ("ended" event) -- the ONLY
+ *            outcome that means the customer heard the whole reply
+ *   failed   it could not play: refused, undecodable, or nothing to play
+ *   stopped  it was interrupted: stop(), a newer clip, or unmount
+ */
+export type PlaybackOutcome = 'ended' | 'failed' | 'stopped';
+
 export interface SpeechPlayback {
   isSpeaking: boolean;
   /**
-   * Plays a spoken reply, resolving when it finishes.
+   * Plays a spoken reply, resolving with how it ended.
    *
-   * Resolves rather than rejects when playback cannot start, because a
-   * silent reply is a degraded experience, not a failed conversation.
+   * Never rejects, because a silent reply is a degraded experience, not a
+   * failed conversation. Always settles: a clip that is stopped or
+   * replaced resolves 'stopped' rather than leaving its caller waiting.
    */
-  play: (audio: Blob) => Promise<void>;
+  play: (audio: Blob) => Promise<PlaybackOutcome>;
   /** Stops immediately and releases the audio. */
   stop: () => void;
   /**
@@ -56,6 +67,16 @@ export function useSpeechPlayback(): SpeechPlayback {
   // Identifies the current clip, so a clip that was stopped cannot
   // resolve or clear state belonging to the one that replaced it.
   const playbackRef = useRef(0);
+  // Settles the current clip's promise. release() detaches the element's
+  // handlers, so without this an interrupted clip would never resolve.
+  const settleRef = useRef<((outcome: PlaybackOutcome) => void) | null>(null);
+
+  /** Resolves whatever clip is pending as interrupted. */
+  const interrupt = useCallback((): void => {
+    const settle = settleRef.current;
+    settleRef.current = null;
+    settle?.('stopped');
+  }, []);
 
   const element = useCallback((): HTMLAudioElement => {
     audioRef.current ??= new Audio();
@@ -93,9 +114,10 @@ export function useSpeechPlayback(): SpeechPlayback {
 
   const stop = useCallback((): void => {
     playbackRef.current += 1;
+    interrupt();
     release();
     setIsSpeaking(false);
-  }, [release]);
+  }, [interrupt, release]);
 
   const unlock = useCallback((): void => {
     if (unlockedRef.current) return;
@@ -142,14 +164,16 @@ export function useSpeechPlayback(): SpeechPlayback {
   }, [element]);
 
   const play = useCallback(
-    (blob: Blob): Promise<void> => {
-      // Nothing to play. The text reply is already on screen, so this is
-      // silence rather than a failure.
-      if (!blob || blob.size === 0) return Promise.resolve();
+    (blob: Blob): Promise<PlaybackOutcome> => {
+      // Nothing to play. The text reply is already on screen, so nothing
+      // breaks -- but nothing was heard either, so this is not 'ended'.
+      if (!blob || blob.size === 0) return Promise.resolve('failed');
 
-      // Whatever was speaking stops before anything new begins.
+      // Whatever was speaking stops before anything new begins, and its
+      // caller learns it was interrupted.
       playbackRef.current += 1;
       const playbackId = playbackRef.current;
+      interrupt();
       release();
 
       const url = URL.createObjectURL(blob);
@@ -159,44 +183,57 @@ export function useSpeechPlayback(): SpeechPlayback {
       audio.src = url;
       setIsSpeaking(true);
 
-      return new Promise<void>((resolve) => {
-        const finish = (): void => {
+      return new Promise<PlaybackOutcome>((resolve) => {
+        let settled = false;
+
+        const settle = (outcome: PlaybackOutcome): void => {
+          if (settled) return;
+          settled = true;
+          if (settleRef.current === settle) settleRef.current = null;
+          resolve(outcome);
+        };
+
+        settleRef.current = settle;
+
+        const finish = (outcome: PlaybackOutcome): void => {
           // A clip that has already been superseded must not clear the
-          // state of the one now playing.
+          // state of the one now playing -- and did not finish either.
           if (playbackRef.current !== playbackId) {
-            resolve();
+            settle('stopped');
             return;
           }
 
           release();
           setIsSpeaking(false);
-          resolve();
+          settle(outcome);
         };
 
-        audio.onended = finish;
-        audio.onerror = finish;
+        // Only the element's own "ended" event means the reply was heard.
+        audio.onended = () => finish('ended');
+        audio.onerror = () => finish('failed');
 
         const started = audio.play?.();
 
         if (started && typeof started.catch === 'function') {
           // Autoplay refusal, an unsupported codec, or a stopped clip.
           // The customer keeps the written reply either way.
-          started.catch(finish);
+          started.catch(() => finish('failed'));
         }
       });
     },
-    [element, release],
+    [element, interrupt, release],
   );
 
   // Audio must never outlive the page that started it.
   useEffect(() => {
     return () => {
       playbackRef.current += 1;
+      interrupt();
       release();
       audioRef.current = null;
       unlockedRef.current = false;
     };
-  }, [release]);
+  }, [interrupt, release]);
 
   return { isSpeaking, play, stop, unlock };
 }

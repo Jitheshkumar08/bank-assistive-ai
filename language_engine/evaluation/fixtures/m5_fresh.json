@@ -1,0 +1,72 @@
+{
+  "version": "m5_fresh",
+  "description": "M5 FRESH evaluation set. Written before any M5 change, independently of every earlier fixture file, and never used to tune anything. Covers spelling and Unicode variants of banking loanwords, inflected loanwords, Indic punctuation, the M4 held-out failure categories in new wording, and checks that negation, questions, controls and amounts survive normalisation. Labels come from what each sentence means; several name behaviour M5 is not expected to fix (noted in the gloss) so the limit stays visible.",
+  "sources": {
+    "m5-fresh": "written for the M5 fresh set before implementation"
+  },
+  "fixtures": [
+    {"id": "svc-kn-en-501", "lang": "kn-en", "category": "service_request", "text": "ನನ್ನ ಅಕೌಂಟ್‌ನಿಂದ ಕ್ಯಾಶ್ ವಿತ್‌ಡ್ರಾ ಮಾಡಬೇಕು", "expected": {"intent": "withdraw money"}, "gloss": "I need to withdraw cash from my account (inflected loanword, ZWNJ)", "source": "m5-fresh"},
+    {"id": "svc-kn-en-502", "lang": "kn-en", "category": "service_request", "text": "ಲೋನ್‌ಗಾಗಿ ಅರ್ಜಿ ಕೊಡಬೇಕು", "expected": {"intent": "apply for loan"}, "gloss": "I need to submit an application for a loan", "source": "m5-fresh"},
+    {"id": "svc-kn-en-503", "lang": "kn-en", "category": "service_request", "text": "ಅಕೌಂಟಿಗೆ ಹಣ ಡೆಪಾಸಿಟ್ ಮಾಡಬೇಕು", "expected": {"intent": "deposit money"}, "gloss": "I need to deposit money into the account (ಅಕೌಂಟಿಗೆ: vowel-joined inflection)", "source": "m5-fresh"},
+    {"id": "svc-kn-en-504", "lang": "kn-en", "category": "service_request", "text": "ಬ್ಯಾಲೆನ್ಸ್‌ ಚೆಕ್ ಮಾಡಬೇಕಿತ್ತು", "expected": {"intent": "check account balance"}, "gloss": "I wanted to check the balance", "source": "m5-fresh"},
+    {"id": "svc-kn-en-505", "lang": "kn-en", "category": "service_request", "text": "ಹೊಸ ಅಕೌಂಟ್ ಓಪನ್ ಮಾಡಿಸಬೇಕು", "expected": {"intent": "open new account"}, "gloss": "I need to get a new account opened", "source": "m5-fresh"},
+    {"id": "svc-kn-en-506", "lang": "kn-en", "category": "service_request", "text": "ಕ್ಯಾಶ್‌ ಡೆಪಾಸಿಟ್ ಮಾಡಬೇಕು", "expected": {"intent": "deposit money"}, "gloss": "I need to deposit cash (stray zero-width non-joiner)", "source": "m5-fresh"},
+    {"id": "svc-hi-en-501", "lang": "hi-en", "category": "service_request", "text": "मुझे एकाउंट से कैश विड्रॉल करना है", "expected": {"intent": "withdraw money"}, "gloss": "I need to withdraw cash from my account (एकाउंट, विड्रॉल spellings)", "source": "m5-fresh"},
+    {"id": "svc-hi-en-502", "lang": "hi-en", "category": "service_request", "text": "मेरा बेलेंस चेक करना है", "expected": {"intent": "check account balance"}, "gloss": "I need to check my balance (बेलेंस spelling)", "source": "m5-fresh"},
+    {"id": "svc-hi-en-503", "lang": "hi-en", "category": "service_request", "text": "डिपोजिट करना है", "expected": {"intent": "deposit money"}, "gloss": "I need to make a deposit (डिपोजिट spelling)", "source": "m5-fresh"},
+    {"id": "svc-hi-en-504", "lang": "hi-en", "category": "service_request", "text": "नया एकाउंट खुलवाना है", "expected": {"intent": "open new account"}, "gloss": "I want to get a new account opened", "source": "m5-fresh"},
+    {"id": "svc-hi-en-505", "lang": "hi-en", "category": "service_request", "text": "मुझे होमलोन चाहिए", "expected": {"intent": "apply for loan"}, "gloss": "I need a home loan (fused compound: not expected to be split by M5)", "source": "m5-fresh"},
+    {"id": "svc-hi-501", "lang": "hi", "category": "service_request", "text": "क़र्ज़ चाहिए", "expected": {"intent": "apply for loan"}, "gloss": "I need a loan (nukta as combining marks)", "source": "m5-fresh"},
+    {"id": "svc-hi-502", "lang": "hi", "category": "service_request", "text": "मुझे पैसे जमा करने हैं।", "expected": {"intent": "deposit money"}, "gloss": "I need to deposit money (with a danda)", "source": "m5-fresh"},
+    {"id": "svc-en-501", "lang": "en", "category": "service_request", "text": "I want to withdrawl money", "expected": {"intent": "withdraw money"}, "gloss": "misspelt withdrawal", "source": "m5-fresh"},
+    {"id": "svc-en-502", "lang": "en", "category": "service_request", "text": "need to deposite cash", "expected": {"intent": "deposit money"}, "gloss": "misspelt deposit", "source": "m5-fresh"},
+    {"id": "svc-en-503", "lang": "en", "category": "service_request", "text": "check my acount balence", "expected": {"intent": "check account balance"}, "gloss": "misspelt account and balance", "source": "m5-fresh"},
+    {"id": "svc-rom-hi-501", "lang": "rom-hi", "category": "service_request", "text": "balence check karna hai", "expected": {"intent": "check account balance"}, "gloss": "I need to check the balance (misspelt)", "source": "m5-fresh"},
+    {"id": "svc-rom-hi-502", "lang": "rom-hi", "category": "service_request", "text": "mujhe lone chahiye", "expected": {"intent": "apply for loan"}, "gloss": "I need a loan, typed 'lone'. 'lone' is an English word, so M5 is not expected to map it", "source": "m5-fresh"},
+    {"id": "svc-rom-kn-501", "lang": "rom-kn", "category": "service_request", "text": "accont open madbeku", "expected": {"intent": "open new account"}, "gloss": "I need to open an account (misspelt)", "source": "m5-fresh"},
+    {"id": "svc-rom-kn-502", "lang": "rom-kn", "category": "service_request", "text": "diposit maadbeku", "expected": {"intent": "deposit money"}, "gloss": "I need to make a deposit (misspelt)", "source": "m5-fresh"},
+
+    {"id": "svc-kn-501", "lang": "kn", "category": "service_request", "text": "ಉಳಿತಾಯ ಖಾತೆಗೆ ಸಾವಿರ ರೂಪಾಯಿ ಹಾಕಬೇಕಿದೆ", "expected": {"intent": "deposit money"}, "gloss": "I need to put a thousand rupees into my savings account. 'Put' deposits (M4 held-out category): ಹಾಕು also means 'submit', so M5 does not map it", "source": "m5-fresh"},
+    {"id": "svc-hi-503", "lang": "hi", "category": "service_request", "text": "खाते में पाँच सौ रुपये डालने हैं", "expected": {"intent": "deposit money"}, "gloss": "I need to put five hundred rupees into the account ('put' deposit)", "source": "m5-fresh"},
+    {"id": "svc-rom-hi-503", "lang": "rom-hi", "category": "service_request", "text": "khaate mein cash daalna hai", "expected": {"intent": "deposit money"}, "gloss": "I need to put cash into the account ('put' deposit)", "source": "m5-fresh"},
+    {"id": "svc-rom-kn-503", "lang": "rom-kn", "category": "service_request", "text": "account ge cash haakbeku", "expected": {"intent": "deposit money"}, "gloss": "I need to put cash into the account ('put' deposit)", "source": "m5-fresh"},
+    {"id": "svc-kn-502", "lang": "kn", "category": "service_request", "text": "ಖಾತೆಯಲ್ಲಿ ಉಳಿದ ಹಣ ತಿಳಿಸಿ", "expected": {"intent": "check account balance"}, "gloss": "tell me the money left in the account (balance as 'remaining money')", "source": "m5-fresh"},
+    {"id": "svc-hi-504", "lang": "hi", "category": "service_request", "text": "खाते में बची राशि दिखाइए", "expected": {"intent": "check account balance"}, "gloss": "show me the amount remaining in the account", "source": "m5-fresh"},
+
+    {"id": "kq-en-501", "lang": "en", "category": "knowledge_question", "text": "home loan interest rate", "expected": {"route": "knowledge", "sources": ["loan.md", "loan_basics.md"]}, "gloss": "noun-phrase question (M4 held-out category)", "source": "m5-fresh"},
+    {"id": "kq-kn-501", "lang": "kn", "category": "knowledge_question", "text": "ಗೃಹ ಸಾಲದ ಅರ್ಹತೆ", "expected": {"route": "knowledge", "sources": ["loan.md", "loan_basics.md"]}, "gloss": "home loan eligibility", "source": "m5-fresh"},
+    {"id": "kq-hi-501", "lang": "hi", "category": "knowledge_question", "text": "चालू खाते के नियम", "expected": {"route": "knowledge", "sources": ["current_account.md"]}, "gloss": "current account rules", "source": "m5-fresh"},
+    {"id": "kq-rom-hi-501", "lang": "rom-hi", "category": "knowledge_question", "text": "loan ki byaj dar", "expected": {"route": "knowledge", "sources": ["loan.md", "loan_basics.md"]}, "gloss": "loan interest rate", "source": "m5-fresh"},
+    {"id": "kq-kn-en-501", "lang": "kn-en", "category": "knowledge_question", "text": "ಪಾಸ್‌ಬುಕ್ ಅಪ್ಡೇಟ್ ವಿಧಾನ", "expected": {"route": "knowledge", "sources": ["passbook.md"]}, "gloss": "passbook update procedure", "source": "m5-fresh"},
+    {"id": "kq-hi-en-501", "lang": "hi-en", "category": "knowledge_question", "text": "चेक बुक के नियम", "expected": {"route": "knowledge", "sources": ["cheque_book.md"]}, "gloss": "cheque book rules", "source": "m5-fresh"},
+    {"id": "kq-kn-en-502", "lang": "kn-en", "category": "knowledge_question", "text": "ಚೆಕ್ ಬುಕ್ ಹೇಗೆ ಪಡೆಯುವುದು", "expected": {"route": "knowledge", "sources": ["cheque_book.md"]}, "gloss": "how does one get a cheque book (question word kept after normalisation)", "source": "m5-fresh"},
+    {"id": "kq-hi-en-502", "lang": "hi-en", "category": "knowledge_question", "text": "एकाउंट कैसे खोलें।", "expected": {"route": "knowledge", "sources": ["account_opening.md", "account_opening_requirements.md"]}, "gloss": "how does one open an account (danda; question word kept)", "source": "m5-fresh"},
+
+    {"id": "amb-kn-501", "lang": "kn", "category": "ambiguous_request", "text": "ನನಗೆ ದುಡ್ಡಿನ ಅವಶ್ಯಕತೆ ಇದೆ", "expected": {"starts_workflow": false}, "gloss": "I am in need of money (M4 held-out category, new wording)", "source": "m5-fresh"},
+    {"id": "amb-hi-501", "lang": "hi", "category": "ambiguous_request", "text": "पैसों की ज़रूरत है", "expected": {"starts_workflow": false}, "gloss": "money is needed", "source": "m5-fresh"},
+    {"id": "amb-kn-502", "lang": "kn", "category": "ambiguous_request", "text": "ಬ್ಯಾಂಕಿನಲ್ಲಿ ಸ್ವಲ್ಪ ಕೆಲಸ ಇದೆ", "expected": {"starts_workflow": false}, "gloss": "I have some work at the bank", "source": "m5-fresh"},
+    {"id": "amb-en-501", "lang": "en", "category": "ambiguous_request", "text": "I came for some banking work", "expected": {"starts_workflow": false}, "gloss": "", "source": "m5-fresh"},
+
+    {"id": "ctl-kn-501", "lang": "kn", "category": "control", "text": "ಮತ್ತೆ ಹೇಳಿ।", "expected": {"command": "repeat"}, "gloss": "say it again (danda)", "source": "m5-fresh"},
+    {"id": "ctl-hi-501", "lang": "hi", "category": "control", "text": "रुको।", "expected": {"command": "pause"}, "gloss": "wait (danda)", "source": "m5-fresh"},
+    {"id": "ctl-kn-502", "lang": "kn", "category": "control", "text": "ದಯವಿಟ್ಟು  ಮತ್ತೆ   ಹೇಳಿ", "expected": {"command": "repeat"}, "gloss": "please say it again (extra spaces)", "source": "m5-fresh"},
+    {"id": "ctl-hi-502", "lang": "hi", "category": "control", "text": "जारी रखो॥", "expected": {"command": "resume"}, "gloss": "carry on (double danda)", "source": "m5-fresh"},
+
+    {"id": "ref-kn-en-501", "lang": "kn-en", "category": "refusal", "text": "ನನಗೆ ಲೋನ್‌ ಬೇಡ।", "expected": {"starts_workflow": false}, "context": {"active_workflow": "deposit money"}, "gloss": "I don't want a loan (ZWNJ, danda)", "source": "m5-fresh"},
+    {"id": "ref-hi-en-501", "lang": "hi-en", "category": "refusal", "text": "मुझे एकाउंट नहीं खुलवाना", "expected": {"starts_workflow": false}, "context": {"active_workflow": "deposit money"}, "gloss": "I don't want to open an account", "source": "m5-fresh"},
+    {"id": "ref-rom-hi-501", "lang": "rom-hi", "category": "refusal", "text": "mujhe lone nahi chahiye", "expected": {"starts_workflow": false}, "context": {"active_workflow": "deposit money"}, "gloss": "I don't want a loan ('lone')", "source": "m5-fresh"},
+    {"id": "ref-en-501", "lang": "en", "category": "refusal", "text": "I don’t want to withdrawl", "expected": {"starts_workflow": false}, "context": {"active_workflow": "deposit money"}, "gloss": "curly apostrophe, misspelt withdrawal", "source": "m5-fresh"},
+
+    {"id": "neg-kn-en-501", "lang": "kn-en", "category": "negation", "text": "ನನಗೆ ಲೋನ್ ಬೇಕು।", "expected": {"negated": false}, "context": {"active_workflow": "deposit money"}, "gloss": "not negated: I need a loan (danda)", "source": "m5-fresh"},
+    {"id": "neg-hi-en-501", "lang": "hi-en", "category": "negation", "text": "मुझे एकाउंट से पैसे नहीं निकालने", "expected": {"negated": true}, "context": {"active_workflow": "deposit money"}, "gloss": "I don't want to withdraw money from the account", "source": "m5-fresh"},
+
+    {"id": "amt-kn-en-501", "lang": "kn-en", "category": "amount", "text": "ಅಕೌಂಟ್‌ಗೆ ೫೦೦೦ ರೂಪಾಯಿ ಡೆಪಾಸಿಟ್", "expected": {"amount": 5000}, "gloss": "deposit 5000 (Kannada digits) into the account", "source": "m5-fresh"},
+    {"id": "amt-rom-hi-501", "lang": "rom-hi", "category": "amount", "text": "account 98765 me 2000 deposit", "expected": {"amount": 2000}, "gloss": "deposit 2000 in account 98765: the account number survives as an identifier", "source": "m5-fresh"},
+    {"id": "amt-hi-en-501", "lang": "hi-en", "category": "amount", "text": "₹2,500 डिपॉजिट करना है।", "expected": {"amount": 2500}, "gloss": "I need to deposit 2,500 rupees (danda)", "source": "m5-fresh"},
+    {"id": "amt-hi-501", "lang": "hi", "category": "amount", "text": "पच्चीस हज़ार रुपये।", "expected": {"amount": 25000}, "gloss": "twenty-five thousand rupees (combining nukta, danda)", "source": "m5-fresh"},
+    {"id": "amt-kn-en-502", "lang": "kn-en", "category": "amount", "text": "ಅಕೌಂಟ್ ನಂಬರ್ 4521 ಗೆ ಎರಡು ಸಾವಿರ", "expected": {"amount": 2000}, "gloss": "two thousand to account number 4521", "source": "m5-fresh"},
+
+    {"id": "cfa-hi-501", "lang": "hi", "category": "conflict_answer", "text": "रद्द करो।", "expected": {"choice": "cancel"}, "gloss": "cancel (danda)", "source": "m5-fresh"},
+    {"id": "cfa-kn-en-501", "lang": "kn-en", "category": "conflict_answer", "text": "ಡೆಪಾಸಿಟ್ ವಿರಾಮ ಮಾಡಿ", "expected": {"choice": "pause"}, "gloss": "pause the deposit (loanword beside a choice word)", "source": "m5-fresh"}
+  ]
+}

@@ -1,0 +1,2784 @@
+{
+  "meta": {
+    "fixtures_file": "evaluation/fixtures/m7_fresh.json",
+    "fixtures_version": "m7_fresh",
+    "fixtures_sha256": "3c9951a6dd6af7e6e2fefe3060f9a6853a355d7726b655b96dfbe54f4b3d1394",
+    "embedding_model": "paraphrase-multilingual-MiniLM-L12-v2",
+    "retrieval": true,
+    "python": "3.13.2",
+    "name": "m7_fresh_after"
+  },
+  "summary": {
+    "total": 60,
+    "severity": {
+      "ok": 1,
+      "critical": 5,
+      "miss": 0,
+      "unscored": 54
+    },
+    "llm_gated": 54,
+    "headline": {
+      "Wrong-service routing (request started the wrong workflow)": 0,
+      "Question started a workflow": 5,
+      "Request or question swallowed by the control tier": 0,
+      "Wrong amount (a value, but not the spoken one)": 0,
+      "Invented amount (a value where none was spoken)": 0,
+      "Wrong control command": 0,
+      "Negated request raised a workflow conflict": 0,
+      "Wrong conflict choice": 0,
+      "Refusal started a workflow (resting state)": 0,
+      "Refusal raised a workflow conflict (mid-task)": 0,
+      "Ambiguous request started a workflow": 0
+    },
+    "abstentions": {
+      "Service request abstained (no workflow started)": 0,
+      "Question answered as a non-question (ack / control / refusal)": 0,
+      "Amount missed (no value)": 0,
+      "Control command missed (left to the LLM)": 0,
+      "Negation not detected": 0,
+      "Negation detected where there was none": 0,
+      "Conflict answer not understood (asked again)": 0
+    },
+    "by_lang": {
+      "en": {
+        "n": 9,
+        "ok": 0,
+        "critical": 0,
+        "miss": 0,
+        "unscored": 9
+      },
+      "kn": {
+        "n": 9,
+        "ok": 0,
+        "critical": 1,
+        "miss": 0,
+        "unscored": 8
+      },
+      "hi": {
+        "n": 9,
+        "ok": 0,
+        "critical": 1,
+        "miss": 0,
+        "unscored": 8
+      },
+      "kn-en": {
+        "n": 8,
+        "ok": 0,
+        "critical": 1,
+        "miss": 0,
+        "unscored": 7
+      },
+      "hi-en": {
+        "n": 8,
+        "ok": 1,
+        "critical": 0,
+        "miss": 0,
+        "unscored": 7
+      },
+      "rom-kn": {
+        "n": 8,
+        "ok": 0,
+        "critical": 1,
+        "miss": 0,
+        "unscored": 7
+      },
+      "rom-hi": {
+        "n": 9,
+        "ok": 0,
+        "critical": 1,
+        "miss": 0,
+        "unscored": 8
+      }
+    },
+    "by_category": {
+      "service_request": {
+        "n": 0
+      },
+      "knowledge_question": {
+        "n": 60,
+        "correct": 1,
+        "llm_gated": 54,
+        "question_to_workflow": 5
+      },
+      "control": {
+        "n": 0
+      },
+      "amount": {
+        "n": 0
+      },
+      "negation": {
+        "n": 0
+      },
+      "conflict_answer": {
+        "n": 0
+      },
+      "refusal": {
+        "n": 0
+      },
+      "ambiguous_request": {
+        "n": 0
+      }
+    },
+    "by_cell": {
+      "en|knowledge_question": {
+        "n": 9,
+        "ok": 0,
+        "critical": 0,
+        "miss": 0,
+        "unscored": 9
+      },
+      "kn|knowledge_question": {
+        "n": 9,
+        "ok": 0,
+        "critical": 1,
+        "miss": 0,
+        "unscored": 8
+      },
+      "hi|knowledge_question": {
+        "n": 9,
+        "ok": 0,
+        "critical": 1,
+        "miss": 0,
+        "unscored": 8
+      },
+      "kn-en|knowledge_question": {
+        "n": 8,
+        "ok": 0,
+        "critical": 1,
+        "miss": 0,
+        "unscored": 7
+      },
+      "hi-en|knowledge_question": {
+        "n": 8,
+        "ok": 1,
+        "critical": 0,
+        "miss": 0,
+        "unscored": 7
+      },
+      "rom-kn|knowledge_question": {
+        "n": 8,
+        "ok": 0,
+        "critical": 1,
+        "miss": 0,
+        "unscored": 7
+      },
+      "rom-hi|knowledge_question": {
+        "n": 9,
+        "ok": 0,
+        "critical": 1,
+        "miss": 0,
+        "unscored": 8
+      }
+    },
+    "detector_view": {
+      "en|knowledge_question": {
+        "n": 9,
+        "correct": 4,
+        "question_to_workflow": 5
+      },
+      "kn|knowledge_question": {
+        "n": 9,
+        "correct": 4,
+        "question_to_workflow": 5
+      },
+      "hi|knowledge_question": {
+        "n": 9,
+        "correct": 3,
+        "question_to_workflow": 6
+      },
+      "kn-en|knowledge_question": {
+        "n": 8,
+        "correct": 2,
+        "question_to_workflow": 6
+      },
+      "hi-en|knowledge_question": {
+        "n": 8,
+        "correct": 4,
+        "question_to_workflow": 4
+      },
+      "rom-kn|knowledge_question": {
+        "n": 8,
+        "correct": 1,
+        "question_to_workflow": 6,
+        "wrong_non_banking": 1
+      },
+      "rom-hi|knowledge_question": {
+        "n": 9,
+        "correct": 1,
+        "question_to_workflow": 8
+      }
+    },
+    "by_intent": {},
+    "retrieval": {
+      "en": {
+        "n": 8,
+        "top1": 7,
+        "hit_at_2": 7,
+        "wrong_top1": 1,
+        "abstained": 0,
+        "no_answer_n": 1,
+        "no_answer_abstained": 0
+      },
+      "kn": {
+        "n": 8,
+        "top1": 6,
+        "hit_at_2": 7,
+        "wrong_top1": 2,
+        "abstained": 0,
+        "no_answer_n": 1,
+        "no_answer_abstained": 0
+      },
+      "hi": {
+        "n": 8,
+        "top1": 7,
+        "hit_at_2": 7,
+        "wrong_top1": 1,
+        "abstained": 0,
+        "no_answer_n": 1,
+        "no_answer_abstained": 0
+      },
+      "kn-en": {
+        "n": 8,
+        "top1": 7,
+        "hit_at_2": 8,
+        "wrong_top1": 1,
+        "abstained": 0,
+        "no_answer_n": 0,
+        "no_answer_abstained": 0
+      },
+      "hi-en": {
+        "n": 8,
+        "top1": 8,
+        "hit_at_2": 8,
+        "wrong_top1": 0,
+        "abstained": 0,
+        "no_answer_n": 0,
+        "no_answer_abstained": 0
+      },
+      "rom-kn": {
+        "n": 8,
+        "top1": 7,
+        "hit_at_2": 7,
+        "wrong_top1": 1,
+        "abstained": 0,
+        "no_answer_n": 0,
+        "no_answer_abstained": 0
+      },
+      "rom-hi": {
+        "n": 8,
+        "top1": 6,
+        "hit_at_2": 7,
+        "wrong_top1": 2,
+        "abstained": 0,
+        "no_answer_n": 1,
+        "no_answer_abstained": 0
+      }
+    },
+    "topic_agreement": {
+      "kn": {
+        "n": 8,
+        "same_top1_as_english": 5
+      },
+      "hi": {
+        "n": 8,
+        "same_top1_as_english": 6
+      },
+      "kn-en": {
+        "n": 8,
+        "same_top1_as_english": 6
+      },
+      "hi-en": {
+        "n": 8,
+        "same_top1_as_english": 7
+      },
+      "rom-kn": {
+        "n": 8,
+        "same_top1_as_english": 5
+      },
+      "rom-hi": {
+        "n": 8,
+        "same_top1_as_english": 3
+      }
+    }
+  },
+  "limits": [
+    "The LLM (Groq gpt-oss-20b) is never called. Turns the question or control prefilter sends to it are counted as unscored, and the LLM's own amount extraction is not measured.",
+    "Speech recognition is not exercised: every fixture is text. Code-mixed ASR output is not measured.",
+    "Conflict detection is measured in isolation. In production it runs only after the LLM has classified a mid-workflow turn.",
+    "Reply language (localization, knowledge-answer language, TTS voice) is not scored in M0.",
+    "Fixtures are hand-authored and few per cell; Kannada and Hindi labels have not yet had a native-speaker review. Results show which behaviours fail, not how often customers hit them."
+  ],
+  "results": [
+    {
+      "id": "kq-en-710",
+      "lang": "en",
+      "category": "knowledge_question",
+      "text": "how do I fill a withdrawal slip",
+      "expected": {
+        "route": "knowledge",
+        "sources": [
+          "withdrawal_slip.md",
+          "withdrawal.md"
+        ]
+      },
+      "got": {
+        "stage": "llm_gate",
+        "control": null,
+        "detector_intent": "withdraw money",
+        "detector_category": "BANKING_INTENT",
+        "detector_is_banking": true,
+        "detector_margin": 0.274,
+        "refused": false
+      },
+      "detector_outcome": "question_to_workflow",
+      "retrieval": {
+        "top2": [
+          {
+            "source": "withdrawal_slip.md",
+            "score": 0.67
+          },
+          {
+            "source": "withdrawal.md",
+            "score": 0.656
+          }
+        ],
+        "answerable": true,
+        "abstained": false,
+        "top1_hit": true,
+        "hit": true
+      },
+      "topic": "T1",
+      "outcome": "llm_gated",
+      "severity": "unscored"
+    },
+    {
+      "id": "kq-kn-710",
+      "lang": "kn",
+      "category": "knowledge_question",
+      "text": "ಹಣ ತೆಗೆಯುವ ಚೀಟಿಯನ್ನು ಹೇಗೆ ತುಂಬಬೇಕು",
+      "expected": {
+        "route": "knowledge",
+        "sources": [
+          "withdrawal_slip.md",
+          "withdrawal.md"
+        ]
+      },
+      "got": {
+        "stage": "llm_gate",
+        "control": null,
+        "detector_intent": "withdraw money",
+        "detector_category": "BANKING_INTENT",
+        "detector_is_banking": true,
+        "detector_margin": 0.115,
+        "refused": false
+      },
+      "detector_outcome": "question_to_workflow",
+      "retrieval": {
+        "top2": [
+          {
+            "source": "deposit_slip.md",
+            "score": 0.625
+          },
+          {
+            "source": "withdrawal_slip.md",
+            "score": 0.563
+          }
+        ],
+        "answerable": true,
+        "abstained": false,
+        "top1_hit": false,
+        "hit": true
+      },
+      "topic": "T1",
+      "outcome": "llm_gated",
+      "severity": "unscored"
+    },
+    {
+      "id": "kq-hi-710",
+      "lang": "hi",
+      "category": "knowledge_question",
+      "text": "निकासी पर्ची कैसे भरें",
+      "expected": {
+        "route": "knowledge",
+        "sources": [
+          "withdrawal_slip.md",
+          "withdrawal.md"
+        ]
+      },
+      "got": {
+        "stage": "llm_gate",
+        "control": null,
+        "detector_intent": "withdraw money",
+        "detector_category": "BANKING_INTENT",
+        "detector_is_banking": true,
+        "detector_margin": 0.111,
+        "refused": false
+      },
+      "detector_outcome": "question_to_workflow",
+      "retrieval": {
+        "top2": [
+          {
+            "source": "withdrawal_slip.md",
+            "score": 0.745
+          },
+          {
+            "source": "withdrawal.md",
+            "score": 0.703
+          }
+        ],
+        "answerable": true,
+        "abstained": false,
+        "top1_hit": true,
+        "hit": true
+      },
+      "topic": "T1",
+      "outcome": "llm_gated",
+      "severity": "unscored"
+    },
+    {
+      "id": "kq-kn-en-710",
+      "lang": "kn-en",
+      "category": "knowledge_question",
+      "text": "withdrawal slip ಹೇಗೆ ತುಂಬುವುದು",
+      "expected": {
+        "route": "knowledge",
+        "sources": [
+          "withdrawal_slip.md",
+          "withdrawal.md"
+        ]
+      },
+      "got": {
+        "stage": "llm_gate",
+        "control": null,
+        "detector_intent": "withdraw money",
+        "detector_category": "BANKING_INTENT",
+        "detector_is_banking": true,
+        "detector_margin": 0.112,
+        "refused": false
+      },
+      "detector_outcome": "question_to_workflow",
+      "retrieval": {
+        "top2": [
+          {
+            "source": "withdrawal_slip.md",
+            "score": 0.69
+          },
+          {
+            "source": "withdrawal.md",
+            "score": 0.682
+          }
+        ],
+        "answerable": true,
+        "abstained": false,
+        "top1_hit": true,
+        "hit": true
+      },
+      "topic": "T1",
+      "outcome": "llm_gated",
+      "severity": "unscored"
+    },
+    {
+      "id": "kq-hi-en-710",
+      "lang": "hi-en",
+      "category": "knowledge_question",
+      "text": "withdrawal slip कैसे भरते हैं",
+      "expected": {
+        "route": "knowledge",
+        "sources": [
+          "withdrawal_slip.md",
+          "withdrawal.md"
+        ]
+      },
+      "got": {
+        "stage": "llm_gate",
+        "control": null,
+        "detector_intent": "withdraw money",
+        "detector_category": "BANKING_INTENT",
+        "detector_is_banking": true,
+        "detector_margin": 0.176,
+        "refused": false
+      },
+      "detector_outcome": "question_to_workflow",
+      "retrieval": {
+        "top2": [
+          {
+            "source": "withdrawal_slip.md",
+            "score": 0.746
+          },
+          {
+            "source": "withdrawal.md",
+            "score": 0.729
+          }
+        ],
+        "answerable": true,
+        "abstained": false,
+        "top1_hit": true,
+        "hit": true
+      },
+      "topic": "T1",
+      "outcome": "llm_gated",
+      "severity": "unscored"
+    },
+    {
+      "id": "kq-rom-hi-710",
+      "lang": "rom-hi",
+      "category": "knowledge_question",
+      "text": "withdrawal slip kaise bharte hain",
+      "expected": {
+        "route": "knowledge",
+        "sources": [
+          "withdrawal_slip.md",
+          "withdrawal.md"
+        ]
+      },
+      "got": {
+        "stage": "llm_gate",
+        "control": null,
+        "detector_intent": "withdraw money",
+        "detector_category": "BANKING_INTENT",
+        "detector_is_banking": true,
+        "detector_margin": 0.156,
+        "refused": false
+      },
+      "detector_outcome": "question_to_workflow",
+      "retrieval": {
+        "top2": [
+          {
+            "source": "withdrawal.md",
+            "score": 0.601
+          },
+          {
+            "source": "withdrawal_slip.md",
+            "score": 0.564
+          }
+        ],
+        "answerable": true,
+        "abstained": false,
+        "top1_hit": true,
+        "hit": true
+      },
+      "topic": "T1",
+      "outcome": "llm_gated",
+      "severity": "unscored"
+    },
+    {
+      "id": "kq-rom-kn-710",
+      "lang": "rom-kn",
+      "category": "knowledge_question",
+      "text": "withdrawal slip hege tumbodu",
+      "expected": {
+        "route": "knowledge",
+        "sources": [
+          "withdrawal_slip.md",
+          "withdrawal.md"
+        ]
+      },
+      "got": {
+        "stage": "llm_gate",
+        "control": null,
+        "detector_intent": "withdraw money",
+        "detector_category": "BANKING_INTENT",
+        "detector_is_banking": true,
+        "detector_margin": 0.199,
+        "refused": false
+      },
+      "detector_outcome": "question_to_workflow",
+      "retrieval": {
+        "top2": [
+          {
+            "source": "withdrawal_slip.md",
+            "score": 0.643
+          },
+          {
+            "source": "withdrawal.md",
+            "score": 0.629
+          }
+        ],
+        "answerable": true,
+        "abstained": false,
+        "top1_hit": true,
+        "hit": true
+      },
+      "topic": "T1",
+      "outcome": "llm_gated",
+      "severity": "unscored"
+    },
+    {
+      "id": "kq-en-720",
+      "lang": "en",
+      "category": "knowledge_question",
+      "text": "why is my account number important",
+      "expected": {
+        "route": "knowledge",
+        "sources": [
+          "account_number.md"
+        ]
+      },
+      "got": {
+        "stage": "llm_gate",
+        "control": null,
+        "detector_intent": "check account balance",
+        "detector_category": "KNOWLEDGE_QUESTION",
+        "detector_is_banking": false,
+        "detector_margin": 0.045,
+        "refused": false
+      },
+      "detector_outcome": "correct",
+      "retrieval": {
+        "top2": [
+          {
+            "source": "account_number.md",
+            "score": 0.684
+          },
+          {
+            "source": "current_account.md",
+            "score": 0.594
+          }
+        ],
+        "answerable": true,
+        "abstained": false,
+        "top1_hit": true,
+        "hit": true
+      },
+      "topic": "T2",
+      "outcome": "llm_gated",
+      "severity": "unscored"
+    },
+    {
+      "id": "kq-kn-720",
+      "lang": "kn",
+      "category": "knowledge_question",
+      "text": "ಖಾತೆ ಸಂಖ್ಯೆ ಏಕೆ ಮುಖ್ಯ",
+      "expected": {
+        "route": "knowledge",
+        "sources": [
+          "account_number.md"
+        ]
+      },
+      "got": {
+        "stage": "llm_gate",
+        "control": null,
+        "detector_intent": "check account balance",
+        "detector_category": "KNOWLEDGE_QUESTION",
+        "detector_is_banking": false,
+        "detector_margin": 0.007,
+        "refused": false
+      },
+      "detector_outcome": "correct",
+      "retrieval": {
+        "top2": [
+          {
+            "source": "account_number.md",
+            "score": 0.673
+          },
+          {
+            "source": "deposit.md",
+            "score": 0.561
+          }
+        ],
+        "answerable": true,
+        "abstained": false,
+        "top1_hit": true,
+        "hit": true
+      },
+      "topic": "T2",
+      "outcome": "llm_gated",
+      "severity": "unscored"
+    },
+    {
+      "id": "kq-hi-720",
+      "lang": "hi",
+      "category": "knowledge_question",
+      "text": "खाता संख्या क्यों ज़रूरी है",
+      "expected": {
+        "route": "knowledge",
+        "sources": [
+          "account_number.md"
+        ]
+      },
+      "got": {
+        "stage": "llm_gate",
+        "control": null,
+        "detector_intent": "check account balance",
+        "detector_category": "KNOWLEDGE_QUESTION",
+        "detector_is_banking": false,
+        "detector_margin": 0.026,
+        "refused": false
+      },
+      "detector_outcome": "correct",
+      "retrieval": {
+        "top2": [
+          {
+            "source": "account_number.md",
+            "score": 0.654
+          },
+          {
+            "source": "current_account.md",
+            "score": 0.588
+          }
+        ],
+        "answerable": true,
+        "abstained": false,
+        "top1_hit": true,
+        "hit": true
+      },
+      "topic": "T2",
+      "outcome": "llm_gated",
+      "severity": "unscored"
+    },
+    {
+      "id": "kq-kn-en-720",
+      "lang": "kn-en",
+      "category": "knowledge_question",
+      "text": "account number ಯಾಕೆ ಬೇಕು",
+      "expected": {
+        "route": "knowledge",
+        "sources": [
+          "account_number.md"
+        ]
+      },
+      "got": {
+        "stage": "llm_gate",
+        "control": null,
+        "detector_intent": "open new account",
+        "detector_category": "BANKING_INTENT",
+        "detector_is_banking": true,
+        "detector_margin": 0.112,
+        "refused": false
+      },
+      "detector_outcome": "question_to_workflow",
+      "retrieval": {
+        "top2": [
+          {
+            "source": "account_number.md",
+            "score": 0.596
+          },
+          {
+            "source": "deposit.md",
+            "score": 0.486
+          }
+        ],
+        "answerable": true,
+        "abstained": false,
+        "top1_hit": true,
+        "hit": true
+      },
+      "topic": "T2",
+      "outcome": "llm_gated",
+      "severity": "unscored"
+    },
+    {
+      "id": "kq-hi-en-720",
+      "lang": "hi-en",
+      "category": "knowledge_question",
+      "text": "account number क्यों चाहिए",
+      "expected": {
+        "route": "knowledge",
+        "sources": [
+          "account_number.md"
+        ]
+      },
+      "got": {
+        "stage": "llm_gate",
+        "control": null,
+        "detector_intent": "deposit money",
+        "detector_category": "KNOWLEDGE_QUESTION",
+        "detector_is_banking": false,
+        "detector_margin": 0.006,
+        "refused": false
+      },
+      "detector_outcome": "correct",
+      "retrieval": {
+        "top2": [
+          {
+            "source": "account_number.md",
+            "score": 0.718
+          },
+          {
+            "source": "current_account.md",
+            "score": 0.582
+          }
+        ],
+        "answerable": true,
+        "abstained": false,
+        "top1_hit": true,
+        "hit": true
+      },
+      "topic": "T2",
+      "outcome": "llm_gated",
+      "severity": "unscored"
+    },
+    {
+      "id": "kq-rom-hi-720",
+      "lang": "rom-hi",
+      "category": "knowledge_question",
+      "text": "account number kyon zaroori hai",
+      "expected": {
+        "route": "knowledge",
+        "sources": [
+          "account_number.md"
+        ]
+      },
+      "got": {
+        "stage": "llm_gate",
+        "control": null,
+        "detector_intent": "deposit money",
+        "detector_category": "BANKING_INTENT",
+        "detector_is_banking": true,
+        "detector_margin": 0.212,
+        "refused": false
+      },
+      "detector_outcome": "question_to_workflow",
+      "retrieval": {
+        "top2": [
+          {
+            "source": "loan.md",
+            "score": 0.449
+          },
+          {
+            "source": "account_number.md",
+            "score": 0.418
+          }
+        ],
+        "answerable": true,
+        "abstained": false,
+        "top1_hit": false,
+        "hit": true
+      },
+      "topic": "T2",
+      "outcome": "llm_gated",
+      "severity": "unscored"
+    },
+    {
+      "id": "kq-rom-kn-720",
+      "lang": "rom-kn",
+      "category": "knowledge_question",
+      "text": "account number yaake beku",
+      "expected": {
+        "route": "knowledge",
+        "sources": [
+          "account_number.md"
+        ]
+      },
+      "got": {
+        "stage": "llm_gate",
+        "control": null,
+        "detector_intent": "deposit money",
+        "detector_category": "BANKING_INTENT",
+        "detector_is_banking": true,
+        "detector_margin": 0.157,
+        "refused": false
+      },
+      "detector_outcome": "question_to_workflow",
+      "retrieval": {
+        "top2": [
+          {
+            "source": "account_number.md",
+            "score": 0.432
+          },
+          {
+            "source": "current_account.md",
+            "score": 0.365
+          }
+        ],
+        "answerable": true,
+        "abstained": false,
+        "top1_hit": true,
+        "hit": true
+      },
+      "topic": "T2",
+      "outcome": "llm_gated",
+      "severity": "unscored"
+    },
+    {
+      "id": "kq-en-730",
+      "lang": "en",
+      "category": "knowledge_question",
+      "text": "how can I send money to another account",
+      "expected": {
+        "route": "knowledge",
+        "sources": [
+          "bank_transfer.md"
+        ]
+      },
+      "got": {
+        "stage": "llm_gate",
+        "control": null,
+        "detector_intent": "deposit money",
+        "detector_category": "BANKING_INTENT",
+        "detector_is_banking": true,
+        "detector_margin": 0.215,
+        "refused": false
+      },
+      "detector_outcome": "question_to_workflow",
+      "retrieval": {
+        "top2": [
+          {
+            "source": "bank_transfer.md",
+            "score": 0.471
+          },
+          {
+            "source": "account_number.md",
+            "score": 0.461
+          }
+        ],
+        "answerable": true,
+        "abstained": false,
+        "top1_hit": true,
+        "hit": true
+      },
+      "topic": "T3",
+      "outcome": "llm_gated",
+      "severity": "unscored"
+    },
+    {
+      "id": "kq-kn-730",
+      "lang": "kn",
+      "category": "knowledge_question",
+      "text": "ಬೇರೆ ಖಾತೆಗೆ ಹಣ ಹೇಗೆ ಕಳುಹಿಸುವುದು",
+      "expected": {
+        "route": "knowledge",
+        "sources": [
+          "bank_transfer.md"
+        ]
+      },
+      "got": {
+        "stage": "llm_gate",
+        "control": null,
+        "detector_intent": "withdraw money",
+        "detector_category": "BANKING_INTENT",
+        "detector_is_banking": true,
+        "detector_margin": 0.132,
+        "refused": false
+      },
+      "detector_outcome": "question_to_workflow",
+      "retrieval": {
+        "top2": [
+          {
+            "source": "bank_transfer.md",
+            "score": 0.682
+          },
+          {
+            "source": "account_number.md",
+            "score": 0.557
+          }
+        ],
+        "answerable": true,
+        "abstained": false,
+        "top1_hit": true,
+        "hit": true
+      },
+      "topic": "T3",
+      "outcome": "llm_gated",
+      "severity": "unscored"
+    },
+    {
+      "id": "kq-hi-730",
+      "lang": "hi",
+      "category": "knowledge_question",
+      "text": "दूसरे खाते में पैसे कैसे भेजें",
+      "expected": {
+        "route": "knowledge",
+        "sources": [
+          "bank_transfer.md"
+        ]
+      },
+      "got": {
+        "stage": "llm_gate",
+        "control": null,
+        "detector_intent": "deposit money",
+        "detector_category": "BANKING_INTENT",
+        "detector_is_banking": true,
+        "detector_margin": 0.193,
+        "refused": false
+      },
+      "detector_outcome": "question_to_workflow",
+      "retrieval": {
+        "top2": [
+          {
+            "source": "bank_transfer.md",
+            "score": 0.682
+          },
+          {
+            "source": "account_number.md",
+            "score": 0.557
+          }
+        ],
+        "answerable": true,
+        "abstained": false,
+        "top1_hit": true,
+        "hit": true
+      },
+      "topic": "T3",
+      "outcome": "llm_gated",
+      "severity": "unscored"
+    },
+    {
+      "id": "kq-kn-en-730",
+      "lang": "kn-en",
+      "category": "knowledge_question",
+      "text": "ಬೇರೆ account ಗೆ money transfer ಹೇಗೆ ಮಾಡುವುದು",
+      "expected": {
+        "route": "knowledge",
+        "sources": [
+          "bank_transfer.md"
+        ]
+      },
+      "got": {
+        "stage": "llm_gate",
+        "control": null,
+        "detector_intent": "withdraw money",
+        "detector_category": "BANKING_INTENT",
+        "detector_is_banking": true,
+        "detector_margin": 0.09,
+        "refused": false
+      },
+      "detector_outcome": "question_to_workflow",
+      "retrieval": {
+        "top2": [
+          {
+            "source": "bank_transfer.md",
+            "score": 0.635
+          },
+          {
+            "source": "account_number.md",
+            "score": 0.534
+          }
+        ],
+        "answerable": true,
+        "abstained": false,
+        "top1_hit": true,
+        "hit": true
+      },
+      "topic": "T3",
+      "outcome": "llm_gated",
+      "severity": "unscored"
+    },
+    {
+      "id": "kq-hi-en-730",
+      "lang": "hi-en",
+      "category": "knowledge_question",
+      "text": "दूसरे account में पैसे transfer कैसे करें",
+      "expected": {
+        "route": "knowledge",
+        "sources": [
+          "bank_transfer.md"
+        ]
+      },
+      "got": {
+        "stage": "llm_gate",
+        "control": null,
+        "detector_intent": "deposit money",
+        "detector_category": "BANKING_INTENT",
+        "detector_is_banking": true,
+        "detector_margin": 0.148,
+        "refused": false
+      },
+      "detector_outcome": "question_to_workflow",
+      "retrieval": {
+        "top2": [
+          {
+            "source": "bank_transfer.md",
+            "score": 0.631
+          },
+          {
+            "source": "current_account.md",
+            "score": 0.488
+          }
+        ],
+        "answerable": true,
+        "abstained": false,
+        "top1_hit": true,
+        "hit": true
+      },
+      "topic": "T3",
+      "outcome": "llm_gated",
+      "severity": "unscored"
+    },
+    {
+      "id": "kq-rom-hi-730",
+      "lang": "rom-hi",
+      "category": "knowledge_question",
+      "text": "dusre account mein paise kaise bheje",
+      "expected": {
+        "route": "knowledge",
+        "sources": [
+          "bank_transfer.md"
+        ]
+      },
+      "got": {
+        "stage": "llm_gate",
+        "control": null,
+        "detector_intent": "withdraw money",
+        "detector_category": "BANKING_INTENT",
+        "detector_is_banking": true,
+        "detector_margin": 0.186,
+        "refused": false
+      },
+      "detector_outcome": "question_to_workflow",
+      "retrieval": {
+        "top2": [
+          {
+            "source": "bank_transfer.md",
+            "score": 0.685
+          },
+          {
+            "source": "withdrawal.md",
+            "score": 0.44
+          }
+        ],
+        "answerable": true,
+        "abstained": false,
+        "top1_hit": true,
+        "hit": true
+      },
+      "topic": "T3",
+      "outcome": "llm_gated",
+      "severity": "unscored"
+    },
+    {
+      "id": "kq-rom-kn-730",
+      "lang": "rom-kn",
+      "category": "knowledge_question",
+      "text": "bere account ge hana hege kalisodu",
+      "expected": {
+        "route": "knowledge",
+        "sources": [
+          "bank_transfer.md"
+        ]
+      },
+      "got": {
+        "stage": "llm_gate",
+        "control": null,
+        "detector_intent": "deposit money",
+        "detector_category": "BANKING_INTENT",
+        "detector_is_banking": true,
+        "detector_margin": 0.196,
+        "refused": false
+      },
+      "detector_outcome": "question_to_workflow",
+      "retrieval": {
+        "top2": [
+          {
+            "source": "bank_transfer.md",
+            "score": 0.685
+          },
+          {
+            "source": "withdrawal.md",
+            "score": 0.44
+          }
+        ],
+        "answerable": true,
+        "abstained": false,
+        "top1_hit": true,
+        "hit": true
+      },
+      "topic": "T3",
+      "outcome": "llm_gated",
+      "severity": "unscored"
+    },
+    {
+      "id": "kq-en-740",
+      "lang": "en",
+      "category": "knowledge_question",
+      "text": "what services does a bank branch offer",
+      "expected": {
+        "route": "knowledge",
+        "sources": [
+          "banking_services.md"
+        ]
+      },
+      "got": {
+        "stage": "llm_gate",
+        "control": null,
+        "detector_intent": "apply for loan",
+        "detector_category": "KNOWLEDGE_QUESTION",
+        "detector_is_banking": false,
+        "detector_margin": -0.0,
+        "refused": false
+      },
+      "detector_outcome": "correct",
+      "retrieval": {
+        "top2": [
+          {
+            "source": "banking_services.md",
+            "score": 0.683
+          },
+          {
+            "source": "loan_basics.md",
+            "score": 0.548
+          }
+        ],
+        "answerable": true,
+        "abstained": false,
+        "top1_hit": true,
+        "hit": true
+      },
+      "topic": "T4",
+      "outcome": "llm_gated",
+      "severity": "unscored"
+    },
+    {
+      "id": "kq-kn-740",
+      "lang": "kn",
+      "category": "knowledge_question",
+      "text": "ಬ್ಯಾಂಕ್ ಶಾಖೆಯಲ್ಲಿ ಯಾವ ಸೇವೆಗಳು ಸಿಗುತ್ತವೆ",
+      "expected": {
+        "route": "knowledge",
+        "sources": [
+          "banking_services.md"
+        ]
+      },
+      "got": {
+        "stage": "llm_gate",
+        "control": null,
+        "detector_intent": "check account balance",
+        "detector_category": "KNOWLEDGE_QUESTION",
+        "detector_is_banking": false,
+        "detector_margin": 0.02,
+        "refused": false
+      },
+      "detector_outcome": "correct",
+      "retrieval": {
+        "top2": [
+          {
+            "source": "banking_services.md",
+            "score": 0.421
+          },
+          {
+            "source": "loan_basics.md",
+            "score": 0.419
+          }
+        ],
+        "answerable": true,
+        "abstained": false,
+        "top1_hit": true,
+        "hit": true
+      },
+      "topic": "T4",
+      "outcome": "llm_gated",
+      "severity": "unscored"
+    },
+    {
+      "id": "kq-hi-740",
+      "lang": "hi",
+      "category": "knowledge_question",
+      "text": "बैंक शाखा में कौन सी सेवाएँ मिलती हैं",
+      "expected": {
+        "route": "knowledge",
+        "sources": [
+          "banking_services.md"
+        ]
+      },
+      "got": {
+        "stage": "llm_gate",
+        "control": null,
+        "detector_intent": "open new account",
+        "detector_category": "KNOWLEDGE_QUESTION",
+        "detector_is_banking": false,
+        "detector_margin": -0.021,
+        "refused": false
+      },
+      "detector_outcome": "correct",
+      "retrieval": {
+        "top2": [
+          {
+            "source": "banking_services.md",
+            "score": 0.671
+          },
+          {
+            "source": "loan_basics.md",
+            "score": 0.534
+          }
+        ],
+        "answerable": true,
+        "abstained": false,
+        "top1_hit": true,
+        "hit": true
+      },
+      "topic": "T4",
+      "outcome": "llm_gated",
+      "severity": "unscored"
+    },
+    {
+      "id": "kq-kn-en-740",
+      "lang": "kn-en",
+      "category": "knowledge_question",
+      "text": "bank branch ನಲ್ಲಿ ಯಾವ services ಇವೆ",
+      "expected": {
+        "route": "knowledge",
+        "sources": [
+          "banking_services.md"
+        ]
+      },
+      "got": {
+        "stage": "llm_gate",
+        "control": null,
+        "detector_intent": "open new account",
+        "detector_category": "KNOWLEDGE_QUESTION",
+        "detector_is_banking": false,
+        "detector_margin": 0.042,
+        "refused": false
+      },
+      "detector_outcome": "correct",
+      "retrieval": {
+        "top2": [
+          {
+            "source": "banking_services.md",
+            "score": 0.549
+          },
+          {
+            "source": "loan_basics.md",
+            "score": 0.427
+          }
+        ],
+        "answerable": true,
+        "abstained": false,
+        "top1_hit": true,
+        "hit": true
+      },
+      "topic": "T4",
+      "outcome": "llm_gated",
+      "severity": "unscored"
+    },
+    {
+      "id": "kq-hi-en-740",
+      "lang": "hi-en",
+      "category": "knowledge_question",
+      "text": "bank branch में कौन सी services मिलती हैं",
+      "expected": {
+        "route": "knowledge",
+        "sources": [
+          "banking_services.md"
+        ]
+      },
+      "got": {
+        "stage": "llm_gate",
+        "control": null,
+        "detector_intent": "open new account",
+        "detector_category": "KNOWLEDGE_QUESTION",
+        "detector_is_banking": false,
+        "detector_margin": -0.039,
+        "refused": false
+      },
+      "detector_outcome": "correct",
+      "retrieval": {
+        "top2": [
+          {
+            "source": "banking_services.md",
+            "score": 0.671
+          },
+          {
+            "source": "loan_basics.md",
+            "score": 0.537
+          }
+        ],
+        "answerable": true,
+        "abstained": false,
+        "top1_hit": true,
+        "hit": true
+      },
+      "topic": "T4",
+      "outcome": "llm_gated",
+      "severity": "unscored"
+    },
+    {
+      "id": "kq-rom-hi-740",
+      "lang": "rom-hi",
+      "category": "knowledge_question",
+      "text": "bank mein kaun si sevaayein milti hain",
+      "expected": {
+        "route": "knowledge",
+        "sources": [
+          "banking_services.md"
+        ]
+      },
+      "got": {
+        "stage": "llm_gate",
+        "control": null,
+        "detector_intent": "deposit money",
+        "detector_category": "BANKING_INTENT",
+        "detector_is_banking": true,
+        "detector_margin": 0.102,
+        "refused": false
+      },
+      "detector_outcome": "question_to_workflow",
+      "retrieval": {
+        "top2": [
+          {
+            "source": "banking_services.md",
+            "score": 0.42
+          },
+          {
+            "source": "loan.md",
+            "score": 0.291
+          }
+        ],
+        "answerable": true,
+        "abstained": false,
+        "top1_hit": true,
+        "hit": true
+      },
+      "topic": "T4",
+      "outcome": "llm_gated",
+      "severity": "unscored"
+    },
+    {
+      "id": "kq-rom-kn-740",
+      "lang": "rom-kn",
+      "category": "knowledge_question",
+      "text": "bank alli yaava sevegalu sigutte",
+      "expected": {
+        "route": "knowledge",
+        "sources": [
+          "banking_services.md"
+        ]
+      },
+      "got": {
+        "stage": "llm_gate",
+        "control": null,
+        "detector_intent": "check account balance",
+        "detector_category": "UNSUPPORTED",
+        "detector_is_banking": false,
+        "detector_margin": -0.077,
+        "refused": false
+      },
+      "detector_outcome": "wrong_non_banking",
+      "retrieval": {
+        "top2": [
+          {
+            "source": "banking_services.md",
+            "score": 0.42
+          },
+          {
+            "source": "deposit.md",
+            "score": 0.359
+          }
+        ],
+        "answerable": true,
+        "abstained": false,
+        "top1_hit": true,
+        "hit": true
+      },
+      "topic": "T4",
+      "outcome": "llm_gated",
+      "severity": "unscored"
+    },
+    {
+      "id": "kq-en-750",
+      "lang": "en",
+      "category": "knowledge_question",
+      "text": "who should open a current account",
+      "expected": {
+        "route": "knowledge",
+        "sources": [
+          "current_account.md"
+        ]
+      },
+      "got": {
+        "stage": "llm_gate",
+        "control": null,
+        "detector_intent": "open new account",
+        "detector_category": "BANKING_INTENT",
+        "detector_is_banking": true,
+        "detector_margin": 0.249,
+        "refused": false
+      },
+      "detector_outcome": "question_to_workflow",
+      "retrieval": {
+        "top2": [
+          {
+            "source": "account_opening_requirements.md",
+            "score": 0.616
+          },
+          {
+            "source": "account_opening.md",
+            "score": 0.615
+          }
+        ],
+        "answerable": true,
+        "abstained": false,
+        "top1_hit": false,
+        "hit": false
+      },
+      "topic": "T5",
+      "outcome": "llm_gated",
+      "severity": "unscored"
+    },
+    {
+      "id": "kq-kn-750",
+      "lang": "kn",
+      "category": "knowledge_question",
+      "text": "ಚಾಲ್ತಿ ಖಾತೆ ಯಾರಿಗೆ ಸೂಕ್ತ",
+      "expected": {
+        "route": "knowledge",
+        "sources": [
+          "current_account.md"
+        ]
+      },
+      "got": {
+        "stage": "detector",
+        "control": null,
+        "detector_intent": "check account balance",
+        "detector_category": "BANKING_INTENT",
+        "detector_is_banking": true,
+        "detector_margin": 0.062,
+        "refused": false
+      },
+      "detector_outcome": "question_to_workflow",
+      "retrieval": {
+        "top2": [
+          {
+            "source": "current_account.md",
+            "score": 0.649
+          },
+          {
+            "source": "account_number.md",
+            "score": 0.536
+          }
+        ],
+        "answerable": true,
+        "abstained": false,
+        "top1_hit": true,
+        "hit": true
+      },
+      "topic": "T5",
+      "outcome": "question_to_workflow",
+      "severity": "critical"
+    },
+    {
+      "id": "kq-hi-750",
+      "lang": "hi",
+      "category": "knowledge_question",
+      "text": "चालू खाता किसके लिए होता है",
+      "expected": {
+        "route": "knowledge",
+        "sources": [
+          "current_account.md"
+        ]
+      },
+      "got": {
+        "stage": "detector",
+        "control": null,
+        "detector_intent": "check account balance",
+        "detector_category": "BANKING_INTENT",
+        "detector_is_banking": true,
+        "detector_margin": 0.13,
+        "refused": false
+      },
+      "detector_outcome": "question_to_workflow",
+      "retrieval": {
+        "top2": [
+          {
+            "source": "current_account.md",
+            "score": 0.649
+          },
+          {
+            "source": "account_number.md",
+            "score": 0.536
+          }
+        ],
+        "answerable": true,
+        "abstained": false,
+        "top1_hit": true,
+        "hit": true
+      },
+      "topic": "T5",
+      "outcome": "question_to_workflow",
+      "severity": "critical"
+    },
+    {
+      "id": "kq-kn-en-750",
+      "lang": "kn-en",
+      "category": "knowledge_question",
+      "text": "current account ಯಾರಿಗೆ ಉಪಯೋಗ",
+      "expected": {
+        "route": "knowledge",
+        "sources": [
+          "current_account.md"
+        ]
+      },
+      "got": {
+        "stage": "detector",
+        "control": null,
+        "detector_intent": "open new account",
+        "detector_category": "BANKING_INTENT",
+        "detector_is_banking": true,
+        "detector_margin": 0.061,
+        "refused": false
+      },
+      "detector_outcome": "question_to_workflow",
+      "retrieval": {
+        "top2": [
+          {
+            "source": "current_account.md",
+            "score": 0.652
+          },
+          {
+            "source": "savings_account.md",
+            "score": 0.602
+          }
+        ],
+        "answerable": true,
+        "abstained": false,
+        "top1_hit": true,
+        "hit": true
+      },
+      "topic": "T5",
+      "outcome": "question_to_workflow",
+      "severity": "critical"
+    },
+    {
+      "id": "kq-hi-en-750",
+      "lang": "hi-en",
+      "category": "knowledge_question",
+      "text": "current account किसके लिए है",
+      "expected": {
+        "route": "knowledge",
+        "sources": [
+          "current_account.md"
+        ]
+      },
+      "got": {
+        "stage": "detector",
+        "control": null,
+        "detector_intent": "open new account",
+        "detector_category": "KNOWLEDGE_QUESTION",
+        "detector_is_banking": false,
+        "detector_margin": 0.041,
+        "refused": false
+      },
+      "detector_outcome": "correct",
+      "retrieval": {
+        "top2": [
+          {
+            "source": "current_account.md",
+            "score": 0.674
+          },
+          {
+            "source": "account_number.md",
+            "score": 0.579
+          }
+        ],
+        "answerable": true,
+        "abstained": false,
+        "top1_hit": true,
+        "hit": true
+      },
+      "topic": "T5",
+      "outcome": "correct",
+      "severity": "ok"
+    },
+    {
+      "id": "kq-rom-hi-750",
+      "lang": "rom-hi",
+      "category": "knowledge_question",
+      "text": "current account kiske liye hota hai",
+      "expected": {
+        "route": "knowledge",
+        "sources": [
+          "current_account.md"
+        ]
+      },
+      "got": {
+        "stage": "detector",
+        "control": null,
+        "detector_intent": "deposit money",
+        "detector_category": "BANKING_INTENT",
+        "detector_is_banking": true,
+        "detector_margin": 0.184,
+        "refused": false
+      },
+      "detector_outcome": "question_to_workflow",
+      "retrieval": {
+        "top2": [
+          {
+            "source": "current_account.md",
+            "score": 0.346
+          },
+          {
+            "source": "account_number.md",
+            "score": 0.288
+          }
+        ],
+        "answerable": true,
+        "abstained": false,
+        "top1_hit": true,
+        "hit": true
+      },
+      "topic": "T5",
+      "outcome": "question_to_workflow",
+      "severity": "critical"
+    },
+    {
+      "id": "kq-rom-kn-750",
+      "lang": "rom-kn",
+      "category": "knowledge_question",
+      "text": "current account yaarige beku",
+      "expected": {
+        "route": "knowledge",
+        "sources": [
+          "current_account.md"
+        ]
+      },
+      "got": {
+        "stage": "detector",
+        "control": null,
+        "detector_intent": "withdraw money",
+        "detector_category": "BANKING_INTENT",
+        "detector_is_banking": true,
+        "detector_margin": 0.253,
+        "refused": false
+      },
+      "detector_outcome": "question_to_workflow",
+      "retrieval": {
+        "top2": [
+          {
+            "source": "current_account.md",
+            "score": 0.386
+          },
+          {
+            "source": "account_number.md",
+            "score": 0.312
+          }
+        ],
+        "answerable": true,
+        "abstained": false,
+        "top1_hit": true,
+        "hit": true
+      },
+      "topic": "T5",
+      "outcome": "question_to_workflow",
+      "severity": "critical"
+    },
+    {
+      "id": "kq-en-760",
+      "lang": "en",
+      "category": "knowledge_question",
+      "text": "what does a passbook show",
+      "expected": {
+        "route": "knowledge",
+        "sources": [
+          "passbook.md"
+        ]
+      },
+      "got": {
+        "stage": "llm_gate",
+        "control": null,
+        "detector_intent": "check account balance",
+        "detector_category": "KNOWLEDGE_QUESTION",
+        "detector_is_banking": false,
+        "detector_margin": -0.033,
+        "refused": false
+      },
+      "detector_outcome": "correct",
+      "retrieval": {
+        "top2": [
+          {
+            "source": "passbook.md",
+            "score": 0.691
+          },
+          {
+            "source": "account_number.md",
+            "score": 0.362
+          }
+        ],
+        "answerable": true,
+        "abstained": false,
+        "top1_hit": true,
+        "hit": true
+      },
+      "topic": "T6",
+      "outcome": "llm_gated",
+      "severity": "unscored"
+    },
+    {
+      "id": "kq-kn-760",
+      "lang": "kn",
+      "category": "knowledge_question",
+      "text": "ಖಾತೆ ಪುಸ್ತಕದಲ್ಲಿ ಏನು ಇರುತ್ತದೆ",
+      "expected": {
+        "route": "knowledge",
+        "sources": [
+          "passbook.md"
+        ]
+      },
+      "got": {
+        "stage": "llm_gate",
+        "control": null,
+        "detector_intent": "check account balance",
+        "detector_category": "BANKING_INTENT",
+        "detector_is_banking": true,
+        "detector_margin": 0.11,
+        "refused": false
+      },
+      "detector_outcome": "question_to_workflow",
+      "retrieval": {
+        "top2": [
+          {
+            "source": "passbook.md",
+            "score": 0.703
+          },
+          {
+            "source": "account_number.md",
+            "score": 0.504
+          }
+        ],
+        "answerable": true,
+        "abstained": false,
+        "top1_hit": true,
+        "hit": true
+      },
+      "topic": "T6",
+      "outcome": "llm_gated",
+      "severity": "unscored"
+    },
+    {
+      "id": "kq-hi-760",
+      "lang": "hi",
+      "category": "knowledge_question",
+      "text": "खाता पुस्तिका में क्या दर्ज होता है",
+      "expected": {
+        "route": "knowledge",
+        "sources": [
+          "passbook.md"
+        ]
+      },
+      "got": {
+        "stage": "llm_gate",
+        "control": null,
+        "detector_intent": "check account balance",
+        "detector_category": "KNOWLEDGE_QUESTION",
+        "detector_is_banking": false,
+        "detector_margin": -0.004,
+        "refused": false
+      },
+      "detector_outcome": "correct",
+      "retrieval": {
+        "top2": [
+          {
+            "source": "passbook.md",
+            "score": 0.703
+          },
+          {
+            "source": "account_number.md",
+            "score": 0.531
+          }
+        ],
+        "answerable": true,
+        "abstained": false,
+        "top1_hit": true,
+        "hit": true
+      },
+      "topic": "T6",
+      "outcome": "llm_gated",
+      "severity": "unscored"
+    },
+    {
+      "id": "kq-kn-en-760",
+      "lang": "kn-en",
+      "category": "knowledge_question",
+      "text": "passbook ನಲ್ಲಿ ಏನು ಇರುತ್ತದೆ",
+      "expected": {
+        "route": "knowledge",
+        "sources": [
+          "passbook.md"
+        ]
+      },
+      "got": {
+        "stage": "llm_gate",
+        "control": null,
+        "detector_intent": "check account balance",
+        "detector_category": "KNOWLEDGE_QUESTION",
+        "detector_is_banking": false,
+        "detector_margin": -0.057,
+        "refused": false
+      },
+      "detector_outcome": "correct",
+      "retrieval": {
+        "top2": [
+          {
+            "source": "passbook.md",
+            "score": 0.657
+          },
+          {
+            "source": "account_number.md",
+            "score": 0.39
+          }
+        ],
+        "answerable": true,
+        "abstained": false,
+        "top1_hit": true,
+        "hit": true
+      },
+      "topic": "T6",
+      "outcome": "llm_gated",
+      "severity": "unscored"
+    },
+    {
+      "id": "kq-hi-en-760",
+      "lang": "hi-en",
+      "category": "knowledge_question",
+      "text": "passbook में क्या होता है",
+      "expected": {
+        "route": "knowledge",
+        "sources": [
+          "passbook.md"
+        ]
+      },
+      "got": {
+        "stage": "llm_gate",
+        "control": null,
+        "detector_intent": "check account balance",
+        "detector_category": "KNOWLEDGE_QUESTION",
+        "detector_is_banking": false,
+        "detector_margin": -0.008,
+        "refused": false
+      },
+      "detector_outcome": "correct",
+      "retrieval": {
+        "top2": [
+          {
+            "source": "passbook.md",
+            "score": 0.682
+          },
+          {
+            "source": "current_account.md",
+            "score": 0.367
+          }
+        ],
+        "answerable": true,
+        "abstained": false,
+        "top1_hit": true,
+        "hit": true
+      },
+      "topic": "T6",
+      "outcome": "llm_gated",
+      "severity": "unscored"
+    },
+    {
+      "id": "kq-rom-hi-760",
+      "lang": "rom-hi",
+      "category": "knowledge_question",
+      "text": "passbook mein kya hota hai",
+      "expected": {
+        "route": "knowledge",
+        "sources": [
+          "passbook.md"
+        ]
+      },
+      "got": {
+        "stage": "llm_gate",
+        "control": null,
+        "detector_intent": "deposit money",
+        "detector_category": "BANKING_INTENT",
+        "detector_is_banking": true,
+        "detector_margin": 0.116,
+        "refused": false
+      },
+      "detector_outcome": "question_to_workflow",
+      "retrieval": {
+        "top2": [
+          {
+            "source": "passbook.md",
+            "score": 0.423
+          },
+          {
+            "source": "bank_transfer.md",
+            "score": 0.288
+          }
+        ],
+        "answerable": true,
+        "abstained": false,
+        "top1_hit": true,
+        "hit": true
+      },
+      "topic": "T6",
+      "outcome": "llm_gated",
+      "severity": "unscored"
+    },
+    {
+      "id": "kq-rom-kn-760",
+      "lang": "rom-kn",
+      "category": "knowledge_question",
+      "text": "passbook nalli enu irutte",
+      "expected": {
+        "route": "knowledge",
+        "sources": [
+          "passbook.md"
+        ]
+      },
+      "got": {
+        "stage": "llm_gate",
+        "control": null,
+        "detector_intent": "deposit money",
+        "detector_category": "KNOWLEDGE_QUESTION",
+        "detector_is_banking": false,
+        "detector_margin": -0.012,
+        "refused": false
+      },
+      "detector_outcome": "correct",
+      "retrieval": {
+        "top2": [
+          {
+            "source": "passbook.md",
+            "score": 0.452
+          },
+          {
+            "source": "account_number.md",
+            "score": 0.28
+          }
+        ],
+        "answerable": true,
+        "abstained": false,
+        "top1_hit": true,
+        "hit": true
+      },
+      "topic": "T6",
+      "outcome": "llm_gated",
+      "severity": "unscored"
+    },
+    {
+      "id": "kq-en-770",
+      "lang": "en",
+      "category": "knowledge_question",
+      "text": "which ID proofs are needed for a new account",
+      "expected": {
+        "route": "knowledge",
+        "sources": [
+          "account_opening_requirements.md",
+          "account_opening.md"
+        ]
+      },
+      "got": {
+        "stage": "llm_gate",
+        "control": null,
+        "detector_intent": "open new account",
+        "detector_category": "BANKING_INTENT",
+        "detector_is_banking": true,
+        "detector_margin": 0.096,
+        "refused": false
+      },
+      "detector_outcome": "question_to_workflow",
+      "retrieval": {
+        "top2": [
+          {
+            "source": "account_opening_requirements.md",
+            "score": 0.509
+          },
+          {
+            "source": "account_number.md",
+            "score": 0.489
+          }
+        ],
+        "answerable": true,
+        "abstained": false,
+        "top1_hit": true,
+        "hit": true
+      },
+      "topic": "T7",
+      "outcome": "llm_gated",
+      "severity": "unscored"
+    },
+    {
+      "id": "kq-kn-770",
+      "lang": "kn",
+      "category": "knowledge_question",
+      "text": "ಹೊಸ ಖಾತೆಗೆ ಯಾವ ಗುರುತಿನ ಚೀಟಿಗಳು ಬೇಕು",
+      "expected": {
+        "route": "knowledge",
+        "sources": [
+          "account_opening_requirements.md",
+          "account_opening.md"
+        ]
+      },
+      "got": {
+        "stage": "llm_gate",
+        "control": null,
+        "detector_intent": "open new account",
+        "detector_category": "BANKING_INTENT",
+        "detector_is_banking": true,
+        "detector_margin": 0.144,
+        "refused": false
+      },
+      "detector_outcome": "question_to_workflow",
+      "retrieval": {
+        "top2": [
+          {
+            "source": "account_number.md",
+            "score": 0.516
+          },
+          {
+            "source": "withdrawal_slip.md",
+            "score": 0.491
+          }
+        ],
+        "answerable": true,
+        "abstained": false,
+        "top1_hit": false,
+        "hit": false
+      },
+      "topic": "T7",
+      "outcome": "llm_gated",
+      "severity": "unscored"
+    },
+    {
+      "id": "kq-hi-770",
+      "lang": "hi",
+      "category": "knowledge_question",
+      "text": "नए खाते के लिए कौन से पहचान पत्र चाहिए",
+      "expected": {
+        "route": "knowledge",
+        "sources": [
+          "account_opening_requirements.md",
+          "account_opening.md"
+        ]
+      },
+      "got": {
+        "stage": "llm_gate",
+        "control": null,
+        "detector_intent": "open new account",
+        "detector_category": "BANKING_INTENT",
+        "detector_is_banking": true,
+        "detector_margin": 0.22,
+        "refused": false
+      },
+      "detector_outcome": "question_to_workflow",
+      "retrieval": {
+        "top2": [
+          {
+            "source": "account_number.md",
+            "score": 0.56
+          },
+          {
+            "source": "current_account.md",
+            "score": 0.538
+          }
+        ],
+        "answerable": true,
+        "abstained": false,
+        "top1_hit": false,
+        "hit": false
+      },
+      "topic": "T7",
+      "outcome": "llm_gated",
+      "severity": "unscored"
+    },
+    {
+      "id": "kq-kn-en-770",
+      "lang": "kn-en",
+      "category": "knowledge_question",
+      "text": "new account ಗೆ ಯಾವ ID proof ಬೇಕು",
+      "expected": {
+        "route": "knowledge",
+        "sources": [
+          "account_opening_requirements.md",
+          "account_opening.md"
+        ]
+      },
+      "got": {
+        "stage": "llm_gate",
+        "control": null,
+        "detector_intent": "open new account",
+        "detector_category": "BANKING_INTENT",
+        "detector_is_banking": true,
+        "detector_margin": 0.069,
+        "refused": false
+      },
+      "detector_outcome": "question_to_workflow",
+      "retrieval": {
+        "top2": [
+          {
+            "source": "account_number.md",
+            "score": 0.41
+          },
+          {
+            "source": "account_opening_requirements.md",
+            "score": 0.386
+          }
+        ],
+        "answerable": true,
+        "abstained": false,
+        "top1_hit": false,
+        "hit": true
+      },
+      "topic": "T7",
+      "outcome": "llm_gated",
+      "severity": "unscored"
+    },
+    {
+      "id": "kq-hi-en-770",
+      "lang": "hi-en",
+      "category": "knowledge_question",
+      "text": "new account के लिए कौन सा ID proof चाहिए",
+      "expected": {
+        "route": "knowledge",
+        "sources": [
+          "account_opening_requirements.md",
+          "account_opening.md"
+        ]
+      },
+      "got": {
+        "stage": "llm_gate",
+        "control": null,
+        "detector_intent": "open new account",
+        "detector_category": "BANKING_INTENT",
+        "detector_is_banking": true,
+        "detector_margin": 0.133,
+        "refused": false
+      },
+      "detector_outcome": "question_to_workflow",
+      "retrieval": {
+        "top2": [
+          {
+            "source": "account_opening_requirements.md",
+            "score": 0.487
+          },
+          {
+            "source": "account_number.md",
+            "score": 0.482
+          }
+        ],
+        "answerable": true,
+        "abstained": false,
+        "top1_hit": true,
+        "hit": true
+      },
+      "topic": "T7",
+      "outcome": "llm_gated",
+      "severity": "unscored"
+    },
+    {
+      "id": "kq-rom-hi-770",
+      "lang": "rom-hi",
+      "category": "knowledge_question",
+      "text": "naye khate ke liye kaun se documents chahiye",
+      "expected": {
+        "route": "knowledge",
+        "sources": [
+          "account_opening_requirements.md",
+          "account_opening.md"
+        ]
+      },
+      "got": {
+        "stage": "llm_gate",
+        "control": null,
+        "detector_intent": "open new account",
+        "detector_category": "BANKING_INTENT",
+        "detector_is_banking": true,
+        "detector_margin": 0.092,
+        "refused": false
+      },
+      "detector_outcome": "question_to_workflow",
+      "retrieval": {
+        "top2": [
+          {
+            "source": "savings_account.md",
+            "score": 0.611
+          },
+          {
+            "source": "current_account.md",
+            "score": 0.607
+          }
+        ],
+        "answerable": true,
+        "abstained": false,
+        "top1_hit": false,
+        "hit": false
+      },
+      "topic": "T7",
+      "outcome": "llm_gated",
+      "severity": "unscored"
+    },
+    {
+      "id": "kq-rom-kn-770",
+      "lang": "rom-kn",
+      "category": "knowledge_question",
+      "text": "hosa khate ge yaava documents beku",
+      "expected": {
+        "route": "knowledge",
+        "sources": [
+          "account_opening_requirements.md",
+          "account_opening.md"
+        ]
+      },
+      "got": {
+        "stage": "llm_gate",
+        "control": null,
+        "detector_intent": "open new account",
+        "detector_category": "BANKING_INTENT",
+        "detector_is_banking": true,
+        "detector_margin": 0.31,
+        "refused": false
+      },
+      "detector_outcome": "question_to_workflow",
+      "retrieval": {
+        "top2": [
+          {
+            "source": "savings_account.md",
+            "score": 0.611
+          },
+          {
+            "source": "current_account.md",
+            "score": 0.607
+          }
+        ],
+        "answerable": true,
+        "abstained": false,
+        "top1_hit": false,
+        "hit": false
+      },
+      "topic": "T7",
+      "outcome": "llm_gated",
+      "severity": "unscored"
+    },
+    {
+      "id": "kq-en-780",
+      "lang": "en",
+      "category": "knowledge_question",
+      "text": "what are the steps to get a loan",
+      "expected": {
+        "route": "knowledge",
+        "sources": [
+          "loan.md",
+          "loan_basics.md"
+        ]
+      },
+      "got": {
+        "stage": "llm_gate",
+        "control": null,
+        "detector_intent": "apply for loan",
+        "detector_category": "BANKING_INTENT",
+        "detector_is_banking": true,
+        "detector_margin": 0.163,
+        "refused": false
+      },
+      "detector_outcome": "question_to_workflow",
+      "retrieval": {
+        "top2": [
+          {
+            "source": "loan.md",
+            "score": 0.553
+          },
+          {
+            "source": "loan_basics.md",
+            "score": 0.5
+          }
+        ],
+        "answerable": true,
+        "abstained": false,
+        "top1_hit": true,
+        "hit": true
+      },
+      "topic": "T8",
+      "outcome": "llm_gated",
+      "severity": "unscored"
+    },
+    {
+      "id": "kq-kn-780",
+      "lang": "kn",
+      "category": "knowledge_question",
+      "text": "ಸಾಲ ಪಡೆಯುವ ಪ್ರಕ್ರಿಯೆ ಏನು",
+      "expected": {
+        "route": "knowledge",
+        "sources": [
+          "loan.md",
+          "loan_basics.md"
+        ]
+      },
+      "got": {
+        "stage": "llm_gate",
+        "control": null,
+        "detector_intent": "apply for loan",
+        "detector_category": "KNOWLEDGE_QUESTION",
+        "detector_is_banking": false,
+        "detector_margin": 0.026,
+        "refused": false
+      },
+      "detector_outcome": "correct",
+      "retrieval": {
+        "top2": [
+          {
+            "source": "loan.md",
+            "score": 0.659
+          },
+          {
+            "source": "loan_basics.md",
+            "score": 0.596
+          }
+        ],
+        "answerable": true,
+        "abstained": false,
+        "top1_hit": true,
+        "hit": true
+      },
+      "topic": "T8",
+      "outcome": "llm_gated",
+      "severity": "unscored"
+    },
+    {
+      "id": "kq-hi-780",
+      "lang": "hi",
+      "category": "knowledge_question",
+      "text": "ऋण लेने की प्रक्रिया क्या है",
+      "expected": {
+        "route": "knowledge",
+        "sources": [
+          "loan.md",
+          "loan_basics.md"
+        ]
+      },
+      "got": {
+        "stage": "llm_gate",
+        "control": null,
+        "detector_intent": "apply for loan",
+        "detector_category": "BANKING_INTENT",
+        "detector_is_banking": true,
+        "detector_margin": 0.103,
+        "refused": false
+      },
+      "detector_outcome": "question_to_workflow",
+      "retrieval": {
+        "top2": [
+          {
+            "source": "loan.md",
+            "score": 0.659
+          },
+          {
+            "source": "loan_basics.md",
+            "score": 0.603
+          }
+        ],
+        "answerable": true,
+        "abstained": false,
+        "top1_hit": true,
+        "hit": true
+      },
+      "topic": "T8",
+      "outcome": "llm_gated",
+      "severity": "unscored"
+    },
+    {
+      "id": "kq-kn-en-780",
+      "lang": "kn-en",
+      "category": "knowledge_question",
+      "text": "loan ತೆಗೆದುಕೊಳ್ಳುವ process ಏನು",
+      "expected": {
+        "route": "knowledge",
+        "sources": [
+          "loan.md",
+          "loan_basics.md"
+        ]
+      },
+      "got": {
+        "stage": "llm_gate",
+        "control": null,
+        "detector_intent": "apply for loan",
+        "detector_category": "BANKING_INTENT",
+        "detector_is_banking": true,
+        "detector_margin": 0.088,
+        "refused": false
+      },
+      "detector_outcome": "question_to_workflow",
+      "retrieval": {
+        "top2": [
+          {
+            "source": "loan.md",
+            "score": 0.603
+          },
+          {
+            "source": "loan_basics.md",
+            "score": 0.597
+          }
+        ],
+        "answerable": true,
+        "abstained": false,
+        "top1_hit": true,
+        "hit": true
+      },
+      "topic": "T8",
+      "outcome": "llm_gated",
+      "severity": "unscored"
+    },
+    {
+      "id": "kq-hi-en-780",
+      "lang": "hi-en",
+      "category": "knowledge_question",
+      "text": "loan लेने का process क्या है",
+      "expected": {
+        "route": "knowledge",
+        "sources": [
+          "loan.md",
+          "loan_basics.md"
+        ]
+      },
+      "got": {
+        "stage": "llm_gate",
+        "control": null,
+        "detector_intent": "apply for loan",
+        "detector_category": "BANKING_INTENT",
+        "detector_is_banking": true,
+        "detector_margin": 0.116,
+        "refused": false
+      },
+      "detector_outcome": "question_to_workflow",
+      "retrieval": {
+        "top2": [
+          {
+            "source": "loan.md",
+            "score": 0.641
+          },
+          {
+            "source": "loan_basics.md",
+            "score": 0.591
+          }
+        ],
+        "answerable": true,
+        "abstained": false,
+        "top1_hit": true,
+        "hit": true
+      },
+      "topic": "T8",
+      "outcome": "llm_gated",
+      "severity": "unscored"
+    },
+    {
+      "id": "kq-rom-hi-780",
+      "lang": "rom-hi",
+      "category": "knowledge_question",
+      "text": "loan lene ka tarika kya hai",
+      "expected": {
+        "route": "knowledge",
+        "sources": [
+          "loan.md",
+          "loan_basics.md"
+        ]
+      },
+      "got": {
+        "stage": "llm_gate",
+        "control": null,
+        "detector_intent": "apply for loan",
+        "detector_category": "BANKING_INTENT",
+        "detector_is_banking": true,
+        "detector_margin": 0.396,
+        "refused": false
+      },
+      "detector_outcome": "question_to_workflow",
+      "retrieval": {
+        "top2": [
+          {
+            "source": "loan_basics.md",
+            "score": 0.386
+          },
+          {
+            "source": "withdrawal_slip.md",
+            "score": 0.326
+          }
+        ],
+        "answerable": true,
+        "abstained": false,
+        "top1_hit": true,
+        "hit": true
+      },
+      "topic": "T8",
+      "outcome": "llm_gated",
+      "severity": "unscored"
+    },
+    {
+      "id": "kq-rom-kn-780",
+      "lang": "rom-kn",
+      "category": "knowledge_question",
+      "text": "loan tegedukolluva vidhana enu",
+      "expected": {
+        "route": "knowledge",
+        "sources": [
+          "loan.md",
+          "loan_basics.md"
+        ]
+      },
+      "got": {
+        "stage": "llm_gate",
+        "control": null,
+        "detector_intent": "apply for loan",
+        "detector_category": "BANKING_INTENT",
+        "detector_is_banking": true,
+        "detector_margin": 0.095,
+        "refused": false
+      },
+      "detector_outcome": "question_to_workflow",
+      "retrieval": {
+        "top2": [
+          {
+            "source": "loan_basics.md",
+            "score": 0.507
+          },
+          {
+            "source": "loan.md",
+            "score": 0.418
+          }
+        ],
+        "answerable": true,
+        "abstained": false,
+        "top1_hit": true,
+        "hit": true
+      },
+      "topic": "T8",
+      "outcome": "llm_gated",
+      "severity": "unscored"
+    },
+    {
+      "id": "kq-en-791",
+      "lang": "en",
+      "category": "knowledge_question",
+      "text": "what is today's gold rate",
+      "expected": {
+        "route": "knowledge",
+        "sources": null
+      },
+      "got": {
+        "stage": "llm_gate",
+        "control": null,
+        "detector_intent": "withdraw money",
+        "detector_category": "KNOWLEDGE_QUESTION",
+        "detector_is_banking": false,
+        "detector_margin": 0.012,
+        "refused": false
+      },
+      "detector_outcome": "correct",
+      "retrieval": {
+        "top2": [
+          {
+            "source": "current_account.md",
+            "score": 0.116
+          },
+          {
+            "source": "loan_basics.md",
+            "score": 0.102
+          }
+        ],
+        "answerable": false,
+        "abstained": false,
+        "top1_hit": false,
+        "hit": false
+      },
+      "outcome": "llm_gated",
+      "severity": "unscored"
+    },
+    {
+      "id": "kq-kn-792",
+      "lang": "kn",
+      "category": "knowledge_question",
+      "text": "ಇಂದಿನ ಚಿನ್ನದ ಬೆಲೆ ಎಷ್ಟು",
+      "expected": {
+        "route": "knowledge",
+        "sources": null
+      },
+      "got": {
+        "stage": "llm_gate",
+        "control": null,
+        "detector_intent": "check account balance",
+        "detector_category": "KNOWLEDGE_QUESTION",
+        "detector_is_banking": false,
+        "detector_margin": 0.047,
+        "refused": false
+      },
+      "detector_outcome": "correct",
+      "retrieval": {
+        "top2": [
+          {
+            "source": "cheque_book.md",
+            "score": 0.176
+          },
+          {
+            "source": "current_account.md",
+            "score": 0.151
+          }
+        ],
+        "answerable": false,
+        "abstained": false,
+        "top1_hit": false,
+        "hit": false
+      },
+      "outcome": "llm_gated",
+      "severity": "unscored"
+    },
+    {
+      "id": "kq-hi-793",
+      "lang": "hi",
+      "category": "knowledge_question",
+      "text": "म्यूचुअल फंड में निवेश कैसे करें",
+      "expected": {
+        "route": "knowledge",
+        "sources": null
+      },
+      "got": {
+        "stage": "llm_gate",
+        "control": null,
+        "detector_intent": "deposit money",
+        "detector_category": "BANKING_INTENT",
+        "detector_is_banking": true,
+        "detector_margin": 0.089,
+        "refused": false
+      },
+      "detector_outcome": "question_to_workflow",
+      "retrieval": {
+        "top2": [
+          {
+            "source": "savings_account.md",
+            "score": 0.426
+          },
+          {
+            "source": "deposit.md",
+            "score": 0.393
+          }
+        ],
+        "answerable": false,
+        "abstained": false,
+        "top1_hit": false,
+        "hit": false
+      },
+      "outcome": "llm_gated",
+      "severity": "unscored"
+    },
+    {
+      "id": "kq-rom-hi-794",
+      "lang": "rom-hi",
+      "category": "knowledge_question",
+      "text": "share market kaise kaam karta hai",
+      "expected": {
+        "route": "knowledge",
+        "sources": null
+      },
+      "got": {
+        "stage": "llm_gate",
+        "control": null,
+        "detector_intent": "check account balance",
+        "detector_category": "KNOWLEDGE_QUESTION",
+        "detector_is_banking": false,
+        "detector_margin": 0.046,
+        "refused": false
+      },
+      "detector_outcome": "correct",
+      "retrieval": {
+        "top2": [
+          {
+            "source": "current_account.md",
+            "score": 0.238
+          },
+          {
+            "source": "passbook.md",
+            "score": 0.195
+          }
+        ],
+        "answerable": false,
+        "abstained": false,
+        "top1_hit": false,
+        "hit": false
+      },
+      "outcome": "llm_gated",
+      "severity": "unscored"
+    }
+  ],
+  "compared_with": "m7_fresh_before.json",
+  "changes": []
+}

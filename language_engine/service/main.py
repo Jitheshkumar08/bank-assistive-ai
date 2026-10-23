@@ -11,18 +11,36 @@ from __future__ import annotations
 
 import logging
 import os
+import re
+import uuid
 from contextlib import asynccontextmanager
-from typing import Optional
+from typing import Annotated, Optional
 
-from fastapi import Depends, FastAPI, File, Form, Header, HTTPException, UploadFile, status
+from fastapi import Depends, FastAPI, File, Form, Header, HTTPException, Path, Request, UploadFile, status
+from fastapi.exception_handlers import request_validation_exception_handler
+from fastapi.exceptions import RequestValidationError
 from fastapi.responses import JSONResponse, Response
 
 from app.conversation.manager import ConversationManager
 from service import LOADED_ENV_NAMES
 from service.config import DEFAULT_ENV_PATH, describe
-from service.engine import TranscriptionError, get_runtime
-from service.models import HealthResponse, TextTurnRequest, TtsRequest, TurnResponse, WorkflowSnapshot
+from service.engine import EngineRuntime, TranscriptionError, get_runtime
+from service.housekeeping import IdleSessionReaper, idle_timeout_from_env, purge_interval_from_env
+from service.assistance import offer_assistance
+from service.models import (
+    AssistanceRequest,
+    AssistanceResponse,
+    HealthResponse,
+    SessionSnapshotResponse,
+    TextTurnRequest,
+    TtsRequest,
+    TurnResponse,
+    WorkflowSnapshot,
+)
+from service.snapshot import workflow_snapshot
+from app.workflow.loader import WorkflowLoader
 from service.tts import TtsError, UnsupportedLanguageError, synthesize
+from service.tts import request_id as tts_request_id
 from service.registry import SessionRegistry
 
 logger = logging.getLogger("assistant-service")
@@ -41,7 +59,11 @@ MAX_AUDIO_BYTES = int(os.getenv("MAX_AUDIO_BYTES", str(10 * 1024 * 1024)))
 #: but strongly recommended anywhere the port is reachable.
 INTERNAL_TOKEN = os.getenv("AI_ENGINE_TOKEN", "").strip()
 
-registry = SessionRegistry()
+registry = SessionRegistry(idle_timeout_seconds=idle_timeout_from_env())
+
+# Releases conversations of customers who walked away without signing
+# out. Started and stopped by the lifespan below, never anywhere else.
+reaper = IdleSessionReaper(registry, purge_interval_from_env())
 
 
 def require_internal_token(x_internal_token: Optional[str] = Header(default=None)) -> None:
@@ -83,24 +105,21 @@ async def lifespan(_: FastAPI):
     get_runtime()
     logger.info("Engine ready.")
 
-    yield
+    reaper.start()
 
-    registry.clear()
+    try:
+        yield
+    finally:
+        await reaper.stop()
+        registry.clear()
 
 
 app = FastAPI(title="Banking assistant engine", version="1.0.0", lifespan=lifespan)
 
 
-def _snapshot(conversation: ConversationManager) -> WorkflowSnapshot:
-    """Plain view of workflow progress. No engine objects cross the wire."""
-    step = conversation.current_step
-
-    return WorkflowSnapshot(
-        name=conversation.current_workflow,
-        state=conversation.workflow_state.value,
-        step=step if step and step > 0 else None,
-        total_steps=None,
-    )
+def _snapshot(conversation: ConversationManager, runtime: EngineRuntime) -> WorkflowSnapshot:
+    """Workflow progress, totalled from the dialogue manager's own definitions."""
+    return workflow_snapshot(conversation, runtime.dialogue.workflow_loader)
 
 
 @app.get("/health", response_model=HealthResponse)
@@ -123,13 +142,17 @@ def text_turn(request: TextTurnRequest) -> TurnResponse:
     runtime = get_runtime()
 
     # Serialised per session: two turns for one visit must not interleave
-    # halfway through a workflow step.
-    with entry.lock:
-        result = runtime.run_turn(entry.conversation, request.text)
+    # halfway through a workflow step. The turn's language is applied once
+    # the lock is held, so a visit whose language changed answers in the
+    # new one from this turn on.
+    with registry.in_turn(entry, request.language):
+        # The visit's own localizer, so the reply leaves in the visit's
+        # language while canonical English stays in history.
+        result = runtime.run_turn(entry.conversation, request.text, entry.localizer)
 
         return TurnResponse(
             reply=result.reply,
-            workflow=_snapshot(entry.conversation),
+            workflow=_snapshot(entry.conversation, runtime),
             ended=result.ended,
         )
 
@@ -167,10 +190,26 @@ async def audio_turn(
 
     suffix = os.path.splitext(audio.filename or "")[1] or ".webm"
 
-    with entry.lock:
+    with registry.in_turn(entry, language):
+        # A conversation the customer has left answers every turn with the
+        # same farewell -- before transcription, so a recording sent after
+        # an exit is neither transcribed nor able to fail differently.
+        if runtime.has_exited(entry.conversation):
+            result = runtime.run_turn(entry.conversation, "", entry.localizer)
+
+            return TurnResponse(
+                reply=result.reply,
+                workflow=_snapshot(entry.conversation, runtime),
+                ended=result.ended,
+            )
+
         try:
             # The recording is transcribed and discarded. It is never
             # stored, and its contents are never logged.
+            #
+            # entry.language, not the raw form field: it is the same
+            # normalised value the localizer renders this turn's reply in,
+            # applied by in_turn() above.
             transcript = runtime.transcribe(payload, language=entry.language, suffix=suffix)
         except TranscriptionError as error:
             raise HTTPException(
@@ -184,18 +223,102 @@ async def audio_turn(
                 detail="I could not hear anything in that recording.",
             )
 
-        result = runtime.run_turn(entry.conversation, transcript)
+        result = runtime.run_turn(entry.conversation, transcript, entry.localizer)
 
         return TurnResponse(
             reply=result.reply,
+            # The RAW transcript, deliberately: this is shown back as the
+            # customer's own words, so it must be what was actually
+            # heard, not the normalized form the router used.
             transcript=transcript,
-            workflow=_snapshot(entry.conversation),
+            workflow=_snapshot(entry.conversation, runtime),
             ended=result.ended,
         )
 
 
+#: A correlation id from the caller is used only if it looks like one.
+#: Anything else -- spaces, newlines, oversize -- is replaced, so a header
+#: can never forge or break a log line.
+_REQUEST_ID = re.compile(r"^[A-Za-z0-9._:-]{1,64}$")
+
+#: Category for a /tts body that failed schema validation.
+INVALID_REQUEST = "invalid_request"
+
+
+def _correlation_id(supplied: Optional[str]) -> str:
+    if supplied and _REQUEST_ID.match(supplied):
+        return supplied
+
+    return uuid.uuid4().hex
+
+
+class TtsHttpError(HTTPException):
+    """
+    A /tts refusal: the HTTP status, the customer-safe message, a stable
+    category and the request id.
+
+    Still an HTTPException, so callers that catch one -- the debugging
+    suites call speak() directly -- see exactly the status they did before.
+    """
+
+    def __init__(self, status_code: int, error: TtsError, request_id: str) -> None:
+        super().__init__(
+            status_code=status_code,
+            detail=str(error),
+            headers={"X-Request-ID": request_id, "Cache-Control": "no-store"},
+        )
+        self.category = error.category
+        self.request_id = request_id
+
+
+def _tts_body(detail: str, category: str, request_id: str) -> dict:
+    """The one error shape /tts returns. `detail` stays a string for NestJS."""
+    return {"detail": detail, "error": category, "request_id": request_id}
+
+
+@app.exception_handler(TtsHttpError)
+async def tts_refused(_request: Request, error: TtsHttpError) -> JSONResponse:
+    return JSONResponse(
+        status_code=error.status_code,
+        content=_tts_body(error.detail, error.category, error.request_id),
+        headers=error.headers,
+    )
+
+
+@app.exception_handler(RequestValidationError)
+async def invalid_request(request: Request, error: RequestValidationError) -> JSONResponse:
+    """
+    Gives a /tts schema failure the same shape and logging as any other
+    /tts refusal. Every other route keeps FastAPI's own 422 unchanged.
+
+    Logged by field location and error type only: the rejected value is
+    the reply text, and is never written to the log.
+    """
+    if request.url.path != "/tts":
+        return await request_validation_exception_handler(request, error)
+
+    correlation = _correlation_id(request.headers.get("x-request-id"))
+    fields = ",".join(
+        ".".join(str(part) for part in item.get("loc", ())) + ":" + str(item.get("type", "?"))
+        for item in error.errors()
+    )
+    logger.warning(
+        "tts.response request_id=%s status=422 category=%s fields=%s",
+        correlation, INVALID_REQUEST, fields,
+    )
+
+    return JSONResponse(
+        status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+        content=_tts_body("The spoken reply request was not valid.", INVALID_REQUEST, correlation),
+        headers={"X-Request-ID": correlation, "Cache-Control": "no-store"},
+    )
+
+
 @app.post("/tts", dependencies=[Depends(require_internal_token)])
-async def speak(request: TtsRequest) -> Response:
+async def speak(
+    request: TtsRequest,
+    x_request_id: Annotated[Optional[str], Header()] = None,
+) -> Response:
     """
     Reads a reply aloud.
 
@@ -205,24 +328,138 @@ async def speak(request: TtsRequest) -> Response:
 
     The audio is returned as bytes for the browser to play. Nothing is
     stored, and the text being spoken is not logged.
+
+    `X-Request-ID` from NestJS correlates this request's log lines with
+    the caller's; it is echoed back on every response, success or not.
     """
+    correlation = _correlation_id(x_request_id)
+    token = tts_request_id.set(correlation)
+
     try:
         audio, content_type = await synthesize(request.text, request.language)
-    except UnsupportedLanguageError as error:
-        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(error)) from error
     except TtsError as error:
-        raise HTTPException(
-            status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
-            detail=str(error),
-        ) from error
+        code = (
+            status.HTTP_400_BAD_REQUEST
+            if isinstance(error, UnsupportedLanguageError)
+            else status.HTTP_422_UNPROCESSABLE_ENTITY
+        )
+        logger.warning(
+            "tts.response request_id=%s status=%s category=%s", correlation, code, error.category
+        )
+        raise TtsHttpError(code, error, correlation) from error
+    finally:
+        tts_request_id.reset(token)
+
+    logger.info("tts.response request_id=%s status=200", correlation)
 
     return Response(
         content=audio,
         media_type=content_type,
         # Generated per request and never reused; caching it would keep
         # a customer's reply sitting in a browser cache.
-        headers={"Cache-Control": "no-store"},
+        headers={"Cache-Control": "no-store", "X-Request-ID": correlation},
     )
+
+
+#: How long a snapshot waits for a turn in progress before reporting busy.
+SNAPSHOT_LOCK_TIMEOUT_SECONDS = 2.0
+
+#: Reads workflow definitions only, to total the steps. Its own instance, so
+#: a snapshot never constructs -- or waits on -- the model-loading runtime.
+_snapshot_loader = WorkflowLoader()
+
+
+@app.get(
+    "/sessions/{session_id}/snapshot",
+    response_model=SessionSnapshotResponse,
+    dependencies=[Depends(require_internal_token)],
+)
+def session_snapshot(
+    session_id: Annotated[str, Path(min_length=1, max_length=128)],
+) -> SessionSnapshotResponse:
+    """
+    Where a visit's conversation stands, without changing it.
+
+    For a caller whose turn reply never arrived: the turn may still have
+    been applied here, and this is how the UI learns what is true now.
+
+    READ-ONLY BY CONSTRUCTION
+    - peek(), not get_or_create(): an unknown visit is reported as unknown,
+      never created, and nothing is evicted to make room.
+    - No touch(): reading a visit does not keep it alive past its idle
+      timeout. Only the customer's own turns do that.
+    - No runtime: no speech recognition, no LLM, no intent detection, no
+      dialogue routing, and not even model loading. The workflow loader
+      only reads definitions, to total the steps.
+    - The visit's own turn lock, held only to READ, so a snapshot is never
+      a half-applied turn. If a turn is still running it answers 409 rather
+      than waiting out the caller's timeout or reporting unsettled state.
+    """
+    entry = registry.peek(session_id)
+
+    if entry is None:
+        return SessionSnapshotResponse(known=False)
+
+    if not entry.lock.acquire(timeout=SNAPSHOT_LOCK_TIMEOUT_SECONDS):
+        raise HTTPException(
+            status_code=status.HTTP_409_CONFLICT,
+            detail="The assistant is still working on the last request.",
+        )
+
+    try:
+        conversation = entry.conversation
+
+        return SessionSnapshotResponse(
+            known=True,
+            ended=EngineRuntime.has_exited(conversation),
+            workflow=workflow_snapshot(conversation, _snapshot_loader),
+        )
+    finally:
+        entry.lock.release()
+
+
+@app.post(
+    "/sessions/{session_id}/assistance",
+    response_model=AssistanceResponse,
+    dependencies=[Depends(require_internal_token)],
+)
+def session_assistance(
+    session_id: Annotated[str, Path(min_length=1, max_length=128)],
+    request: AssistanceRequest,
+) -> AssistanceResponse:
+    """
+    An offer of help for a customer who has gone quiet on a step.
+
+    The browser decides when they are quiet; this decides whether an offer
+    fits the conversation and words it (service/assistance.py). Same rules
+    as the snapshot for everything around it: peek() so an unknown visit is
+    never created, no touch() so an offer never keeps an idle visit alive,
+    no runtime and no model, and the turn lock with a bounded wait -- 409
+    while a turn is running, because a customer mid-turn is not quiet.
+    """
+    entry = registry.peek(session_id)
+
+    if entry is None:
+        return AssistanceResponse(offered=False, reason="unknown_session")
+
+    if not entry.lock.acquire(timeout=SNAPSHOT_LOCK_TIMEOUT_SECONDS):
+        raise HTTPException(
+            status_code=status.HTTP_409_CONFLICT,
+            detail="The assistant is still working on the last request.",
+        )
+
+    try:
+        conversation = entry.conversation
+
+        return offer_assistance(
+            conversation,
+            _snapshot_loader,
+            entry.localizer,
+            ended=EngineRuntime.has_exited(conversation),
+            avoid=request.avoid,
+        )
+    finally:
+        entry.lock.release()
 
 
 @app.delete("/sessions/{session_id}", dependencies=[Depends(require_internal_token)])

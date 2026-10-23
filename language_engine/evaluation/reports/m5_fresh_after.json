@@ -1,0 +1,1704 @@
+{
+  "meta": {
+    "fixtures_file": "evaluation/fixtures/m5_fresh.json",
+    "fixtures_version": "m5_fresh",
+    "fixtures_sha256": "9fb6d0c9af71cd70e17e70de27e93e57de3a4102d3a1bf2bc56cd1e4a01c1a74",
+    "embedding_model": "paraphrase-multilingual-MiniLM-L12-v2",
+    "retrieval": true,
+    "python": "3.13.2",
+    "name": "m5_fresh_after"
+  },
+  "summary": {
+    "total": 55,
+    "severity": {
+      "ok": 41,
+      "critical": 9,
+      "miss": 3,
+      "unscored": 2
+    },
+    "llm_gated": 2,
+    "headline": {
+      "Wrong-service routing (request started the wrong workflow)": 2,
+      "Question started a workflow": 4,
+      "Request or question swallowed by the control tier": 0,
+      "Wrong amount (a value, but not the spoken one)": 0,
+      "Invented amount (a value where none was spoken)": 0,
+      "Wrong control command": 0,
+      "Negated request raised a workflow conflict": 0,
+      "Wrong conflict choice": 0,
+      "Refusal started a workflow (resting state)": 0,
+      "Refusal raised a workflow conflict (mid-task)": 0,
+      "Ambiguous request started a workflow": 3
+    },
+    "abstentions": {
+      "Service request abstained (no workflow started)": 3,
+      "Question answered as a non-question (ack / control / refusal)": 0,
+      "Amount missed (no value)": 0,
+      "Control command missed (left to the LLM)": 0,
+      "Negation not detected": 0,
+      "Negation detected where there was none": 0,
+      "Conflict answer not understood (asked again)": 0
+    },
+    "by_lang": {
+      "en": {
+        "n": 6,
+        "ok": 4,
+        "critical": 2,
+        "miss": 0,
+        "unscored": 0
+      },
+      "kn": {
+        "n": 7,
+        "ok": 4,
+        "critical": 3,
+        "miss": 0,
+        "unscored": 0
+      },
+      "hi": {
+        "n": 10,
+        "ok": 7,
+        "critical": 2,
+        "miss": 1,
+        "unscored": 0
+      },
+      "kn-en": {
+        "n": 13,
+        "ok": 11,
+        "critical": 0,
+        "miss": 1,
+        "unscored": 1
+      },
+      "hi-en": {
+        "n": 10,
+        "ok": 9,
+        "critical": 0,
+        "miss": 0,
+        "unscored": 1
+      },
+      "rom-kn": {
+        "n": 3,
+        "ok": 3,
+        "critical": 0,
+        "miss": 0,
+        "unscored": 0
+      },
+      "rom-hi": {
+        "n": 6,
+        "ok": 3,
+        "critical": 2,
+        "miss": 1,
+        "unscored": 0
+      }
+    },
+    "by_category": {
+      "service_request": {
+        "n": 26,
+        "abstained": 3,
+        "correct": 21,
+        "wrong_service": 2
+      },
+      "knowledge_question": {
+        "n": 8,
+        "correct": 2,
+        "llm_gated": 2,
+        "question_to_workflow": 4
+      },
+      "control": {
+        "n": 4,
+        "correct": 4
+      },
+      "amount": {
+        "n": 5,
+        "correct": 5
+      },
+      "negation": {
+        "n": 2,
+        "correct": 2
+      },
+      "conflict_answer": {
+        "n": 2,
+        "correct": 2
+      },
+      "refusal": {
+        "n": 4,
+        "correct": 4
+      },
+      "ambiguous_request": {
+        "n": 4,
+        "correct": 1,
+        "guessed_service": 3
+      }
+    },
+    "by_cell": {
+      "en|service_request": {
+        "n": 3,
+        "ok": 3,
+        "critical": 0,
+        "miss": 0,
+        "unscored": 0
+      },
+      "en|knowledge_question": {
+        "n": 1,
+        "ok": 0,
+        "critical": 1,
+        "miss": 0,
+        "unscored": 0
+      },
+      "en|refusal": {
+        "n": 1,
+        "ok": 1,
+        "critical": 0,
+        "miss": 0,
+        "unscored": 0
+      },
+      "en|ambiguous_request": {
+        "n": 1,
+        "ok": 0,
+        "critical": 1,
+        "miss": 0,
+        "unscored": 0
+      },
+      "kn|service_request": {
+        "n": 2,
+        "ok": 1,
+        "critical": 1,
+        "miss": 0,
+        "unscored": 0
+      },
+      "kn|knowledge_question": {
+        "n": 1,
+        "ok": 0,
+        "critical": 1,
+        "miss": 0,
+        "unscored": 0
+      },
+      "kn|control": {
+        "n": 2,
+        "ok": 2,
+        "critical": 0,
+        "miss": 0,
+        "unscored": 0
+      },
+      "kn|ambiguous_request": {
+        "n": 2,
+        "ok": 1,
+        "critical": 1,
+        "miss": 0,
+        "unscored": 0
+      },
+      "hi|service_request": {
+        "n": 4,
+        "ok": 3,
+        "critical": 0,
+        "miss": 1,
+        "unscored": 0
+      },
+      "hi|knowledge_question": {
+        "n": 1,
+        "ok": 0,
+        "critical": 1,
+        "miss": 0,
+        "unscored": 0
+      },
+      "hi|control": {
+        "n": 2,
+        "ok": 2,
+        "critical": 0,
+        "miss": 0,
+        "unscored": 0
+      },
+      "hi|amount": {
+        "n": 1,
+        "ok": 1,
+        "critical": 0,
+        "miss": 0,
+        "unscored": 0
+      },
+      "hi|conflict_answer": {
+        "n": 1,
+        "ok": 1,
+        "critical": 0,
+        "miss": 0,
+        "unscored": 0
+      },
+      "hi|ambiguous_request": {
+        "n": 1,
+        "ok": 0,
+        "critical": 1,
+        "miss": 0,
+        "unscored": 0
+      },
+      "kn-en|service_request": {
+        "n": 6,
+        "ok": 5,
+        "critical": 0,
+        "miss": 1,
+        "unscored": 0
+      },
+      "kn-en|knowledge_question": {
+        "n": 2,
+        "ok": 1,
+        "critical": 0,
+        "miss": 0,
+        "unscored": 1
+      },
+      "kn-en|amount": {
+        "n": 2,
+        "ok": 2,
+        "critical": 0,
+        "miss": 0,
+        "unscored": 0
+      },
+      "kn-en|negation": {
+        "n": 1,
+        "ok": 1,
+        "critical": 0,
+        "miss": 0,
+        "unscored": 0
+      },
+      "kn-en|conflict_answer": {
+        "n": 1,
+        "ok": 1,
+        "critical": 0,
+        "miss": 0,
+        "unscored": 0
+      },
+      "kn-en|refusal": {
+        "n": 1,
+        "ok": 1,
+        "critical": 0,
+        "miss": 0,
+        "unscored": 0
+      },
+      "hi-en|service_request": {
+        "n": 5,
+        "ok": 5,
+        "critical": 0,
+        "miss": 0,
+        "unscored": 0
+      },
+      "hi-en|knowledge_question": {
+        "n": 2,
+        "ok": 1,
+        "critical": 0,
+        "miss": 0,
+        "unscored": 1
+      },
+      "hi-en|amount": {
+        "n": 1,
+        "ok": 1,
+        "critical": 0,
+        "miss": 0,
+        "unscored": 0
+      },
+      "hi-en|negation": {
+        "n": 1,
+        "ok": 1,
+        "critical": 0,
+        "miss": 0,
+        "unscored": 0
+      },
+      "hi-en|refusal": {
+        "n": 1,
+        "ok": 1,
+        "critical": 0,
+        "miss": 0,
+        "unscored": 0
+      },
+      "rom-kn|service_request": {
+        "n": 3,
+        "ok": 3,
+        "critical": 0,
+        "miss": 0,
+        "unscored": 0
+      },
+      "rom-hi|service_request": {
+        "n": 3,
+        "ok": 1,
+        "critical": 1,
+        "miss": 1,
+        "unscored": 0
+      },
+      "rom-hi|knowledge_question": {
+        "n": 1,
+        "ok": 0,
+        "critical": 1,
+        "miss": 0,
+        "unscored": 0
+      },
+      "rom-hi|amount": {
+        "n": 1,
+        "ok": 1,
+        "critical": 0,
+        "miss": 0,
+        "unscored": 0
+      },
+      "rom-hi|refusal": {
+        "n": 1,
+        "ok": 1,
+        "critical": 0,
+        "miss": 0,
+        "unscored": 0
+      }
+    },
+    "detector_view": {
+      "en|service_request": {
+        "n": 3,
+        "correct": 3
+      },
+      "en|knowledge_question": {
+        "n": 1,
+        "question_to_workflow": 1
+      },
+      "kn|service_request": {
+        "n": 2,
+        "correct": 1,
+        "wrong_service": 1
+      },
+      "kn|knowledge_question": {
+        "n": 1,
+        "question_to_workflow": 1
+      },
+      "hi|service_request": {
+        "n": 4,
+        "abstained": 1,
+        "correct": 3
+      },
+      "hi|knowledge_question": {
+        "n": 1,
+        "question_to_workflow": 1
+      },
+      "kn-en|service_request": {
+        "n": 6,
+        "abstained": 1,
+        "correct": 5
+      },
+      "kn-en|knowledge_question": {
+        "n": 2,
+        "correct": 2
+      },
+      "hi-en|service_request": {
+        "n": 5,
+        "correct": 5
+      },
+      "hi-en|knowledge_question": {
+        "n": 2,
+        "correct": 1,
+        "question_to_workflow": 1
+      },
+      "rom-kn|service_request": {
+        "n": 3,
+        "correct": 3
+      },
+      "rom-hi|service_request": {
+        "n": 3,
+        "abstained": 1,
+        "correct": 1,
+        "wrong_service": 1
+      },
+      "rom-hi|knowledge_question": {
+        "n": 1,
+        "question_to_workflow": 1
+      }
+    },
+    "by_intent": {
+      "deposit money": {
+        "n": 10,
+        "correct": 9,
+        "wrong_service": 1,
+        "wrong_to": {
+          "open new account": 1
+        }
+      },
+      "withdraw money": {
+        "n": 3,
+        "correct": 3,
+        "wrong_to": {}
+      },
+      "check account balance": {
+        "n": 6,
+        "abstained": 2,
+        "correct": 3,
+        "wrong_service": 1,
+        "wrong_to": {
+          "deposit money": 1
+        }
+      },
+      "apply for loan": {
+        "n": 4,
+        "abstained": 1,
+        "correct": 3,
+        "wrong_to": {}
+      },
+      "open new account": {
+        "n": 3,
+        "correct": 3,
+        "wrong_to": {}
+      }
+    },
+    "retrieval": {
+      "en": {
+        "n": 1,
+        "hit_at_2": 1
+      },
+      "kn": {
+        "n": 1,
+        "hit_at_2": 1
+      },
+      "hi": {
+        "n": 1,
+        "hit_at_2": 0
+      },
+      "kn-en": {
+        "n": 2,
+        "hit_at_2": 2
+      },
+      "hi-en": {
+        "n": 2,
+        "hit_at_2": 2
+      },
+      "rom-hi": {
+        "n": 1,
+        "hit_at_2": 1
+      }
+    }
+  },
+  "limits": [
+    "The LLM (Groq gpt-oss-20b) is never called. Turns the question or control prefilter sends to it are counted as unscored, and the LLM's own amount extraction is not measured.",
+    "Speech recognition is not exercised: every fixture is text. Code-mixed ASR output is not measured.",
+    "Conflict detection is measured in isolation. In production it runs only after the LLM has classified a mid-workflow turn.",
+    "Reply language (localization, knowledge-answer language, TTS voice) is not scored in M0.",
+    "Fixtures are hand-authored and few per cell; Kannada and Hindi labels have not yet had a native-speaker review. Results show which behaviours fail, not how often customers hit them."
+  ],
+  "results": [
+    {
+      "id": "svc-kn-en-501",
+      "lang": "kn-en",
+      "category": "service_request",
+      "text": "ನನ್ನ ಅಕೌಂಟ್‌ನಿಂದ ಕ್ಯಾಶ್ ವಿತ್‌ಡ್ರಾ ಮಾಡಬೇಕು",
+      "expected": {
+        "intent": "withdraw money"
+      },
+      "got": {
+        "stage": "detector",
+        "control": null,
+        "detector_intent": "withdraw money",
+        "detector_category": "BANKING_INTENT",
+        "detector_is_banking": true,
+        "detector_margin": 0.127,
+        "refused": false
+      },
+      "detector_outcome": "correct",
+      "outcome": "correct",
+      "severity": "ok"
+    },
+    {
+      "id": "svc-kn-en-502",
+      "lang": "kn-en",
+      "category": "service_request",
+      "text": "ಲೋನ್‌ಗಾಗಿ ಅರ್ಜಿ ಕೊಡಬೇಕು",
+      "expected": {
+        "intent": "apply for loan"
+      },
+      "got": {
+        "stage": "detector",
+        "control": null,
+        "detector_intent": "apply for loan",
+        "detector_category": "BANKING_INTENT",
+        "detector_is_banking": true,
+        "detector_margin": 0.22,
+        "refused": false
+      },
+      "detector_outcome": "correct",
+      "outcome": "correct",
+      "severity": "ok"
+    },
+    {
+      "id": "svc-kn-en-503",
+      "lang": "kn-en",
+      "category": "service_request",
+      "text": "ಅಕೌಂಟಿಗೆ ಹಣ ಡೆಪಾಸಿಟ್ ಮಾಡಬೇಕು",
+      "expected": {
+        "intent": "deposit money"
+      },
+      "got": {
+        "stage": "detector",
+        "control": null,
+        "detector_intent": "deposit money",
+        "detector_category": "BANKING_INTENT",
+        "detector_is_banking": true,
+        "detector_margin": 0.062,
+        "refused": false
+      },
+      "detector_outcome": "correct",
+      "outcome": "correct",
+      "severity": "ok"
+    },
+    {
+      "id": "svc-kn-en-504",
+      "lang": "kn-en",
+      "category": "service_request",
+      "text": "ಬ್ಯಾಲೆನ್ಸ್‌ ಚೆಕ್ ಮಾಡಬೇಕಿತ್ತು",
+      "expected": {
+        "intent": "check account balance"
+      },
+      "got": {
+        "stage": "detector",
+        "control": null,
+        "detector_intent": "check account balance",
+        "detector_category": "KNOWLEDGE_QUESTION",
+        "detector_is_banking": false,
+        "detector_margin": -0.006,
+        "refused": false
+      },
+      "detector_outcome": "abstained",
+      "outcome": "abstained",
+      "severity": "miss"
+    },
+    {
+      "id": "svc-kn-en-505",
+      "lang": "kn-en",
+      "category": "service_request",
+      "text": "ಹೊಸ ಅಕೌಂಟ್ ಓಪನ್ ಮಾಡಿಸಬೇಕು",
+      "expected": {
+        "intent": "open new account"
+      },
+      "got": {
+        "stage": "detector",
+        "control": null,
+        "detector_intent": "open new account",
+        "detector_category": "BANKING_INTENT",
+        "detector_is_banking": true,
+        "detector_margin": 0.165,
+        "refused": false
+      },
+      "detector_outcome": "correct",
+      "outcome": "correct",
+      "severity": "ok"
+    },
+    {
+      "id": "svc-kn-en-506",
+      "lang": "kn-en",
+      "category": "service_request",
+      "text": "ಕ್ಯಾಶ್‌ ಡೆಪಾಸಿಟ್ ಮಾಡಬೇಕು",
+      "expected": {
+        "intent": "deposit money"
+      },
+      "got": {
+        "stage": "detector",
+        "control": null,
+        "detector_intent": "deposit money",
+        "detector_category": "BANKING_INTENT",
+        "detector_is_banking": true,
+        "detector_margin": 0.104,
+        "refused": false
+      },
+      "detector_outcome": "correct",
+      "outcome": "correct",
+      "severity": "ok"
+    },
+    {
+      "id": "svc-hi-en-501",
+      "lang": "hi-en",
+      "category": "service_request",
+      "text": "मुझे एकाउंट से कैश विड्रॉल करना है",
+      "expected": {
+        "intent": "withdraw money"
+      },
+      "got": {
+        "stage": "detector",
+        "control": null,
+        "detector_intent": "withdraw money",
+        "detector_category": "BANKING_INTENT",
+        "detector_is_banking": true,
+        "detector_margin": 0.294,
+        "refused": false
+      },
+      "detector_outcome": "correct",
+      "outcome": "correct",
+      "severity": "ok"
+    },
+    {
+      "id": "svc-hi-en-502",
+      "lang": "hi-en",
+      "category": "service_request",
+      "text": "मेरा बेलेंस चेक करना है",
+      "expected": {
+        "intent": "check account balance"
+      },
+      "got": {
+        "stage": "detector",
+        "control": null,
+        "detector_intent": "check account balance",
+        "detector_category": "BANKING_INTENT",
+        "detector_is_banking": true,
+        "detector_margin": 0.109,
+        "refused": false
+      },
+      "detector_outcome": "correct",
+      "outcome": "correct",
+      "severity": "ok"
+    },
+    {
+      "id": "svc-hi-en-503",
+      "lang": "hi-en",
+      "category": "service_request",
+      "text": "डिपोजिट करना है",
+      "expected": {
+        "intent": "deposit money"
+      },
+      "got": {
+        "stage": "detector",
+        "control": null,
+        "detector_intent": "deposit money",
+        "detector_category": "BANKING_INTENT",
+        "detector_is_banking": true,
+        "detector_margin": 0.105,
+        "refused": false
+      },
+      "detector_outcome": "correct",
+      "outcome": "correct",
+      "severity": "ok"
+    },
+    {
+      "id": "svc-hi-en-504",
+      "lang": "hi-en",
+      "category": "service_request",
+      "text": "नया एकाउंट खुलवाना है",
+      "expected": {
+        "intent": "open new account"
+      },
+      "got": {
+        "stage": "detector",
+        "control": null,
+        "detector_intent": "open new account",
+        "detector_category": "BANKING_INTENT",
+        "detector_is_banking": true,
+        "detector_margin": 0.375,
+        "refused": false
+      },
+      "detector_outcome": "correct",
+      "outcome": "correct",
+      "severity": "ok"
+    },
+    {
+      "id": "svc-hi-en-505",
+      "lang": "hi-en",
+      "category": "service_request",
+      "text": "मुझे होमलोन चाहिए",
+      "expected": {
+        "intent": "apply for loan"
+      },
+      "got": {
+        "stage": "detector",
+        "control": null,
+        "detector_intent": "apply for loan",
+        "detector_category": "BANKING_INTENT",
+        "detector_is_banking": true,
+        "detector_margin": 0.095,
+        "refused": false
+      },
+      "detector_outcome": "correct",
+      "outcome": "correct",
+      "severity": "ok"
+    },
+    {
+      "id": "svc-hi-501",
+      "lang": "hi",
+      "category": "service_request",
+      "text": "क़र्ज़ चाहिए",
+      "expected": {
+        "intent": "apply for loan"
+      },
+      "got": {
+        "stage": "detector",
+        "control": null,
+        "detector_intent": "apply for loan",
+        "detector_category": "BANKING_INTENT",
+        "detector_is_banking": true,
+        "detector_margin": 0.214,
+        "refused": false
+      },
+      "detector_outcome": "correct",
+      "outcome": "correct",
+      "severity": "ok"
+    },
+    {
+      "id": "svc-hi-502",
+      "lang": "hi",
+      "category": "service_request",
+      "text": "मुझे पैसे जमा करने हैं।",
+      "expected": {
+        "intent": "deposit money"
+      },
+      "got": {
+        "stage": "detector",
+        "control": null,
+        "detector_intent": "deposit money",
+        "detector_category": "BANKING_INTENT",
+        "detector_is_banking": true,
+        "detector_margin": 0.437,
+        "refused": false
+      },
+      "detector_outcome": "correct",
+      "outcome": "correct",
+      "severity": "ok"
+    },
+    {
+      "id": "svc-en-501",
+      "lang": "en",
+      "category": "service_request",
+      "text": "I want to withdrawl money",
+      "expected": {
+        "intent": "withdraw money"
+      },
+      "got": {
+        "stage": "detector",
+        "control": null,
+        "detector_intent": "withdraw money",
+        "detector_category": "BANKING_INTENT",
+        "detector_is_banking": true,
+        "detector_margin": 0.394,
+        "refused": false
+      },
+      "detector_outcome": "correct",
+      "outcome": "correct",
+      "severity": "ok"
+    },
+    {
+      "id": "svc-en-502",
+      "lang": "en",
+      "category": "service_request",
+      "text": "need to deposite cash",
+      "expected": {
+        "intent": "deposit money"
+      },
+      "got": {
+        "stage": "detector",
+        "control": null,
+        "detector_intent": "deposit money",
+        "detector_category": "BANKING_INTENT",
+        "detector_is_banking": true,
+        "detector_margin": 0.21,
+        "refused": false
+      },
+      "detector_outcome": "correct",
+      "outcome": "correct",
+      "severity": "ok"
+    },
+    {
+      "id": "svc-en-503",
+      "lang": "en",
+      "category": "service_request",
+      "text": "check my acount balence",
+      "expected": {
+        "intent": "check account balance"
+      },
+      "got": {
+        "stage": "detector",
+        "control": null,
+        "detector_intent": "check account balance",
+        "detector_category": "BANKING_INTENT",
+        "detector_is_banking": true,
+        "detector_margin": 0.355,
+        "refused": false
+      },
+      "detector_outcome": "correct",
+      "outcome": "correct",
+      "severity": "ok"
+    },
+    {
+      "id": "svc-rom-hi-501",
+      "lang": "rom-hi",
+      "category": "service_request",
+      "text": "balence check karna hai",
+      "expected": {
+        "intent": "check account balance"
+      },
+      "got": {
+        "stage": "detector",
+        "control": null,
+        "detector_intent": "check account balance",
+        "detector_category": "BANKING_INTENT",
+        "detector_is_banking": true,
+        "detector_margin": 0.123,
+        "refused": false
+      },
+      "detector_outcome": "correct",
+      "outcome": "correct",
+      "severity": "ok"
+    },
+    {
+      "id": "svc-rom-hi-502",
+      "lang": "rom-hi",
+      "category": "service_request",
+      "text": "mujhe lone chahiye",
+      "expected": {
+        "intent": "apply for loan"
+      },
+      "got": {
+        "stage": "detector",
+        "control": null,
+        "detector_intent": "apply for loan",
+        "detector_category": "KNOWLEDGE_QUESTION",
+        "detector_is_banking": false,
+        "detector_margin": -0.04,
+        "refused": false
+      },
+      "detector_outcome": "abstained",
+      "outcome": "abstained",
+      "severity": "miss"
+    },
+    {
+      "id": "svc-rom-kn-501",
+      "lang": "rom-kn",
+      "category": "service_request",
+      "text": "accont open madbeku",
+      "expected": {
+        "intent": "open new account"
+      },
+      "got": {
+        "stage": "detector",
+        "control": null,
+        "detector_intent": "open new account",
+        "detector_category": "BANKING_INTENT",
+        "detector_is_banking": true,
+        "detector_margin": 0.322,
+        "refused": false
+      },
+      "detector_outcome": "correct",
+      "outcome": "correct",
+      "severity": "ok"
+    },
+    {
+      "id": "svc-rom-kn-502",
+      "lang": "rom-kn",
+      "category": "service_request",
+      "text": "diposit maadbeku",
+      "expected": {
+        "intent": "deposit money"
+      },
+      "got": {
+        "stage": "detector",
+        "control": null,
+        "detector_intent": "deposit money",
+        "detector_category": "BANKING_INTENT",
+        "detector_is_banking": true,
+        "detector_margin": 0.254,
+        "refused": false
+      },
+      "detector_outcome": "correct",
+      "outcome": "correct",
+      "severity": "ok"
+    },
+    {
+      "id": "svc-kn-501",
+      "lang": "kn",
+      "category": "service_request",
+      "text": "ಉಳಿತಾಯ ಖಾತೆಗೆ ಸಾವಿರ ರೂಪಾಯಿ ಹಾಕಬೇಕಿದೆ",
+      "expected": {
+        "intent": "deposit money"
+      },
+      "got": {
+        "stage": "detector",
+        "control": null,
+        "detector_intent": "deposit money",
+        "detector_category": "BANKING_INTENT",
+        "detector_is_banking": true,
+        "detector_margin": 0.06,
+        "refused": false
+      },
+      "detector_outcome": "correct",
+      "outcome": "correct",
+      "severity": "ok"
+    },
+    {
+      "id": "svc-hi-503",
+      "lang": "hi",
+      "category": "service_request",
+      "text": "खाते में पाँच सौ रुपये डालने हैं",
+      "expected": {
+        "intent": "deposit money"
+      },
+      "got": {
+        "stage": "detector",
+        "control": null,
+        "detector_intent": "deposit money",
+        "detector_category": "BANKING_INTENT",
+        "detector_is_banking": true,
+        "detector_margin": 0.106,
+        "refused": false
+      },
+      "detector_outcome": "correct",
+      "outcome": "correct",
+      "severity": "ok"
+    },
+    {
+      "id": "svc-rom-hi-503",
+      "lang": "rom-hi",
+      "category": "service_request",
+      "text": "khaate mein cash daalna hai",
+      "expected": {
+        "intent": "deposit money"
+      },
+      "got": {
+        "stage": "detector",
+        "control": null,
+        "detector_intent": "open new account",
+        "detector_category": "BANKING_INTENT",
+        "detector_is_banking": true,
+        "detector_margin": 0.259,
+        "refused": false
+      },
+      "detector_outcome": "wrong_service",
+      "outcome": "wrong_service",
+      "severity": "critical"
+    },
+    {
+      "id": "svc-rom-kn-503",
+      "lang": "rom-kn",
+      "category": "service_request",
+      "text": "account ge cash haakbeku",
+      "expected": {
+        "intent": "deposit money"
+      },
+      "got": {
+        "stage": "detector",
+        "control": null,
+        "detector_intent": "deposit money",
+        "detector_category": "BANKING_INTENT",
+        "detector_is_banking": true,
+        "detector_margin": 0.219,
+        "refused": false
+      },
+      "detector_outcome": "correct",
+      "outcome": "correct",
+      "severity": "ok"
+    },
+    {
+      "id": "svc-kn-502",
+      "lang": "kn",
+      "category": "service_request",
+      "text": "ಖಾತೆಯಲ್ಲಿ ಉಳಿದ ಹಣ ತಿಳಿಸಿ",
+      "expected": {
+        "intent": "check account balance"
+      },
+      "got": {
+        "stage": "detector",
+        "control": null,
+        "detector_intent": "deposit money",
+        "detector_category": "BANKING_INTENT",
+        "detector_is_banking": true,
+        "detector_margin": 0.098,
+        "refused": false
+      },
+      "detector_outcome": "wrong_service",
+      "outcome": "wrong_service",
+      "severity": "critical"
+    },
+    {
+      "id": "svc-hi-504",
+      "lang": "hi",
+      "category": "service_request",
+      "text": "खाते में बची राशि दिखाइए",
+      "expected": {
+        "intent": "check account balance"
+      },
+      "got": {
+        "stage": "detector",
+        "control": null,
+        "detector_intent": "check account balance",
+        "detector_category": "KNOWLEDGE_QUESTION",
+        "detector_is_banking": false,
+        "detector_margin": 0.018,
+        "refused": false
+      },
+      "detector_outcome": "abstained",
+      "outcome": "abstained",
+      "severity": "miss"
+    },
+    {
+      "id": "kq-en-501",
+      "lang": "en",
+      "category": "knowledge_question",
+      "text": "home loan interest rate",
+      "expected": {
+        "route": "knowledge",
+        "sources": [
+          "loan.md",
+          "loan_basics.md"
+        ]
+      },
+      "got": {
+        "stage": "detector",
+        "control": null,
+        "detector_intent": "apply for loan",
+        "detector_category": "BANKING_INTENT",
+        "detector_is_banking": true,
+        "detector_margin": 0.067,
+        "refused": false
+      },
+      "detector_outcome": "question_to_workflow",
+      "retrieval": {
+        "top2": [
+          {
+            "source": "loan_basics.md",
+            "score": 0.486
+          },
+          {
+            "source": "loan.md",
+            "score": 0.308
+          }
+        ],
+        "hit": true
+      },
+      "outcome": "question_to_workflow",
+      "severity": "critical"
+    },
+    {
+      "id": "kq-kn-501",
+      "lang": "kn",
+      "category": "knowledge_question",
+      "text": "ಗೃಹ ಸಾಲದ ಅರ್ಹತೆ",
+      "expected": {
+        "route": "knowledge",
+        "sources": [
+          "loan.md",
+          "loan_basics.md"
+        ]
+      },
+      "got": {
+        "stage": "detector",
+        "control": null,
+        "detector_intent": "apply for loan",
+        "detector_category": "BANKING_INTENT",
+        "detector_is_banking": true,
+        "detector_margin": 0.058,
+        "refused": false
+      },
+      "detector_outcome": "question_to_workflow",
+      "retrieval": {
+        "top2": [
+          {
+            "source": "loan_basics.md",
+            "score": 0.392
+          },
+          {
+            "source": "savings_account.md",
+            "score": 0.342
+          }
+        ],
+        "hit": true
+      },
+      "outcome": "question_to_workflow",
+      "severity": "critical"
+    },
+    {
+      "id": "kq-hi-501",
+      "lang": "hi",
+      "category": "knowledge_question",
+      "text": "चालू खाते के नियम",
+      "expected": {
+        "route": "knowledge",
+        "sources": [
+          "current_account.md"
+        ]
+      },
+      "got": {
+        "stage": "detector",
+        "control": null,
+        "detector_intent": "open new account",
+        "detector_category": "BANKING_INTENT",
+        "detector_is_banking": true,
+        "detector_margin": 0.08,
+        "refused": false
+      },
+      "detector_outcome": "question_to_workflow",
+      "retrieval": {
+        "top2": [
+          {
+            "source": "account_opening_requirements.md",
+            "score": 0.42
+          },
+          {
+            "source": "account_number.md",
+            "score": 0.409
+          }
+        ],
+        "hit": false
+      },
+      "outcome": "question_to_workflow",
+      "severity": "critical"
+    },
+    {
+      "id": "kq-rom-hi-501",
+      "lang": "rom-hi",
+      "category": "knowledge_question",
+      "text": "loan ki byaj dar",
+      "expected": {
+        "route": "knowledge",
+        "sources": [
+          "loan.md",
+          "loan_basics.md"
+        ]
+      },
+      "got": {
+        "stage": "detector",
+        "control": null,
+        "detector_intent": "apply for loan",
+        "detector_category": "BANKING_INTENT",
+        "detector_is_banking": true,
+        "detector_margin": 0.175,
+        "refused": false
+      },
+      "detector_outcome": "question_to_workflow",
+      "retrieval": {
+        "top2": [
+          {
+            "source": "loan_basics.md",
+            "score": 0.352
+          },
+          {
+            "source": "loan.md",
+            "score": 0.294
+          }
+        ],
+        "hit": true
+      },
+      "outcome": "question_to_workflow",
+      "severity": "critical"
+    },
+    {
+      "id": "kq-kn-en-501",
+      "lang": "kn-en",
+      "category": "knowledge_question",
+      "text": "ಪಾಸ್‌ಬುಕ್ ಅಪ್ಡೇಟ್ ವಿಧಾನ",
+      "expected": {
+        "route": "knowledge",
+        "sources": [
+          "passbook.md"
+        ]
+      },
+      "got": {
+        "stage": "detector",
+        "control": null,
+        "detector_intent": "deposit money",
+        "detector_category": "KNOWLEDGE_QUESTION",
+        "detector_is_banking": false,
+        "detector_margin": -0.007,
+        "refused": false
+      },
+      "detector_outcome": "correct",
+      "retrieval": {
+        "top2": [
+          {
+            "source": "passbook.md",
+            "score": 0.635
+          },
+          {
+            "source": "bank_transfer.md",
+            "score": 0.322
+          }
+        ],
+        "hit": true
+      },
+      "outcome": "correct",
+      "severity": "ok"
+    },
+    {
+      "id": "kq-hi-en-501",
+      "lang": "hi-en",
+      "category": "knowledge_question",
+      "text": "चेक बुक के नियम",
+      "expected": {
+        "route": "knowledge",
+        "sources": [
+          "cheque_book.md"
+        ]
+      },
+      "got": {
+        "stage": "detector",
+        "control": null,
+        "detector_intent": "check account balance",
+        "detector_category": "KNOWLEDGE_QUESTION",
+        "detector_is_banking": false,
+        "detector_margin": -0.351,
+        "refused": false
+      },
+      "detector_outcome": "correct",
+      "retrieval": {
+        "top2": [
+          {
+            "source": "cheque_book.md",
+            "score": 0.679
+          },
+          {
+            "source": "banking_services.md",
+            "score": 0.303
+          }
+        ],
+        "hit": true
+      },
+      "outcome": "correct",
+      "severity": "ok"
+    },
+    {
+      "id": "kq-kn-en-502",
+      "lang": "kn-en",
+      "category": "knowledge_question",
+      "text": "ಚೆಕ್ ಬುಕ್ ಹೇಗೆ ಪಡೆಯುವುದು",
+      "expected": {
+        "route": "knowledge",
+        "sources": [
+          "cheque_book.md"
+        ]
+      },
+      "got": {
+        "stage": "llm_gate",
+        "control": null,
+        "detector_intent": "check account balance",
+        "detector_category": "KNOWLEDGE_QUESTION",
+        "detector_is_banking": false,
+        "detector_margin": -0.195,
+        "refused": false
+      },
+      "detector_outcome": "correct",
+      "retrieval": {
+        "top2": [
+          {
+            "source": "cheque_book.md",
+            "score": 0.65
+          },
+          {
+            "source": "deposit.md",
+            "score": 0.315
+          }
+        ],
+        "hit": true
+      },
+      "outcome": "llm_gated",
+      "severity": "unscored"
+    },
+    {
+      "id": "kq-hi-en-502",
+      "lang": "hi-en",
+      "category": "knowledge_question",
+      "text": "एकाउंट कैसे खोलें।",
+      "expected": {
+        "route": "knowledge",
+        "sources": [
+          "account_opening.md",
+          "account_opening_requirements.md"
+        ]
+      },
+      "got": {
+        "stage": "llm_gate",
+        "control": null,
+        "detector_intent": "open new account",
+        "detector_category": "BANKING_INTENT",
+        "detector_is_banking": true,
+        "detector_margin": 0.186,
+        "refused": false
+      },
+      "detector_outcome": "question_to_workflow",
+      "retrieval": {
+        "top2": [
+          {
+            "source": "account_opening.md",
+            "score": 0.597
+          },
+          {
+            "source": "account_opening_requirements.md",
+            "score": 0.549
+          }
+        ],
+        "hit": true
+      },
+      "outcome": "llm_gated",
+      "severity": "unscored"
+    },
+    {
+      "id": "amb-kn-501",
+      "lang": "kn",
+      "category": "ambiguous_request",
+      "text": "ನನಗೆ ದುಡ್ಡಿನ ಅವಶ್ಯಕತೆ ಇದೆ",
+      "expected": {
+        "starts_workflow": false
+      },
+      "got": {
+        "stage": "detector",
+        "control": null,
+        "detector_intent": "withdraw money",
+        "detector_category": "BANKING_INTENT",
+        "detector_is_banking": true,
+        "detector_margin": 0.181,
+        "refused": false
+      },
+      "outcome": "guessed_service",
+      "severity": "critical"
+    },
+    {
+      "id": "amb-hi-501",
+      "lang": "hi",
+      "category": "ambiguous_request",
+      "text": "पैसों की ज़रूरत है",
+      "expected": {
+        "starts_workflow": false
+      },
+      "got": {
+        "stage": "detector",
+        "control": null,
+        "detector_intent": "deposit money",
+        "detector_category": "BANKING_INTENT",
+        "detector_is_banking": true,
+        "detector_margin": 0.235,
+        "refused": false
+      },
+      "outcome": "guessed_service",
+      "severity": "critical"
+    },
+    {
+      "id": "amb-kn-502",
+      "lang": "kn",
+      "category": "ambiguous_request",
+      "text": "ಬ್ಯಾಂಕಿನಲ್ಲಿ ಸ್ವಲ್ಪ ಕೆಲಸ ಇದೆ",
+      "expected": {
+        "starts_workflow": false
+      },
+      "got": {
+        "stage": "detector",
+        "control": null,
+        "detector_intent": "check account balance",
+        "detector_category": "KNOWLEDGE_QUESTION",
+        "detector_is_banking": false,
+        "detector_margin": -0.017,
+        "refused": false
+      },
+      "outcome": "correct",
+      "severity": "ok"
+    },
+    {
+      "id": "amb-en-501",
+      "lang": "en",
+      "category": "ambiguous_request",
+      "text": "I came for some banking work",
+      "expected": {
+        "starts_workflow": false
+      },
+      "got": {
+        "stage": "detector",
+        "control": null,
+        "detector_intent": "deposit money",
+        "detector_category": "BANKING_INTENT",
+        "detector_is_banking": true,
+        "detector_margin": 0.056,
+        "refused": false
+      },
+      "outcome": "guessed_service",
+      "severity": "critical"
+    },
+    {
+      "id": "ctl-kn-501",
+      "lang": "kn",
+      "category": "control",
+      "text": "ಮತ್ತೆ ಹೇಳಿ।",
+      "expected": {
+        "command": "repeat"
+      },
+      "got": {
+        "command": "repeat"
+      },
+      "outcome": "correct",
+      "severity": "ok"
+    },
+    {
+      "id": "ctl-hi-501",
+      "lang": "hi",
+      "category": "control",
+      "text": "रुको।",
+      "expected": {
+        "command": "pause"
+      },
+      "got": {
+        "command": "pause"
+      },
+      "outcome": "correct",
+      "severity": "ok"
+    },
+    {
+      "id": "ctl-kn-502",
+      "lang": "kn",
+      "category": "control",
+      "text": "ದಯವಿಟ್ಟು  ಮತ್ತೆ   ಹೇಳಿ",
+      "expected": {
+        "command": "repeat"
+      },
+      "got": {
+        "command": "repeat"
+      },
+      "outcome": "correct",
+      "severity": "ok"
+    },
+    {
+      "id": "ctl-hi-502",
+      "lang": "hi",
+      "category": "control",
+      "text": "जारी रखो॥",
+      "expected": {
+        "command": "resume"
+      },
+      "got": {
+        "command": "resume"
+      },
+      "outcome": "correct",
+      "severity": "ok"
+    },
+    {
+      "id": "ref-kn-en-501",
+      "lang": "kn-en",
+      "category": "refusal",
+      "text": "ನನಗೆ ಲೋನ್‌ ಬೇಡ।",
+      "expected": {
+        "starts_workflow": false
+      },
+      "got": {
+        "stage": "detector",
+        "control": null,
+        "detector_intent": "apply for loan",
+        "detector_is_banking": true,
+        "negated": true,
+        "refused": true,
+        "active_workflow": "deposit money",
+        "conflict_requested": null
+      },
+      "outcome": "correct",
+      "severity": "ok"
+    },
+    {
+      "id": "ref-hi-en-501",
+      "lang": "hi-en",
+      "category": "refusal",
+      "text": "मुझे एकाउंट नहीं खुलवाना",
+      "expected": {
+        "starts_workflow": false
+      },
+      "got": {
+        "stage": "detector",
+        "control": null,
+        "detector_intent": "open new account",
+        "detector_is_banking": false,
+        "negated": true,
+        "refused": true,
+        "active_workflow": "deposit money",
+        "conflict_requested": null
+      },
+      "outcome": "correct",
+      "severity": "ok"
+    },
+    {
+      "id": "ref-rom-hi-501",
+      "lang": "rom-hi",
+      "category": "refusal",
+      "text": "mujhe lone nahi chahiye",
+      "expected": {
+        "starts_workflow": false
+      },
+      "got": {
+        "stage": "detector",
+        "control": null,
+        "detector_intent": "deposit money",
+        "detector_is_banking": true,
+        "negated": true,
+        "refused": true,
+        "active_workflow": "deposit money",
+        "conflict_requested": null
+      },
+      "outcome": "correct",
+      "severity": "ok"
+    },
+    {
+      "id": "ref-en-501",
+      "lang": "en",
+      "category": "refusal",
+      "text": "I don’t want to withdrawl",
+      "expected": {
+        "starts_workflow": false
+      },
+      "got": {
+        "stage": "detector",
+        "control": null,
+        "detector_intent": "withdraw money",
+        "detector_is_banking": true,
+        "negated": true,
+        "refused": true,
+        "active_workflow": "deposit money",
+        "conflict_requested": null
+      },
+      "outcome": "correct",
+      "severity": "ok"
+    },
+    {
+      "id": "neg-kn-en-501",
+      "lang": "kn-en",
+      "category": "negation",
+      "text": "ನನಗೆ ಲೋನ್ ಬೇಕು।",
+      "expected": {
+        "negated": false
+      },
+      "got": {
+        "negated": false,
+        "active_workflow": "deposit money",
+        "conflict_requested": "apply for loan"
+      },
+      "outcome": "correct",
+      "severity": "ok"
+    },
+    {
+      "id": "neg-hi-en-501",
+      "lang": "hi-en",
+      "category": "negation",
+      "text": "मुझे एकाउंट से पैसे नहीं निकालने",
+      "expected": {
+        "negated": true
+      },
+      "got": {
+        "negated": true,
+        "active_workflow": "deposit money",
+        "conflict_requested": null
+      },
+      "outcome": "correct",
+      "severity": "ok"
+    },
+    {
+      "id": "amt-kn-en-501",
+      "lang": "kn-en",
+      "category": "amount",
+      "text": "ಅಕೌಂಟ್‌ಗೆ ೫೦೦೦ ರೂಪಾಯಿ ಡೆಪಾಸಿಟ್",
+      "expected": {
+        "amount": 5000
+      },
+      "got": {
+        "amount": 5000
+      },
+      "outcome": "correct",
+      "severity": "ok"
+    },
+    {
+      "id": "amt-rom-hi-501",
+      "lang": "rom-hi",
+      "category": "amount",
+      "text": "account 98765 me 2000 deposit",
+      "expected": {
+        "amount": 2000
+      },
+      "got": {
+        "amount": 2000
+      },
+      "outcome": "correct",
+      "severity": "ok"
+    },
+    {
+      "id": "amt-hi-en-501",
+      "lang": "hi-en",
+      "category": "amount",
+      "text": "₹2,500 डिपॉजिट करना है।",
+      "expected": {
+        "amount": 2500
+      },
+      "got": {
+        "amount": 2500
+      },
+      "outcome": "correct",
+      "severity": "ok"
+    },
+    {
+      "id": "amt-hi-501",
+      "lang": "hi",
+      "category": "amount",
+      "text": "पच्चीस हज़ार रुपये।",
+      "expected": {
+        "amount": 25000
+      },
+      "got": {
+        "amount": 25000
+      },
+      "outcome": "correct",
+      "severity": "ok"
+    },
+    {
+      "id": "amt-kn-en-502",
+      "lang": "kn-en",
+      "category": "amount",
+      "text": "ಅಕೌಂಟ್ ನಂಬರ್ 4521 ಗೆ ಎರಡು ಸಾವಿರ",
+      "expected": {
+        "amount": 2000
+      },
+      "got": {
+        "amount": 2000
+      },
+      "outcome": "correct",
+      "severity": "ok"
+    },
+    {
+      "id": "cfa-hi-501",
+      "lang": "hi",
+      "category": "conflict_answer",
+      "text": "रद्द करो।",
+      "expected": {
+        "choice": "cancel"
+      },
+      "got": {
+        "choice": "cancel"
+      },
+      "outcome": "correct",
+      "severity": "ok"
+    },
+    {
+      "id": "cfa-kn-en-501",
+      "lang": "kn-en",
+      "category": "conflict_answer",
+      "text": "ಡೆಪಾಸಿಟ್ ವಿರಾಮ ಮಾಡಿ",
+      "expected": {
+        "choice": "pause"
+      },
+      "got": {
+        "choice": "pause"
+      },
+      "outcome": "correct",
+      "severity": "ok"
+    }
+  ],
+  "compared_with": "m5_fresh_before.json",
+  "changes": [
+    {
+      "id": "svc-kn-en-504",
+      "before": "correct",
+      "after": "abstained"
+    },
+    {
+      "id": "svc-hi-en-501",
+      "before": "abstained",
+      "after": "correct"
+    },
+    {
+      "id": "svc-hi-en-503",
+      "before": "abstained",
+      "after": "correct"
+    },
+    {
+      "id": "svc-rom-kn-501",
+      "before": "wrong_service",
+      "after": "correct"
+    },
+    {
+      "id": "svc-rom-kn-502",
+      "before": "abstained",
+      "after": "correct"
+    },
+    {
+      "id": "ctl-hi-502",
+      "before": "missed_command",
+      "after": "correct"
+    }
+  ]
+}

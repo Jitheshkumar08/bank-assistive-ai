@@ -1,123 +1,272 @@
-"""Rendering assistant replies in the session language (Phase 3.2B-12, K).
+"""Rendering assistant replies in the session language (3.2B-12, rebuilt in M6).
 
-THE SITUATION THIS ADDRESSES
+THE CONTRACT, UNCHANGED SINCE 3.2B-12
 
-Every reply the engine produces is authored in English: workflow instructions
-come from the workflow JSON, control and acknowledgement replies are literals in
-manager.py, and knowledge answers come back from the LLM. The session language
-was only ever passed to TTS, so a Kannada session heard English sentences read
-by a Kannada voice. `app/translation/translator.py` is a stub that returns its
-input unchanged and is called from nowhere.
+The engine composes every reply in canonical English, and that English is what
+conversation history keeps and what the LLM is later shown. Rendering into the
+session language happens once, at the output boundary (ResponseLocalizer, used
+by the CLI loop and EngineRuntime.run_turn). Replay re-renders the remembered
+English reply, so "ಮತ್ತೆ ಹೇಳಿ" repeats in the CURRENT language.
 
-WHAT THIS DOES, AND WHAT IT HONESTLY CANNOT
+WHAT M6 CHANGED
 
-The assistant's OWN fixed sentences -- controls, acknowledgements, cancel, exit,
-"nothing to repeat", the non-banking refusal, the unsupported-service message --
-are a bounded set. They are translated here as authored data: exact, offline,
-deterministic and testable.
+Before M6 only eleven whole sentences had renderings, matched exactly; every
+workflow instruction, the conflict question, cancellations and most status
+messages stayed English in a Kannada or Hindi session.
 
-Dynamic text is a different problem. Workflow step instructions and RAG answers
-are open-ended English, and translating them needs a translation model this
-project deliberately does not have yet. Rather than pretend, `localize()`
-returns such text unchanged and reports that it did (`translated=False`), so the
-caller and the tests can see exactly which strings are still English. Wiring a
-real translator later means implementing app/translation/translator.py and
-calling it from `localize()` -- one function, one call site.
+The engine builds its fixed replies from a bounded set of sentences, some
+with slots ("Okay." + "{instruction}" + "Let me know when you've completed
+it."). localization_catalog lists every one of them with authored Kannada
+and Hindi renderings, and this module reads a reply back into that sequence
+of sentences and renders each one, slots included.
 
-REPLAY
+THREE KINDS OF TEXT, THREE RULES
 
-Replay does not re-translate a stored English string by accident: the canonical
-English reply is remembered, and rendering happens on the way out, so repeating
-a turn in a Kannada session produces the Kannada rendering of the same reply.
+  fixed       the engine's own sentences. Rendered from the catalog.
+  generated   written by the LLM (knowledge answers). Marked GeneratedText at
+              its source in DialogueManager, and passed through UNCHANGED:
+              localising it is M7's job, and a template can never match it.
+  composed    a generated answer followed by a fixed instruction
+              ("{answer} {next_instruction}"). Built with compose(); the
+              fixed part is rendered, the generated part passed through.
+
+THE FALLBACK POLICY (for Kannada and Hindi)
+
+A fixed reply is never shown in English as if it were Kannada or Hindi. Any
+part of it the catalog cannot read is kept in English but preceded by an
+explicit marker in the session language -- "(ಈ ಭಾಗ ಇಂಗ್ಲಿಷ್‌ನಲ್ಲಿ ಮಾತ್ರ
+ಲಭ್ಯವಿದೆ:)" -- and the result reports translated=False. A coverage test
+asserts no reply the engine can compose today reaches that path.
+
+English sessions, and languages the engine does not support at all, are
+returned unchanged, exactly as before (unsupported languages are refused
+explicitly elsewhere: ASR raises, TTS returns 400).
 """
 
-#: Canonical English -> {language: translation} for the assistant's own fixed
-#: sentences. Keys are matched on exact, whitespace-collapsed English text.
-FIXED_RESPONSES = {
-    "There's nothing to repeat right now.": {
-        "kn": "ಈಗ ಪುನಃ ಹೇಳಲು ಏನೂ ಇಲ್ಲ.",
-        "hi": "अभी दोहराने के लिए कुछ नहीं है.",
-    },
-    "There's nothing active right now.": {
-        "kn": "ಈಗ ಯಾವುದೇ ಪ್ರಕ್ರಿಯೆ ಚಾಲನೆಯಲ್ಲಿಲ್ಲ.",
-        "hi": "अभी कोई प्रक्रिया सक्रिय नहीं है.",
-    },
-    "There's nothing active to cancel right now.": {
-        "kn": "ರದ್ದು ಮಾಡಲು ಈಗ ಏನೂ ಇಲ್ಲ.",
-        "hi": "अभी रद्द करने के लिए कुछ नहीं है.",
-    },
-    "There's nothing active to pause right now.": {
-        "kn": "ವಿರಾಮಗೊಳಿಸಲು ಈಗ ಏನೂ ಇಲ್ಲ.",
-        "hi": "अभी रोकने के लिए कुछ नहीं है.",
-    },
-    "There's no active request right now. What banking service would you like help with?": {
-        "kn": "ಈಗ ಯಾವುದೇ ವಿನಂತಿ ಚಾಲನೆಯಲ್ಲಿಲ್ಲ. ಯಾವ ಬ್ಯಾಂಕಿಂಗ್ ಸೇವೆಗೆ ಸಹಾಯ ಬೇಕು?",
-        "hi": "अभी कोई अनुरोध सक्रिय नहीं है. आपको किस बैंकिंग सेवा में मदद चाहिए?",
-    },
-    "There's no active request to control right now. Let me know which banking service you'd like help with.": {
-        "kn": "ಈಗ ನಿಯಂತ್ರಿಸಲು ಯಾವುದೇ ವಿನಂತಿ ಇಲ್ಲ. ಯಾವ ಬ್ಯಾಂಕಿಂಗ್ ಸೇವೆ ಬೇಕು ಎಂದು ತಿಳಿಸಿ.",
-        "hi": "अभी नियंत्रित करने के लिए कोई अनुरोध नहीं है. बताइए आपको कौन सी बैंकिंग सेवा चाहिए.",
-    },
-    "I can't help with that. I can help you deposit money, withdraw money, check your balance, apply for a loan or open an account. Which would you like?": {
-        "kn": "ಅದಕ್ಕೆ ನಾನು ಸಹಾಯ ಮಾಡಲಾರೆ. ಹಣ ಜಮಾ, ಹಣ ತೆಗೆಯುವುದು, ಬ್ಯಾಲೆನ್ಸ್ ಪರಿಶೀಲನೆ, ಸಾಲದ ಅರ್ಜಿ ಅಥವಾ ಹೊಸ ಖಾತೆ ತೆರೆಯಲು ಸಹಾಯ ಮಾಡಬಲ್ಲೆ. ಯಾವುದು ಬೇಕು?",
-        "hi": "इसमें मैं मदद नहीं कर सकता. मैं पैसे जमा करने, निकालने, बैलेंस देखने, लोन के आवेदन या नया खाता खोलने में मदद कर सकता हूँ. आपको क्या चाहिए?",
-    },
-    "Okay. Let me know which banking service you'd like help with.": {
-        "kn": "ಸರಿ. ಯಾವ ಬ್ಯಾಂಕಿಂಗ್ ಸೇವೆ ಬೇಕು ಎಂದು ತಿಳಿಸಿ.",
-        "hi": "ठीक है. बताइए आपको कौन सी बैंकिंग सेवा चाहिए.",
-    },
-    "You're welcome.": {"kn": "ಸ್ವಾಗತ.", "hi": "आपका स्वागत है."},
-    "Okay.": {"kn": "ಸರಿ.", "hi": "ठीक है."},
-    "Continuing.": {"kn": "ಮುಂದುವರಿಸುತ್ತಿದ್ದೇನೆ.", "hi": "जारी रख रहा हूँ."},
-}
+import re
+from functools import lru_cache
 
-#: Sentence-level openers that are prepended to dynamic text. Translating the
-#: opener alone still helps the listener, so they are handled separately.
-PREFIXES = {
-    "You're welcome.": {"kn": "ಸ್ವಾಗತ.", "hi": "आपका स्वागत है."},
-    "Okay.": {"kn": "ಸರಿ.", "hi": "ठीक है."},
-    "Continuing.": {"kn": "ಮುಂದುವರಿಸುತ್ತಿದ್ದೇನೆ.", "hi": "जारी रख रहा हूँ."},
-}
+from app.dialogue.localization_catalog import (
+    INSTRUCTIONS,
+    SENTENCES,
+    UNTRANSLATED_MARKER,
+    WORKFLOW_NAMES,
+)
 
 SUPPORTED_LANGUAGES = ("en", "kn", "hi")
 
+#: Outcome of one rendering, reported by localize_detailed().
+ENGLISH = "english"                    # an English session: nothing to do
+TRANSLATED = "translated"              # every fixed sentence rendered
+FALLBACK = "fallback"                  # some fixed text kept in English, marked
+GENERATED = "generated"                # LLM text, passed through (M7)
+MIXED = "mixed"                        # composed: fixed part rendered, LLM part passed through
+UNSUPPORTED_LANGUAGE = "unsupported_language"
 
-def _normalize(text):
-    return " ".join((text or "").split())
+
+# =========================================================
+# MARKING TEXT BY ORIGIN
+# =========================================================
+
+class GeneratedText(str):
+    """Text written by the LLM. Behaves as a str everywhere else.
+
+    `language` (M7) is the language the LLM was asked to answer in -- the
+    session language at the time -- or None when unknown.
+    """
+
+    language = None
+
+    def __new__(cls, text, language=None):
+        obj = super().__new__(cls, text)
+        obj.language = language
+        return obj
+
+
+class ComposedReply(str):
+    """A reply built from parts, some generated. Remembers which is which."""
+
+    parts = ()
+
+    def __new__(cls, parts):
+        text = " ".join(p for p in parts if p)
+        obj = super().__new__(cls, text)
+        obj.parts = tuple(p for p in parts if p)
+        return obj
+
+
+def compose(*parts):
+    """Join reply parts with spaces, keeping each part's origin."""
+    if not any(isinstance(p, GeneratedText) for p in parts):
+        return " ".join(p for p in parts if p)
+    return ComposedReply(parts)
+
+
+# =========================================================
+# READING A FIXED REPLY BACK INTO SENTENCES
+# =========================================================
+
+_SLOT = re.compile(r"\{(\w+)\}")
+_NAME_SLOTS = {"workflow", "workflow2", "current", "requested"}
+_NUMBER_SLOTS = {"n", "k"}
+
+
+def _alternation(values):
+    return "(?:" + "|".join(re.escape(v) for v in sorted(values, key=len, reverse=True)) + ")"
+
+
+_INSTRUCTION_RE = _alternation(INSTRUCTIONS)
+_NAME_RE = _alternation(WORKFLOW_NAMES)
+
+
+def _compile(template):
+    """English template -> regex with one named group per distinct slot."""
+    pattern, seen, position = "", set(), 0
+    for match in _SLOT.finditer(template):
+        pattern += re.escape(template[position:match.start()])
+        slot = match.group(1)
+        if slot in seen:
+            pattern += f"(?P={slot})"
+        else:
+            seen.add(slot)
+            body = (_INSTRUCTION_RE if slot == "instruction"
+                    else _NAME_RE if slot in _NAME_SLOTS
+                    else r"\d+" if slot in _NUMBER_SLOTS
+                    else None)
+            if body is None:
+                raise ValueError(f"unknown slot {{{slot}}} in {template!r}")
+            pattern += f"(?P<{slot}>{body})"
+        position = match.end()
+    pattern += re.escape(template[position:])
+    return re.compile(pattern)
+
+
+#: Every instruction is also a sentence on its own.
+_UNITS = [(_compile(t), r) for t, r in SENTENCES] + \
+         [(re.compile(re.escape(i)), r) for i, r in INSTRUCTIONS.items()]
+
+
+def _parse(text):
+    """
+    The reply as a list of ("unit", renderings, slots) and ("unknown", text).
+
+    Chooses the reading with the least unknown text. Units are separated by
+    single spaces, as the engine composes them.
+    """
+
+    @lru_cache(maxsize=None)
+    def best(position):
+        if position >= len(text):
+            return 0, ()
+
+        options = []
+        for regex, renderings in _UNITS:
+            match = regex.match(text, position)
+            if not match:
+                continue
+            end = match.end()
+            if end == len(text) or text[end] == " ":
+                cost, rest = best(end + 1)
+                options.append((cost, (("unit", renderings, match.groupdict()),) + rest))
+
+        space = text.find(" ", position)
+        end = len(text) if space == -1 else space
+        cost, rest = best(end + 1)
+        options.append((cost + (end - position), (("unknown", text[position:end]),) + rest))
+
+        return min(options, key=lambda option: option[0])
+
+    return list(best(0)[1])
+
+
+def _render_unit(renderings, slots, language):
+    rendered = renderings[language]
+    for slot, value in slots.items():
+        if slot == "instruction":
+            value = INSTRUCTIONS[value][language]
+        elif slot in _NAME_SLOTS:
+            value = WORKFLOW_NAMES[value][language]
+        rendered = rendered.replace("{" + slot + "}", value)
+    return rendered
+
+
+def _render_fixed(text, language):
+    """(rendered, complete) for a fixed reply in Kannada or Hindi."""
+    out, complete, in_unknown = [], True, False
+    for piece in _parse(" ".join(text.split())):
+        if piece[0] == "unit":
+            out.append(_render_unit(piece[1], piece[2], language))
+            in_unknown = False
+        else:
+            if not in_unknown:
+                out.append(UNTRANSLATED_MARKER[language])
+                in_unknown = True
+            out.append(piece[1])
+            complete = False
+    return " ".join(out), complete
+
+
+# =========================================================
+# PUBLIC API
+# =========================================================
+
+def localize_detailed(text, language):
+    """(rendered_text, status) -- status is one of the constants above."""
+    language = (language or "en").lower()
+
+    if not text:
+        return text, ENGLISH if language == "en" else TRANSLATED
+    if language == "en":
+        return text, ENGLISH
+    if language not in SUPPORTED_LANGUAGES:
+        return text, UNSUPPORTED_LANGUAGE
+
+    if isinstance(text, GeneratedText):
+        # An answer the LLM was asked to write in ENGLISH, now shown in a
+        # Kannada or Hindi session (a replay after a language switch), is
+        # marked the same way as untranslated fixed text (M7). Any other
+        # LLM answer passes through as written.
+        if text.language == "en":
+            return f"{UNTRANSLATED_MARKER[language]} {text}", FALLBACK
+        return text, GENERATED
+
+    if isinstance(text, ComposedReply):
+        out, complete, generated = [], True, False
+        for part in text.parts:
+            if isinstance(part, GeneratedText):
+                if part.language == "en":       # see the GeneratedText rule above
+                    out.append(f"{UNTRANSLATED_MARKER[language]} {part}")
+                    complete = False
+                else:
+                    out.append(str(part))
+                generated = True
+            else:
+                rendered, ok = _render_fixed(part, language)
+                out.append(rendered)
+                complete = complete and ok
+        status = FALLBACK if not complete else MIXED if generated else TRANSLATED
+        return " ".join(out), status
+
+    rendered, complete = _render_fixed(text, language)
+    return rendered, TRANSLATED if complete else FALLBACK
 
 
 def localize(text, language):
-    """Render `text` in `language`.
-
-    Returns (rendered_text, translated). `translated` is False when the text
-    was left in English because no translation exists for it -- dynamic
-    workflow instructions and knowledge answers, today. Callers can log or
-    test on that flag instead of guessing.
     """
-    language = (language or "en").lower()
+    (rendered_text, translated) -- the 3.2B-12 contract.
 
-    if not text or language == "en" or language not in SUPPORTED_LANGUAGES:
-        return text, language == "en"
-
-    normalized = _normalize(text)
-
-    exact = FIXED_RESPONSES.get(normalized)
-    if exact and language in exact:
-        return exact[language], True
-
-    # "Continuing. <instruction>" -- translate the opener, keep the rest.
-    for prefix, translations in PREFIXES.items():
-        if normalized.startswith(prefix) and language in translations:
-            remainder = normalized[len(prefix):].strip()
-            if not remainder:
-                return translations[language], True
-            return f"{translations[language]} {remainder}", False
-
-    return text, False
+    `translated` is True only when the whole reply is in the session language
+    as authored: an English session, or every fixed sentence rendered. It is
+    False for marked fallbacks, LLM-written text, and unsupported languages.
+    """
+    if not text:
+        return text, (language or "en").lower() == "en"   # as in 3.2B-12
+    rendered, status = localize_detailed(text, language)
+    return rendered, status in (ENGLISH, TRANSLATED)
 
 
 class ResponseLocalizer:
-    """Applies `localize()` at the output boundary and remembers the last reply.
+    """Applies localize() at the output boundary and remembers the last reply.
 
     Holding the CANONICAL English reply (not the rendered one) is what makes
     replay language-correct: repeating in a Kannada session re-renders the same
@@ -129,16 +278,19 @@ class ResponseLocalizer:
         self.last_canonical = None
         self.last_rendered = None
         self.last_translated = None
+        self.last_status = None
 
     def set_language(self, language):
         self.language = (language or "en").lower()
 
     def render(self, text, remember=True):
-        rendered, translated = localize(text, self.language)
+        rendered, status = localize_detailed(text, self.language)
+        translated = status in (ENGLISH, TRANSLATED)
         if remember and text:
             self.last_canonical = text
             self.last_rendered = rendered
             self.last_translated = translated
+            self.last_status = status
         return rendered
 
     def replay(self):

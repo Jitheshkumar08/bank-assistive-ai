@@ -8,6 +8,7 @@ import {
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
+import { Role } from '@prisma/client';
 import { UsersService } from '../users/users.service';
 import { PasswordService } from './password.service';
 import { ChangePasswordDto } from './dto/change-password.dto';
@@ -50,10 +51,40 @@ export class AuthService implements OnModuleInit {
     const adminPassword = this.config.get<string>('ADMIN_PASSWORD');
 
     if (adminEmail && adminPassword) {
-      const passwordHash = await this.passwordService.hash(adminPassword);
-      await this.usersService.upsertAdminUser(adminEmail, passwordHash, 'Administrator');
-      this.logger.log(`Admin account initialized / updated: ${adminEmail}`);
+      await this.syncAdminAccount(adminEmail, adminPassword);
     }
+  }
+
+  /**
+   * Makes the ADMIN_EMAIL account match the configuration -- and writes
+   * nothing when it already does.
+   *
+   * This runs on every boot. Upserting unconditionally rewrote the row
+   * each time, with a freshly salted hash of the same password, so merely
+   * starting the API modified the database.
+   *
+   * The stored password is reused only when it verifiably matches.
+   * PasswordService.verify() answers false for anything it cannot check,
+   * so a corrupt or foreign hash is replaced rather than trusted.
+   */
+  private async syncAdminAccount(email: string, password: string): Promise<void> {
+    const existing = await this.usersService.findByEmailWithHash(email);
+
+    const passwordMatches =
+      existing !== null && (await this.passwordService.verify(existing.passwordHash, password));
+
+    if (existing && passwordMatches && existing.role === Role.ADMIN && existing.isActive) {
+      this.logger.log(`Admin account already up to date: ${email}`);
+      return;
+    }
+
+    // A matching password keeps its hash, so correcting only the role or
+    // the active flag does not churn the credential.
+    const passwordHash =
+      existing && passwordMatches ? existing.passwordHash : await this.passwordService.hash(password);
+
+    await this.usersService.upsertAdminUser(email, passwordHash, 'Administrator');
+    this.logger.log(`Admin account ${existing ? 'updated' : 'created'}: ${email}`);
   }
 
   async register(dto: RegisterDto): Promise<AuthResult> {

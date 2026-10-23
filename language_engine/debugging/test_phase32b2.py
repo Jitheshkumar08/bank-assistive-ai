@@ -317,6 +317,7 @@ def cancelled_deposit():
 
     dialogue.start_workflow(conversation, "deposit money")
     dialogue.handle_control_command(conversation, "cancel")
+    dialogue.handle_control_command(conversation, "cancel")   # confirmed
 
     assert conversation.workflow_state is WorkflowState.CANCELLED
 

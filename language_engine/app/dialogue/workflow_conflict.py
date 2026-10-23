@@ -34,7 +34,7 @@ from the dialogue manager, and cannot start, cancel, suspend or advance
 anything -- DialogueManager performs every transition, through the
 ConversationManager methods that already own them.
 """
-from typing import NamedTuple
+from typing import NamedTuple, Optional
 
 
 class WorkflowConflict(NamedTuple):
@@ -44,12 +44,30 @@ class WorkflowConflict(NamedTuple):
     INTENTS and as conversation.current_intent -- so WorkflowLoader can resolve
     either one without a second spelling ever entering the system.
 
+    `requested_workflow` is None for a CANCEL CONFIRMATION: the customer asked
+    to cancel the request in progress, and nothing else, and is being asked to
+    confirm before anything is lost. It is the same pending question, held in
+    the same slot and answered through the same routing -- there is no second
+    pending-question mechanism. See cancel_confirmation_question().
+
     A NamedTuple so it is immutable: a stored conflict cannot be edited into a
     different question than the one the customer was actually asked.
     """
 
     current_workflow: str
-    requested_workflow: str
+    requested_workflow: Optional[str]
+
+
+def is_cancel_confirmation(conflict):
+    """Whether a pending question is a cancel confirmation."""
+
+    return conflict is not None and conflict.requested_workflow is None
+
+
+def cancel_confirmation(current_workflow):
+    """The pending question asked before cancelling `current_workflow`."""
+
+    return WorkflowConflict(current_workflow, None)
 
 
 # =========================================================
@@ -131,6 +149,33 @@ def conflict_question(conflict, paused=False):
 
 
 # =========================================================
+# CANCEL CONFIRMATION
+#
+# Cancelling is the one control that cannot be undone: a cancelled request
+# cannot be resumed. With hands-free listening, one incidental "stop" -- said
+# to someone else at the counter -- is a complete turn. So a cancel is asked
+# about first, and only a second, explicit cancel carries it out.
+#
+# Two answers are named, by words the resolver below and the control tier both
+# recognise: "cancel" confirms, "continue" keeps the request exactly as it is.
+# =========================================================
+
+def cancel_confirmation_question(conflict, paused=False):
+    """The question asked before a request in progress is cancelled."""
+
+    current = display_name(conflict.current_workflow)
+    question = (
+        f"Do you want to cancel the {current}? "
+        "Say cancel to confirm, or continue to keep it."
+    )
+
+    if paused:
+        return f"Your {current} is currently paused. {question}"
+
+    return question
+
+
+# =========================================================
 # THE THREE ANSWERS
 # =========================================================
 
@@ -184,6 +229,10 @@ CHOICE_WORDS = {
         "cancel", "cancels", "cancelled", "canceled",
         "cancelling", "canceling", "scrap", "abandon",
         "stop", "forget", "drop",
+        # Romanised G4 -- AWAITING NATIVE-SPEAKER REVIEW. Romanised रद्द /
+        # ರದ್ದು, matched as WHOLE tokens only (this set is never a prefix
+        # scan), so "raddi" (scrap paper) can never select cancel.
+        "radd", "raddu",
     }),
     CHOICE_PAUSE: frozenset({
         "pause", "pauses", "paused", "pausing",

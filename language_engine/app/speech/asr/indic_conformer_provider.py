@@ -22,6 +22,8 @@ come from the same conversion family, but are UNVERIFIED here and are opt-in
 through configuration rather than advertised as supported.
 """
 import os
+import shutil
+import subprocess
 import time
 import wave
 from typing import Dict, Optional, Tuple
@@ -62,19 +64,82 @@ UNVERIFIED_MODELS: Dict[str, str] = {
 #: family and stays a separate research track (Phase 3.2B-10 audit).
 NEVER_CLAIMED = {"tcy", "en"}
 
+#: Leading bytes of the WAV containers scipy reads. Anything else is decoded by
+#: ffmpeg instead.
+WAV_SIGNATURES = (b"RIFF", b"RIFX", b"RF64")
+
+
+class AudioDecodeError(ValueError):
+    """The recording could not be turned into a waveform.
+
+    The message is safe to surface: it never carries ffmpeg's output, the file
+    path or any of the audio itself.
+    """
+
+
+def is_wav(audio_path: str) -> bool:
+    """True when the file starts with a WAV container signature."""
+    with open(audio_path, "rb") as fh:
+        return fh.read(4) in WAV_SIGNATURES
+
+
+def decode_with_ffmpeg(audio_path: str) -> np.ndarray:
+    """Decode any ffmpeg-readable recording to mono float32 at 16 kHz.
+
+    Browsers upload MediaRecorder output -- WebM/Opus from Chromium and
+    Firefox, MP4/AAC from Safari -- never WAV, and scipy's reader refuses all
+    of it ("File format b'\\x1aE\\xdf\\xa3' not understood"). This is the same
+    ffmpeg command Whisper's own load_audio() runs, so it needs nothing the
+    service did not already require. The PCM arrives on stdout: no second
+    temporary file is written.
+    """
+    ffmpeg = shutil.which("ffmpeg")
+    if ffmpeg is None:
+        raise AudioDecodeError("ffmpeg is required to decode non-WAV recordings and was not found")
+
+    cmd = [
+        ffmpeg,
+        "-nostdin",
+        "-threads", "0",
+        "-i", audio_path,
+        "-f", "s16le",
+        "-ac", "1",
+        "-acodec", "pcm_s16le",
+        "-ar", str(TARGET_SAMPLE_RATE),
+        "-",
+    ]
+    # ffmpeg's stderr names the file and describes its contents, so it is
+    # captured and dropped rather than passed on in the error.
+    completed = subprocess.run(cmd, capture_output=True)
+    if completed.returncode != 0:
+        raise AudioDecodeError("the recording is not a supported audio format or is corrupt")
+
+    data = np.frombuffer(completed.stdout, np.int16).astype(np.float32) / 32768.0
+    if data.size == 0:
+        raise AudioDecodeError("the recording contained no audio")
+
+    return data
+
 
 def read_waveform(audio_path: str) -> Tuple[np.ndarray, int]:
-    """Read a WAV file as mono float32 in [-1, 1], plus its sample rate.
+    """Read a recording as mono float32 in [-1, 1], plus its sample rate.
 
-    onnx-asr reads files with the stdlib `wave` module, which supports only
-    integer PCM and raises "unknown format: 3" on IEEE-float WAV. The recorder
-    (app/speech/recorder.py) writes float32 WAV through scipy, so live
-    recordings hit exactly that error. Decoding here instead keeps the provider
-    working for both: onnx-asr accepts a float32 NumPy array directly.
+    WAV is read directly. onnx-asr reads files with the stdlib `wave` module,
+    which supports only integer PCM and raises "unknown format: 3" on
+    IEEE-float WAV. The recorder (app/speech/recorder.py) writes float32 WAV
+    through scipy, so live recordings hit exactly that error. Decoding here
+    instead keeps the provider working for both: onnx-asr accepts a float32
+    NumPy array directly.
 
     scipy is already a pinned dependency and is what the recorder writes with,
     so this adds nothing new; the stdlib path is a fallback for integer PCM.
+
+    Anything that is not WAV -- in practice a browser upload -- goes through
+    decode_with_ffmpeg(), which already returns 16 kHz mono.
     """
+    if not is_wav(audio_path):
+        return decode_with_ffmpeg(audio_path), TARGET_SAMPLE_RATE
+
     data = None
     sample_rate = None
     try:
@@ -179,11 +244,13 @@ class IndicConformerRecognizer(SpeechRecognizer):
                 f"IndicConformer has no model configured for language {lang!r}; "
                 f"configured: {sorted(self.models)}"
             )
-        model = self._load(lang)
         started = time.perf_counter()
         # Decode here rather than handing onnx-asr the path: its reader is the
         # stdlib `wave` module, which rejects the float32 WAV the recorder writes.
+        # Decoded before the model loads, so an undecodable upload is refused
+        # without first pulling a model into memory.
         waveform, sample_rate = read_waveform(audio_path)
+        model = self._load(lang)
         text = model.recognize(waveform, sample_rate=sample_rate)
         latency = time.perf_counter() - started
         return SpeechRecognitionResult(

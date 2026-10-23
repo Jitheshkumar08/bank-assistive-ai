@@ -7,6 +7,10 @@ import { RegisterPage } from './RegisterPage';
 import { ApiError } from '@/types/api';
 import type { RegisterRequest } from '@/types/auth';
 
+// Anchored so "Password" does not also match "Confirm password".
+const PASSWORD_LABEL = /^password/i;
+const CONFIRM_PASSWORD_LABEL = /confirm password/i;
+
 const register = vi.fn<(details: RegisterRequest) => Promise<void>>();
 
 function auth(overrides: Partial<AuthContextValue> = {}): AuthContextValue {
@@ -50,7 +54,8 @@ function renderRegister(authValue = auth()) {
 async function fillValidForm() {
   await userEvent.type(screen.getByLabelText(/full name/i), 'Anita Rao');
   await userEvent.type(screen.getByLabelText(/email/i), 'anita@example.com');
-  await userEvent.type(screen.getByLabelText(/password/i), 'StrongPass123!');
+  await userEvent.type(screen.getByLabelText(PASSWORD_LABEL), 'StrongPass123!');
+  await userEvent.type(screen.getByLabelText(CONFIRM_PASSWORD_LABEL), 'StrongPass123!');
 }
 
 beforeEach(() => {
@@ -65,7 +70,8 @@ describe('RegisterPage', () => {
 
       expect(screen.getByLabelText(/full name/i)).toBeInTheDocument();
       expect(screen.getByLabelText(/email/i)).toBeInTheDocument();
-      expect(screen.getByLabelText(/password/i)).toBeInTheDocument();
+      expect(screen.getByLabelText(PASSWORD_LABEL)).toBeInTheDocument();
+      expect(screen.getByLabelText(CONFIRM_PASSWORD_LABEL)).toBeInTheDocument();
     });
 
     it('offers every language the assistant can actually speak', () => {
@@ -130,7 +136,8 @@ describe('RegisterPage', () => {
 
       await userEvent.type(screen.getByLabelText(/full name/i), '  Anita Rao  ');
       await userEvent.type(screen.getByLabelText(/email/i), '  anita@example.com  ');
-      await userEvent.type(screen.getByLabelText(/password/i), 'StrongPass123!');
+      await userEvent.type(screen.getByLabelText(PASSWORD_LABEL), 'StrongPass123!');
+      await userEvent.type(screen.getByLabelText(CONFIRM_PASSWORD_LABEL), 'StrongPass123!');
       await userEvent.click(screen.getByRole('button', { name: /create account/i }));
 
       await waitFor(() =>
@@ -181,12 +188,26 @@ describe('RegisterPage', () => {
 
       await userEvent.type(screen.getByLabelText(/full name/i), 'Anita Rao');
       await userEvent.type(screen.getByLabelText(/email/i), 'anita@example.com');
-      await userEvent.type(screen.getByLabelText(/password/i), 'short');
+      await userEvent.type(screen.getByLabelText(PASSWORD_LABEL), 'short');
+      await userEvent.type(screen.getByLabelText(CONFIRM_PASSWORD_LABEL), 'short');
       await userEvent.click(screen.getByRole('button', { name: /create account/i }));
 
       // Caught here rather than after a round trip that was always
       // going to fail.
       expect(await screen.findByText(/at least 8 characters/i)).toBeInTheDocument();
+      expect(register).not.toHaveBeenCalled();
+    });
+
+    it('rejects a confirmation that does not match the password', async () => {
+      renderRegister();
+
+      await userEvent.type(screen.getByLabelText(/full name/i), 'Anita Rao');
+      await userEvent.type(screen.getByLabelText(/email/i), 'anita@example.com');
+      await userEvent.type(screen.getByLabelText(PASSWORD_LABEL), 'StrongPass123!');
+      await userEvent.type(screen.getByLabelText(CONFIRM_PASSWORD_LABEL), 'StrongPass123?');
+      await userEvent.click(screen.getByRole('button', { name: /create account/i }));
+
+      expect(await screen.findByText('Passwords do not match.')).toBeInTheDocument();
       expect(register).not.toHaveBeenCalled();
     });
 

@@ -14,6 +14,8 @@ interface ComposerProps {
    * the conversation.
    */
   voice?: VoiceContextValue | null;
+  /** Called whenever the customer types, so a quiet-spell timer can restart. */
+  onActivity?: () => void;
 }
 
 /** About five lines. Past that the box scrolls instead of growing. */
@@ -45,7 +47,7 @@ const ROUND_BUTTON =
  * the button is Send once something is typed, and -- with voice on -- the
  * microphone while the box is empty.
  */
-export function Composer({ onSend, isSending, voice }: ComposerProps) {
+export function Composer({ onSend, isSending, voice, onActivity }: ComposerProps) {
   const [draft, setDraft] = useState('');
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const wasSending = useRef(false);
@@ -200,7 +202,10 @@ export function Composer({ onSend, isSending, voice }: ComposerProps) {
               placeholder="Message the assistant"
               className="block max-h-[8.5rem] min-h-12 flex-1 resize-none rounded-3xl bg-white px-4 py-3 text-base leading-6 text-ink-900 shadow-[0_1px_2px_rgb(16_24_40/0.04)] ring-1 ring-ink-200 transition-shadow placeholder:text-ink-400 focus:ring-2 focus:ring-brand-500/50 focus-visible:outline-none"
               value={draft}
-              onChange={(event) => setDraft(event.target.value)}
+              onChange={(event) => {
+                setDraft(event.target.value);
+                onActivity?.();
+              }}
               onKeyDown={handleKeyDown}
               // Deliberately NOT disabled while a reply is in flight.
               // Disabling an element blurs it, so the customer would lose

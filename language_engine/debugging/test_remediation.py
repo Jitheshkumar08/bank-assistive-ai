@@ -518,7 +518,8 @@ def test_control_handling():
     check("[E] control repeat returns the instruction",
           response == "Please take a withdrawal slip.", response)
 
-    # [F] / [G] cancel
+    # [F] / [G] cancel -- asked first, then confirmed
+    dialogue.handle_control_command(conversation, "cancel")
     dialogue.handle_control_command(conversation, "cancel")
     check("[F][G] cancel moves to CANCELLED",
           conversation.workflow_state is WorkflowState.CANCELLED)

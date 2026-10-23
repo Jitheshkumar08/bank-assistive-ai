@@ -20,6 +20,7 @@ phrase in these tables may be ambiguous with a service request -- that is why,
 for example, Kannada "ಮುಗಿಸು" (finish) is absent: it can report completion of a
 step rather than ask to end the session.
 """
+from app.dialogue.text_normalization import fold_word, nfc, word_tokens
 
 #: Ending the assistant session.
 SESSION_EXIT_PHRASES = {
@@ -39,7 +40,7 @@ WORKFLOW_CONTROL_PHRASES = {
         "ವಿರಾಮ", "ವಿರಾಮಿಸು", "ವಿರಾಮಿಸಿ", "ವಿರಾಮ ಮಾಡು", "ವಿರಾಮ ಮಾಡಿ",
         "ತಡೆಯಿರಿ", "ತಡೆಯಿಸು", "ಸ್ವಲ್ಪ ನಿಲ್ಲಿ", "ಸ್ವಲ್ಪ ತಡೆಯಿರಿ", "ಒಂದು ನಿಮಿಷ",
         # Hindi
-        "रुको", "ठहरो", "विराम", "एक मिनट", "थोड़ा रुको",
+        "रुको", "ठहरो", "विराम", "एक मिनट", "थोड़ा रुको", "रुक जाओ",
     },
     "resume": {
         # Kannada
@@ -53,7 +54,12 @@ WORKFLOW_CONTROL_PHRASES = {
         # session used; "ಬೇಡ" (don't/no need) is the common refusal.
         "ನಿಲ್ಲಿಸು", "ನಿಲ್ಲಿಸಿ", "ಸಾಕು", "ಬೇಡ", "ರದ್ದು ಮಾಡು", "ರದ್ದುಮಾಡಿ",
         # Hindi
-        "रद्द करो", "रद्द करें", "कैंसिल करो", "बस", "रुक जाओ", "नहीं चाहिए",
+        # "रुक जाओ" ("hold on") moved to pause in M3: it was cancel here
+        # and pause in the conflict resolver, so one utterance had two
+        # meanings. Pause is the safe reading -- see manager.py's
+        # CONTROL_INTENT_KEYWORDS: pausing loses nothing, cancelling loses
+        # the customer's request.
+        "रद्द करो", "रद्द करें", "कैंसिल करो", "बस", "नहीं चाहिए",
     },
     "repeat": {
         # Kannada
@@ -66,6 +72,14 @@ WORKFLOW_CONTROL_PHRASES = {
         "ಮುಂದಿನದು", "ಮುಂದೇನು", "ಮುಂದಿನ ಹಂತ",
         # Hindi
         "अगला", "आगे क्या", "अगला कदम", "आगे क्या करना है",
+    },
+    # AWAITING NATIVE-SPEAKER REVIEW. The words the proactive offer tells
+    # the customer to say (localization_catalog: "Just say help.").
+    "help": {
+        # Kannada
+        "ಸಹಾಯ", "ಸಹಾಯ ಮಾಡಿ", "ಸಹಾಯ ಬೇಕು",
+        # Hindi
+        "मदद", "मदद कीजिए", "मदद चाहिए",
     },
 }
 
@@ -165,3 +179,103 @@ def merge_phrase_sets(english, additions):
     for key, value in additions.items():
         merged.setdefault(key, set()).update(value)
     return merged
+
+
+# =========================================================
+# CODE-MIXED AND ROMANISED CONTROL PHRASES  (M3)
+#
+# What customers actually type and say: an English command word with a
+# Kannada or Hindi verb ("cancel ಮಾಡಿ", "repeat कीजिए"), or the whole
+# phrase in Latin script ("ruko", "matte heli", "cancel maadi"). None of
+# these matched before, so each one fell through to the LLM -- or, in a
+# resting state, to IntentDetector.
+#
+# Same rules as every table above: WHOLE-utterance exact match, never a
+# substring, so "cancel karo mera loan application" stays a sentence for
+# the LLM. Each phrase means exactly what its native counterpart already
+# means here ("nillisi" is cancel because "ನಿಲ್ಲಿಸಿ" is; "beda" is cancel
+# because "ಬೇಡ" is), so no utterance gains a meaning its native form lacks.
+# =========================================================
+
+M3_WORKFLOW_CONTROL_PHRASES = {
+    "pause": {
+        # Hindi, polite forms of रुको
+        "रुकिए", "रुक जाइए", "ज़रा रुकिए", "थोड़ा रुकिए", "एक मिनट रुकिए",
+        # code-mixed
+        "pause ಮಾಡಿ", "pause करो", "pause कीजिए",
+        # romanised
+        "ruko", "ruk jao", "ruk jaiye", "rukiye", "thoda ruko", "zara ruko",
+        "ek minute", "pause karo", "swalpa nilli", "ondu nimisha",
+        "pause maadi", "pause madi",
+        # Romanised Batch 1 (G5) -- AWAITING NATIVE-SPEAKER REVIEW.
+        "ek second", "wait karo", "ruko zara", "ruko na",
+        "swalpa iri", "tadeyiri", "ondu second",
+    },
+    "resume": {
+        "continue ಮಾಡಿ", "continue करो", "continue कीजिए",
+        "jaari rakho", "jari rakho", "jaari rakhiye", "aage badho", "continue karo",
+        "munduvarisi", "munduvarisu", "munduvaresi", "continue maadi", "continue madi",
+    },
+    "cancel": {
+        "cancel ಮಾಡಿ", "ಕ್ಯಾನ್ಸಲ್ ಮಾಡಿ", "cancel करो", "cancel कीजिए", "कैंसल करो",
+        "cancel karo", "cancel kar do", "radd karo", "nahi chahiye",
+        "cancel maadi", "cancel madi", "nillisi", "nillisu", "beda", "saaku", "saku",
+        # Romanised G3 -- AWAITING NATIVE-SPEAKER REVIEW. Romanised forms of
+        # रद्द कर दो / ರದ್ದು ಮಾಡಿ. A cancel phrase only ever ASKS first.
+        "radd kar do", "raddu maadi", "radd maadi",
+    },
+    "repeat": {
+        "repeat ಮಾಡಿ", "ರಿಪೀಟ್ ಮಾಡಿ", "repeat करो", "repeat कीजिए", "रिपीट करो",
+        "phir se batao", "phir se bataiye", "dobara batao", "dobara bataiye",
+        "repeat karo", "repeat kijiye",
+        "matte heli", "matte helu", "mathe heli", "innomme heli", "repeat maadi", "repeat madi",
+        # Romanised Batch 1 (G6) -- AWAITING NATIVE-SPEAKER REVIEW.
+        "phir se bolo", "dobara bolo", "ek baar aur", "punah heli",
+    },
+    # Romanised Batch 1 (G2) -- AWAITING NATIVE-SPEAKER REVIEW. Romanised
+    # forms of the native "next" phrases above (अगला, आगे क्या, अगला कदम,
+    # आगे क्या करना है / ಮುಂದಿನದು, ಮುಂದೇನು, ಮುಂದಿನ ಹಂತ). "next" never
+    # advances or cancels: it restates the step, or resumes a paused one.
+    "next": {
+        "agla", "aage kya", "agla step", "aage kya karna hai",
+        "mundina", "mundenu", "mundina hantha", "munde enu",
+    },
+}
+
+M3_ACKNOWLEDGEMENT_PHRASES = {
+    "thanks": {
+        "ಥ್ಯಾಂಕ್ಸ್", "ಥ್ಯಾಂಕ್ ಯೂ", "थैंक यू", "थैंक्स",
+        "dhanyavaad", "dhanyawad", "dhanyavad", "shukriya", "dhanyavadagalu", "dhanyavaada",
+    },
+    "acknowledgement": {"theek hai", "thik hai", "sari"},
+}
+
+#: Politeness wrappers, stripped by manager.strip_politeness() before the
+#: remainder is matched EXACTLY against pause / resume / repeat. Cancel and
+#: next stay exact-only, as manager.py documents: a wrapper must never widen
+#: the surface on which a destructive command fires.
+POLITE_PREFIXES = (
+    "ದಯವಿಟ್ಟು", "ದಯಮಾಡಿ", "कृपया", "ज़रा", "जरा", "dayavittu", "kripya", "kripaya",
+)
+
+
+def _nfc_table(table):
+    return {key: {nfc(p) for p in phrases} for key, phrases in table.items()}
+
+
+WORKFLOW_CONTROL_PHRASES = _nfc_table(merge_phrase_sets(WORKFLOW_CONTROL_PHRASES, M3_WORKFLOW_CONTROL_PHRASES))
+ACKNOWLEDGEMENT_PHRASES = _nfc_table(merge_phrase_sets(ACKNOWLEDGEMENT_PHRASES, M3_ACKNOWLEDGEMENT_PHRASES))
+SESSION_EXIT_PHRASES = {nfc(p) for p in SESSION_EXIT_PHRASES}
+POLITE_PREFIXES = tuple(nfc(p) for p in POLITE_PREFIXES)
+
+
+# =========================================================
+# WORD FOLDING FOR THE CUE MODULES  (M3, moved to text_normalization in M5)
+#
+# multilingual_questions, multilingual_negation and intent/service_keywords
+# import `fold` and `word_tokens` from here. Since M5 they are the central
+# definitions in app/dialogue/text_normalization, re-exported under the M3
+# names, so there is one set of Unicode and spelling rules in the engine.
+# =========================================================
+
+fold = fold_word

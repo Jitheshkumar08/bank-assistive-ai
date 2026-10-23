@@ -1,0 +1,623 @@
+{
+  "meta": {
+    "fixtures_file": "evaluation/fixtures/amounts_m1.json",
+    "fixtures_version": "amounts_m1",
+    "fixtures_sha256": "6d328857b50b0adc1bb1e16f49c4b94caadfaf061ffc0e4aa16aa6187c1e84f7",
+    "embedding_model": "paraphrase-multilingual-MiniLM-L12-v2",
+    "retrieval": false,
+    "python": "3.13.2",
+    "name": "m1_amounts"
+  },
+  "summary": {
+    "total": 34,
+    "severity": {
+      "ok": 33,
+      "critical": 0,
+      "miss": 1,
+      "unscored": 0
+    },
+    "llm_gated": 0,
+    "headline": {
+      "Wrong-service routing (request started the wrong workflow)": 0,
+      "Question started a workflow": 0,
+      "Request or question swallowed by the control tier": 0,
+      "Wrong amount (a value, but not the spoken one)": 0,
+      "Invented amount (a value where none was spoken)": 0,
+      "Wrong control command": 0,
+      "Negated request raised a workflow conflict": 0,
+      "Wrong conflict choice": 0
+    },
+    "abstentions": {
+      "Service request abstained (no workflow started)": 0,
+      "Question answered as a non-question (ack / control / refusal)": 0,
+      "Amount missed (no value)": 1,
+      "Control command missed (left to the LLM)": 0,
+      "Negation not detected": 0,
+      "Negation detected where there was none": 0,
+      "Conflict answer not understood (asked again)": 0
+    },
+    "by_lang": {
+      "en": {
+        "n": 9,
+        "ok": 9,
+        "critical": 0,
+        "miss": 0,
+        "unscored": 0
+      },
+      "kn": {
+        "n": 11,
+        "ok": 10,
+        "critical": 0,
+        "miss": 1,
+        "unscored": 0
+      },
+      "hi": {
+        "n": 14,
+        "ok": 14,
+        "critical": 0,
+        "miss": 0,
+        "unscored": 0
+      },
+      "kn-en": {
+        "n": 0,
+        "ok": 0,
+        "critical": 0,
+        "miss": 0,
+        "unscored": 0
+      },
+      "hi-en": {
+        "n": 0,
+        "ok": 0,
+        "critical": 0,
+        "miss": 0,
+        "unscored": 0
+      },
+      "rom-kn": {
+        "n": 0,
+        "ok": 0,
+        "critical": 0,
+        "miss": 0,
+        "unscored": 0
+      },
+      "rom-hi": {
+        "n": 0,
+        "ok": 0,
+        "critical": 0,
+        "miss": 0,
+        "unscored": 0
+      }
+    },
+    "by_category": {
+      "service_request": {
+        "n": 0
+      },
+      "knowledge_question": {
+        "n": 0
+      },
+      "control": {
+        "n": 0
+      },
+      "amount": {
+        "n": 34,
+        "correct": 33,
+        "missed_amount": 1
+      },
+      "negation": {
+        "n": 0
+      },
+      "conflict_answer": {
+        "n": 0
+      }
+    },
+    "by_cell": {
+      "en|amount": {
+        "n": 9,
+        "ok": 9,
+        "critical": 0,
+        "miss": 0,
+        "unscored": 0
+      },
+      "kn|amount": {
+        "n": 11,
+        "ok": 10,
+        "critical": 0,
+        "miss": 1,
+        "unscored": 0
+      },
+      "hi|amount": {
+        "n": 14,
+        "ok": 14,
+        "critical": 0,
+        "miss": 0,
+        "unscored": 0
+      }
+    },
+    "detector_view": {},
+    "retrieval": {}
+  },
+  "limits": [
+    "The LLM (Groq gpt-oss-20b) is never called. Turns the question or control prefilter sends to it are counted as unscored, and the LLM's own amount extraction is not measured.",
+    "Speech recognition is not exercised: every fixture is text. Code-mixed ASR output is not measured.",
+    "Conflict detection is measured in isolation. In production it runs only after the LLM has classified a mid-workflow turn.",
+    "Reply language (localization, knowledge-answer language, TTS voice) is not scored in M0.",
+    "Fixtures are hand-authored and few per cell; Kannada and Hindi labels have not yet had a native-speaker review. Results show which behaviours fail, not how often customers hit them."
+  ],
+  "results": [
+    {
+      "id": "amt-hi-101",
+      "lang": "hi",
+      "category": "amount",
+      "text": "इक्कीस हज़ार रुपये",
+      "expected": {
+        "amount": 21000
+      },
+      "got": {
+        "amount": 21000
+      },
+      "outcome": "correct",
+      "severity": "ok"
+    },
+    {
+      "id": "amt-hi-102",
+      "lang": "hi",
+      "category": "amount",
+      "text": "निन्यानवे हज़ार",
+      "expected": {
+        "amount": 99000
+      },
+      "got": {
+        "amount": 99000
+      },
+      "outcome": "correct",
+      "severity": "ok"
+    },
+    {
+      "id": "amt-hi-103",
+      "lang": "hi",
+      "category": "amount",
+      "text": "दो हज़ार पाँच सौ रुपये",
+      "expected": {
+        "amount": 2500
+      },
+      "got": {
+        "amount": 2500
+      },
+      "outcome": "correct",
+      "severity": "ok"
+    },
+    {
+      "id": "amt-hi-104",
+      "lang": "hi",
+      "category": "amount",
+      "text": "साढ़े तीन हज़ार",
+      "expected": {
+        "amount": 3500
+      },
+      "got": {
+        "amount": 3500
+      },
+      "outcome": "correct",
+      "severity": "ok"
+    },
+    {
+      "id": "amt-hi-105",
+      "lang": "hi",
+      "category": "amount",
+      "text": "सवा लाख रुपये",
+      "expected": {
+        "amount": 125000
+      },
+      "got": {
+        "amount": 125000
+      },
+      "outcome": "correct",
+      "severity": "ok"
+    },
+    {
+      "id": "amt-hi-106",
+      "lang": "hi",
+      "category": "amount",
+      "text": "पौने दो लाख",
+      "expected": {
+        "amount": 175000
+      },
+      "got": {
+        "amount": 175000
+      },
+      "outcome": "correct",
+      "severity": "ok"
+    },
+    {
+      "id": "amt-hi-107",
+      "lang": "hi",
+      "category": "amount",
+      "text": "ढाई रुपये",
+      "expected": {
+        "amount": null
+      },
+      "got": {
+        "amount": null
+      },
+      "outcome": "correct",
+      "severity": "ok"
+    },
+    {
+      "id": "amt-hi-108",
+      "lang": "hi",
+      "category": "amount",
+      "text": "पच्चीसी हज़ार रुपये",
+      "expected": {
+        "amount": null
+      },
+      "got": {
+        "amount": null
+      },
+      "outcome": "correct",
+      "severity": "ok"
+    },
+    {
+      "id": "amt-hi-109",
+      "lang": "hi",
+      "category": "amount",
+      "text": "दो तीन हज़ार रुपये",
+      "expected": {
+        "amount": null
+      },
+      "got": {
+        "amount": null
+      },
+      "outcome": "correct",
+      "severity": "ok"
+    },
+    {
+      "id": "amt-hi-110",
+      "lang": "hi",
+      "category": "amount",
+      "text": "मुझे दो हज़ार दो",
+      "expected": {
+        "amount": 2000
+      },
+      "got": {
+        "amount": 2000
+      },
+      "outcome": "correct",
+      "severity": "ok"
+    },
+    {
+      "id": "amt-hi-111",
+      "lang": "hi",
+      "category": "amount",
+      "text": "सात सौ रुपये भेजना बंद करें और तीन सौ रुपये भेजें",
+      "expected": {
+        "amount": null
+      },
+      "got": {
+        "amount": null
+      },
+      "outcome": "correct",
+      "severity": "ok"
+    },
+    {
+      "id": "amt-hi-112",
+      "lang": "hi",
+      "category": "amount",
+      "text": "बीमित राशि सौ रुपये चुनें",
+      "expected": {
+        "amount": 100
+      },
+      "got": {
+        "amount": 100
+      },
+      "outcome": "correct",
+      "severity": "ok"
+    },
+    {
+      "id": "amt-hi-113",
+      "lang": "hi",
+      "category": "amount",
+      "text": "इक्कीस बारह दो हज़ार उन्नीस से इक्कीस एक दो हज़ार उन्नीस तक",
+      "expected": {
+        "amount": null
+      },
+      "got": {
+        "amount": null
+      },
+      "outcome": "correct",
+      "severity": "ok"
+    },
+    {
+      "id": "amt-hi-114",
+      "lang": "hi",
+      "category": "amount",
+      "text": "खाता नंबर 4521 में दो हज़ार जमा",
+      "expected": {
+        "amount": 2000
+      },
+      "got": {
+        "amount": 2000
+      },
+      "outcome": "correct",
+      "severity": "ok"
+    },
+    {
+      "id": "amt-kn-101",
+      "lang": "kn",
+      "category": "amount",
+      "text": "ಇಪ್ಪತ್ಮೂರು ಸಾವಿರ",
+      "expected": {
+        "amount": 23000
+      },
+      "got": {
+        "amount": 23000
+      },
+      "outcome": "correct",
+      "severity": "ok"
+    },
+    {
+      "id": "amt-kn-102",
+      "lang": "kn",
+      "category": "amount",
+      "text": "ನಲವತ್ತೆಂಟು ಸಾವಿರ ರೂಪಾಯಿ",
+      "expected": {
+        "amount": 48000
+      },
+      "got": {
+        "amount": 48000
+      },
+      "outcome": "correct",
+      "severity": "ok"
+    },
+    {
+      "id": "amt-kn-103",
+      "lang": "kn",
+      "category": "amount",
+      "text": "ಇಪ್ಪತ್ತು ಐದು ಸಾವಿರ",
+      "expected": {
+        "amount": 25000
+      },
+      "got": {
+        "amount": 25000
+      },
+      "outcome": "correct",
+      "severity": "ok"
+    },
+    {
+      "id": "amt-kn-104",
+      "lang": "kn",
+      "category": "amount",
+      "text": "ಐನೂರ ಐವತ್ತು ರೂಪಾಯಿ",
+      "expected": {
+        "amount": 550
+      },
+      "got": {
+        "amount": 550
+      },
+      "outcome": "correct",
+      "severity": "ok"
+    },
+    {
+      "id": "amt-kn-105",
+      "lang": "kn",
+      "category": "amount",
+      "text": "ಮೂರೂವರೆ ಸಾವಿರ",
+      "expected": {
+        "amount": 3500
+      },
+      "got": {
+        "amount": 3500
+      },
+      "outcome": "correct",
+      "severity": "ok"
+    },
+    {
+      "id": "amt-kn-106",
+      "lang": "kn",
+      "category": "amount",
+      "text": "ಎರಡು ಮೂರು ಸಾವಿರ",
+      "expected": {
+        "amount": null
+      },
+      "got": {
+        "amount": null
+      },
+      "outcome": "correct",
+      "severity": "ok"
+    },
+    {
+      "id": "amt-kn-107",
+      "lang": "kn",
+      "category": "amount",
+      "text": "ಇಪ್ಪತ್ತೈದ ಸಾವಿರ",
+      "expected": {
+        "amount": null
+      },
+      "got": {
+        "amount": null
+      },
+      "outcome": "correct",
+      "severity": "ok"
+    },
+    {
+      "id": "amt-kn-108",
+      "lang": "kn",
+      "category": "amount",
+      "text": "ಒಂದು ಸಾವಿರ ರೂಪಾಯನ್ನು ನಿಲ್ಲಿಸಿ ಎರಡು ಸಾವಿರ ರೂಪಾಯಿ ಕಳಿಸಿ",
+      "expected": {
+        "amount": null
+      },
+      "got": {
+        "amount": null
+      },
+      "outcome": "correct",
+      "severity": "ok"
+    },
+    {
+      "id": "amt-kn-109",
+      "lang": "kn",
+      "category": "amount",
+      "text": "ಹದಿನೆಂಟು ಹನ್ನೊಂದು ಎರಡು ಸಾವಿರದ ಹದಿನೆಂಟನೇ ತಾರೀಖು",
+      "expected": {
+        "amount": null
+      },
+      "got": {
+        "amount": null
+      },
+      "outcome": "correct",
+      "severity": "ok"
+    },
+    {
+      "id": "amt-kn-110",
+      "lang": "kn",
+      "category": "amount",
+      "text": "ಐದು ಸೊನ್ನೆ ಸೊನ್ನೆ ರೂಪಾಯಿ",
+      "expected": {
+        "amount": 500
+      },
+      "got": {
+        "amount": null
+      },
+      "outcome": "missed_amount",
+      "severity": "miss"
+    },
+    {
+      "id": "amt-kn-111",
+      "lang": "kn",
+      "category": "amount",
+      "text": "ಖಾತೆ ಸಂಖ್ಯೆ 4521 ಗೆ ಎರಡು ಸಾವಿರ",
+      "expected": {
+        "amount": 2000
+      },
+      "got": {
+        "amount": 2000
+      },
+      "outcome": "correct",
+      "severity": "ok"
+    },
+    {
+      "id": "amt-en-101",
+      "lang": "en",
+      "category": "amount",
+      "text": "2.5 lakh",
+      "expected": {
+        "amount": 250000
+      },
+      "got": {
+        "amount": 250000
+      },
+      "outcome": "correct",
+      "severity": "ok"
+    },
+    {
+      "id": "amt-en-102",
+      "lang": "en",
+      "category": "amount",
+      "text": "5 thousand rupees",
+      "expected": {
+        "amount": 5000
+      },
+      "got": {
+        "amount": 5000
+      },
+      "outcome": "correct",
+      "severity": "ok"
+    },
+    {
+      "id": "amt-en-103",
+      "lang": "en",
+      "category": "amount",
+      "text": "₹5000",
+      "expected": {
+        "amount": 5000
+      },
+      "got": {
+        "amount": 5000
+      },
+      "outcome": "correct",
+      "severity": "ok"
+    },
+    {
+      "id": "amt-en-104",
+      "lang": "en",
+      "category": "amount",
+      "text": "transfer on 15-08-2024",
+      "expected": {
+        "amount": null
+      },
+      "got": {
+        "amount": null
+      },
+      "outcome": "correct",
+      "severity": "ok"
+    },
+    {
+      "id": "amt-en-105",
+      "lang": "en",
+      "category": "amount",
+      "text": "I am on step 2",
+      "expected": {
+        "amount": null
+      },
+      "got": {
+        "amount": null
+      },
+      "outcome": "correct",
+      "severity": "ok"
+    },
+    {
+      "id": "amt-en-106",
+      "lang": "en",
+      "category": "amount",
+      "text": "account number 1234567890",
+      "expected": {
+        "amount": null
+      },
+      "got": {
+        "amount": null
+      },
+      "outcome": "correct",
+      "severity": "ok"
+    },
+    {
+      "id": "amt-en-107",
+      "lang": "en",
+      "category": "amount",
+      "text": "deposit 5000 from my 20000 balance",
+      "expected": {
+        "amount": null
+      },
+      "got": {
+        "amount": null
+      },
+      "outcome": "correct",
+      "severity": "ok"
+    },
+    {
+      "id": "amt-en-108",
+      "lang": "en",
+      "category": "amount",
+      "text": "deposit thousand rupees",
+      "expected": {
+        "amount": null
+      },
+      "got": {
+        "amount": null
+      },
+      "outcome": "correct",
+      "severity": "ok"
+    },
+    {
+      "id": "amt-en-109",
+      "lang": "en",
+      "category": "amount",
+      "text": "500.50",
+      "expected": {
+        "amount": 500
+      },
+      "got": {
+        "amount": 500
+      },
+      "outcome": "correct",
+      "severity": "ok"
+    }
+  ]
+}

@@ -1,6 +1,6 @@
 import { act, renderHook, waitFor } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { useSpeechPlayback } from './useSpeechPlayback';
+import { useSpeechPlayback, type PlaybackOutcome } from './useSpeechPlayback';
 
 /**
  * jsdom has no media stack: object URLs do not exist and play() is not
@@ -78,7 +78,7 @@ describe('useSpeechPlayback', () => {
   it('returns to silence and releases the audio when playback ends', async () => {
     const { result } = renderHook(() => useSpeechPlayback());
 
-    let finished!: Promise<void>;
+    let finished!: Promise<PlaybackOutcome>;
     act(() => {
       finished = result.current.play(audio());
     });
@@ -90,17 +90,22 @@ describe('useSpeechPlayback', () => {
       await finished;
     });
 
+    await expect(finished).resolves.toBe('ended');
     expect(result.current.isSpeaking).toBe(false);
     // A URL that is never revoked keeps the audio alive for the life of
     // the page.
     expect(revoked).toEqual(created);
   });
 
-  it('treats an empty recording as nothing to play', async () => {
+  it('treats an empty recording as nothing to play -- not as heard', async () => {
     const { result } = renderHook(() => useSpeechPlayback());
 
-    await act(() => result.current.play(new Blob([], { type: 'audio/mpeg' })));
+    let outcome!: PlaybackOutcome;
+    await act(async () => {
+      outcome = await result.current.play(new Blob([], { type: 'audio/mpeg' }));
+    });
 
+    expect(outcome).toBe('failed');
     expect(result.current.isSpeaking).toBe(false);
     expect(created).toHaveLength(0);
   });
@@ -137,7 +142,7 @@ describe('useSpeechPlayback', () => {
     it('ignores a stopped clip finishing afterwards', async () => {
       const { result } = renderHook(() => useSpeechPlayback());
 
-      let finished!: Promise<void>;
+      let finished!: Promise<PlaybackOutcome>;
       act(() => {
         finished = result.current.play(audio());
       });
@@ -159,6 +164,83 @@ describe('useSpeechPlayback', () => {
       });
 
       expect(result.current.isSpeaking).toBe(true);
+      // Stopped is what it was; a late "ended" cannot rewrite that.
+      await expect(finished).resolves.toBe('stopped');
+    });
+
+    it('settles a stopped clip as stopped, without any late browser event', async () => {
+      const { result } = renderHook(() => useSpeechPlayback());
+
+      let finished!: Promise<PlaybackOutcome>;
+      act(() => {
+        finished = result.current.play(audio());
+      });
+      await waitFor(() => expect(result.current.isSpeaking).toBe(true));
+
+      act(() => result.current.stop());
+
+      // Before this contract, release() detached the handlers and this
+      // promise never settled at all.
+      await expect(finished).resolves.toBe('stopped');
+    });
+
+    it('settles a replaced clip as stopped, and the new one independently', async () => {
+      const { result } = renderHook(() => useSpeechPlayback());
+
+      let first!: Promise<PlaybackOutcome>;
+      let second!: Promise<PlaybackOutcome>;
+      act(() => {
+        first = result.current.play(audio());
+      });
+      await waitFor(() => expect(elements).toHaveLength(1));
+      act(() => {
+        second = result.current.play(audio());
+      });
+
+      await expect(first).resolves.toBe('stopped');
+
+      await act(async () => {
+        elements[1].onended?.(new Event('ended'));
+        await second;
+      });
+      await expect(second).resolves.toBe('ended');
+    });
+
+    it('settles once, however many events the browser fires', async () => {
+      const { result } = renderHook(() => useSpeechPlayback());
+
+      let finished!: Promise<PlaybackOutcome>;
+      const settled = vi.fn();
+      act(() => {
+        finished = result.current.play(audio());
+        void finished.then(settled);
+      });
+      await waitFor(() => expect(result.current.isSpeaking).toBe(true));
+
+      const { onended, onerror } = elements[0];
+      await act(async () => {
+        onended?.call(elements[0], new Event('ended'));
+        onerror?.call(elements[0], new Event('error'));
+        onended?.call(elements[0], new Event('ended'));
+        await finished;
+      });
+
+      await expect(finished).resolves.toBe('ended');
+      expect(settled).toHaveBeenCalledTimes(1);
+    });
+
+    it('settles a pending clip as stopped when the component goes away', async () => {
+      const { result, unmount } = renderHook(() => useSpeechPlayback());
+
+      let finished!: Promise<PlaybackOutcome>;
+      act(() => {
+        finished = result.current.play(audio());
+      });
+      await waitFor(() => expect(result.current.isSpeaking).toBe(true));
+
+      unmount();
+
+      await expect(finished).resolves.toBe('stopped');
     });
   });
 
@@ -169,9 +251,14 @@ describe('useSpeechPlayback', () => {
       const { result } = renderHook(() => useSpeechPlayback());
 
       // Autoplay refusal is the common case on iOS. The written reply is
-      // already on screen, so this must not become an error.
-      await act(() => result.current.play(audio()));
+      // already on screen, so this must not throw -- but it was not heard,
+      // so it must not report success either.
+      let outcome!: PlaybackOutcome;
+      await act(async () => {
+        outcome = await result.current.play(audio());
+      });
 
+      expect(outcome).toBe('failed');
       await waitFor(() => expect(result.current.isSpeaking).toBe(false));
       expect(revoked).toEqual(created);
     });
@@ -179,7 +266,7 @@ describe('useSpeechPlayback', () => {
     it('returns to a safe state when the audio cannot be decoded', async () => {
       const { result } = renderHook(() => useSpeechPlayback());
 
-      let finished!: Promise<void>;
+      let finished!: Promise<PlaybackOutcome>;
       act(() => {
         finished = result.current.play(audio());
       });
@@ -190,6 +277,7 @@ describe('useSpeechPlayback', () => {
         await finished;
       });
 
+      await expect(finished).resolves.toBe('failed');
       expect(result.current.isSpeaking).toBe(false);
       expect(revoked).toEqual(created);
     });

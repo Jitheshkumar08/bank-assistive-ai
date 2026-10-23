@@ -1,8 +1,11 @@
 import { api } from '@/api/client';
+import { ApiError } from '@/types/api';
 import type {
+  AssistanceOffer,
   AssistantClient,
   AssistantReply,
   AssistantRequest,
+  AssistantSnapshot,
   SpeechRequest,
   WorkflowState,
 } from '@/types/assistant';
@@ -26,6 +29,20 @@ interface AssistantResponseBody {
     totalSteps: number | null;
   } | null;
   ended?: boolean;
+}
+
+interface AssistantSnapshotBody {
+  known?: unknown;
+  ended?: unknown;
+  workflow?: AssistantResponseBody['workflow'];
+}
+
+interface AssistanceBody {
+  offered?: unknown;
+  reason?: unknown;
+  field?: unknown;
+  promptId?: unknown;
+  text?: unknown;
 }
 
 /**
@@ -79,6 +96,69 @@ export class HttpAssistantClient implements AssistantClient {
       ASSISTANT_TIMEOUT_MS,
       signal,
     );
+  }
+
+  /**
+   * Reads where the visit's conversation stands. The server changes nothing.
+   *
+   * Failures arrive as ApiError, as for every call: 409 while a turn is
+   * still running, 403 for a visit that is no longer the customer's, 502 /
+   * 504 when the assistant is unavailable. A body without an explicit
+   * `known` flag is refused rather than read as "no workflow".
+   */
+  async getSnapshot(sessionId: string, signal?: AbortSignal): Promise<AssistantSnapshot> {
+    const body = await api.get<AssistantSnapshotBody>(
+      `/assistant/sessions/${encodeURIComponent(sessionId)}/snapshot`,
+      signal,
+    );
+
+    if (!body || typeof body.known !== 'boolean') {
+      throw new ApiError('The assistant could not report its progress.', 502);
+    }
+
+    return {
+      known: body.known,
+      ended: body.ended === true,
+      // Unknown progress is never shown as a workflow, whatever came back.
+      workflow:
+        body.known && body.workflow
+          ? { ...body.workflow, state: toWorkflowState(body.workflow.state) }
+          : null,
+    };
+  }
+
+  /**
+   * Asks whether the customer, quiet on a step, should be offered help.
+   *
+   * Only the id of the last offer is sent, so the next one is worded
+   * differently. Failures arrive as ApiError, like every call; the caller
+   * treats them as "no offer" and never retries.
+   */
+  async requestAssistance(
+    sessionId: string,
+    avoid: string | null,
+    signal?: AbortSignal,
+  ): Promise<AssistanceOffer> {
+    const body = await api.post<AssistanceBody>(
+      `/assistant/sessions/${encodeURIComponent(sessionId)}/assistance`,
+      avoid ? { avoid } : {},
+      signal,
+    );
+
+    if (!body || typeof body.offered !== 'boolean') {
+      throw new ApiError('The assistant could not offer help right now.', 502);
+    }
+
+    const text = typeof body.text === 'string' && body.text.trim() ? body.text : null;
+
+    return {
+      // An offer with nothing to say is not an offer.
+      offered: body.offered && text !== null,
+      reason: typeof body.reason === 'string' ? body.reason : 'unknown',
+      field: typeof body.field === 'string' ? body.field : null,
+      promptId: typeof body.promptId === 'string' ? body.promptId : null,
+      text: body.offered ? text : null,
+    };
   }
 
   private voiceBody(sessionId: string, audio: Blob, mimeType: string): FormData {

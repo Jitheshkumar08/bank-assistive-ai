@@ -1,0 +1,2622 @@
+{
+  "meta": {
+    "fixtures_file": "evaluation/fixtures/m3_language_cues.json",
+    "fixtures_version": "m3_language_cues",
+    "fixtures_sha256": "9ab254b4242643bceeec864557c8ff10ea271b28ca379b5819f8b939ff830ee9",
+    "embedding_model": "paraphrase-multilingual-MiniLM-L12-v2",
+    "retrieval": true,
+    "python": "3.13.2",
+    "name": "m5_m3targets"
+  },
+  "summary": {
+    "total": 97,
+    "severity": {
+      "ok": 71,
+      "critical": 0,
+      "miss": 1,
+      "unscored": 25
+    },
+    "llm_gated": 25,
+    "headline": {
+      "Wrong-service routing (request started the wrong workflow)": 0,
+      "Question started a workflow": 0,
+      "Request or question swallowed by the control tier": 0,
+      "Wrong amount (a value, but not the spoken one)": 0,
+      "Invented amount (a value where none was spoken)": 0,
+      "Wrong control command": 0,
+      "Negated request raised a workflow conflict": 0,
+      "Wrong conflict choice": 0,
+      "Refusal started a workflow (resting state)": 0,
+      "Refusal raised a workflow conflict (mid-task)": 0,
+      "Ambiguous request started a workflow": 0
+    },
+    "abstentions": {
+      "Service request abstained (no workflow started)": 0,
+      "Question answered as a non-question (ack / control / refusal)": 0,
+      "Amount missed (no value)": 0,
+      "Control command missed (left to the LLM)": 1,
+      "Negation not detected": 0,
+      "Negation detected where there was none": 0,
+      "Conflict answer not understood (asked again)": 0
+    },
+    "by_lang": {
+      "en": {
+        "n": 4,
+        "ok": 4,
+        "critical": 0,
+        "miss": 0,
+        "unscored": 0
+      },
+      "kn": {
+        "n": 23,
+        "ok": 16,
+        "critical": 0,
+        "miss": 1,
+        "unscored": 6
+      },
+      "hi": {
+        "n": 18,
+        "ok": 13,
+        "critical": 0,
+        "miss": 0,
+        "unscored": 5
+      },
+      "kn-en": {
+        "n": 12,
+        "ok": 8,
+        "critical": 0,
+        "miss": 0,
+        "unscored": 4
+      },
+      "hi-en": {
+        "n": 11,
+        "ok": 7,
+        "critical": 0,
+        "miss": 0,
+        "unscored": 4
+      },
+      "rom-kn": {
+        "n": 12,
+        "ok": 9,
+        "critical": 0,
+        "miss": 0,
+        "unscored": 3
+      },
+      "rom-hi": {
+        "n": 17,
+        "ok": 14,
+        "critical": 0,
+        "miss": 0,
+        "unscored": 3
+      }
+    },
+    "by_category": {
+      "service_request": {
+        "n": 13,
+        "correct": 12,
+        "llm_gated": 1
+      },
+      "knowledge_question": {
+        "n": 24,
+        "llm_gated": 24
+      },
+      "control": {
+        "n": 24,
+        "correct": 23,
+        "missed_command": 1
+      },
+      "amount": {
+        "n": 0
+      },
+      "negation": {
+        "n": 9,
+        "correct": 9
+      },
+      "conflict_answer": {
+        "n": 8,
+        "correct": 8
+      },
+      "refusal": {
+        "n": 19,
+        "correct": 19
+      },
+      "ambiguous_request": {
+        "n": 0
+      }
+    },
+    "by_cell": {
+      "en|service_request": {
+        "n": 1,
+        "ok": 1,
+        "critical": 0,
+        "miss": 0,
+        "unscored": 0
+      },
+      "en|negation": {
+        "n": 1,
+        "ok": 1,
+        "critical": 0,
+        "miss": 0,
+        "unscored": 0
+      },
+      "en|refusal": {
+        "n": 2,
+        "ok": 2,
+        "critical": 0,
+        "miss": 0,
+        "unscored": 0
+      },
+      "kn|service_request": {
+        "n": 4,
+        "ok": 4,
+        "critical": 0,
+        "miss": 0,
+        "unscored": 0
+      },
+      "kn|knowledge_question": {
+        "n": 6,
+        "ok": 0,
+        "critical": 0,
+        "miss": 0,
+        "unscored": 6
+      },
+      "kn|control": {
+        "n": 4,
+        "ok": 3,
+        "critical": 0,
+        "miss": 1,
+        "unscored": 0
+      },
+      "kn|negation": {
+        "n": 3,
+        "ok": 3,
+        "critical": 0,
+        "miss": 0,
+        "unscored": 0
+      },
+      "kn|conflict_answer": {
+        "n": 1,
+        "ok": 1,
+        "critical": 0,
+        "miss": 0,
+        "unscored": 0
+      },
+      "kn|refusal": {
+        "n": 5,
+        "ok": 5,
+        "critical": 0,
+        "miss": 0,
+        "unscored": 0
+      },
+      "hi|service_request": {
+        "n": 3,
+        "ok": 2,
+        "critical": 0,
+        "miss": 0,
+        "unscored": 1
+      },
+      "hi|knowledge_question": {
+        "n": 4,
+        "ok": 0,
+        "critical": 0,
+        "miss": 0,
+        "unscored": 4
+      },
+      "hi|control": {
+        "n": 5,
+        "ok": 5,
+        "critical": 0,
+        "miss": 0,
+        "unscored": 0
+      },
+      "hi|negation": {
+        "n": 1,
+        "ok": 1,
+        "critical": 0,
+        "miss": 0,
+        "unscored": 0
+      },
+      "hi|conflict_answer": {
+        "n": 2,
+        "ok": 2,
+        "critical": 0,
+        "miss": 0,
+        "unscored": 0
+      },
+      "hi|refusal": {
+        "n": 3,
+        "ok": 3,
+        "critical": 0,
+        "miss": 0,
+        "unscored": 0
+      },
+      "kn-en|service_request": {
+        "n": 1,
+        "ok": 1,
+        "critical": 0,
+        "miss": 0,
+        "unscored": 0
+      },
+      "kn-en|knowledge_question": {
+        "n": 4,
+        "ok": 0,
+        "critical": 0,
+        "miss": 0,
+        "unscored": 4
+      },
+      "kn-en|control": {
+        "n": 3,
+        "ok": 3,
+        "critical": 0,
+        "miss": 0,
+        "unscored": 0
+      },
+      "kn-en|negation": {
+        "n": 1,
+        "ok": 1,
+        "critical": 0,
+        "miss": 0,
+        "unscored": 0
+      },
+      "kn-en|conflict_answer": {
+        "n": 1,
+        "ok": 1,
+        "critical": 0,
+        "miss": 0,
+        "unscored": 0
+      },
+      "kn-en|refusal": {
+        "n": 2,
+        "ok": 2,
+        "critical": 0,
+        "miss": 0,
+        "unscored": 0
+      },
+      "hi-en|service_request": {
+        "n": 1,
+        "ok": 1,
+        "critical": 0,
+        "miss": 0,
+        "unscored": 0
+      },
+      "hi-en|knowledge_question": {
+        "n": 4,
+        "ok": 0,
+        "critical": 0,
+        "miss": 0,
+        "unscored": 4
+      },
+      "hi-en|control": {
+        "n": 3,
+        "ok": 3,
+        "critical": 0,
+        "miss": 0,
+        "unscored": 0
+      },
+      "hi-en|negation": {
+        "n": 1,
+        "ok": 1,
+        "critical": 0,
+        "miss": 0,
+        "unscored": 0
+      },
+      "hi-en|refusal": {
+        "n": 2,
+        "ok": 2,
+        "critical": 0,
+        "miss": 0,
+        "unscored": 0
+      },
+      "rom-kn|service_request": {
+        "n": 1,
+        "ok": 1,
+        "critical": 0,
+        "miss": 0,
+        "unscored": 0
+      },
+      "rom-kn|knowledge_question": {
+        "n": 3,
+        "ok": 0,
+        "critical": 0,
+        "miss": 0,
+        "unscored": 3
+      },
+      "rom-kn|control": {
+        "n": 4,
+        "ok": 4,
+        "critical": 0,
+        "miss": 0,
+        "unscored": 0
+      },
+      "rom-kn|negation": {
+        "n": 1,
+        "ok": 1,
+        "critical": 0,
+        "miss": 0,
+        "unscored": 0
+      },
+      "rom-kn|conflict_answer": {
+        "n": 1,
+        "ok": 1,
+        "critical": 0,
+        "miss": 0,
+        "unscored": 0
+      },
+      "rom-kn|refusal": {
+        "n": 2,
+        "ok": 2,
+        "critical": 0,
+        "miss": 0,
+        "unscored": 0
+      },
+      "rom-hi|service_request": {
+        "n": 2,
+        "ok": 2,
+        "critical": 0,
+        "miss": 0,
+        "unscored": 0
+      },
+      "rom-hi|knowledge_question": {
+        "n": 3,
+        "ok": 0,
+        "critical": 0,
+        "miss": 0,
+        "unscored": 3
+      },
+      "rom-hi|control": {
+        "n": 5,
+        "ok": 5,
+        "critical": 0,
+        "miss": 0,
+        "unscored": 0
+      },
+      "rom-hi|negation": {
+        "n": 1,
+        "ok": 1,
+        "critical": 0,
+        "miss": 0,
+        "unscored": 0
+      },
+      "rom-hi|conflict_answer": {
+        "n": 3,
+        "ok": 3,
+        "critical": 0,
+        "miss": 0,
+        "unscored": 0
+      },
+      "rom-hi|refusal": {
+        "n": 3,
+        "ok": 3,
+        "critical": 0,
+        "miss": 0,
+        "unscored": 0
+      }
+    },
+    "detector_view": {
+      "en|service_request": {
+        "n": 1,
+        "correct": 1
+      },
+      "kn|service_request": {
+        "n": 4,
+        "correct": 4
+      },
+      "kn|knowledge_question": {
+        "n": 6,
+        "correct": 3,
+        "question_to_workflow": 2,
+        "wrong_non_banking": 1
+      },
+      "hi|service_request": {
+        "n": 3,
+        "correct": 3
+      },
+      "hi|knowledge_question": {
+        "n": 4,
+        "correct": 3,
+        "question_to_workflow": 1
+      },
+      "kn-en|service_request": {
+        "n": 1,
+        "correct": 1
+      },
+      "kn-en|knowledge_question": {
+        "n": 4,
+        "correct": 2,
+        "question_to_workflow": 2
+      },
+      "hi-en|service_request": {
+        "n": 1,
+        "correct": 1
+      },
+      "hi-en|knowledge_question": {
+        "n": 4,
+        "correct": 2,
+        "question_to_workflow": 2
+      },
+      "rom-kn|service_request": {
+        "n": 1,
+        "correct": 1
+      },
+      "rom-kn|knowledge_question": {
+        "n": 3,
+        "question_to_workflow": 3
+      },
+      "rom-hi|service_request": {
+        "n": 2,
+        "correct": 2
+      },
+      "rom-hi|knowledge_question": {
+        "n": 3,
+        "question_to_workflow": 3
+      }
+    },
+    "by_intent": {
+      "deposit money": {
+        "n": 3,
+        "correct": 3,
+        "wrong_to": {}
+      },
+      "withdraw money": {
+        "n": 3,
+        "correct": 2,
+        "llm_gated": 1,
+        "wrong_to": {}
+      },
+      "check account balance": {
+        "n": 6,
+        "correct": 6,
+        "wrong_to": {}
+      },
+      "apply for loan": {
+        "n": 1,
+        "correct": 1,
+        "wrong_to": {}
+      }
+    },
+    "retrieval": {
+      "kn": {
+        "n": 5,
+        "hit_at_2": 4
+      },
+      "hi": {
+        "n": 3,
+        "hit_at_2": 3
+      },
+      "kn-en": {
+        "n": 4,
+        "hit_at_2": 4
+      },
+      "hi-en": {
+        "n": 3,
+        "hit_at_2": 3
+      },
+      "rom-kn": {
+        "n": 3,
+        "hit_at_2": 3
+      },
+      "rom-hi": {
+        "n": 2,
+        "hit_at_2": 1
+      }
+    }
+  },
+  "limits": [
+    "The LLM (Groq gpt-oss-20b) is never called. Turns the question or control prefilter sends to it are counted as unscored, and the LLM's own amount extraction is not measured.",
+    "Speech recognition is not exercised: every fixture is text. Code-mixed ASR output is not measured.",
+    "Conflict detection is measured in isolation. In production it runs only after the LLM has classified a mid-workflow turn.",
+    "Reply language (localization, knowledge-answer language, TTS voice) is not scored in M0.",
+    "Fixtures are hand-authored and few per cell; Kannada and Hindi labels have not yet had a native-speaker review. Results show which behaviours fail, not how often customers hit them."
+  ],
+  "results": [
+    {
+      "id": "kq-kn-301",
+      "lang": "kn",
+      "category": "knowledge_question",
+      "text": "ಖಾತೆ ತೆರೆಯಲು ಏನು ಬೇಕು",
+      "expected": {
+        "route": "knowledge",
+        "sources": [
+          "account_opening_requirements.md",
+          "account_opening.md"
+        ]
+      },
+      "got": {
+        "stage": "llm_gate",
+        "control": null,
+        "detector_intent": "open new account",
+        "detector_category": "BANKING_INTENT",
+        "detector_is_banking": true,
+        "detector_margin": 0.098,
+        "refused": false
+      },
+      "detector_outcome": "question_to_workflow",
+      "retrieval": {
+        "top2": [
+          {
+            "source": "account_opening_requirements.md",
+            "score": 0.475
+          },
+          {
+            "source": "account_opening.md",
+            "score": 0.474
+          }
+        ],
+        "hit": true
+      },
+      "outcome": "llm_gated",
+      "severity": "unscored"
+    },
+    {
+      "id": "kq-kn-302",
+      "lang": "kn",
+      "category": "knowledge_question",
+      "text": "ಉಳಿತಾಯ ಖಾತೆ ತೆರೆಯಲು ಬೇಕಾದ ದಾಖಲೆಗಳು",
+      "expected": {
+        "route": "knowledge",
+        "sources": [
+          "account_opening_requirements.md",
+          "account_opening.md"
+        ]
+      },
+      "got": {
+        "stage": "llm_gate",
+        "control": null,
+        "detector_intent": "open new account",
+        "detector_category": "AMBIGUOUS_SERVICE",
+        "detector_is_banking": false,
+        "detector_margin": 0.036,
+        "refused": false
+      },
+      "detector_outcome": "wrong_non_banking",
+      "retrieval": {
+        "top2": [
+          {
+            "source": "savings_account.md",
+            "score": 0.37
+          },
+          {
+            "source": "current_account.md",
+            "score": 0.352
+          }
+        ],
+        "hit": false
+      },
+      "outcome": "llm_gated",
+      "severity": "unscored"
+    },
+    {
+      "id": "kq-kn-303",
+      "lang": "kn",
+      "category": "knowledge_question",
+      "text": "ಬ್ಯಾಂಕ್ ಯಾಕೆ ಬಡ್ಡಿ ಕೊಡುತ್ತದೆ",
+      "expected": {
+        "route": "knowledge",
+        "sources": null
+      },
+      "got": {
+        "stage": "llm_gate",
+        "control": null,
+        "detector_intent": "check account balance",
+        "detector_category": "KNOWLEDGE_QUESTION",
+        "detector_is_banking": false,
+        "detector_margin": -0.088,
+        "refused": false
+      },
+      "detector_outcome": "correct",
+      "outcome": "llm_gated",
+      "severity": "unscored"
+    },
+    {
+      "id": "kq-kn-304",
+      "lang": "kn",
+      "category": "knowledge_question",
+      "text": "ಠೇವಣಿ ಚೀಟಿ ಎಲ್ಲಿ ಸಿಗುತ್ತದೆ",
+      "expected": {
+        "route": "knowledge",
+        "sources": [
+          "deposit_slip.md"
+        ]
+      },
+      "got": {
+        "stage": "llm_gate",
+        "control": null,
+        "detector_intent": "check account balance",
+        "detector_category": "KNOWLEDGE_QUESTION",
+        "detector_is_banking": false,
+        "detector_margin": -0.036,
+        "refused": false
+      },
+      "detector_outcome": "correct",
+      "retrieval": {
+        "top2": [
+          {
+            "source": "passbook.md",
+            "score": 0.262
+          },
+          {
+            "source": "deposit_slip.md",
+            "score": 0.245
+          }
+        ],
+        "hit": true
+      },
+      "outcome": "llm_gated",
+      "severity": "unscored"
+    },
+    {
+      "id": "kq-kn-305",
+      "lang": "kn",
+      "category": "knowledge_question",
+      "text": "ಸಾಲದ ಬಡ್ಡಿ ದರ ಎಷ್ಟು",
+      "expected": {
+        "route": "knowledge",
+        "sources": [
+          "loan.md",
+          "loan_basics.md"
+        ]
+      },
+      "got": {
+        "stage": "llm_gate",
+        "control": null,
+        "detector_intent": "apply for loan",
+        "detector_category": "KNOWLEDGE_QUESTION",
+        "detector_is_banking": false,
+        "detector_margin": -0.046,
+        "refused": false
+      },
+      "detector_outcome": "correct",
+      "retrieval": {
+        "top2": [
+          {
+            "source": "loan_basics.md",
+            "score": 0.444
+          },
+          {
+            "source": "savings_account.md",
+            "score": 0.341
+          }
+        ],
+        "hit": true
+      },
+      "outcome": "llm_gated",
+      "severity": "unscored"
+    },
+    {
+      "id": "kq-kn-306",
+      "lang": "kn",
+      "category": "knowledge_question",
+      "text": "ಸಾಲದ ಬಗ್ಗೆ ಮಾಹಿತಿ ಬೇಕು",
+      "expected": {
+        "route": "knowledge",
+        "sources": [
+          "loan.md",
+          "loan_basics.md"
+        ]
+      },
+      "got": {
+        "stage": "llm_gate",
+        "control": null,
+        "detector_intent": "apply for loan",
+        "detector_category": "BANKING_INTENT",
+        "detector_is_banking": true,
+        "detector_margin": 0.052,
+        "refused": false
+      },
+      "detector_outcome": "question_to_workflow",
+      "retrieval": {
+        "top2": [
+          {
+            "source": "loan_basics.md",
+            "score": 0.318
+          },
+          {
+            "source": "deposit_slip.md",
+            "score": 0.309
+          }
+        ],
+        "hit": true
+      },
+      "outcome": "llm_gated",
+      "severity": "unscored"
+    },
+    {
+      "id": "kq-kn-en-301",
+      "lang": "kn-en",
+      "category": "knowledge_question",
+      "text": "ಹಣ ತೆಗೆಯಲು ಪಾಸ್‌ಬುಕ್ ಬೇಕಾ",
+      "expected": {
+        "route": "knowledge",
+        "sources": [
+          "passbook.md",
+          "withdrawal.md"
+        ]
+      },
+      "got": {
+        "stage": "llm_gate",
+        "control": null,
+        "detector_intent": "withdraw money",
+        "detector_category": "KNOWLEDGE_QUESTION",
+        "detector_is_banking": false,
+        "detector_margin": -0.034,
+        "refused": false
+      },
+      "detector_outcome": "correct",
+      "retrieval": {
+        "top2": [
+          {
+            "source": "passbook.md",
+            "score": 0.52
+          },
+          {
+            "source": "savings_account.md",
+            "score": 0.377
+          }
+        ],
+        "hit": true
+      },
+      "outcome": "llm_gated",
+      "severity": "unscored"
+    },
+    {
+      "id": "kq-kn-en-302",
+      "lang": "kn-en",
+      "category": "knowledge_question",
+      "text": "ಚೆಕ್ ಬುಕ್ ಪಡೆಯುವುದು ಹೇಗೆ",
+      "expected": {
+        "route": "knowledge",
+        "sources": [
+          "cheque_book.md"
+        ]
+      },
+      "got": {
+        "stage": "llm_gate",
+        "control": null,
+        "detector_intent": "check account balance",
+        "detector_category": "KNOWLEDGE_QUESTION",
+        "detector_is_banking": false,
+        "detector_margin": -0.211,
+        "refused": false
+      },
+      "detector_outcome": "correct",
+      "retrieval": {
+        "top2": [
+          {
+            "source": "cheque_book.md",
+            "score": 0.647
+          },
+          {
+            "source": "deposit.md",
+            "score": 0.311
+          }
+        ],
+        "hit": true
+      },
+      "outcome": "llm_gated",
+      "severity": "unscored"
+    },
+    {
+      "id": "kq-kn-en-303",
+      "lang": "kn-en",
+      "category": "knowledge_question",
+      "text": "account open ಮಾಡಲು ಏನು ಬೇಕು",
+      "expected": {
+        "route": "knowledge",
+        "sources": [
+          "account_opening_requirements.md",
+          "account_opening.md"
+        ]
+      },
+      "got": {
+        "stage": "llm_gate",
+        "control": null,
+        "detector_intent": "open new account",
+        "detector_category": "BANKING_INTENT",
+        "detector_is_banking": true,
+        "detector_margin": 0.141,
+        "refused": false
+      },
+      "detector_outcome": "question_to_workflow",
+      "retrieval": {
+        "top2": [
+          {
+            "source": "account_opening.md",
+            "score": 0.608
+          },
+          {
+            "source": "account_opening_requirements.md",
+            "score": 0.591
+          }
+        ],
+        "hit": true
+      },
+      "outcome": "llm_gated",
+      "severity": "unscored"
+    },
+    {
+      "id": "kq-kn-en-304",
+      "lang": "kn-en",
+      "category": "knowledge_question",
+      "text": "ಲೋನ್ ಇಂಟರೆಸ್ಟ್ ರೇಟ್ ಎಷ್ಟು",
+      "expected": {
+        "route": "knowledge",
+        "sources": [
+          "loan.md",
+          "loan_basics.md"
+        ]
+      },
+      "got": {
+        "stage": "llm_gate",
+        "control": null,
+        "detector_intent": "apply for loan",
+        "detector_category": "BANKING_INTENT",
+        "detector_is_banking": true,
+        "detector_margin": 0.1,
+        "refused": false
+      },
+      "detector_outcome": "question_to_workflow",
+      "retrieval": {
+        "top2": [
+          {
+            "source": "loan_basics.md",
+            "score": 0.571
+          },
+          {
+            "source": "loan.md",
+            "score": 0.398
+          }
+        ],
+        "hit": true
+      },
+      "outcome": "llm_gated",
+      "severity": "unscored"
+    },
+    {
+      "id": "kq-hi-301",
+      "lang": "hi",
+      "category": "knowledge_question",
+      "text": "बैंक ब्याज क्यों देता है",
+      "expected": {
+        "route": "knowledge",
+        "sources": null
+      },
+      "got": {
+        "stage": "llm_gate",
+        "control": null,
+        "detector_intent": "deposit money",
+        "detector_category": "KNOWLEDGE_QUESTION",
+        "detector_is_banking": false,
+        "detector_margin": -0.366,
+        "refused": false
+      },
+      "detector_outcome": "correct",
+      "outcome": "llm_gated",
+      "severity": "unscored"
+    },
+    {
+      "id": "kq-hi-302",
+      "lang": "hi",
+      "category": "knowledge_question",
+      "text": "जमा पर्ची कहाँ मिलेगी",
+      "expected": {
+        "route": "knowledge",
+        "sources": [
+          "deposit_slip.md"
+        ]
+      },
+      "got": {
+        "stage": "llm_gate",
+        "control": null,
+        "detector_intent": "deposit money",
+        "detector_category": "KNOWLEDGE_QUESTION",
+        "detector_is_banking": false,
+        "detector_margin": -0.027,
+        "refused": false
+      },
+      "detector_outcome": "correct",
+      "retrieval": {
+        "top2": [
+          {
+            "source": "banking_services.md",
+            "score": 0.233
+          },
+          {
+            "source": "deposit_slip.md",
+            "score": 0.162
+          }
+        ],
+        "hit": true
+      },
+      "outcome": "llm_gated",
+      "severity": "unscored"
+    },
+    {
+      "id": "kq-hi-303",
+      "lang": "hi",
+      "category": "knowledge_question",
+      "text": "खाता खोलने के लिए कौन से दस्तावेज़ चाहिए",
+      "expected": {
+        "route": "knowledge",
+        "sources": [
+          "account_opening_requirements.md",
+          "account_opening.md"
+        ]
+      },
+      "got": {
+        "stage": "llm_gate",
+        "control": null,
+        "detector_intent": "open new account",
+        "detector_category": "BANKING_INTENT",
+        "detector_is_banking": true,
+        "detector_margin": 0.162,
+        "refused": false
+      },
+      "detector_outcome": "question_to_workflow",
+      "retrieval": {
+        "top2": [
+          {
+            "source": "account_opening_requirements.md",
+            "score": 0.577
+          },
+          {
+            "source": "account_opening.md",
+            "score": 0.566
+          }
+        ],
+        "hit": true
+      },
+      "outcome": "llm_gated",
+      "severity": "unscored"
+    },
+    {
+      "id": "kq-hi-304",
+      "lang": "hi",
+      "category": "knowledge_question",
+      "text": "बचत खाते के बारे में जानकारी चाहिए",
+      "expected": {
+        "route": "knowledge",
+        "sources": [
+          "savings_account.md"
+        ]
+      },
+      "got": {
+        "stage": "llm_gate",
+        "control": null,
+        "detector_intent": "open new account",
+        "detector_category": "KNOWLEDGE_QUESTION",
+        "detector_is_banking": false,
+        "detector_margin": -0.06,
+        "refused": false
+      },
+      "detector_outcome": "correct",
+      "retrieval": {
+        "top2": [
+          {
+            "source": "savings_account.md",
+            "score": 0.632
+          },
+          {
+            "source": "current_account.md",
+            "score": 0.523
+          }
+        ],
+        "hit": true
+      },
+      "outcome": "llm_gated",
+      "severity": "unscored"
+    },
+    {
+      "id": "kq-hi-en-301",
+      "lang": "hi-en",
+      "category": "knowledge_question",
+      "text": "बै लेंस कैसे चेक करें",
+      "expected": {
+        "route": "knowledge",
+        "sources": null
+      },
+      "got": {
+        "stage": "llm_gate",
+        "control": null,
+        "detector_intent": "check account balance",
+        "detector_category": "BANKING_INTENT",
+        "detector_is_banking": true,
+        "detector_margin": 0.276,
+        "refused": false
+      },
+      "detector_outcome": "question_to_workflow",
+      "outcome": "llm_gated",
+      "severity": "unscored"
+    },
+    {
+      "id": "kq-hi-en-302",
+      "lang": "hi-en",
+      "category": "knowledge_question",
+      "text": "लोन की ब्याज दर कितनी है",
+      "expected": {
+        "route": "knowledge",
+        "sources": [
+          "loan.md",
+          "loan_basics.md"
+        ]
+      },
+      "got": {
+        "stage": "llm_gate",
+        "control": null,
+        "detector_intent": "apply for loan",
+        "detector_category": "KNOWLEDGE_QUESTION",
+        "detector_is_banking": false,
+        "detector_margin": -0.057,
+        "refused": false
+      },
+      "detector_outcome": "correct",
+      "retrieval": {
+        "top2": [
+          {
+            "source": "loan_basics.md",
+            "score": 0.561
+          },
+          {
+            "source": "loan.md",
+            "score": 0.375
+          }
+        ],
+        "hit": true
+      },
+      "outcome": "llm_gated",
+      "severity": "unscored"
+    },
+    {
+      "id": "kq-hi-en-303",
+      "lang": "hi-en",
+      "category": "knowledge_question",
+      "text": "पैसे निकालने के लिए पासबुक चाहिए क्या",
+      "expected": {
+        "route": "knowledge",
+        "sources": [
+          "passbook.md",
+          "withdrawal.md"
+        ]
+      },
+      "got": {
+        "stage": "llm_gate",
+        "control": null,
+        "detector_intent": "withdraw money",
+        "detector_category": "KNOWLEDGE_QUESTION",
+        "detector_is_banking": false,
+        "detector_margin": 0.024,
+        "refused": false
+      },
+      "detector_outcome": "correct",
+      "retrieval": {
+        "top2": [
+          {
+            "source": "passbook.md",
+            "score": 0.558
+          },
+          {
+            "source": "savings_account.md",
+            "score": 0.366
+          }
+        ],
+        "hit": true
+      },
+      "outcome": "llm_gated",
+      "severity": "unscored"
+    },
+    {
+      "id": "kq-hi-en-304",
+      "lang": "hi-en",
+      "category": "knowledge_question",
+      "text": "account open करने के लिए क्या चाहिए",
+      "expected": {
+        "route": "knowledge",
+        "sources": [
+          "account_opening_requirements.md",
+          "account_opening.md"
+        ]
+      },
+      "got": {
+        "stage": "llm_gate",
+        "control": null,
+        "detector_intent": "open new account",
+        "detector_category": "BANKING_INTENT",
+        "detector_is_banking": true,
+        "detector_margin": 0.157,
+        "refused": false
+      },
+      "detector_outcome": "question_to_workflow",
+      "retrieval": {
+        "top2": [
+          {
+            "source": "account_opening.md",
+            "score": 0.639
+          },
+          {
+            "source": "account_opening_requirements.md",
+            "score": 0.609
+          }
+        ],
+        "hit": true
+      },
+      "outcome": "llm_gated",
+      "severity": "unscored"
+    },
+    {
+      "id": "kq-rom-hi-301",
+      "lang": "rom-hi",
+      "category": "knowledge_question",
+      "text": "balance kaise check kare",
+      "expected": {
+        "route": "knowledge",
+        "sources": null
+      },
+      "got": {
+        "stage": "llm_gate",
+        "control": null,
+        "detector_intent": "check account balance",
+        "detector_category": "BANKING_INTENT",
+        "detector_is_banking": true,
+        "detector_margin": 0.136,
+        "refused": false
+      },
+      "detector_outcome": "question_to_workflow",
+      "outcome": "llm_gated",
+      "severity": "unscored"
+    },
+    {
+      "id": "kq-rom-hi-302",
+      "lang": "rom-hi",
+      "category": "knowledge_question",
+      "text": "loan ka interest kitna hai",
+      "expected": {
+        "route": "knowledge",
+        "sources": [
+          "loan.md",
+          "loan_basics.md"
+        ]
+      },
+      "got": {
+        "stage": "llm_gate",
+        "control": null,
+        "detector_intent": "apply for loan",
+        "detector_category": "BANKING_INTENT",
+        "detector_is_banking": true,
+        "detector_margin": 0.139,
+        "refused": false
+      },
+      "detector_outcome": "question_to_workflow",
+      "retrieval": {
+        "top2": [
+          {
+            "source": "loan_basics.md",
+            "score": 0.637
+          },
+          {
+            "source": "loan.md",
+            "score": 0.479
+          }
+        ],
+        "hit": true
+      },
+      "outcome": "llm_gated",
+      "severity": "unscored"
+    },
+    {
+      "id": "kq-rom-hi-303",
+      "lang": "rom-hi",
+      "category": "knowledge_question",
+      "text": "account kholne ke liye kya chahiye",
+      "expected": {
+        "route": "knowledge",
+        "sources": [
+          "account_opening_requirements.md",
+          "account_opening.md"
+        ]
+      },
+      "got": {
+        "stage": "llm_gate",
+        "control": null,
+        "detector_intent": "open new account",
+        "detector_category": "BANKING_INTENT",
+        "detector_is_banking": true,
+        "detector_margin": 0.3,
+        "refused": false
+      },
+      "detector_outcome": "question_to_workflow",
+      "retrieval": {
+        "top2": [
+          {
+            "source": "account_number.md",
+            "score": 0.306
+          },
+          {
+            "source": "savings_account.md",
+            "score": 0.296
+          }
+        ],
+        "hit": false
+      },
+      "outcome": "llm_gated",
+      "severity": "unscored"
+    },
+    {
+      "id": "kq-rom-kn-301",
+      "lang": "rom-kn",
+      "category": "knowledge_question",
+      "text": "account open madalu enu beku",
+      "expected": {
+        "route": "knowledge",
+        "sources": [
+          "account_opening_requirements.md",
+          "account_opening.md"
+        ]
+      },
+      "got": {
+        "stage": "llm_gate",
+        "control": null,
+        "detector_intent": "open new account",
+        "detector_category": "BANKING_INTENT",
+        "detector_is_banking": true,
+        "detector_margin": 0.201,
+        "refused": false
+      },
+      "detector_outcome": "question_to_workflow",
+      "retrieval": {
+        "top2": [
+          {
+            "source": "account_opening_requirements.md",
+            "score": 0.421
+          },
+          {
+            "source": "account_opening.md",
+            "score": 0.401
+          }
+        ],
+        "hit": true
+      },
+      "outcome": "llm_gated",
+      "severity": "unscored"
+    },
+    {
+      "id": "kq-rom-kn-302",
+      "lang": "rom-kn",
+      "category": "knowledge_question",
+      "text": "loan bagge mahiti beku",
+      "expected": {
+        "route": "knowledge",
+        "sources": [
+          "loan.md",
+          "loan_basics.md"
+        ]
+      },
+      "got": {
+        "stage": "llm_gate",
+        "control": null,
+        "detector_intent": "apply for loan",
+        "detector_category": "BANKING_INTENT",
+        "detector_is_banking": true,
+        "detector_margin": 0.201,
+        "refused": false
+      },
+      "detector_outcome": "question_to_workflow",
+      "retrieval": {
+        "top2": [
+          {
+            "source": "loan_basics.md",
+            "score": 0.503
+          },
+          {
+            "source": "loan.md",
+            "score": 0.399
+          }
+        ],
+        "hit": true
+      },
+      "outcome": "llm_gated",
+      "severity": "unscored"
+    },
+    {
+      "id": "kq-rom-kn-303",
+      "lang": "rom-kn",
+      "category": "knowledge_question",
+      "text": "deposit slip elli sigutte",
+      "expected": {
+        "route": "knowledge",
+        "sources": [
+          "deposit_slip.md"
+        ]
+      },
+      "got": {
+        "stage": "llm_gate",
+        "control": null,
+        "detector_intent": "deposit money",
+        "detector_category": "BANKING_INTENT",
+        "detector_is_banking": true,
+        "detector_margin": 0.054,
+        "refused": false
+      },
+      "detector_outcome": "question_to_workflow",
+      "retrieval": {
+        "top2": [
+          {
+            "source": "deposit_slip.md",
+            "score": 0.498
+          },
+          {
+            "source": "deposit.md",
+            "score": 0.492
+          }
+        ],
+        "hit": true
+      },
+      "outcome": "llm_gated",
+      "severity": "unscored"
+    },
+    {
+      "id": "svc-kn-301",
+      "lang": "kn",
+      "category": "service_request",
+      "text": "ನನಗೆ ಎಲ್ಲ ಹಣ ತೆಗೆಯಬೇಕು",
+      "expected": {
+        "intent": "withdraw money"
+      },
+      "got": {
+        "stage": "detector",
+        "control": null,
+        "detector_intent": "withdraw money",
+        "detector_category": "BANKING_INTENT",
+        "detector_is_banking": true,
+        "detector_margin": 0.194,
+        "refused": false
+      },
+      "detector_outcome": "correct",
+      "outcome": "correct",
+      "severity": "ok"
+    },
+    {
+      "id": "svc-kn-302",
+      "lang": "kn",
+      "category": "service_request",
+      "text": "ನನಗೆ ಇವತ್ತು ಹಣ ಜಮಾ ಮಾಡಬೇಕು",
+      "expected": {
+        "intent": "deposit money"
+      },
+      "got": {
+        "stage": "detector",
+        "control": null,
+        "detector_intent": "deposit money",
+        "detector_category": "BANKING_INTENT",
+        "detector_is_banking": true,
+        "detector_margin": 0.21,
+        "refused": false
+      },
+      "detector_outcome": "correct",
+      "outcome": "correct",
+      "severity": "ok"
+    },
+    {
+      "id": "svc-kn-303",
+      "lang": "kn",
+      "category": "service_request",
+      "text": "ನನ್ನ ಖಾತೆಯಲ್ಲಿ ಎಷ್ಟು ಹಣವಿದೆ",
+      "expected": {
+        "intent": "check account balance"
+      },
+      "got": {
+        "stage": "detector",
+        "control": null,
+        "detector_intent": "check account balance",
+        "detector_category": "BANKING_INTENT",
+        "detector_is_banking": true,
+        "detector_margin": 0.182,
+        "refused": false
+      },
+      "detector_outcome": "correct",
+      "outcome": "correct",
+      "severity": "ok"
+    },
+    {
+      "id": "svc-kn-304",
+      "lang": "kn",
+      "category": "service_request",
+      "text": "ನನಗೆ ಮನೆ ಕಟ್ಟಲು ಸಾಲ ಬೇಕು",
+      "expected": {
+        "intent": "apply for loan"
+      },
+      "got": {
+        "stage": "detector",
+        "control": null,
+        "detector_intent": "apply for loan",
+        "detector_category": "BANKING_INTENT",
+        "detector_is_banking": true,
+        "detector_margin": 0.171,
+        "refused": false
+      },
+      "detector_outcome": "correct",
+      "outcome": "correct",
+      "severity": "ok"
+    },
+    {
+      "id": "svc-kn-en-301",
+      "lang": "kn-en",
+      "category": "service_request",
+      "text": "ನನ್ನ ಬ್ಯಾಲೆನ್ಸ್ ಎಷ್ಟಿದೆ",
+      "expected": {
+        "intent": "check account balance"
+      },
+      "got": {
+        "stage": "detector",
+        "control": null,
+        "detector_intent": "check account balance",
+        "detector_category": "BANKING_INTENT",
+        "detector_is_banking": true,
+        "detector_margin": 0.212,
+        "refused": false
+      },
+      "detector_outcome": "correct",
+      "outcome": "correct",
+      "severity": "ok"
+    },
+    {
+      "id": "svc-hi-301",
+      "lang": "hi",
+      "category": "service_request",
+      "text": "मुझे आज पैसे जमा करने हैं",
+      "expected": {
+        "intent": "deposit money"
+      },
+      "got": {
+        "stage": "detector",
+        "control": null,
+        "detector_intent": "deposit money",
+        "detector_category": "BANKING_INTENT",
+        "detector_is_banking": true,
+        "detector_margin": 0.375,
+        "refused": false
+      },
+      "detector_outcome": "correct",
+      "outcome": "correct",
+      "severity": "ok"
+    },
+    {
+      "id": "svc-hi-302",
+      "lang": "hi",
+      "category": "service_request",
+      "text": "मेरे खाते में कितने पैसे हैं",
+      "expected": {
+        "intent": "check account balance"
+      },
+      "got": {
+        "stage": "detector",
+        "control": null,
+        "detector_intent": "check account balance",
+        "detector_category": "BANKING_INTENT",
+        "detector_is_banking": true,
+        "detector_margin": 0.346,
+        "refused": false
+      },
+      "detector_outcome": "correct",
+      "outcome": "correct",
+      "severity": "ok"
+    },
+    {
+      "id": "svc-hi-303",
+      "lang": "hi",
+      "category": "service_request",
+      "text": "क्या मैं पैसे निकाल सकता हूँ",
+      "expected": {
+        "intent": "withdraw money"
+      },
+      "got": {
+        "stage": "llm_gate",
+        "control": null,
+        "detector_intent": "withdraw money",
+        "detector_category": "BANKING_INTENT",
+        "detector_is_banking": true,
+        "detector_margin": 0.178,
+        "refused": false
+      },
+      "detector_outcome": "correct",
+      "outcome": "llm_gated",
+      "severity": "unscored"
+    },
+    {
+      "id": "svc-hi-en-301",
+      "lang": "hi-en",
+      "category": "service_request",
+      "text": "मेरा account balance बताओ",
+      "expected": {
+        "intent": "check account balance"
+      },
+      "got": {
+        "stage": "detector",
+        "control": null,
+        "detector_intent": "check account balance",
+        "detector_category": "BANKING_INTENT",
+        "detector_is_banking": true,
+        "detector_margin": 0.326,
+        "refused": false
+      },
+      "detector_outcome": "correct",
+      "outcome": "correct",
+      "severity": "ok"
+    },
+    {
+      "id": "svc-rom-hi-301",
+      "lang": "rom-hi",
+      "category": "service_request",
+      "text": "mera balance kitna hai",
+      "expected": {
+        "intent": "check account balance"
+      },
+      "got": {
+        "stage": "detector",
+        "control": null,
+        "detector_intent": "check account balance",
+        "detector_category": "BANKING_INTENT",
+        "detector_is_banking": true,
+        "detector_margin": 0.081,
+        "refused": false
+      },
+      "detector_outcome": "correct",
+      "outcome": "correct",
+      "severity": "ok"
+    },
+    {
+      "id": "svc-rom-hi-302",
+      "lang": "rom-hi",
+      "category": "service_request",
+      "text": "mujhe paise jama karne hain",
+      "expected": {
+        "intent": "deposit money"
+      },
+      "got": {
+        "stage": "detector",
+        "control": null,
+        "detector_intent": "deposit money",
+        "detector_category": "BANKING_INTENT",
+        "detector_is_banking": true,
+        "detector_margin": 0.362,
+        "refused": false
+      },
+      "detector_outcome": "correct",
+      "outcome": "correct",
+      "severity": "ok"
+    },
+    {
+      "id": "svc-rom-kn-301",
+      "lang": "rom-kn",
+      "category": "service_request",
+      "text": "nanna balance eshtu",
+      "expected": {
+        "intent": "check account balance"
+      },
+      "got": {
+        "stage": "detector",
+        "control": null,
+        "detector_intent": "check account balance",
+        "detector_category": "BANKING_INTENT",
+        "detector_is_banking": true,
+        "detector_margin": 0.244,
+        "refused": false
+      },
+      "detector_outcome": "correct",
+      "outcome": "correct",
+      "severity": "ok"
+    },
+    {
+      "id": "svc-en-301",
+      "lang": "en",
+      "category": "service_request",
+      "text": "I need to withdraw all my money",
+      "expected": {
+        "intent": "withdraw money"
+      },
+      "got": {
+        "stage": "detector",
+        "control": null,
+        "detector_intent": "withdraw money",
+        "detector_category": "BANKING_INTENT",
+        "detector_is_banking": true,
+        "detector_margin": 0.32,
+        "refused": false
+      },
+      "detector_outcome": "correct",
+      "outcome": "correct",
+      "severity": "ok"
+    },
+    {
+      "id": "ctl-kn-301",
+      "lang": "kn",
+      "category": "control",
+      "text": "ದಯವಿಟ್ಟು ಮತ್ತೆ ಹೇಳಿ",
+      "expected": {
+        "command": "repeat"
+      },
+      "got": {
+        "command": "repeat"
+      },
+      "outcome": "correct",
+      "severity": "ok"
+    },
+    {
+      "id": "ctl-kn-302",
+      "lang": "kn",
+      "category": "control",
+      "text": "ದಯವಿಟ್ಟು ಮುಂದುವರಿಸಿ",
+      "expected": {
+        "command": "resume"
+      },
+      "got": {
+        "command": "resume"
+      },
+      "outcome": "correct",
+      "severity": "ok"
+    },
+    {
+      "id": "ctl-kn-303",
+      "lang": "kn",
+      "category": "control",
+      "text": "ದಯವಿಟ್ಟು ಸ್ವಲ್ಪ ನಿಲ್ಲಿ",
+      "expected": {
+        "command": "pause"
+      },
+      "got": {
+        "command": "pause"
+      },
+      "outcome": "correct",
+      "severity": "ok"
+    },
+    {
+      "id": "ctl-kn-304",
+      "lang": "kn",
+      "category": "control",
+      "text": "ದಯವಿಟ್ಟು ನಿಲ್ಲಿಸಿ",
+      "expected": {
+        "command": "cancel"
+      },
+      "got": {
+        "command": null
+      },
+      "outcome": "missed_command",
+      "severity": "miss"
+    },
+    {
+      "id": "ctl-hi-301",
+      "lang": "hi",
+      "category": "control",
+      "text": "कृपया दोबारा बताइए",
+      "expected": {
+        "command": "repeat"
+      },
+      "got": {
+        "command": "repeat"
+      },
+      "outcome": "correct",
+      "severity": "ok"
+    },
+    {
+      "id": "ctl-hi-302",
+      "lang": "hi",
+      "category": "control",
+      "text": "कृपया जारी रखिए",
+      "expected": {
+        "command": "resume"
+      },
+      "got": {
+        "command": "resume"
+      },
+      "outcome": "correct",
+      "severity": "ok"
+    },
+    {
+      "id": "ctl-hi-303",
+      "lang": "hi",
+      "category": "control",
+      "text": "ज़रा रुकिए",
+      "expected": {
+        "command": "pause"
+      },
+      "got": {
+        "command": "pause"
+      },
+      "outcome": "correct",
+      "severity": "ok"
+    },
+    {
+      "id": "ctl-hi-304",
+      "lang": "hi",
+      "category": "control",
+      "text": "रुक जाओ",
+      "expected": {
+        "command": "pause"
+      },
+      "got": {
+        "command": "pause"
+      },
+      "outcome": "correct",
+      "severity": "ok"
+    },
+    {
+      "id": "ctl-hi-305",
+      "lang": "hi",
+      "category": "control",
+      "text": "थोड़ा रुकिए",
+      "expected": {
+        "command": "pause"
+      },
+      "got": {
+        "command": "pause"
+      },
+      "outcome": "correct",
+      "severity": "ok"
+    },
+    {
+      "id": "ctl-kn-en-301",
+      "lang": "kn-en",
+      "category": "control",
+      "text": "continue ಮಾಡಿ",
+      "expected": {
+        "command": "resume"
+      },
+      "got": {
+        "command": "resume"
+      },
+      "outcome": "correct",
+      "severity": "ok"
+    },
+    {
+      "id": "ctl-kn-en-302",
+      "lang": "kn-en",
+      "category": "control",
+      "text": "pause ಮಾಡಿ",
+      "expected": {
+        "command": "pause"
+      },
+      "got": {
+        "command": "pause"
+      },
+      "outcome": "correct",
+      "severity": "ok"
+    },
+    {
+      "id": "ctl-kn-en-303",
+      "lang": "kn-en",
+      "category": "control",
+      "text": "ದಯವಿಟ್ಟು repeat ಮಾಡಿ",
+      "expected": {
+        "command": "repeat"
+      },
+      "got": {
+        "command": "repeat"
+      },
+      "outcome": "correct",
+      "severity": "ok"
+    },
+    {
+      "id": "ctl-hi-en-301",
+      "lang": "hi-en",
+      "category": "control",
+      "text": "continue कीजिए",
+      "expected": {
+        "command": "resume"
+      },
+      "got": {
+        "command": "resume"
+      },
+      "outcome": "correct",
+      "severity": "ok"
+    },
+    {
+      "id": "ctl-hi-en-302",
+      "lang": "hi-en",
+      "category": "control",
+      "text": "pause करो",
+      "expected": {
+        "command": "pause"
+      },
+      "got": {
+        "command": "pause"
+      },
+      "outcome": "correct",
+      "severity": "ok"
+    },
+    {
+      "id": "ctl-hi-en-303",
+      "lang": "hi-en",
+      "category": "control",
+      "text": "कृपया repeat कीजिए",
+      "expected": {
+        "command": "repeat"
+      },
+      "got": {
+        "command": "repeat"
+      },
+      "outcome": "correct",
+      "severity": "ok"
+    },
+    {
+      "id": "ctl-rom-hi-301",
+      "lang": "rom-hi",
+      "category": "control",
+      "text": "ruk jao",
+      "expected": {
+        "command": "pause"
+      },
+      "got": {
+        "command": "pause"
+      },
+      "outcome": "correct",
+      "severity": "ok"
+    },
+    {
+      "id": "ctl-rom-hi-302",
+      "lang": "rom-hi",
+      "category": "control",
+      "text": "please ruko",
+      "expected": {
+        "command": "pause"
+      },
+      "got": {
+        "command": "pause"
+      },
+      "outcome": "correct",
+      "severity": "ok"
+    },
+    {
+      "id": "ctl-rom-hi-303",
+      "lang": "rom-hi",
+      "category": "control",
+      "text": "dobara batao",
+      "expected": {
+        "command": "repeat"
+      },
+      "got": {
+        "command": "repeat"
+      },
+      "outcome": "correct",
+      "severity": "ok"
+    },
+    {
+      "id": "ctl-rom-hi-304",
+      "lang": "rom-hi",
+      "category": "control",
+      "text": "continue karo",
+      "expected": {
+        "command": "resume"
+      },
+      "got": {
+        "command": "resume"
+      },
+      "outcome": "correct",
+      "severity": "ok"
+    },
+    {
+      "id": "ctl-rom-hi-305",
+      "lang": "rom-hi",
+      "category": "control",
+      "text": "thoda ruko",
+      "expected": {
+        "command": "pause"
+      },
+      "got": {
+        "command": "pause"
+      },
+      "outcome": "correct",
+      "severity": "ok"
+    },
+    {
+      "id": "ctl-rom-kn-301",
+      "lang": "rom-kn",
+      "category": "control",
+      "text": "swalpa nilli",
+      "expected": {
+        "command": "pause"
+      },
+      "got": {
+        "command": "pause"
+      },
+      "outcome": "correct",
+      "severity": "ok"
+    },
+    {
+      "id": "ctl-rom-kn-302",
+      "lang": "rom-kn",
+      "category": "control",
+      "text": "dayavittu matte heli",
+      "expected": {
+        "command": "repeat"
+      },
+      "got": {
+        "command": "repeat"
+      },
+      "outcome": "correct",
+      "severity": "ok"
+    },
+    {
+      "id": "ctl-rom-kn-303",
+      "lang": "rom-kn",
+      "category": "control",
+      "text": "continue maadi",
+      "expected": {
+        "command": "resume"
+      },
+      "got": {
+        "command": "resume"
+      },
+      "outcome": "correct",
+      "severity": "ok"
+    },
+    {
+      "id": "ctl-rom-kn-304",
+      "lang": "rom-kn",
+      "category": "control",
+      "text": "pause maadi",
+      "expected": {
+        "command": "pause"
+      },
+      "got": {
+        "command": "pause"
+      },
+      "outcome": "correct",
+      "severity": "ok"
+    },
+    {
+      "id": "ref-en-301",
+      "lang": "en",
+      "category": "refusal",
+      "text": "I don't want to withdraw money",
+      "expected": {
+        "starts_workflow": false
+      },
+      "got": {
+        "stage": "detector",
+        "control": null,
+        "detector_intent": "withdraw money",
+        "detector_is_banking": true,
+        "negated": true,
+        "refused": true,
+        "active_workflow": "deposit money",
+        "conflict_requested": null
+      },
+      "outcome": "correct",
+      "severity": "ok"
+    },
+    {
+      "id": "ref-en-302",
+      "lang": "en",
+      "category": "refusal",
+      "text": "I do not need a loan",
+      "expected": {
+        "starts_workflow": false
+      },
+      "got": {
+        "stage": "detector",
+        "control": null,
+        "detector_intent": "apply for loan",
+        "detector_is_banking": true,
+        "negated": true,
+        "refused": true,
+        "active_workflow": null,
+        "conflict_requested": null
+      },
+      "outcome": "correct",
+      "severity": "ok"
+    },
+    {
+      "id": "ref-kn-301",
+      "lang": "kn",
+      "category": "refusal",
+      "text": "ನನಗೆ ಹಣ ತೆಗೆಯುವುದು ಬೇಡ",
+      "expected": {
+        "starts_workflow": false
+      },
+      "got": {
+        "stage": "detector",
+        "control": null,
+        "detector_intent": "withdraw money",
+        "detector_is_banking": true,
+        "negated": true,
+        "refused": true,
+        "active_workflow": "deposit money",
+        "conflict_requested": null
+      },
+      "outcome": "correct",
+      "severity": "ok"
+    },
+    {
+      "id": "ref-kn-302",
+      "lang": "kn",
+      "category": "refusal",
+      "text": "ನನಗೆ ಸಾಲ ಬೇಡ",
+      "expected": {
+        "starts_workflow": false
+      },
+      "got": {
+        "stage": "detector",
+        "control": null,
+        "detector_intent": "apply for loan",
+        "detector_is_banking": true,
+        "negated": true,
+        "refused": true,
+        "active_workflow": "deposit money",
+        "conflict_requested": null
+      },
+      "outcome": "correct",
+      "severity": "ok"
+    },
+    {
+      "id": "ref-kn-303",
+      "lang": "kn",
+      "category": "refusal",
+      "text": "ನಾನು ಹಣ ತೆಗೆಯಲ್ಲ",
+      "expected": {
+        "starts_workflow": false
+      },
+      "got": {
+        "stage": "detector",
+        "control": null,
+        "detector_intent": "withdraw money",
+        "detector_is_banking": true,
+        "negated": true,
+        "refused": true,
+        "active_workflow": "deposit money",
+        "conflict_requested": null
+      },
+      "outcome": "correct",
+      "severity": "ok"
+    },
+    {
+      "id": "ref-kn-304",
+      "lang": "kn",
+      "category": "refusal",
+      "text": "ನನಗೆ ಹೊಸ ಖಾತೆ ಬೇಕಿಲ್ಲ",
+      "expected": {
+        "starts_workflow": false
+      },
+      "got": {
+        "stage": "detector",
+        "control": null,
+        "detector_intent": "open new account",
+        "detector_is_banking": true,
+        "negated": true,
+        "refused": true,
+        "active_workflow": "deposit money",
+        "conflict_requested": null
+      },
+      "outcome": "correct",
+      "severity": "ok"
+    },
+    {
+      "id": "ref-kn-305",
+      "lang": "kn",
+      "category": "refusal",
+      "text": "ಹಣ ತೆಗೆಯಬೇಡಿ",
+      "expected": {
+        "starts_workflow": false
+      },
+      "got": {
+        "stage": "detector",
+        "control": null,
+        "detector_intent": "withdraw money",
+        "detector_is_banking": true,
+        "negated": true,
+        "refused": true,
+        "active_workflow": null,
+        "conflict_requested": null
+      },
+      "outcome": "correct",
+      "severity": "ok"
+    },
+    {
+      "id": "ref-hi-301",
+      "lang": "hi",
+      "category": "refusal",
+      "text": "मुझे पैसे नहीं निकालने",
+      "expected": {
+        "starts_workflow": false
+      },
+      "got": {
+        "stage": "detector",
+        "control": null,
+        "detector_intent": "withdraw money",
+        "detector_is_banking": true,
+        "negated": true,
+        "refused": true,
+        "active_workflow": "deposit money",
+        "conflict_requested": null
+      },
+      "outcome": "correct",
+      "severity": "ok"
+    },
+    {
+      "id": "ref-hi-302",
+      "lang": "hi",
+      "category": "refusal",
+      "text": "मुझे नया खाता नहीं खोलना",
+      "expected": {
+        "starts_workflow": false
+      },
+      "got": {
+        "stage": "detector",
+        "control": null,
+        "detector_intent": "open new account",
+        "detector_is_banking": true,
+        "negated": true,
+        "refused": true,
+        "active_workflow": "deposit money",
+        "conflict_requested": null
+      },
+      "outcome": "correct",
+      "severity": "ok"
+    },
+    {
+      "id": "ref-hi-303",
+      "lang": "hi",
+      "category": "refusal",
+      "text": "पैसे मत निकालो",
+      "expected": {
+        "starts_workflow": false
+      },
+      "got": {
+        "stage": "detector",
+        "control": null,
+        "detector_intent": "withdraw money",
+        "detector_is_banking": true,
+        "negated": true,
+        "refused": true,
+        "active_workflow": null,
+        "conflict_requested": null
+      },
+      "outcome": "correct",
+      "severity": "ok"
+    },
+    {
+      "id": "ref-kn-en-301",
+      "lang": "kn-en",
+      "category": "refusal",
+      "text": "ನನಗೆ ಲೋನ್ ಬೇಡ",
+      "expected": {
+        "starts_workflow": false
+      },
+      "got": {
+        "stage": "detector",
+        "control": null,
+        "detector_intent": "apply for loan",
+        "detector_is_banking": true,
+        "negated": true,
+        "refused": true,
+        "active_workflow": "deposit money",
+        "conflict_requested": null
+      },
+      "outcome": "correct",
+      "severity": "ok"
+    },
+    {
+      "id": "ref-kn-en-302",
+      "lang": "kn-en",
+      "category": "refusal",
+      "text": "ನನಗೆ loan ಬೇಡ",
+      "expected": {
+        "starts_workflow": false
+      },
+      "got": {
+        "stage": "detector",
+        "control": null,
+        "detector_intent": "apply for loan",
+        "detector_is_banking": true,
+        "negated": true,
+        "refused": true,
+        "active_workflow": "deposit money",
+        "conflict_requested": null
+      },
+      "outcome": "correct",
+      "severity": "ok"
+    },
+    {
+      "id": "ref-hi-en-301",
+      "lang": "hi-en",
+      "category": "refusal",
+      "text": "मुझे लोन नहीं चाहिए",
+      "expected": {
+        "starts_workflow": false
+      },
+      "got": {
+        "stage": "detector",
+        "control": null,
+        "detector_intent": "apply for loan",
+        "detector_is_banking": true,
+        "negated": true,
+        "refused": true,
+        "active_workflow": "deposit money",
+        "conflict_requested": null
+      },
+      "outcome": "correct",
+      "severity": "ok"
+    },
+    {
+      "id": "ref-hi-en-302",
+      "lang": "hi-en",
+      "category": "refusal",
+      "text": "मुझे withdraw नहीं करना",
+      "expected": {
+        "starts_workflow": false
+      },
+      "got": {
+        "stage": "detector",
+        "control": null,
+        "detector_intent": "withdraw money",
+        "detector_is_banking": false,
+        "negated": true,
+        "refused": true,
+        "active_workflow": "deposit money",
+        "conflict_requested": null
+      },
+      "outcome": "correct",
+      "severity": "ok"
+    },
+    {
+      "id": "ref-rom-hi-301",
+      "lang": "rom-hi",
+      "category": "refusal",
+      "text": "mujhe loan nahi chahiye",
+      "expected": {
+        "starts_workflow": false
+      },
+      "got": {
+        "stage": "detector",
+        "control": null,
+        "detector_intent": "apply for loan",
+        "detector_is_banking": true,
+        "negated": true,
+        "refused": true,
+        "active_workflow": "deposit money",
+        "conflict_requested": null
+      },
+      "outcome": "correct",
+      "severity": "ok"
+    },
+    {
+      "id": "ref-rom-hi-302",
+      "lang": "rom-hi",
+      "category": "refusal",
+      "text": "paise mat nikalo",
+      "expected": {
+        "starts_workflow": false
+      },
+      "got": {
+        "stage": "detector",
+        "control": null,
+        "detector_intent": "withdraw money",
+        "detector_is_banking": true,
+        "negated": true,
+        "refused": true,
+        "active_workflow": "deposit money",
+        "conflict_requested": null
+      },
+      "outcome": "correct",
+      "severity": "ok"
+    },
+    {
+      "id": "ref-rom-hi-303",
+      "lang": "rom-hi",
+      "category": "refusal",
+      "text": "mujhe account nahi kholna",
+      "expected": {
+        "starts_workflow": false
+      },
+      "got": {
+        "stage": "detector",
+        "control": null,
+        "detector_intent": "open new account",
+        "detector_is_banking": true,
+        "negated": true,
+        "refused": true,
+        "active_workflow": null,
+        "conflict_requested": null
+      },
+      "outcome": "correct",
+      "severity": "ok"
+    },
+    {
+      "id": "ref-rom-kn-301",
+      "lang": "rom-kn",
+      "category": "refusal",
+      "text": "nanage loan beda",
+      "expected": {
+        "starts_workflow": false
+      },
+      "got": {
+        "stage": "detector",
+        "control": null,
+        "detector_intent": "apply for loan",
+        "detector_is_banking": true,
+        "negated": true,
+        "refused": true,
+        "active_workflow": "deposit money",
+        "conflict_requested": null
+      },
+      "outcome": "correct",
+      "severity": "ok"
+    },
+    {
+      "id": "ref-rom-kn-302",
+      "lang": "rom-kn",
+      "category": "refusal",
+      "text": "nanage hana tegeyodu beda",
+      "expected": {
+        "starts_workflow": false
+      },
+      "got": {
+        "stage": "detector",
+        "control": null,
+        "detector_intent": "withdraw money",
+        "detector_is_banking": false,
+        "negated": true,
+        "refused": true,
+        "active_workflow": "deposit money",
+        "conflict_requested": null
+      },
+      "outcome": "correct",
+      "severity": "ok"
+    },
+    {
+      "id": "neg-kn-301",
+      "lang": "kn",
+      "category": "negation",
+      "text": "ನನಗೆ ಎಲ್ಲ ಹಣ ತೆಗೆಯಬೇಕು",
+      "expected": {
+        "negated": false
+      },
+      "got": {
+        "negated": false,
+        "active_workflow": "deposit money",
+        "conflict_requested": "withdraw money"
+      },
+      "outcome": "correct",
+      "severity": "ok"
+    },
+    {
+      "id": "neg-kn-302",
+      "lang": "kn",
+      "category": "negation",
+      "text": "ನನಗೆ ಸಾಲ ಬೇಕು",
+      "expected": {
+        "negated": false
+      },
+      "got": {
+        "negated": false,
+        "active_workflow": "deposit money",
+        "conflict_requested": "apply for loan"
+      },
+      "outcome": "correct",
+      "severity": "ok"
+    },
+    {
+      "id": "neg-kn-303",
+      "lang": "kn",
+      "category": "negation",
+      "text": "ನನಗೆ ಸಾಲ ಬೇಕಿಲ್ಲ",
+      "expected": {
+        "negated": true
+      },
+      "got": {
+        "negated": true,
+        "active_workflow": "deposit money",
+        "conflict_requested": null
+      },
+      "outcome": "correct",
+      "severity": "ok"
+    },
+    {
+      "id": "neg-hi-301",
+      "lang": "hi",
+      "category": "negation",
+      "text": "नमस्ते मुझे पैसे निकालने हैं",
+      "expected": {
+        "negated": false
+      },
+      "got": {
+        "negated": false,
+        "active_workflow": "deposit money",
+        "conflict_requested": "withdraw money"
+      },
+      "outcome": "correct",
+      "severity": "ok"
+    },
+    {
+      "id": "neg-hi-en-301",
+      "lang": "hi-en",
+      "category": "negation",
+      "text": "मुझे लोन चाहिए",
+      "expected": {
+        "negated": false
+      },
+      "got": {
+        "negated": false,
+        "active_workflow": "deposit money",
+        "conflict_requested": "apply for loan"
+      },
+      "outcome": "correct",
+      "severity": "ok"
+    },
+    {
+      "id": "neg-rom-hi-301",
+      "lang": "rom-hi",
+      "category": "negation",
+      "text": "mujhe loan chahiye",
+      "expected": {
+        "negated": false
+      },
+      "got": {
+        "negated": false,
+        "active_workflow": "deposit money",
+        "conflict_requested": "apply for loan"
+      },
+      "outcome": "correct",
+      "severity": "ok"
+    },
+    {
+      "id": "neg-rom-kn-301",
+      "lang": "rom-kn",
+      "category": "negation",
+      "text": "nanage loan beku",
+      "expected": {
+        "negated": false
+      },
+      "got": {
+        "negated": false,
+        "active_workflow": "deposit money",
+        "conflict_requested": "apply for loan"
+      },
+      "outcome": "correct",
+      "severity": "ok"
+    },
+    {
+      "id": "neg-kn-en-301",
+      "lang": "kn-en",
+      "category": "negation",
+      "text": "ನನಗೆ ಲೋನ್ ಬೇಕು",
+      "expected": {
+        "negated": false
+      },
+      "got": {
+        "negated": false,
+        "active_workflow": "deposit money",
+        "conflict_requested": "apply for loan"
+      },
+      "outcome": "correct",
+      "severity": "ok"
+    },
+    {
+      "id": "neg-en-301",
+      "lang": "en",
+      "category": "negation",
+      "text": "I need a loan",
+      "expected": {
+        "negated": false
+      },
+      "got": {
+        "negated": false,
+        "active_workflow": "deposit money",
+        "conflict_requested": "apply for loan"
+      },
+      "outcome": "correct",
+      "severity": "ok"
+    },
+    {
+      "id": "cfa-hi-301",
+      "lang": "hi",
+      "category": "conflict_answer",
+      "text": "रुक जाओ",
+      "expected": {
+        "choice": "pause"
+      },
+      "got": {
+        "choice": "pause"
+      },
+      "outcome": "correct",
+      "severity": "ok"
+    },
+    {
+      "id": "cfa-hi-302",
+      "lang": "hi",
+      "category": "conflict_answer",
+      "text": "रद्द नहीं करना",
+      "expected": {
+        "choice": null
+      },
+      "got": {
+        "choice": null
+      },
+      "outcome": "correct",
+      "severity": "ok"
+    },
+    {
+      "id": "cfa-kn-301",
+      "lang": "kn",
+      "category": "conflict_answer",
+      "text": "ಸ್ವಲ್ಪ ನಿಲ್ಲಿ",
+      "expected": {
+        "choice": "pause"
+      },
+      "got": {
+        "choice": "pause"
+      },
+      "outcome": "correct",
+      "severity": "ok"
+    },
+    {
+      "id": "cfa-rom-hi-301",
+      "lang": "rom-hi",
+      "category": "conflict_answer",
+      "text": "ruk jao",
+      "expected": {
+        "choice": "pause"
+      },
+      "got": {
+        "choice": "pause"
+      },
+      "outcome": "correct",
+      "severity": "ok"
+    },
+    {
+      "id": "cfa-rom-hi-302",
+      "lang": "rom-hi",
+      "category": "conflict_answer",
+      "text": "cancel karo",
+      "expected": {
+        "choice": "cancel"
+      },
+      "got": {
+        "choice": "cancel"
+      },
+      "outcome": "correct",
+      "severity": "ok"
+    },
+    {
+      "id": "cfa-rom-hi-303",
+      "lang": "rom-hi",
+      "category": "conflict_answer",
+      "text": "cancel mat karo",
+      "expected": {
+        "choice": null
+      },
+      "got": {
+        "choice": null
+      },
+      "outcome": "correct",
+      "severity": "ok"
+    },
+    {
+      "id": "cfa-rom-kn-301",
+      "lang": "rom-kn",
+      "category": "conflict_answer",
+      "text": "nillisi",
+      "expected": {
+        "choice": "cancel"
+      },
+      "got": {
+        "choice": "cancel"
+      },
+      "outcome": "correct",
+      "severity": "ok"
+    },
+    {
+      "id": "cfa-kn-en-301",
+      "lang": "kn-en",
+      "category": "conflict_answer",
+      "text": "cancel ಮಾಡಬೇಡಿ",
+      "expected": {
+        "choice": null
+      },
+      "got": {
+        "choice": null
+      },
+      "outcome": "correct",
+      "severity": "ok"
+    }
+  ],
+  "compared_with": "m4_m3targets.json",
+  "changes": []
+}

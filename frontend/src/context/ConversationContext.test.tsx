@@ -284,3 +284,183 @@ describe('ConversationProvider', () => {
     });
   });
 });
+
+describe('ConversationProvider -- workflow and the end of a visit', () => {
+  const DEPOSIT_STEP_1 = {
+    reply: 'Please take a deposit slip.',
+    workflow: { name: 'deposit money', state: 'active', step: 1, totalSteps: 4 },
+    ended: false,
+  };
+
+  /** Lets a test swap the visit, as a new scan would. */
+  function renderWithSession(initial: SessionContextValue) {
+    let current = initial;
+
+    const view = renderHook(() => useConversation(), {
+      wrapper: ({ children }: { children: ReactNode }) => (
+        <SessionContext.Provider value={current}>
+          <ConversationProvider>{children}</ConversationProvider>
+        </SessionContext.Provider>
+      ),
+    });
+
+    return {
+      ...view,
+      switchTo(next: SessionContextValue) {
+        current = next;
+        view.rerender();
+      },
+    };
+  }
+
+  beforeEach(() => {
+    sendMessage.mockReset();
+  });
+
+  it('starts with no workflow and not ended', () => {
+    const { result } = render();
+
+    expect(result.current.workflow).toBeNull();
+    expect(result.current.ended).toBe(false);
+  });
+
+  it('takes the workflow from each reply', async () => {
+    sendMessage.mockResolvedValueOnce(DEPOSIT_STEP_1).mockResolvedValueOnce({
+      reply: 'Fill in your account number.',
+      workflow: { name: 'deposit money', state: 'active', step: 2, totalSteps: 4 },
+    });
+
+    const { result } = render();
+
+    await act(() => result.current.send('I want to deposit money'));
+    expect(result.current.workflow).toEqual(DEPOSIT_STEP_1.workflow);
+
+    await act(() => result.current.send('done'));
+    expect(result.current.workflow).toEqual({
+      name: 'deposit money',
+      state: 'active',
+      step: 2,
+      totalSteps: 4,
+    });
+  });
+
+  it('replaces the workflow when it completes, without ending the visit', async () => {
+    sendMessage.mockResolvedValueOnce(DEPOSIT_STEP_1).mockResolvedValueOnce({
+      reply: 'Workflow Completed.',
+      workflow: { name: 'deposit money', state: 'completed', step: 5, totalSteps: 4 },
+      ended: false,
+    });
+
+    const { result } = render();
+
+    await act(() => result.current.send('I want to deposit money'));
+    await act(() => result.current.send('submitted'));
+
+    expect(result.current.workflow?.state).toBe('completed');
+    // Completing a task never ends the visit.
+    expect(result.current.ended).toBe(false);
+  });
+
+  it('clears the workflow when a reply carries none', async () => {
+    sendMessage
+      .mockResolvedValueOnce(DEPOSIT_STEP_1)
+      .mockResolvedValueOnce({ reply: 'A cheque book is a set of cheques.' });
+
+    const { result } = render();
+
+    await act(() => result.current.send('I want to deposit money'));
+    await act(() => result.current.send('what is a cheque book'));
+
+    expect(result.current.workflow).toBeNull();
+  });
+
+  it('keeps the last known workflow when a turn fails', async () => {
+    sendMessage
+      .mockResolvedValueOnce(DEPOSIT_STEP_1)
+      .mockRejectedValueOnce(new ApiError('The assistant is temporarily unavailable.', 502));
+
+    const { result } = render();
+
+    await act(() => result.current.send('I want to deposit money'));
+    await act(() => result.current.send('next'));
+
+    expect(result.current.workflow).toEqual(DEPOSIT_STEP_1.workflow);
+    expect(result.current.ended).toBe(false);
+  });
+
+  it('marks the conversation ended and keeps the goodbye', async () => {
+    sendMessage.mockResolvedValueOnce({
+      reply: 'Thank you for using the banking assistant.',
+      workflow: { name: null, state: 'none', step: null, totalSteps: null },
+      ended: true,
+    });
+
+    const { result } = render();
+
+    await act(() => result.current.send('exit'));
+
+    expect(result.current.ended).toBe(true);
+    expect(result.current.messages.at(-1)?.content).toBe(
+      'Thank you for using the banking assistant.',
+    );
+  });
+
+  it('accepts nothing more once ended, typed or spoken', async () => {
+    sendMessage.mockResolvedValueOnce({ reply: 'Goodbye.', ended: true });
+
+    const { result } = render();
+
+    await act(() => result.current.send('exit'));
+    sendMessage.mockClear();
+
+    let typed: string | null = 'unset';
+    let spoken: string | null = 'unset';
+
+    await act(async () => {
+      typed = await result.current.send('one more thing');
+      spoken = await result.current.sendVoice(audio(), 'audio/webm');
+    });
+
+    expect(typed).toBeNull();
+    expect(spoken).toBeNull();
+    expect(sendMessage).not.toHaveBeenCalled();
+    expect(result.current.messages).toHaveLength(2);
+  });
+
+  it('starts afresh for a new visit', async () => {
+    sendMessage.mockResolvedValueOnce({ reply: 'Goodbye.', ended: true });
+
+    const { result, switchTo } = renderWithSession(session);
+
+    await act(() => result.current.send('exit'));
+    expect(result.current.ended).toBe(true);
+
+    switchTo({ ...session, session: { ...SESSION, id: 'sess-2' } });
+
+    expect(result.current.ended).toBe(false);
+    expect(result.current.workflow).toBeNull();
+    expect(result.current.messages).toEqual([]);
+
+    sendMessage.mockResolvedValueOnce({ reply: 'Hello again.' });
+    await act(() => result.current.send('hello'));
+
+    expect((sendMessage.mock.calls.at(-1)?.[0] as AssistantRequest).sessionId).toBe('sess-2');
+  });
+
+  it('keeps the conversation when the same visit is re-scanned', async () => {
+    sendMessage.mockResolvedValueOnce(DEPOSIT_STEP_1);
+
+    const { result, switchTo } = renderWithSession(session);
+
+    await act(() => result.current.send('I want to deposit money'));
+
+    // Same id, new branch: the visit moved, it did not restart.
+    switchTo({
+      ...session,
+      session: { ...SESSION, branch: { ...SESSION.branch, code: 'BR002' } },
+    });
+
+    expect(result.current.messages).toHaveLength(2);
+    expect(result.current.workflow).toEqual(DEPOSIT_STEP_1.workflow);
+  });
+});

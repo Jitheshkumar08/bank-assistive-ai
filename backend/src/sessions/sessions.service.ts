@@ -1,5 +1,6 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { SessionStatus } from '@prisma/client';
+import { AiEngineClient } from '../assistant/engine/ai-engine.client';
 import { PrismaService } from '../prisma/prisma.service';
 import { ContextService } from '../context/context.service';
 import { CreateSessionDto } from './dto/create-session.dto';
@@ -27,9 +28,12 @@ const SESSION_VIEW = {
 
 @Injectable()
 export class SessionsService {
+  private readonly logger = new Logger(SessionsService.name);
+
   constructor(
     private readonly prisma: PrismaService,
     private readonly contextService: ContextService,
+    private readonly engine: AiEngineClient,
   ) {}
 
   /**
@@ -108,6 +112,11 @@ export class SessionsService {
     }
 
     if (session.status === SessionStatus.ENDED) {
+      // Repeating the end is how a customer retries after the engine
+      // could not be reached the first time, so the engine is told again.
+      // Releasing an already released conversation is a no-op there.
+      await this.releaseConversation(session.id);
+
       return this.prisma.session.findUniqueOrThrow({
         where: { id: session.id },
         select: SESSION_VIEW,
@@ -117,7 +126,7 @@ export class SessionsService {
     // Clearing activeUserId is what frees the unique slot, so the next
     // scan can open a fresh visit. Ending a visit and releasing the slot
     // must happen together or not at all.
-    return this.prisma.session.update({
+    const ended = await this.prisma.session.update({
       where: { id: session.id },
       data: {
         status: SessionStatus.ENDED,
@@ -126,5 +135,32 @@ export class SessionsService {
       },
       select: SESSION_VIEW,
     });
+
+    // After the database, never before: the visit is over once its row
+    // says so, whatever the engine does next.
+    await this.releaseConversation(session.id);
+
+    return ended;
+  }
+
+  /**
+   * Tells the engine to drop the visit's conversation.
+   *
+   * Best effort by design. The database is the record of whether a visit
+   * is open; the engine only holds a cache of the conversation. A failure
+   * here must not undo or block an end that has already been recorded,
+   * and an engine that missed this purges the conversation once it has
+   * been idle long enough.
+   */
+  private async releaseConversation(sessionId: string): Promise<void> {
+    try {
+      await this.engine.endSession(sessionId);
+    } catch (error) {
+      this.logger.warn(
+        `Engine conversation not released for an ended session: ${
+          error instanceof Error ? error.name : 'unknown'
+        }`,
+      );
+    }
   }
 }

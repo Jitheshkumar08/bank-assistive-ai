@@ -25,7 +25,9 @@ from typing import Optional
 
 from app.conversation.manager import ConversationManager
 from app.conversation.state import SessionState
+from app.dialogue.localization import ResponseLocalizer
 from app.dialogue.manager import DialogueManager
+from app.dialogue.text_normalization import normalize_turn
 from app.intent.detector import IntentDetector
 from app.pipeline.voice_pipeline import VoiceAssistantPipeline
 from app.speech.stt import SpeechToText
@@ -35,10 +37,21 @@ class TranscriptionError(RuntimeError):
     """Raised when audio could not be turned into text."""
 
 
+#: Said when the customer leaves, and to anything said after that.
+FAREWELL = "Thank you for using the banking assistant."
+
+
 @dataclass
 class TurnResult:
+    #: What the customer is shown and hears: the reply rendered in the
+    #: session's language.
     reply: str
     ended: bool = False
+    #: The same reply in canonical English, before rendering -- which is
+    #: also exactly what went into conversation history. Carried so the
+    #: distinction the output boundary depends on is visible to callers
+    #: and assertable by tests, rather than implied.
+    canonical_reply: Optional[str] = None
 
 
 class _TurnHost:
@@ -71,7 +84,25 @@ class EngineRuntime:
         # Constructing them per request would make every turn unusable.
         self.stt = SpeechToText()
         self.intent_detector = IntentDetector()
-        self.dialogue = DialogueManager()
+
+        # THE SAME detector, injected -- not a second one (Phase
+        # 3.2B-16A).
+        #
+        # DialogueManager needs a detector to answer one question:
+        # "is this turn a request for a DIFFERENT banking service than
+        # the one in progress?" Without it, _detect_workflow_conflict()
+        # returns None by design and the whole of Phase 3.2B-14 is dark.
+        # That is exactly what had happened here: VoiceAssistantPipeline
+        # passed `intent_detector=` and this constructor did not, so a
+        # customer mid-deposit who asked to withdraw heard the deposit
+        # step restated -- the defect 3.2B-14 was written to fix, still
+        # live on the web path only.
+        #
+        # Injected rather than constructed for the same reason the CLI
+        # injects it: this engine has exactly one intent classifier, and
+        # a second would double the start-up cost and the memory while
+        # adding nothing.
+        self.dialogue = DialogueManager(intent_detector=self.intent_detector)
 
     # -----------------------------------------------------------------
     # Speech to text
@@ -123,19 +154,109 @@ class EngineRuntime:
     # One conversational turn
     # -----------------------------------------------------------------
 
-    def run_turn(self, conversation: ConversationManager, user_text: str) -> TurnResult:
+    @staticmethod
+    def _render(
+        localizer: Optional[ResponseLocalizer],
+        reply: str,
+        *,
+        remember: bool,
+    ) -> str:
+        """
+        The single output boundary, mirroring the CLI's.
+
+        `remember` is True only for a reply that was also written to
+        conversation history, so the localizer's remembered canonical
+        reply and the history never disagree about what the assistant
+        last said.
+
+        No localizer -- an older caller, or a test -- means English out,
+        exactly as before this phase.
+        """
+        if localizer is None:
+            return reply
+
+        return localizer.render(reply, remember=remember)
+
+    @staticmethod
+    def has_exited(conversation: ConversationManager) -> bool:
+        """Whether the customer has ended this conversation ("exit", "bye")."""
+        return getattr(conversation, "session_state", None) == SessionState.EXITED
+
+    def _farewell(self, localizer: Optional[ResponseLocalizer]) -> TurnResult:
+        """The reply to an exit, and to every turn after one. Never remembered."""
+        return TurnResult(
+            reply=self._render(localizer, FAREWELL, remember=False),
+            ended=True,
+            canonical_reply=FAREWELL,
+        )
+
+    def run_turn(
+        self,
+        conversation: ConversationManager,
+        user_text: str,
+        localizer: Optional[ResponseLocalizer] = None,
+    ) -> TurnResult:
         """
         Mirrors one iteration of the engine's own conversation loop.
 
         The sequence is the CLI's, minus the terminal input and output:
-        classify control commands first, record the turn in history, then
-        let the engine decide the reply. Voice and text both arrive here,
-        which is what makes them one pipeline rather than two.
-        """
-        text = (user_text or "").strip()
+        normalize the transcript, classify control commands, record the
+        turn in history, let the engine decide the reply, then render it
+        in the session's language on the way out. Voice and text both
+        arrive here, which is what makes them one pipeline rather than
+        two.
 
-        if not text:
-            return TurnResult(reply="I did not catch that. Could you say it again?")
+        `localizer` is per-session and optional. It is per-session
+        because ResponseLocalizer holds the session's LANGUAGE -- one
+        shared instance would render a Kannada customer's reply in
+        whichever language the previous request happened to use -- and
+        because it remembers the last canonical reply for replay. It is
+        optional so every existing caller keeps working unchanged, in
+        which case nothing is rendered and the reply stays English.
+
+        WHY THIS METHOD KEEPS DRIFTING FROM THE CLI, AND WHAT FIXES IT
+        -------------------------------------------------------------
+        The per-turn ROUTING is shared -- `_respond` below is the
+        engine's own method, not a copy -- but the steps AROUND it were
+        hand-written here and fell behind three times over
+        (normalization, the injected detector, rendering). The parity
+        suite in debugging/test_service_turn.py exists to catch the
+        fourth: it asserts this sequence against the CLI's, rather than
+        asserting any one of the three fixes in isolation.
+        """
+        # A conversation the customer has left takes no further turns.
+        # Checked before anything else -- an empty turn, a control, a
+        # banking request -- so nothing after an exit can reach routing,
+        # history or the workflow: every later turn gets the same
+        # farewell and ended=True, exactly as the exit turn itself did.
+        if self.has_exited(conversation):
+            return self._farewell(localizer)
+
+        raw_text = (user_text or "").strip()
+
+        if not raw_text:
+            # Never recorded in history, so never remembered.
+            return TurnResult(
+                reply=self._render(
+                    localizer,
+                    "I did not catch that. Could you say it again?",
+                    remember=False,
+                ),
+                canonical_reply="I did not catch that. Could you say it again?",
+            )
+
+        # Normalisation, exactly where the CLI applies it: after
+        # transcription, before ANY routing decision. Since M5 one call
+        # produces all three representations (text_normalization): the
+        # ORIGINAL, the NORMALIZED spelling, and the ROUTING text --
+        # mis-heard banking terms repaired ("Chuck Book" -> "cheque book")
+        # and loanwords written in English (ಲೋನ್ / लोन -> loan).
+        #
+        # The ORIGINAL is what goes into history below, keeping debugging
+        # honest about what was actually heard. Only the routing path sees
+        # the routing text.
+        turn = normalize_turn(raw_text)
+        text = turn.routing
 
         # Deterministic and LLM-free, so leaving a session still works
         # even while the language model is failing.
@@ -143,13 +264,14 @@ class EngineRuntime:
 
         if control == "session_exit":
             conversation.update_session_state(SessionState.EXITED)
-            return TurnResult(
-                reply="Thank you for using the banking assistant.",
-                ended=True,
-            )
+
+            # Like the CLI, an exit turn is not recorded: the loop ends
+            # before history is touched. Not recorded means not
+            # remembered.
+            return self._farewell(localizer)
 
         conversation.update_session_state(SessionState.PROCESSING)
-        conversation.add_history("User", text)
+        conversation.add_history("User", raw_text)
 
         host = _TurnHost(conversation, self.dialogue, self.intent_detector)
 
@@ -161,17 +283,31 @@ class EngineRuntime:
             # conversation object is untouched, so the next turn resumes
             # exactly where this one left off.
             conversation.update_session_state(SessionState.READY)
-            return TurnResult(
-                reply=(
-                    "Sorry, I hit a temporary problem handling that. "
-                    "Your request is still saved -- please say that again."
-                ),
+
+            apology = (
+                "Sorry, I hit a temporary problem handling that. "
+                "Your request is still saved -- please say that again."
             )
 
+            return TurnResult(
+                reply=self._render(localizer, apology, remember=False),
+                canonical_reply=apology,
+            )
+
+        # CANONICAL ENGLISH goes into history, always.
+        #
+        # History is what dialogue understanding is later given as
+        # context, and what `repeat` replays through
+        # _last_assistant_message(). Storing the rendered reply would put
+        # Kannada into the English prompt and make a replay return text
+        # that was never the assistant's own wording.
         conversation.add_history("Assistant", reply)
         conversation.update_session_state(SessionState.READY)
 
-        return TurnResult(reply=reply)
+        return TurnResult(
+            reply=self._render(localizer, reply, remember=True),
+            canonical_reply=reply,
+        )
 
 
 _runtime: Optional[EngineRuntime] = None

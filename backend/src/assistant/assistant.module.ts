@@ -2,18 +2,12 @@ import { Module } from '@nestjs/common';
 import { SessionsModule } from '../sessions/sessions.module';
 import { AssistantController } from './assistant.controller';
 import { AssistantService } from './assistant.service';
-import { AiEngineClient } from './engine/ai-engine.client';
-import { HttpAiEngineClient } from './engine/http-ai-engine.client';
+import { EngineModule } from './engine/engine.module';
 
 @Module({
-  imports: [SessionsModule],
+  imports: [SessionsModule, EngineModule],
   controllers: [AssistantController],
-  providers: [
-    AssistantService,
-    // The single swap point on this side of the boundary. Tests provide
-    // their own implementation of the same abstract class.
-    { provide: AiEngineClient, useClass: HttpAiEngineClient },
-  ],
+  providers: [AssistantService],
   exports: [AssistantService],
 })
 export class AssistantModule {}

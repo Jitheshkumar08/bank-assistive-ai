@@ -1182,6 +1182,11 @@ def test_n_control_behaviour_unchanged():
           conversation.current_step == 2, str(conversation.current_step))
 
     reply = dialogue.handle_control_command(conversation, "cancel")
+    check("cancel now asks first, leaving the request untouched",
+          conversation.workflow_state == WorkflowState.ACTIVE
+          and reply.startswith("Do you want to cancel the deposit?"), reply)
+
+    reply = dialogue.handle_control_command(conversation, "cancel")   # confirmed
     check("cancel still cancels",
           conversation.workflow_state == WorkflowState.CANCELLED)
     check("cancel still confirms the cancellation",

@@ -594,6 +594,7 @@ def test_completion_contract():
     fake.set("control", "cancel", step_completed=True)
 
     dialogue.generate_response(conversation, "I filled it, actually cancel")
+    dialogue.handle_control_command(conversation, "cancel")   # cancel is confirmed first
 
     check("[F] cancel outranks completion",
           conversation.workflow_state is WorkflowState.CANCELLED,

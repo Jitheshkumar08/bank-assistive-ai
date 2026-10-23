@@ -834,6 +834,7 @@ def test_control_still_outranks_completion():
     fake.set("control", "cancel", step_completed=True)
 
     dialogue.generate_response(conversation, "I filled it, actually cancel")
+    dialogue.handle_control_command(conversation, "cancel")   # cancel is confirmed first
 
     check(
         "[8] cancel outranks completion",

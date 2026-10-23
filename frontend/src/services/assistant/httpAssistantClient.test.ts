@@ -174,7 +174,9 @@ describe('HttpAssistantClient', () => {
 
   describe('speaking a reply', () => {
     it('fetches audio from the speak endpoint', async () => {
-      const audio = new Blob([new Uint8Array(512)], { type: 'audio/mpeg' });
+      // Bytes, not a Blob: jsdom's Blob has no stream(), which Node's
+      // Response needs when handed one.
+      const audio = new Uint8Array(512);
       const fetchMock = vi
         .fn()
         .mockResolvedValue(new Response(audio, { status: 200, headers: { 'Content-Type': 'audio/mpeg' } }));
@@ -185,14 +187,18 @@ describe('HttpAssistantClient', () => {
       const [url, init] = fetchMock.mock.calls[0];
       expect(url).toMatch(/\/assistant\/speak$/);
       expect(JSON.parse(init.body)).toEqual({ sessionId: 'sess-1', text: 'Please take a slip.' });
-      expect(result).toBeInstanceOf(Blob);
-      expect(result.size).toBeGreaterThan(0);
+      // Not toBeInstanceOf(Blob): response.blob() returns Node's Blob while
+      // jsdom replaces the global one, so the two never match here. In a
+      // browser there is only one.
+      expect(Object.prototype.toString.call(result)).toBe('[object Blob]');
+      expect(result.size).toBe(512);
+      expect(result.type).toBe('audio/mpeg');
     });
 
     it('never sends a language of its own', async () => {
       const fetchMock = vi
         .fn()
-        .mockResolvedValue(new Response(new Blob(['x']), { status: 200 }));
+        .mockResolvedValue(new Response(new Uint8Array([1]), { status: 200 }));
       vi.stubGlobal('fetch', fetchMock);
 
       await client.speak({ sessionId: 'sess-1', text: 'hello' });

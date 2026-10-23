@@ -2,6 +2,7 @@ import os
 import json
 from groq import Groq
 from app.knowledge.retriever import KnowledgeRetriever
+from app.dialogue.llm.answer_language import answer_language_rules, answer_language_system_note
 from app.dialogue.side_question_context import (
     format_recent_context,
     retrieval_query,
@@ -892,7 +893,8 @@ Return only the structured result required by the schema.
         question,
         workflow_context,
         current_instruction,
-        recent_context=None
+        recent_context=None,
+        response_language=None
     ):
 
         """
@@ -902,6 +904,11 @@ Return only the structured result required by the schema.
 
         It defaults to None, so every existing caller keeps
         working unchanged and behaves exactly as before.
+
+        `response_language` (M7) is the session language. The prompt
+        tells the model to answer in it, in its script; None means
+        English. answer_language.py explains what offline tests can
+        and cannot show about the model following it.
         """
 
         # -------------------------------------------------
@@ -1067,6 +1074,12 @@ THE IMMEDIATELY PRECEDING SIDE QUESTION
     say "you previously asked" or refer to remembered context.
     Just answer.
 
+19. Do not repeat the CURRENT STEP instruction in your answer.
+    When the customer needs it, the assistant adds it after your
+    answer itself.
+
+{answer_language_rules(response_language)}
+
 Return only the answer to the customer.
 """
 
@@ -1079,7 +1092,8 @@ Return only the answer to the customer.
                         "role": "system",
                         "content": (
                             "You are a concise and factual banking "
-                            "assistant."
+                            "assistant. "
+                            + answer_language_system_note(response_language)
                         )
                     },
                     {

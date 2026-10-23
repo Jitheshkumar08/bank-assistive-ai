@@ -11,6 +11,7 @@ import { SessionsService } from '../sessions/sessions.service';
 import {
   AiEngineClient,
   AiEngineError,
+  type EngineAssistance,
   type EngineSpeech,
   type EngineWorkflow,
 } from './engine/ai-engine.client';
@@ -20,6 +21,23 @@ export interface AssistantReplyView {
   transcript: string | null;
   workflow: EngineWorkflow | null;
   ended: boolean;
+}
+
+/**
+ * Where the visit's conversation stands, for re-syncing after a turn whose
+ * reply never arrived. Status only -- nothing that was said.
+ */
+export interface AssistantSnapshotView {
+  /**
+   * False when the assistant holds no conversation for this visit (it was
+   * restarted, or the visit went idle). Progress is then unknown and
+   * `workflow` is null -- not "no workflow".
+   */
+  known: boolean;
+  /** The customer ended the conversation; no further turns are accepted. */
+  ended: boolean;
+  /** The same shape every reply carries. Null only when `known` is false. */
+  workflow: EngineWorkflow | null;
 }
 
 /** Formats a browser could plausibly produce with MediaRecorder. */
@@ -134,6 +152,68 @@ export class AssistantService {
       );
 
       throw new HttpException('The spoken reply is unavailable right now.', 502);
+    }
+  }
+
+  /**
+   * Reads where the visit's conversation stands, changing nothing.
+   *
+   * The same ownership check as every turn: a customer can only ever read
+   * their own open visit. The engine is the source of truth; nothing here
+   * interprets or adjusts what it reports.
+   */
+  async snapshot(userId: string, sessionId: string): Promise<AssistantSnapshotView> {
+    const session = await this.resolveSession(userId, sessionId);
+
+    try {
+      return await this.engine.getSnapshot(session.id);
+    } catch (error) {
+      if (error instanceof AiEngineError) {
+        throw new HttpException(error.message, error.status);
+      }
+
+      if (error instanceof HttpException) {
+        throw error;
+      }
+
+      this.logger.error(
+        `Unexpected snapshot failure: ${error instanceof Error ? error.name : 'unknown'}`,
+      );
+
+      throw new HttpException('The assistant could not report its progress.', 502);
+    }
+  }
+
+  /**
+   * An offer of help for a customer who has gone quiet on a step.
+   *
+   * The same ownership check as every turn. The engine decides whether an
+   * offer fits and words it in the visit's language; nothing here adds to
+   * or reinterprets it, and nothing moves the workflow.
+   */
+  async assistance(
+    userId: string,
+    sessionId: string,
+    avoid: string | null,
+  ): Promise<EngineAssistance> {
+    const session = await this.resolveSession(userId, sessionId);
+
+    try {
+      return await this.engine.requestAssistance(session.id, avoid);
+    } catch (error) {
+      if (error instanceof AiEngineError) {
+        throw new HttpException(error.message, error.status);
+      }
+
+      if (error instanceof HttpException) {
+        throw error;
+      }
+
+      this.logger.error(
+        `Unexpected assistance failure: ${error instanceof Error ? error.name : 'unknown'}`,
+      );
+
+      throw new HttpException('The assistant could not offer help right now.', 502);
     }
   }
 

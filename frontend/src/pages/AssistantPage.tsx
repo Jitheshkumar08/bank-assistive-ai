@@ -1,15 +1,36 @@
-import { useEffect, useRef } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { Navigate, useLocation, useNavigate } from 'react-router-dom';
 import { BrandMark } from '@/components/brand/BrandMark';
+import { AssistanceCard } from '@/components/chat/AssistanceCard';
 import { Composer } from '@/components/chat/Composer';
 import { MessageList } from '@/components/chat/MessageList';
+import { WorkflowProgress } from '@/components/chat/WorkflowProgress';
 import { RequestIcon } from '@/components/requests/RequestIcon';
+import { VoiceConsole } from '@/components/voice/VoiceConsole';
 import { useAuth } from '@/context/useAuth';
 import { useSession } from '@/context/useSession';
 import { useConversation } from '@/context/useConversation';
 import { useOptionalVoice } from '@/context/useVoice';
+import { useProactiveAssistance } from '@/hooks/useProactiveAssistance';
 import { COMMON_REQUESTS, isCommonRequest } from '@/lib/commonRequests';
 import { firstName } from '@/lib/greeting';
+import { assistantClient } from '@/services/assistant';
+import type { AssistanceOffer, ConversationMessage } from '@/types/assistant';
+
+/**
+ * What the Help control sends: the word the assistant's own offers tell the
+ * customer to say, in the visit's language. Each is an exact `help` phrase
+ * in the engine's control tier, so help is answered deterministically.
+ */
+const HELP_WORD: Record<string, string> = { en: 'help', kn: 'ಸಹಾಯ', hi: 'मदद' };
+
+function latest(messages: ConversationMessage[], author: ConversationMessage['author']): string | null {
+  for (let index = messages.length - 1; index >= 0; index -= 1) {
+    const message = messages[index];
+    if (message.author === author && message.status !== 'sending') return message.content;
+  }
+  return null;
+}
 
 /**
  * The conversation screen.
@@ -27,8 +48,10 @@ import { firstName } from '@/lib/greeting';
  */
 export function AssistantPage() {
   const { user } = useAuth();
-  const { session } = useSession();
-  const { messages, isSending, error, isEmpty, canRetry, send, retry } = useConversation();
+  const { session, endSession } = useSession();
+  const { messages, isSending, error, isEmpty, canRetry, workflow, ended, send, retry } =
+    useConversation();
+  const [isLeaving, setIsLeaving] = useState(false);
   const voice = useOptionalVoice();
   const location = useLocation();
   const navigate = useNavigate();
@@ -48,12 +71,74 @@ export function AssistantPage() {
     void send(handedOver);
   }, [handedOver, session, user, send, navigate, location.pathname]);
 
+  // Spoken aloud only when the customer has voice on; speak() checks.
+  const speakOffer = useCallback(
+    (offer: AssistanceOffer): void => {
+      if (offer.text) void voice?.speak(offer.text);
+    },
+    [voice],
+  );
+
+  const assistance = useProactiveAssistance({
+    sessionId: session?.id ?? null,
+    workflow,
+    isSending,
+    ended,
+    voiceActivity: voice?.activity ?? 'idle',
+    micStatus: voice?.micStatus ?? null,
+    turnKey: messages.length,
+    client: assistantClient,
+    onOffer: speakOffer,
+  });
+
+  const { noteActivity } = assistance;
+
+  const askForHelp = useCallback((): void => {
+    noteActivity();
+    void send(HELP_WORD[session?.language ?? 'en'] ?? HELP_WORD.en);
+  }, [noteActivity, send, session?.language]);
+
+  /**
+   * Closes the visit after the assistant has said goodbye.
+   *
+   * The customer asked to leave, so this is the same explicit exit as any
+   * other: the visit is ended on the server, which releases the
+   * assistant's side of the conversation too. It waits for the customer
+   * rather than happening by itself, so the goodbye stays readable -- and
+   * audible -- until they are done with it.
+   */
+  async function handleFinish(): Promise<void> {
+    setIsLeaving(true);
+    await endSession();
+    navigate('/scan', { replace: true });
+  }
+
   // RequireAuth and RequireContext already guarantee both. Rendering a
   // conversation with no idea where the customer is standing would be
   // worse than sending them back to scan.
   if (!session || !user) {
     return <Navigate to="/scan" replace />;
   }
+
+  const lastReply = latest(messages, 'assistant');
+  const lastHeard = latest(messages, 'user');
+  const stepInProgress = !ended && workflow?.state === 'active';
+
+  // With voice available, the console holds every voice control; the
+  // composer below stays the text alternative and carries no second mic.
+  const voiceConsole = (variant: 'hero' | 'compact') =>
+    voice && (
+      <VoiceConsole
+        voice={voice}
+        variant={variant}
+        isSending={isSending}
+        ended={ended}
+        lastReply={lastReply}
+        lastHeard={lastHeard}
+        onHelp={askForHelp}
+        onActivity={noteActivity}
+      />
+    );
 
   return (
     <div className="flex min-h-0 flex-1 flex-col">
@@ -63,15 +148,28 @@ export function AssistantPage() {
         // Near the bottom on a phone, where the thumb already is; centred
         // on a larger screen, where there is room to breathe.
         <div className="flex min-h-0 flex-1 flex-col justify-end gap-7 overflow-y-auto pt-4 pb-5 sm:justify-center">
-          <div className="flex flex-col items-center text-center">
-            <BrandMark size="lg" elevated />
-            <p className="mt-4 text-2xl font-semibold tracking-[-0.03em] text-ink-900">
-              Hello, {firstName(user.fullName)}
-            </p>
-            <p className="mt-1.5 max-w-xs text-[0.9375rem] leading-relaxed text-ink-500">
-              Tell me what you would like to do, and I will guide you step by step.
-            </p>
-          </div>
+          {voice ? (
+            <div className="flex flex-col items-center gap-4 text-center">
+              <p className="text-2xl font-semibold tracking-[-0.03em] text-ink-900">
+                Hello, {firstName(user.fullName)}
+              </p>
+              {voiceConsole('hero')}
+              <p className="max-w-xs text-[0.9375rem] leading-relaxed text-ink-500">
+                Say what you would like to do — for example, “I want to withdraw money” — and I
+                will guide you step by step.
+              </p>
+            </div>
+          ) : (
+            <div className="flex flex-col items-center text-center">
+              <BrandMark size="lg" elevated />
+              <p className="mt-4 text-2xl font-semibold tracking-[-0.03em] text-ink-900">
+                Hello, {firstName(user.fullName)}
+              </p>
+              <p className="mt-1.5 max-w-xs text-[0.9375rem] leading-relaxed text-ink-500">
+                Tell me what you would like to do, and I will guide you step by step.
+              </p>
+            </div>
+          )}
 
           <div>
             <p
@@ -79,6 +177,7 @@ export function AssistantPage() {
               className="px-1 text-xs font-medium tracking-[0.1em] text-ink-500 uppercase"
             >
               Common requests
+              {voice && <span className="sr-only"> (or choose one instead of speaking)</span>}
             </p>
             <ul
               aria-labelledby="suggestions-label"
@@ -88,7 +187,10 @@ export function AssistantPage() {
                 <li key={id}>
                   <button
                     type="button"
-                    onClick={() => void send(request)}
+                    onClick={() => {
+                      noteActivity();
+                      void send(request);
+                    }}
                     className="flex min-h-14 w-full items-center gap-3 px-4 text-left text-[0.9375rem] font-medium text-ink-900 transition-colors hover:bg-ink-50 focus-visible:-outline-offset-2"
                   >
                     <span
@@ -117,8 +219,20 @@ export function AssistantPage() {
           </div>
         </div>
       ) : (
-        <MessageList messages={messages} isSending={isSending} />
+        <>
+          <WorkflowProgress workflow={workflow} />
+          {voiceConsole('compact')}
+          <MessageList messages={messages} isSending={isSending} />
+        </>
       )}
+
+      <AssistanceCard
+        offer={assistance.offer}
+        stepInProgress={stepInProgress}
+        // Without voice there is no console, so the card carries Help.
+        onHelp={voice || isSending ? undefined : askForHelp}
+        onDismiss={assistance.dismiss}
+      />
 
       {error && (
         <div
@@ -139,7 +253,29 @@ export function AssistantPage() {
         </div>
       )}
 
-      <Composer onSend={(content) => void send(content)} isSending={isSending} voice={voice} />
+      {ended ? (
+        <div
+          role="status"
+          className="flex flex-col items-center gap-3 rounded-2xl bg-white px-4 py-4 text-center shadow-[0_1px_2px_rgb(16_24_40/0.04)] ring-1 ring-ink-200/70"
+        >
+          <p className="text-[0.9375rem] text-ink-700">This visit has ended.</p>
+          <button
+            type="button"
+            onClick={() => void handleFinish()}
+            disabled={isLeaving}
+            className="inline-flex min-h-11 items-center rounded-full bg-brand-600 px-5 text-[0.9375rem] font-semibold text-white transition-colors hover:bg-brand-700 disabled:opacity-60"
+          >
+            {isLeaving ? 'Finishing…' : 'Finish'}
+          </button>
+        </div>
+      ) : (
+        <Composer
+          onSend={(content) => void send(content)}
+          isSending={isSending}
+          voice={null}
+          onActivity={noteActivity}
+        />
+      )}
     </div>
   );
 }

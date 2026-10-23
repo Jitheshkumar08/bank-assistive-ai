@@ -1,0 +1,918 @@
+{
+ "version": "m7_fresh",
+ "description": "M7 FRESH retrieval set. Written before any M7 change and never used to tune retrieval, query preparation or the answer-language prompt. Eight knowledge-base topics, each asked in all seven language groups (`topic` links a question to its English equivalent), plus four questions the knowledge base cannot answer, for which retrieval should return nothing.",
+ "sources": {
+  "m7-fresh": "written for the M7 fresh set before implementation"
+ },
+ "fixtures": [
+  {
+   "id": "kq-en-710",
+   "lang": "en",
+   "category": "knowledge_question",
+   "text": "how do I fill a withdrawal slip",
+   "expected": {
+    "route": "knowledge",
+    "sources": [
+     "withdrawal_slip.md",
+     "withdrawal.md"
+    ]
+   },
+   "topic": "T1",
+   "gloss": "how to fill in a withdrawal slip",
+   "source": "m7-fresh"
+  },
+  {
+   "id": "kq-kn-710",
+   "lang": "kn",
+   "category": "knowledge_question",
+   "text": "ಹಣ ತೆಗೆಯುವ ಚೀಟಿಯನ್ನು ಹೇಗೆ ತುಂಬಬೇಕು",
+   "expected": {
+    "route": "knowledge",
+    "sources": [
+     "withdrawal_slip.md",
+     "withdrawal.md"
+    ]
+   },
+   "topic": "T1",
+   "gloss": "how to fill in a withdrawal slip",
+   "source": "m7-fresh"
+  },
+  {
+   "id": "kq-hi-710",
+   "lang": "hi",
+   "category": "knowledge_question",
+   "text": "निकासी पर्ची कैसे भरें",
+   "expected": {
+    "route": "knowledge",
+    "sources": [
+     "withdrawal_slip.md",
+     "withdrawal.md"
+    ]
+   },
+   "topic": "T1",
+   "gloss": "how to fill in a withdrawal slip",
+   "source": "m7-fresh"
+  },
+  {
+   "id": "kq-kn-en-710",
+   "lang": "kn-en",
+   "category": "knowledge_question",
+   "text": "withdrawal slip ಹೇಗೆ ತುಂಬುವುದು",
+   "expected": {
+    "route": "knowledge",
+    "sources": [
+     "withdrawal_slip.md",
+     "withdrawal.md"
+    ]
+   },
+   "topic": "T1",
+   "gloss": "how to fill in a withdrawal slip",
+   "source": "m7-fresh"
+  },
+  {
+   "id": "kq-hi-en-710",
+   "lang": "hi-en",
+   "category": "knowledge_question",
+   "text": "withdrawal slip कैसे भरते हैं",
+   "expected": {
+    "route": "knowledge",
+    "sources": [
+     "withdrawal_slip.md",
+     "withdrawal.md"
+    ]
+   },
+   "topic": "T1",
+   "gloss": "how to fill in a withdrawal slip",
+   "source": "m7-fresh"
+  },
+  {
+   "id": "kq-rom-hi-710",
+   "lang": "rom-hi",
+   "category": "knowledge_question",
+   "text": "withdrawal slip kaise bharte hain",
+   "expected": {
+    "route": "knowledge",
+    "sources": [
+     "withdrawal_slip.md",
+     "withdrawal.md"
+    ]
+   },
+   "topic": "T1",
+   "gloss": "how to fill in a withdrawal slip",
+   "source": "m7-fresh"
+  },
+  {
+   "id": "kq-rom-kn-710",
+   "lang": "rom-kn",
+   "category": "knowledge_question",
+   "text": "withdrawal slip hege tumbodu",
+   "expected": {
+    "route": "knowledge",
+    "sources": [
+     "withdrawal_slip.md",
+     "withdrawal.md"
+    ]
+   },
+   "topic": "T1",
+   "gloss": "how to fill in a withdrawal slip",
+   "source": "m7-fresh"
+  },
+  {
+   "id": "kq-en-720",
+   "lang": "en",
+   "category": "knowledge_question",
+   "text": "why is my account number important",
+   "expected": {
+    "route": "knowledge",
+    "sources": [
+     "account_number.md"
+    ]
+   },
+   "topic": "T2",
+   "gloss": "why the account number matters",
+   "source": "m7-fresh"
+  },
+  {
+   "id": "kq-kn-720",
+   "lang": "kn",
+   "category": "knowledge_question",
+   "text": "ಖಾತೆ ಸಂಖ್ಯೆ ಏಕೆ ಮುಖ್ಯ",
+   "expected": {
+    "route": "knowledge",
+    "sources": [
+     "account_number.md"
+    ]
+   },
+   "topic": "T2",
+   "gloss": "why the account number matters",
+   "source": "m7-fresh"
+  },
+  {
+   "id": "kq-hi-720",
+   "lang": "hi",
+   "category": "knowledge_question",
+   "text": "खाता संख्या क्यों ज़रूरी है",
+   "expected": {
+    "route": "knowledge",
+    "sources": [
+     "account_number.md"
+    ]
+   },
+   "topic": "T2",
+   "gloss": "why the account number matters",
+   "source": "m7-fresh"
+  },
+  {
+   "id": "kq-kn-en-720",
+   "lang": "kn-en",
+   "category": "knowledge_question",
+   "text": "account number ಯಾಕೆ ಬೇಕು",
+   "expected": {
+    "route": "knowledge",
+    "sources": [
+     "account_number.md"
+    ]
+   },
+   "topic": "T2",
+   "gloss": "why the account number matters",
+   "source": "m7-fresh"
+  },
+  {
+   "id": "kq-hi-en-720",
+   "lang": "hi-en",
+   "category": "knowledge_question",
+   "text": "account number क्यों चाहिए",
+   "expected": {
+    "route": "knowledge",
+    "sources": [
+     "account_number.md"
+    ]
+   },
+   "topic": "T2",
+   "gloss": "why the account number matters",
+   "source": "m7-fresh"
+  },
+  {
+   "id": "kq-rom-hi-720",
+   "lang": "rom-hi",
+   "category": "knowledge_question",
+   "text": "account number kyon zaroori hai",
+   "expected": {
+    "route": "knowledge",
+    "sources": [
+     "account_number.md"
+    ]
+   },
+   "topic": "T2",
+   "gloss": "why the account number matters",
+   "source": "m7-fresh"
+  },
+  {
+   "id": "kq-rom-kn-720",
+   "lang": "rom-kn",
+   "category": "knowledge_question",
+   "text": "account number yaake beku",
+   "expected": {
+    "route": "knowledge",
+    "sources": [
+     "account_number.md"
+    ]
+   },
+   "topic": "T2",
+   "gloss": "why the account number matters",
+   "source": "m7-fresh"
+  },
+  {
+   "id": "kq-en-730",
+   "lang": "en",
+   "category": "knowledge_question",
+   "text": "how can I send money to another account",
+   "expected": {
+    "route": "knowledge",
+    "sources": [
+     "bank_transfer.md"
+    ]
+   },
+   "topic": "T3",
+   "gloss": "sending money to another account",
+   "source": "m7-fresh"
+  },
+  {
+   "id": "kq-kn-730",
+   "lang": "kn",
+   "category": "knowledge_question",
+   "text": "ಬೇರೆ ಖಾತೆಗೆ ಹಣ ಹೇಗೆ ಕಳುಹಿಸುವುದು",
+   "expected": {
+    "route": "knowledge",
+    "sources": [
+     "bank_transfer.md"
+    ]
+   },
+   "topic": "T3",
+   "gloss": "sending money to another account",
+   "source": "m7-fresh"
+  },
+  {
+   "id": "kq-hi-730",
+   "lang": "hi",
+   "category": "knowledge_question",
+   "text": "दूसरे खाते में पैसे कैसे भेजें",
+   "expected": {
+    "route": "knowledge",
+    "sources": [
+     "bank_transfer.md"
+    ]
+   },
+   "topic": "T3",
+   "gloss": "sending money to another account",
+   "source": "m7-fresh"
+  },
+  {
+   "id": "kq-kn-en-730",
+   "lang": "kn-en",
+   "category": "knowledge_question",
+   "text": "ಬೇರೆ account ಗೆ money transfer ಹೇಗೆ ಮಾಡುವುದು",
+   "expected": {
+    "route": "knowledge",
+    "sources": [
+     "bank_transfer.md"
+    ]
+   },
+   "topic": "T3",
+   "gloss": "sending money to another account",
+   "source": "m7-fresh"
+  },
+  {
+   "id": "kq-hi-en-730",
+   "lang": "hi-en",
+   "category": "knowledge_question",
+   "text": "दूसरे account में पैसे transfer कैसे करें",
+   "expected": {
+    "route": "knowledge",
+    "sources": [
+     "bank_transfer.md"
+    ]
+   },
+   "topic": "T3",
+   "gloss": "sending money to another account",
+   "source": "m7-fresh"
+  },
+  {
+   "id": "kq-rom-hi-730",
+   "lang": "rom-hi",
+   "category": "knowledge_question",
+   "text": "dusre account mein paise kaise bheje",
+   "expected": {
+    "route": "knowledge",
+    "sources": [
+     "bank_transfer.md"
+    ]
+   },
+   "topic": "T3",
+   "gloss": "sending money to another account",
+   "source": "m7-fresh"
+  },
+  {
+   "id": "kq-rom-kn-730",
+   "lang": "rom-kn",
+   "category": "knowledge_question",
+   "text": "bere account ge hana hege kalisodu",
+   "expected": {
+    "route": "knowledge",
+    "sources": [
+     "bank_transfer.md"
+    ]
+   },
+   "topic": "T3",
+   "gloss": "sending money to another account",
+   "source": "m7-fresh"
+  },
+  {
+   "id": "kq-en-740",
+   "lang": "en",
+   "category": "knowledge_question",
+   "text": "what services does a bank branch offer",
+   "expected": {
+    "route": "knowledge",
+    "sources": [
+     "banking_services.md"
+    ]
+   },
+   "topic": "T4",
+   "gloss": "services a branch offers",
+   "source": "m7-fresh"
+  },
+  {
+   "id": "kq-kn-740",
+   "lang": "kn",
+   "category": "knowledge_question",
+   "text": "ಬ್ಯಾಂಕ್ ಶಾಖೆಯಲ್ಲಿ ಯಾವ ಸೇವೆಗಳು ಸಿಗುತ್ತವೆ",
+   "expected": {
+    "route": "knowledge",
+    "sources": [
+     "banking_services.md"
+    ]
+   },
+   "topic": "T4",
+   "gloss": "services a branch offers",
+   "source": "m7-fresh"
+  },
+  {
+   "id": "kq-hi-740",
+   "lang": "hi",
+   "category": "knowledge_question",
+   "text": "बैंक शाखा में कौन सी सेवाएँ मिलती हैं",
+   "expected": {
+    "route": "knowledge",
+    "sources": [
+     "banking_services.md"
+    ]
+   },
+   "topic": "T4",
+   "gloss": "services a branch offers",
+   "source": "m7-fresh"
+  },
+  {
+   "id": "kq-kn-en-740",
+   "lang": "kn-en",
+   "category": "knowledge_question",
+   "text": "bank branch ನಲ್ಲಿ ಯಾವ services ಇವೆ",
+   "expected": {
+    "route": "knowledge",
+    "sources": [
+     "banking_services.md"
+    ]
+   },
+   "topic": "T4",
+   "gloss": "services a branch offers",
+   "source": "m7-fresh"
+  },
+  {
+   "id": "kq-hi-en-740",
+   "lang": "hi-en",
+   "category": "knowledge_question",
+   "text": "bank branch में कौन सी services मिलती हैं",
+   "expected": {
+    "route": "knowledge",
+    "sources": [
+     "banking_services.md"
+    ]
+   },
+   "topic": "T4",
+   "gloss": "services a branch offers",
+   "source": "m7-fresh"
+  },
+  {
+   "id": "kq-rom-hi-740",
+   "lang": "rom-hi",
+   "category": "knowledge_question",
+   "text": "bank mein kaun si sevaayein milti hain",
+   "expected": {
+    "route": "knowledge",
+    "sources": [
+     "banking_services.md"
+    ]
+   },
+   "topic": "T4",
+   "gloss": "services a branch offers",
+   "source": "m7-fresh"
+  },
+  {
+   "id": "kq-rom-kn-740",
+   "lang": "rom-kn",
+   "category": "knowledge_question",
+   "text": "bank alli yaava sevegalu sigutte",
+   "expected": {
+    "route": "knowledge",
+    "sources": [
+     "banking_services.md"
+    ]
+   },
+   "topic": "T4",
+   "gloss": "services a branch offers",
+   "source": "m7-fresh"
+  },
+  {
+   "id": "kq-en-750",
+   "lang": "en",
+   "category": "knowledge_question",
+   "text": "who should open a current account",
+   "expected": {
+    "route": "knowledge",
+    "sources": [
+     "current_account.md"
+    ]
+   },
+   "topic": "T5",
+   "gloss": "who a current account is for",
+   "source": "m7-fresh"
+  },
+  {
+   "id": "kq-kn-750",
+   "lang": "kn",
+   "category": "knowledge_question",
+   "text": "ಚಾಲ್ತಿ ಖಾತೆ ಯಾರಿಗೆ ಸೂಕ್ತ",
+   "expected": {
+    "route": "knowledge",
+    "sources": [
+     "current_account.md"
+    ]
+   },
+   "topic": "T5",
+   "gloss": "who a current account is for",
+   "source": "m7-fresh"
+  },
+  {
+   "id": "kq-hi-750",
+   "lang": "hi",
+   "category": "knowledge_question",
+   "text": "चालू खाता किसके लिए होता है",
+   "expected": {
+    "route": "knowledge",
+    "sources": [
+     "current_account.md"
+    ]
+   },
+   "topic": "T5",
+   "gloss": "who a current account is for",
+   "source": "m7-fresh"
+  },
+  {
+   "id": "kq-kn-en-750",
+   "lang": "kn-en",
+   "category": "knowledge_question",
+   "text": "current account ಯಾರಿಗೆ ಉಪಯೋಗ",
+   "expected": {
+    "route": "knowledge",
+    "sources": [
+     "current_account.md"
+    ]
+   },
+   "topic": "T5",
+   "gloss": "who a current account is for",
+   "source": "m7-fresh"
+  },
+  {
+   "id": "kq-hi-en-750",
+   "lang": "hi-en",
+   "category": "knowledge_question",
+   "text": "current account किसके लिए है",
+   "expected": {
+    "route": "knowledge",
+    "sources": [
+     "current_account.md"
+    ]
+   },
+   "topic": "T5",
+   "gloss": "who a current account is for",
+   "source": "m7-fresh"
+  },
+  {
+   "id": "kq-rom-hi-750",
+   "lang": "rom-hi",
+   "category": "knowledge_question",
+   "text": "current account kiske liye hota hai",
+   "expected": {
+    "route": "knowledge",
+    "sources": [
+     "current_account.md"
+    ]
+   },
+   "topic": "T5",
+   "gloss": "who a current account is for",
+   "source": "m7-fresh"
+  },
+  {
+   "id": "kq-rom-kn-750",
+   "lang": "rom-kn",
+   "category": "knowledge_question",
+   "text": "current account yaarige beku",
+   "expected": {
+    "route": "knowledge",
+    "sources": [
+     "current_account.md"
+    ]
+   },
+   "topic": "T5",
+   "gloss": "who a current account is for",
+   "source": "m7-fresh"
+  },
+  {
+   "id": "kq-en-760",
+   "lang": "en",
+   "category": "knowledge_question",
+   "text": "what does a passbook show",
+   "expected": {
+    "route": "knowledge",
+    "sources": [
+     "passbook.md"
+    ]
+   },
+   "topic": "T6",
+   "gloss": "what a passbook records",
+   "source": "m7-fresh"
+  },
+  {
+   "id": "kq-kn-760",
+   "lang": "kn",
+   "category": "knowledge_question",
+   "text": "ಖಾತೆ ಪುಸ್ತಕದಲ್ಲಿ ಏನು ಇರುತ್ತದೆ",
+   "expected": {
+    "route": "knowledge",
+    "sources": [
+     "passbook.md"
+    ]
+   },
+   "topic": "T6",
+   "gloss": "what a passbook records",
+   "source": "m7-fresh"
+  },
+  {
+   "id": "kq-hi-760",
+   "lang": "hi",
+   "category": "knowledge_question",
+   "text": "खाता पुस्तिका में क्या दर्ज होता है",
+   "expected": {
+    "route": "knowledge",
+    "sources": [
+     "passbook.md"
+    ]
+   },
+   "topic": "T6",
+   "gloss": "what a passbook records",
+   "source": "m7-fresh"
+  },
+  {
+   "id": "kq-kn-en-760",
+   "lang": "kn-en",
+   "category": "knowledge_question",
+   "text": "passbook ನಲ್ಲಿ ಏನು ಇರುತ್ತದೆ",
+   "expected": {
+    "route": "knowledge",
+    "sources": [
+     "passbook.md"
+    ]
+   },
+   "topic": "T6",
+   "gloss": "what a passbook records",
+   "source": "m7-fresh"
+  },
+  {
+   "id": "kq-hi-en-760",
+   "lang": "hi-en",
+   "category": "knowledge_question",
+   "text": "passbook में क्या होता है",
+   "expected": {
+    "route": "knowledge",
+    "sources": [
+     "passbook.md"
+    ]
+   },
+   "topic": "T6",
+   "gloss": "what a passbook records",
+   "source": "m7-fresh"
+  },
+  {
+   "id": "kq-rom-hi-760",
+   "lang": "rom-hi",
+   "category": "knowledge_question",
+   "text": "passbook mein kya hota hai",
+   "expected": {
+    "route": "knowledge",
+    "sources": [
+     "passbook.md"
+    ]
+   },
+   "topic": "T6",
+   "gloss": "what a passbook records",
+   "source": "m7-fresh"
+  },
+  {
+   "id": "kq-rom-kn-760",
+   "lang": "rom-kn",
+   "category": "knowledge_question",
+   "text": "passbook nalli enu irutte",
+   "expected": {
+    "route": "knowledge",
+    "sources": [
+     "passbook.md"
+    ]
+   },
+   "topic": "T6",
+   "gloss": "what a passbook records",
+   "source": "m7-fresh"
+  },
+  {
+   "id": "kq-en-770",
+   "lang": "en",
+   "category": "knowledge_question",
+   "text": "which ID proofs are needed for a new account",
+   "expected": {
+    "route": "knowledge",
+    "sources": [
+     "account_opening_requirements.md",
+     "account_opening.md"
+    ]
+   },
+   "topic": "T7",
+   "gloss": "identity documents for a new account",
+   "source": "m7-fresh"
+  },
+  {
+   "id": "kq-kn-770",
+   "lang": "kn",
+   "category": "knowledge_question",
+   "text": "ಹೊಸ ಖಾತೆಗೆ ಯಾವ ಗುರುತಿನ ಚೀಟಿಗಳು ಬೇಕು",
+   "expected": {
+    "route": "knowledge",
+    "sources": [
+     "account_opening_requirements.md",
+     "account_opening.md"
+    ]
+   },
+   "topic": "T7",
+   "gloss": "identity documents for a new account",
+   "source": "m7-fresh"
+  },
+  {
+   "id": "kq-hi-770",
+   "lang": "hi",
+   "category": "knowledge_question",
+   "text": "नए खाते के लिए कौन से पहचान पत्र चाहिए",
+   "expected": {
+    "route": "knowledge",
+    "sources": [
+     "account_opening_requirements.md",
+     "account_opening.md"
+    ]
+   },
+   "topic": "T7",
+   "gloss": "identity documents for a new account",
+   "source": "m7-fresh"
+  },
+  {
+   "id": "kq-kn-en-770",
+   "lang": "kn-en",
+   "category": "knowledge_question",
+   "text": "new account ಗೆ ಯಾವ ID proof ಬೇಕು",
+   "expected": {
+    "route": "knowledge",
+    "sources": [
+     "account_opening_requirements.md",
+     "account_opening.md"
+    ]
+   },
+   "topic": "T7",
+   "gloss": "identity documents for a new account",
+   "source": "m7-fresh"
+  },
+  {
+   "id": "kq-hi-en-770",
+   "lang": "hi-en",
+   "category": "knowledge_question",
+   "text": "new account के लिए कौन सा ID proof चाहिए",
+   "expected": {
+    "route": "knowledge",
+    "sources": [
+     "account_opening_requirements.md",
+     "account_opening.md"
+    ]
+   },
+   "topic": "T7",
+   "gloss": "identity documents for a new account",
+   "source": "m7-fresh"
+  },
+  {
+   "id": "kq-rom-hi-770",
+   "lang": "rom-hi",
+   "category": "knowledge_question",
+   "text": "naye khate ke liye kaun se documents chahiye",
+   "expected": {
+    "route": "knowledge",
+    "sources": [
+     "account_opening_requirements.md",
+     "account_opening.md"
+    ]
+   },
+   "topic": "T7",
+   "gloss": "identity documents for a new account",
+   "source": "m7-fresh"
+  },
+  {
+   "id": "kq-rom-kn-770",
+   "lang": "rom-kn",
+   "category": "knowledge_question",
+   "text": "hosa khate ge yaava documents beku",
+   "expected": {
+    "route": "knowledge",
+    "sources": [
+     "account_opening_requirements.md",
+     "account_opening.md"
+    ]
+   },
+   "topic": "T7",
+   "gloss": "identity documents for a new account",
+   "source": "m7-fresh"
+  },
+  {
+   "id": "kq-en-780",
+   "lang": "en",
+   "category": "knowledge_question",
+   "text": "what are the steps to get a loan",
+   "expected": {
+    "route": "knowledge",
+    "sources": [
+     "loan.md",
+     "loan_basics.md"
+    ]
+   },
+   "topic": "T8",
+   "gloss": "the loan process",
+   "source": "m7-fresh"
+  },
+  {
+   "id": "kq-kn-780",
+   "lang": "kn",
+   "category": "knowledge_question",
+   "text": "ಸಾಲ ಪಡೆಯುವ ಪ್ರಕ್ರಿಯೆ ಏನು",
+   "expected": {
+    "route": "knowledge",
+    "sources": [
+     "loan.md",
+     "loan_basics.md"
+    ]
+   },
+   "topic": "T8",
+   "gloss": "the loan process",
+   "source": "m7-fresh"
+  },
+  {
+   "id": "kq-hi-780",
+   "lang": "hi",
+   "category": "knowledge_question",
+   "text": "ऋण लेने की प्रक्रिया क्या है",
+   "expected": {
+    "route": "knowledge",
+    "sources": [
+     "loan.md",
+     "loan_basics.md"
+    ]
+   },
+   "topic": "T8",
+   "gloss": "the loan process",
+   "source": "m7-fresh"
+  },
+  {
+   "id": "kq-kn-en-780",
+   "lang": "kn-en",
+   "category": "knowledge_question",
+   "text": "loan ತೆಗೆದುಕೊಳ್ಳುವ process ಏನು",
+   "expected": {
+    "route": "knowledge",
+    "sources": [
+     "loan.md",
+     "loan_basics.md"
+    ]
+   },
+   "topic": "T8",
+   "gloss": "the loan process",
+   "source": "m7-fresh"
+  },
+  {
+   "id": "kq-hi-en-780",
+   "lang": "hi-en",
+   "category": "knowledge_question",
+   "text": "loan लेने का process क्या है",
+   "expected": {
+    "route": "knowledge",
+    "sources": [
+     "loan.md",
+     "loan_basics.md"
+    ]
+   },
+   "topic": "T8",
+   "gloss": "the loan process",
+   "source": "m7-fresh"
+  },
+  {
+   "id": "kq-rom-hi-780",
+   "lang": "rom-hi",
+   "category": "knowledge_question",
+   "text": "loan lene ka tarika kya hai",
+   "expected": {
+    "route": "knowledge",
+    "sources": [
+     "loan.md",
+     "loan_basics.md"
+    ]
+   },
+   "topic": "T8",
+   "gloss": "the loan process",
+   "source": "m7-fresh"
+  },
+  {
+   "id": "kq-rom-kn-780",
+   "lang": "rom-kn",
+   "category": "knowledge_question",
+   "text": "loan tegedukolluva vidhana enu",
+   "expected": {
+    "route": "knowledge",
+    "sources": [
+     "loan.md",
+     "loan_basics.md"
+    ]
+   },
+   "topic": "T8",
+   "gloss": "the loan process",
+   "source": "m7-fresh"
+  },
+  {
+   "id": "kq-en-791",
+   "lang": "en",
+   "category": "knowledge_question",
+   "text": "what is today's gold rate",
+   "expected": {
+    "route": "knowledge",
+    "sources": null
+   },
+   "gloss": "not in the knowledge base",
+   "source": "m7-fresh"
+  },
+  {
+   "id": "kq-kn-792",
+   "lang": "kn",
+   "category": "knowledge_question",
+   "text": "ಇಂದಿನ ಚಿನ್ನದ ಬೆಲೆ ಎಷ್ಟು",
+   "expected": {
+    "route": "knowledge",
+    "sources": null
+   },
+   "gloss": "today's gold price: not in the knowledge base",
+   "source": "m7-fresh"
+  },
+  {
+   "id": "kq-hi-793",
+   "lang": "hi",
+   "category": "knowledge_question",
+   "text": "म्यूचुअल फंड में निवेश कैसे करें",
+   "expected": {
+    "route": "knowledge",
+    "sources": null
+   },
+   "gloss": "how to invest in mutual funds: not in the knowledge base",
+   "source": "m7-fresh"
+  },
+  {
+   "id": "kq-rom-hi-794",
+   "lang": "rom-hi",
+   "category": "knowledge_question",
+   "text": "share market kaise kaam karta hai",
+   "expected": {
+    "route": "knowledge",
+    "sources": null
+   },
+   "gloss": "how the share market works: not in the knowledge base",
+   "source": "m7-fresh"
+  }
+ ]
+}

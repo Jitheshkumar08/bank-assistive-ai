@@ -43,6 +43,8 @@ function conversation(overrides: Partial<ConversationState> = {}): ConversationS
     error: null,
     isEmpty: true,
     canRetry: false,
+    workflow: null,
+    ended: false,
     send: (...args) => send(...args),
     sendVoice: (...args) => sendVoice(...args),
     retry: async () => {},

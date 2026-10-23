@@ -6,8 +6,8 @@ from app.intent.detector import IntentDetector
 from app.conversation.manager import ConversationManager
 from app.conversation.state import SessionState, WorkflowState
 from app.dialogue.localization import ResponseLocalizer
-from app.dialogue.manager import DialogueManager
-from app.dialogue.term_normalizer import normalize_banking_terms
+from app.dialogue.manager import DialogueManager, contains_negation
+from app.dialogue.text_normalization import normalize_turn
 
 
 LANGUAGES = {
@@ -31,6 +31,19 @@ NEEDS_NEW_INTENT_STATES = (
     WorkflowState.COMPLETED,
     WorkflowState.CANCELLED
 )
+
+
+def _accepts_keyword(function, name):
+    """Whether `function` takes keyword `name` (or **kwargs)."""
+    import inspect
+
+    try:
+        parameters = inspect.signature(function).parameters
+    except (TypeError, ValueError):
+        return False
+    return name in parameters or any(
+        p.kind is inspect.Parameter.VAR_KEYWORD for p in parameters.values()
+    )
 
 
 class VoiceAssistantPipeline:
@@ -206,22 +219,23 @@ class VoiceAssistantPipeline:
                 continue
 
             # -----------------------------
-            # Domain terminology normalization
+            # Normalisation  (M5: app/dialogue/text_normalization)
             #
-            # Whisper mishears a small, known set of banking
-            # terms ("cheque book" -> "Chuck Book"). Only those
-            # listed phrases are rewritten; everything else --
-            # including Kannada and Hindi -- passes through
-            # untouched.
+            # One call, three representations: the ORIGINAL, the
+            # NORMALIZED spelling (NFC, dandas, spacing), and the
+            # ROUTING text -- mis-heard banking terms repaired
+            # ("Chuck Book" -> "cheque book") and loanwords written
+            # in English (ಲೋನ್ / लोन -> loan). Native Kannada and
+            # Hindi words are never translated.
             #
-            # The RAW transcript is what gets recorded in the
+            # The ORIGINAL is what gets recorded in the
             # conversation history, so debugging always shows
-            # what was actually heard. The normalized form is
-            # used only for control detection, understanding,
+            # what was actually heard. The routing text is used
+            # only for control detection, understanding,
             # retrieval and intent detection.
             # -----------------------------
 
-            user_input = normalize_banking_terms(raw_input_text)
+            user_input = normalize_turn(raw_input_text).routing
 
             if user_input != raw_input_text:
                 print("🔤 Normalized Text:", user_input)
@@ -348,9 +362,19 @@ class VoiceAssistantPipeline:
 
         if control is not None:
 
+            # The words travel with the classification when the
+            # dialogue manager takes them: answering "do you want to
+            # cancel?" with "ಬೇಡ" ("no, don't") classifies as cancel,
+            # and only the text shows it is a refusal. Same
+            # signature-tolerant pattern as the language argument below.
+            text_argument = {}
+            if _accepts_keyword(self.dialogue.handle_control_command, "user_input"):
+                text_argument["user_input"] = user_input
+
             return self.dialogue.handle_control_command(
                 self.conversation,
-                control
+                control,
+                **text_argument
             )
 
         # -----------------------------
@@ -377,8 +401,17 @@ class VoiceAssistantPipeline:
         # no confidence threshold)
         # ---------------------------------------------
 
+        # The session language (M7), so a knowledge answer is asked for
+        # in it. Passed only to a dialogue manager that accepts it; the
+        # conversation itself is still NOT passed here, so the control
+        # guard behaves exactly as before.
+        language_argument = {}
+        if _accepts_keyword(self.dialogue.answer_general_question, "language"):
+            language_argument["language"] = getattr(self.conversation, "language", None)
+
         question_response = self.dialogue.answer_general_question(
-            user_input
+            user_input,
+            **language_argument
         )
 
         if question_response is not None:
@@ -419,9 +452,41 @@ class VoiceAssistantPipeline:
 
         if not intent_result.get("is_banking_intent", True):
 
+            # M10: the detector withholds a start it cannot justify (no
+            # service named, a question about a service, an operation the
+            # assistant does not offer). Before M10 such a sentence was a
+            # banking verdict, so a negated one reached the refusal gate
+            # below; it still does, and refusals keep their reply. A
+            # complaint ("the app is not showing my balance", policy D7)
+            # is negated but is not a refusal.
+            if (intent_result.get("withheld_start")
+                    and intent_result.get("abstain_reason") != "troubleshooting"
+                    and contains_negation(user_input)):
+
+                return self.dialogue.handle_refused_request(
+                    self.conversation
+                )
+
             return self.dialogue.handle_non_banking_request(
                 intent_result.get("category"),
                 user_input,
+                self.conversation
+            )
+
+        # ---------------------------------------------
+        # REFUSAL GATE  (M3)
+        #
+        # A refusal names the service it refuses, so the detector
+        # finds a banking intent in "ನನಗೆ ಲೋನ್ ಬೇಡ" (I don't want a
+        # loan) as readily as in "ನನಗೆ ಲೋನ್ ಬೇಕು" (I want one). A
+        # negated utterance never starts a workflow: it is answered
+        # without touching conversation state. Same placement and
+        # reasoning as the abstention gate above.
+        # ---------------------------------------------
+
+        if contains_negation(user_input):
+
+            return self.dialogue.handle_refused_request(
                 self.conversation
             )
 

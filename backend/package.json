@@ -14,7 +14,8 @@
     "prisma:studio": "prisma studio",
     "db:seed": "ts-node prisma/seed.ts",
     "test": "jest --config test/jest-e2e.js",
-    "test:watch": "jest --config test/jest-e2e.js --watch"
+    "test:watch": "jest --config test/jest-e2e.js --watch",
+    "test:unit": "jest --config test/jest-unit.js"
   },
   "prisma": {
     "seed": "ts-node prisma/seed.ts"

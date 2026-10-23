@@ -46,6 +46,15 @@ describe('Composer', () => {
     expect(onSend).toHaveBeenCalledWith('first\nsecond');
   });
 
+  it('reports typing as activity, so a quiet-spell timer can restart', async () => {
+    const onActivity = vi.fn();
+    render(<Composer onSend={vi.fn()} isSending={false} onActivity={onActivity} />);
+
+    await userEvent.type(textBox(), 'ab');
+
+    expect(onActivity).toHaveBeenCalledTimes(2);
+  });
+
   it('shows no microphone while voice is off', () => {
     render(
       <Composer

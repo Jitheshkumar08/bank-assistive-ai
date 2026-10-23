@@ -394,3 +394,97 @@ describe('AssistantPage', () => {
     });
   });
 });
+
+describe('AssistantPage -- workflow progress and the end of a visit', () => {
+  beforeEach(() => {
+    sendMessage.mockReset();
+  });
+
+  const taskPanel = () => screen.queryByRole('region', { name: /current task/i });
+
+  it('shows no task panel for a plain question', async () => {
+    sendMessage.mockResolvedValue({
+      reply: 'A passbook records your transactions.',
+      workflow: { name: null, state: 'none', step: null, totalSteps: null },
+    });
+    renderAssistant();
+
+    await userEvent.type(composer(), 'what is a passbook');
+    await userEvent.click(sendButton());
+
+    await screen.findByText('A passbook records your transactions.');
+    expect(taskPanel()).not.toBeInTheDocument();
+  });
+
+  it('shows the task and its step as the workflow moves on', async () => {
+    sendMessage
+      .mockResolvedValueOnce({
+        reply: 'Please take a deposit slip.',
+        workflow: { name: 'deposit money', state: 'active', step: 1, totalSteps: 4 },
+      })
+      .mockResolvedValueOnce({
+        reply: 'Fill in your account number.',
+        workflow: { name: 'deposit money', state: 'active', step: 2, totalSteps: 4 },
+      });
+    renderAssistant();
+
+    await userEvent.type(composer(), 'I want to deposit money');
+    await userEvent.click(sendButton());
+
+    await screen.findByText('Please take a deposit slip.');
+    const task = taskPanel()!;
+    expect(within(task).getByText('Deposit money')).toBeInTheDocument();
+    expect(within(task).getByText('Step 1 of 4')).toBeInTheDocument();
+
+    await userEvent.type(composer(), 'done');
+    await userEvent.click(sendButton());
+
+    expect(await within(taskPanel()!).findByText('Step 2 of 4')).toBeInTheDocument();
+  });
+
+  it('shows a completed task and stays open for the next request', async () => {
+    sendMessage.mockResolvedValueOnce({
+      reply: 'Workflow Completed.',
+      workflow: { name: 'deposit money', state: 'completed', step: 5, totalSteps: 4 },
+      ended: false,
+    });
+    renderAssistant();
+
+    await userEvent.type(composer(), 'submitted');
+    await userEvent.click(sendButton());
+
+    await screen.findByText('Workflow Completed.');
+    expect(within(taskPanel()!).getByText('Completed')).toBeInTheDocument();
+    expect(composer()).toBeInTheDocument();
+    expect(screen.queryByText(/this visit has ended/i)).not.toBeInTheDocument();
+  });
+
+  it('closes the composer after the goodbye, keeping the goodbye on screen', async () => {
+    sendMessage.mockResolvedValueOnce({
+      reply: 'Thank you for using the banking assistant.',
+      workflow: { name: null, state: 'none', step: null, totalSteps: null },
+      ended: true,
+    });
+    renderAssistant();
+
+    await userEvent.type(composer(), 'exit');
+    await userEvent.click(sendButton());
+
+    expect(await screen.findByText(/this visit has ended/i)).toBeInTheDocument();
+    expect(screen.getByText('Thank you for using the banking assistant.')).toBeInTheDocument();
+    expect(screen.queryByRole('textbox', { name: /type your message/i })).not.toBeInTheDocument();
+  });
+
+  it('finishing ends the visit and returns to scanning', async () => {
+    const endSession = vi.fn(async () => {});
+    sendMessage.mockResolvedValueOnce({ reply: 'Goodbye.', ended: true });
+    renderAssistant(auth(), session({ endSession }));
+
+    await userEvent.type(composer(), 'exit');
+    await userEvent.click(sendButton());
+    await userEvent.click(await screen.findByRole('button', { name: /finish/i }));
+
+    expect(endSession).toHaveBeenCalledTimes(1);
+    expect(await screen.findByText('scan screen')).toBeInTheDocument();
+  });
+});

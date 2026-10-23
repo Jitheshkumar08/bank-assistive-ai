@@ -1,8 +1,14 @@
+import inspect
 import re
 from typing import NamedTuple
 
 from app.dialogue import multilingual_phrases
+from app.dialogue.assistance import field_help, step_field
 from app.dialogue.indic_numbers import extract_amount
+from app.dialogue.localization import GeneratedText, compose
+from app.dialogue.multilingual_negation import contains_indic_negation
+from app.dialogue.multilingual_questions import looks_like_an_indic_question
+from app.dialogue.text_normalization import normalize_text
 from app.workflow.loader import WorkflowLoader
 from app.dialogue.llm.dialogue_understanding import (
     DialogueUnderstanding,
@@ -22,8 +28,11 @@ from app.dialogue.workflow_conflict import (
     CHOICE_PAUSE,
     CONFLICT_CONTROL_CHOICES,
     WorkflowConflict,
+    cancel_confirmation,
+    cancel_confirmation_question,
     conflict_question,
     display_name,
+    is_cancel_confirmation,
     resolve_conflict_answer,
     same_workflow,
 )
@@ -82,6 +91,12 @@ WORKFLOW_CONTROL_PHRASES = {
     },
     "next": {
         "next", "what next", "what's next", "whats next"
+    },
+    # Explains the current field and restates the step; never moves the
+    # workflow. Exact phrases only: "help me open an account" is a
+    # banking request and still reaches intent detection.
+    "help": {
+        "help", "help me", "i need help", "please help", "please help me"
     },
 }
 
@@ -260,9 +275,11 @@ POLITE_SUFFIXES = tuple(sorted(
     reverse=True,
 ))
 
-# One table for the stripping loop, longest-first.
+# One table for the stripping loop, longest-first. Kannada and Hindi
+# wrappers ("ದಯವಿಟ್ಟು", "कृपया") joined in M3; the remainder must still be an
+# exact pause / resume / repeat phrase, in any language.
 STRIPPABLE_PREFIXES = tuple(sorted(
-    POLITE_PREFIXES + CONVERSATIONAL_LEAD_INS,
+    POLITE_PREFIXES + CONVERSATIONAL_LEAD_INS + multilingual_phrases.POLITE_PREFIXES,
     key=len,
     reverse=True,
 ))
@@ -318,6 +335,11 @@ _NEGATION_WORD_PATTERN = re.compile(r"[a-z']+")
 def contains_negation(text):
     """
     True when `text` contains a word that negates a command.
+
+    English words here; Kannada, Hindi and romanised ones in
+    multilingual_negation (M3). Every caller is a guard against
+    executing a refusal as a request, so the guard now holds in all
+    three languages.
     """
 
     if not text:
@@ -327,10 +349,13 @@ def contains_negation(text):
     # "don't" are the same token.
     normalized = text.lower().replace("’", "'")
 
-    return any(
+    if any(
         word in NEGATION_TOKENS
         for word in _NEGATION_WORD_PATTERN.findall(normalized)
-    )
+    ):
+        return True
+
+    return contains_indic_negation(text)
 
 
 def strip_politeness(text):
@@ -665,7 +690,13 @@ def normalize_command_text(text):
     if not text:
         return ""
 
-    normalized = text.strip().lower()
+    # The engine's one normalisation (M5, text_normalization): NFC -- a
+    # nukta letter such as ड़ in "थोड़ा रुको" arrives precomposed or
+    # combining, and the phrase tables are NFC -- invisible characters
+    # removed, dandas (। ॥) and curly apostrophes as ASCII, and runs of
+    # spaces collapsed. Before M5 "जारी रखो॥" and "ದಯವಿಟ್ಟು  ಮತ್ತೆ ಹೇಳಿ"
+    # (two spaces) missed their exact phrases.
+    normalized = normalize_text(text).lower()
     normalized = normalized.rstrip(" .!?,;:")
 
     return normalized
@@ -746,7 +777,14 @@ def classify_command(text):
     # exact tables after dropping single-character debris.
     # ---------------------------------------------
 
-    by_stem = multilingual_phrases.classify_by_stem(normalized)
+    # A negated word is never a command: "ನಿಲ್ಲಿಸಬೇಡಿ" (don't stop)
+    # begins with the cancel stem ನಿಲ್ಲಿಸ, and "ಮುಂದುವರಿಸಬೇಡಿ" (don't
+    # continue) with the resume stem. Before M3 the stem rule had no
+    # negation check, so "don't stop" cancelled the request.
+    by_stem = (
+        None if contains_negation(normalized)
+        else multilingual_phrases.classify_by_stem(normalized)
+    )
 
     if by_stem is not None:
         return by_stem
@@ -887,10 +925,18 @@ def looks_like_a_question(text):
         return True
 
     # A strong interrogative anywhere in the sentence.
-    return any(
+    if any(
         word in STRONG_QUESTION_WORDS
         for word in _WORD_PATTERN.findall(normalized)
-    )
+    ):
+        return True
+
+    # Kannada, Hindi and romanised question cues (M3). The same
+    # contract as everything above: a match only buys the LLM's own
+    # classification, it decides nothing. Before M3 every Kannada and
+    # Hindi question skipped that classification and reached
+    # IntentDetector, which started workflows for them.
+    return looks_like_an_indic_question(text)
 
 
 # =========================================================
@@ -1076,6 +1122,59 @@ def resolve_control_command(text):
     return None
 
 
+# =========================================================
+# LLM-WRITTEN TEXT  (M6)
+#
+# Knowledge answers come from the LLM. The output boundary renders the
+# engine's FIXED sentences into Kannada and Hindi from authored templates,
+# and must leave LLM text alone (localising it is M7). Marking the answer
+# at the one place it enters the dialogue manager is how the boundary can
+# tell the two apart. GeneratedText is a str: history, comparisons and the
+# side-question memory all treat it exactly as before.
+#
+# The "having trouble looking that up" message is NOT marked: it is the
+# engine's own fixed sentence, and it has a rendering.
+#
+# M7: the answer also records the language it was ASKED to be written in
+# (the session language at the time). That is the canonical record of an
+# LLM answer: there is no English original to keep, because the model is
+# asked to write in the customer's language directly.
+# =========================================================
+
+def mark_generated(answer, language=None):
+    if not isinstance(answer, str) or not answer or answer == QUESTION_UNAVAILABLE_MESSAGE:
+        return answer
+    return GeneratedText(answer, language=language)
+
+
+def strip_instruction(answer, instruction, language=None):
+    """
+    `answer` without a verbatim copy of `instruction` (M7).
+
+    The reply "{answer} {next_instruction}" appends the step itself, and the
+    prompt asks the model not to repeat it. If it does anyway, the copy is
+    removed here -- in English, or in the session language's authored
+    rendering -- so the customer does not hear the step twice. Only exact
+    copies are removed; a paraphrase cannot be detected and stays.
+    """
+    if not isinstance(answer, str) or not instruction:
+        return answer
+
+    from app.dialogue.localization_catalog import INSTRUCTIONS
+
+    copies = [instruction] + [r for r in INSTRUCTIONS.get(instruction, {}).values() if r]
+    text = str(answer)
+    for copy in copies:
+        text = text.replace(copy, " ")
+    text = " ".join(text.split())
+
+    if text == " ".join(str(answer).split()):
+        return answer
+    if isinstance(answer, GeneratedText):
+        return GeneratedText(text, language=answer.language)
+    return text
+
+
 class DialogueManager:
 
     def __init__(self, intent_detector=None):
@@ -1129,7 +1228,7 @@ class DialogueManager:
     # TIER-1 CONTROL COMMAND HANDLING
     # =====================================================
 
-    def handle_control_command(self, conversation, command):
+    def handle_control_command(self, conversation, command, user_input=None):
 
         # An explicit step reference is dispatched FIRST. It is a
         # READ-ONLY request in every workflow state, so it must
@@ -1182,6 +1281,15 @@ class DialogueManager:
         if pending_conflict is not None:
 
             choice = CONFLICT_CONTROL_CHOICES.get(command)
+
+            # A CANCEL CONFIRMATION is answered by the same words, with
+            # one difference the text alone can show: "ಬೇಡ", "नहीं
+            # चाहिए", "beda" and "nahi chahiye" classify as cancel, yet
+            # as the answer to "do you want to cancel?" they mean "no,
+            # don't". A negated answer is therefore a refusal -- the
+            # direction that loses nothing -- and never a confirmation.
+            if is_cancel_confirmation(pending_conflict):
+                choice = self._cancel_confirmation_choice(choice, user_input)
 
             if choice is not None:
 
@@ -1300,18 +1408,47 @@ class DialogueManager:
             )
 
         # ---------------------------------------------
-        # CANCEL
+        # CANCEL -- asked, not done
+        #
+        # A cancelled request cannot be resumed, and with hands-free
+        # listening one incidental "stop" is a complete turn. So the
+        # first cancel only asks. The question is held in the existing
+        # pending-question slot (a WorkflowConflict with no requested
+        # workflow), so every answer -- a control word here, or free
+        # text in generate_response() -- comes back through
+        # _resolve_workflow_conflict(). The workflow and its step stay
+        # exactly as they are until a cancel is confirmed there.
         # ---------------------------------------------
 
         if command == "cancel":
 
-            conversation.cancel_workflow()
+            confirmation = cancel_confirmation(conversation.current_intent)
+            conversation.remember_workflow_conflict(confirmation)
 
-            return (
-                "Okay, I've cancelled that request. "
-                "Let me know if you'd like help with "
-                "something else."
-            )
+            return self._ask_conflict_question(conversation, confirmation)
+
+        # ---------------------------------------------
+        # HELP
+        # (explains the field the current step is about, from the
+        # workflow definition, then restates the step. Read-only:
+        # never completes, advances, resumes or cancels anything --
+        # a paused request is explained and stays paused)
+        # ---------------------------------------------
+
+        if command == "help":
+
+            if current_instruction is None:
+                return "There's nothing active right now."
+
+            explanation = field_help(self._current_step_field(conversation))
+
+            if workflow_state == WorkflowState.SUSPENDED:
+                return (
+                    f"{explanation} {current_instruction} "
+                    "Say resume when you'd like to continue."
+                )
+
+            return f"{explanation} {restate_current_step(current_instruction)}"
 
         # ---------------------------------------------
         # REPEAT
@@ -1730,6 +1867,23 @@ class DialogueManager:
 
         return None
 
+    def _current_step_field(self, conversation):
+        """The current step's field type, from its definition ("general" if none)."""
+
+        workflow = self.workflow_loader.load_workflow(
+            conversation.current_workflow
+        )
+
+        if workflow is None:
+            return step_field(None)
+
+        steps = workflow["steps"]
+
+        if 1 <= conversation.current_step <= len(steps):
+            return step_field(steps[conversation.current_step - 1])
+
+        return step_field(None)
+
     # =====================================================
     # ACTIVE-WORKFLOW INTERRUPTION  (Phase 3.2B-14)
     #
@@ -1796,6 +1950,11 @@ class DialogueManager:
         The clarification, phrased for the state the interrupted
         request is actually in. Changes nothing.
         """
+
+        paused = conversation.workflow_state == WorkflowState.SUSPENDED
+
+        if is_cancel_confirmation(conflict):
+            return cancel_confirmation_question(conflict, paused=paused)
 
         return conflict_question(
             conflict,
@@ -1915,7 +2074,7 @@ class DialogueManager:
             requested_workflow=requested
         )
 
-    def _conflict_choice_from_text(self, user_input):
+    def _conflict_choice_from_text(self, user_input, conflict=None):
         """
         Which of the three options a free-text answer selects, or
         None when it selects none of them.
@@ -1924,15 +2083,53 @@ class DialogueManager:
         resolve_conflict_answer() so the resolver stays a pure
         function of its vocabulary, and so the guard is the same
         contains_negation() the rest of this file uses.
+
+        For a cancel confirmation the guard means the opposite: a
+        negated answer ("no", "don't cancel it") is a refusal, not an
+        unclear answer -- see _cancel_confirmation_choice().
         """
 
         if not user_input:
             return None
 
+        if is_cancel_confirmation(conflict):
+            return self._cancel_confirmation_choice(
+                resolve_conflict_answer(user_input),
+                user_input
+            )
+
         if contains_negation(user_input):
             return None
 
         return resolve_conflict_answer(user_input)
+
+    @staticmethod
+    def _cancel_confirmation_choice(choice, user_input):
+        """
+        The answer to "do you want to cancel?", from the option a turn
+        named and the words it used.
+
+        Returns CHOICE_CANCEL (confirmed), CHOICE_CONTINUE (refused), or
+        None (not an answer: ask again).
+
+        - Any negation is a REFUSAL, whatever else was named. "No",
+          "don't cancel it", and the cancel phrases that are themselves
+          negations -- ಬೇಡ, नहीं चाहिए, beda, nahi chahiye -- all mean
+          "keep it" as the answer to this question. "No, cancel it" is
+          read as a refusal too: when an answer contradicts itself, the
+          reading that loses nothing wins, and the customer can simply
+          say cancel again.
+        - "Pause" is not one of the two options offered, so it asks
+          again rather than doing something the question did not name.
+        """
+
+        if user_input and contains_negation(user_input):
+            return CHOICE_CONTINUE
+
+        if choice in (CHOICE_CANCEL, CHOICE_CONTINUE):
+            return choice
+
+        return None
 
     def _resolve_workflow_conflict(self, conversation, conflict, choice):
         """
@@ -1950,6 +2147,9 @@ class DialogueManager:
         load_workflow for activation). There is no second workflow
         engine and at no point are two workflows ACTIVE.
         """
+
+        if is_cancel_confirmation(conflict):
+            return self._resolve_cancel_confirmation(conversation, conflict, choice)
 
         current = conflict.current_workflow
         requested = conflict.requested_workflow
@@ -2079,6 +2279,50 @@ class DialogueManager:
     # wedge the session.
     # =====================================================
 
+    def _resolve_cancel_confirmation(self, conversation, conflict, choice):
+        """
+        Carries out the answer to "do you want to cancel?".
+
+        CHOICE_CANCEL is the only path to cancel_workflow(). Refusing
+        changes nothing at all: an ACTIVE request stays ACTIVE and a
+        paused one stays paused, at the same step -- "keep it" is not
+        "resume it". Anything that is not an answer asks again, with
+        the question still pending and no state touched.
+        """
+
+        if choice == CHOICE_CANCEL:
+            conversation.clear_workflow_conflict()
+            conversation.cancel_workflow()
+            return (
+                "Okay, I've cancelled that request. "
+                "Let me know if you'd like help with "
+                "something else."
+            )
+
+        if choice == CHOICE_CONTINUE:
+            conversation.clear_workflow_conflict()
+
+            if conversation.workflow_state == WorkflowState.SUSPENDED:
+                return (
+                    "Okay, I won't cancel it. "
+                    "That request is still paused. "
+                    "Say resume when you'd like to continue."
+                )
+
+            current_instruction = self._resolve_current_instruction(
+                conversation
+            )
+
+            if current_instruction is None:
+                return "Okay, I won't cancel it."
+
+            return (
+                "Okay, I won't cancel it. "
+                + restate_current_step(current_instruction)
+            )
+
+        return self._ask_conflict_question(conversation, conflict)
+
     def start_workflow(self, conversation, intent):
         """
         Attempts to activate the workflow for `intent`.
@@ -2143,7 +2387,7 @@ class DialogueManager:
             return self._resolve_workflow_conflict(
                 conversation,
                 pending_conflict,
-                self._conflict_choice_from_text(user_input)
+                self._conflict_choice_from_text(user_input, pending_conflict)
             )
 
         # =================================================
@@ -2261,14 +2505,18 @@ class DialogueManager:
 
             if message_type in {"help", "question"}:
 
-                return self.dialogue_understanding.answer_question(
+                # Through _ask_question_answerer (M7), so this answer is
+                # marked and asked for in the session language like every
+                # other. No recent_context, as before.
+                return self._ask_question_answerer(
                     question=user_input,
                     workflow_context=(
                         status_message
                         + " Workflow: "
                         + conversation.current_intent
                     ),
-                    current_instruction=""
+                    current_instruction="",
+                    language=getattr(conversation, "language", None)
                 )
 
             return (
@@ -2396,17 +2644,30 @@ class DialogueManager:
                 entities["amount"] = spoken_amount
 
         # =================================================
-        # 7. CANCEL
+        # 7. CANCEL -- asked, never done, on this path too
+        #
+        # The model reading a turn as "cancel" is a request to cancel,
+        # exactly like a cancel phrase the tables recognise, and it
+        # gets exactly the same treatment: handle_control_command()
+        # asks "do you want to cancel?" and holds the question in the
+        # one pending-question slot. Only an explicit confirmation,
+        # through _resolve_cancel_confirmation(), cancels.
+        #
+        # Without this, any cancel the tables did not know ("please
+        # cancel it", a romanised spelling) -- or a refusal the model
+        # mislabelled ("don't cancel it") -- cancelled at once, the one
+        # path the confirmation did not cover.
+        #
+        # A question already pending never reaches here: it is
+        # resolved at the top of this method, before any of this.
         # =================================================
 
         if action == "cancel":
 
-            conversation.cancel_workflow()
-
-            return (
-                "Okay, I've cancelled that request. "
-                "Let me know if you'd like help with "
-                "something else."
+            return self.handle_control_command(
+                conversation,
+                "cancel",
+                user_input=user_input
             )
 
         # =================================================
@@ -2670,7 +2931,15 @@ class DialogueManager:
                     entities
                 )
 
-                return f"{answer} {next_instruction}"
+                # compose(), not an f-string: the answer is LLM-written
+                # and the instruction is fixed, and the output boundary
+                # renders only the fixed part (M6). Any verbatim copy of
+                # the instruction inside the answer is removed first, so
+                # the step is said once (M7).
+                return compose(
+                    strip_instruction(answer, next_instruction),
+                    next_instruction
+                )
 
             # ---------------------------------------------
             # Plain completion, or completion plus a request for
@@ -2912,7 +3181,8 @@ class DialogueManager:
             question=user_input,
             workflow_context=workflow_context,
             current_instruction=current_instruction,
-            recent_context=recent_context
+            recent_context=recent_context,
+            language=getattr(conversation, "language", None)
         )
 
         self._remember_side_question(
@@ -2949,7 +3219,8 @@ class DialogueManager:
         question,
         workflow_context,
         current_instruction,
-        recent_context=None
+        recent_context=None,
+        language=None
     ):
 
         optional = {}
@@ -2957,12 +3228,34 @@ class DialogueManager:
         if recent_context is not None and self._answerer_takes_context():
             optional["recent_context"] = recent_context
 
-        return self.dialogue_understanding.answer_question(
+        # The session language (M7), under the same rule as
+        # recent_context: sent only to an answerer that accepts it.
+        if language and self._answerer_takes_language():
+            optional["response_language"] = language
+
+        return mark_generated(self.dialogue_understanding.answer_question(
             question=question,
             workflow_context=workflow_context,
             current_instruction=current_instruction,
             **optional
-        )
+        ), language)
+
+    def _answerer_takes_language(self):
+        """Whether the injected answer_question() accepts `response_language`."""
+
+        cached = getattr(self, "_accepts_response_language", None)
+
+        if cached is None:
+            try:
+                parameters = inspect.signature(self.dialogue_understanding.answer_question).parameters
+            except (TypeError, ValueError):
+                parameters = {}
+            cached = "response_language" in parameters or any(
+                p.kind is inspect.Parameter.VAR_KEYWORD for p in parameters.values()
+            )
+            self._accepts_response_language = cached
+
+        return cached
 
     def _answerer_takes_context(self):
         """
@@ -3026,7 +3319,7 @@ class DialogueManager:
     # intent is set at all)
     # =====================================================
 
-    def answer_general_question(self, user_input, conversation=None):
+    def answer_general_question(self, user_input, conversation=None, language=None):
 
         """
         Determines whether `user_input` is a general or banking
@@ -3138,6 +3431,8 @@ class DialogueManager:
             None
         )
 
+        # `language` (M7): the routing layer's resting-state call passes no
+        # conversation, so it passes the session language on its own.
         answer = self._ask_question_answerer(
             question=user_input,
             workflow_context=(
@@ -3145,7 +3440,8 @@ class DialogueManager:
                 "Answer general banking questions helpfully."
             ),
             current_instruction="",
-            recent_context=recent_context
+            recent_context=recent_context,
+            language=language or getattr(conversation, "language", None)
         )
 
         if conversation is not None:
@@ -3177,9 +3473,18 @@ class DialogueManager:
         Answers an utterance that is not a banking service request.
 
         `category` comes from IntentDetector: KNOWLEDGE_QUESTION,
-        ACKNOWLEDGEMENT, CONTROL, UNSUPPORTED or OUT_OF_DOMAIN.
+        ACKNOWLEDGEMENT, CONTROL, UNSUPPORTED, OUT_OF_DOMAIN,
+        AMBIGUOUS_SERVICE or (M10) UNSUPPORTED_OPERATION.
         Returns the reply string. Starts no workflow in any case.
         """
+
+        if category == "AMBIGUOUS_SERVICE":
+
+            # M4: a banking request, but the detector's preferred service
+            # is not one the customer named. Ask which service, rather
+            # than start the wrong procedure. An existing sentence, so it
+            # is already rendered in Kannada and Hindi.
+            return "Okay. Let me know which banking service you'd like help with."
 
         if category == "ACKNOWLEDGEMENT":
 
@@ -3226,10 +3531,14 @@ class DialogueManager:
                     conversation,
                     "recent_side_question",
                     None
-                )
+                ),
+                language=getattr(conversation, "language", None)
             )
 
-        # UNSUPPORTED / OUT_OF_DOMAIN.
+        # UNSUPPORTED / OUT_OF_DOMAIN, and (M10) UNSUPPORTED_OPERATION:
+        # a banking operation the assistant does not offer (a transfer,
+        # UPI, a bill, a wallet, a card, insurance). The sentence below
+        # says it cannot help and lists what it can do.
         #
         # Deliberately one fixed, non-judgemental sentence rather
         # than a lecture or a keyword-specific refusal: the
@@ -3241,6 +3550,28 @@ class DialogueManager:
             "withdraw money, check your balance, apply for a loan "
             "or open an account. Which would you like?"
         )
+
+    # =====================================================
+    # REFUSALS  (M3)
+    #
+    # "मुझे लोन नहीं चाहिए" (I don't want a loan) names a banking
+    # service, so IntentDetector reports it as a banking request -- and
+    # before M3 the routing layer started the loan workflow. English
+    # "I don't want to withdraw" did the same. The routing layer now
+    # sends any negated utterance that would otherwise start a workflow
+    # here instead.
+    #
+    # The reply is the acknowledgement handler's, unchanged: it reports
+    # the conversation's actual state and mutates nothing. A customer
+    # who combined a refusal with a request ("no, I want to deposit")
+    # is asked once more, which costs one turn; starting the refused
+    # service would cost them a wrong banking procedure.
+    # =====================================================
+
+    def handle_refused_request(self, conversation):
+        """Answers a refusal. Starts, stops and changes nothing."""
+
+        return self._handle_acknowledgement(conversation, "acknowledgement")
 
     # =====================================================
     # RESTING-STATE CONTROL  (the control guard's handler)

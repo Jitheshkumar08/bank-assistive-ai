@@ -1,0 +1,46 @@
+{
+  "version": "amounts_m1",
+  "description": "M1 amount regression fixtures, kept separate from multilingual_v1 so the M0 baseline stays comparable. Boundary cases for each M1 safety rule, plus sentences adapted from the annotated IndicVoices banking transcripts. Expected values come from what each sentence means.",
+  "sources": {
+    "m1-new": "new sentence written for M1",
+    "indicvoices-annotated": "taken or shortened from debugging/spike/indicvoices_banking_annotations.json"
+  },
+  "fixtures": [
+    {"id": "amt-hi-101", "lang": "hi", "category": "amount", "text": "इक्कीस हज़ार रुपये", "expected": {"amount": 21000}, "gloss": "twenty-one thousand rupees", "source": "m1-new"},
+    {"id": "amt-hi-102", "lang": "hi", "category": "amount", "text": "निन्यानवे हज़ार", "expected": {"amount": 99000}, "gloss": "ninety-nine thousand", "source": "m1-new"},
+    {"id": "amt-hi-103", "lang": "hi", "category": "amount", "text": "दो हज़ार पाँच सौ रुपये", "expected": {"amount": 2500}, "gloss": "two thousand five hundred rupees", "source": "m1-new"},
+    {"id": "amt-hi-104", "lang": "hi", "category": "amount", "text": "साढ़े तीन हज़ार", "expected": {"amount": 3500}, "gloss": "three and a half thousand", "source": "m1-new"},
+    {"id": "amt-hi-105", "lang": "hi", "category": "amount", "text": "सवा लाख रुपये", "expected": {"amount": 125000}, "gloss": "one and a quarter lakh rupees", "source": "m1-new"},
+    {"id": "amt-hi-106", "lang": "hi", "category": "amount", "text": "पौने दो लाख", "expected": {"amount": 175000}, "gloss": "one and three-quarter lakh", "source": "m1-new"},
+    {"id": "amt-hi-107", "lang": "hi", "category": "amount", "text": "ढाई रुपये", "expected": {"amount": null}, "gloss": "two and a half rupees: not a whole amount", "source": "m1-new"},
+    {"id": "amt-hi-108", "lang": "hi", "category": "amount", "text": "पच्चीसी हज़ार रुपये", "expected": {"amount": null}, "gloss": "a misspelt number word before thousand", "source": "m1-new"},
+    {"id": "amt-hi-109", "lang": "hi", "category": "amount", "text": "दो तीन हज़ार रुपये", "expected": {"amount": null}, "gloss": "two-three thousand rupees: an approximation", "source": "m1-new"},
+    {"id": "amt-hi-110", "lang": "hi", "category": "amount", "text": "मुझे दो हज़ार दो", "expected": {"amount": 2000}, "gloss": "give me two thousand (the final दो is 'give')", "source": "m1-new"},
+    {"id": "amt-hi-111", "lang": "hi", "category": "amount", "text": "सात सौ रुपये भेजना बंद करें और तीन सौ रुपये भेजें", "expected": {"amount": null}, "gloss": "stop sending 700, send 300: two amounts, cannot tell which", "source": "indicvoices-annotated"},
+    {"id": "amt-hi-112", "lang": "hi", "category": "amount", "text": "बीमित राशि सौ रुपये चुनें", "expected": {"amount": 100}, "gloss": "choose an insured amount of a hundred rupees", "source": "indicvoices-annotated"},
+    {"id": "amt-hi-113", "lang": "hi", "category": "amount", "text": "इक्कीस बारह दो हज़ार उन्नीस से इक्कीस एक दो हज़ार उन्नीस तक", "expected": {"amount": null}, "gloss": "from 21-12-2019 to 21-1-2019: spoken dates", "source": "indicvoices-annotated"},
+    {"id": "amt-hi-114", "lang": "hi", "category": "amount", "text": "खाता नंबर 4521 में दो हज़ार जमा", "expected": {"amount": 2000}, "gloss": "deposit two thousand in account number 4521", "source": "m1-new"},
+
+    {"id": "amt-kn-101", "lang": "kn", "category": "amount", "text": "ಇಪ್ಪತ್ಮೂರು ಸಾವಿರ", "expected": {"amount": 23000}, "gloss": "twenty-three thousand (clipped spelling)", "source": "m1-new"},
+    {"id": "amt-kn-102", "lang": "kn", "category": "amount", "text": "ನಲವತ್ತೆಂಟು ಸಾವಿರ ರೂಪಾಯಿ", "expected": {"amount": 48000}, "gloss": "forty-eight thousand rupees", "source": "m1-new"},
+    {"id": "amt-kn-103", "lang": "kn", "category": "amount", "text": "ಇಪ್ಪತ್ತು ಐದು ಸಾವಿರ", "expected": {"amount": 25000}, "gloss": "twenty five thousand (spaced)", "source": "m1-new"},
+    {"id": "amt-kn-104", "lang": "kn", "category": "amount", "text": "ಐನೂರ ಐವತ್ತು ರೂಪಾಯಿ", "expected": {"amount": 550}, "gloss": "five hundred and fifty rupees", "source": "m1-new"},
+    {"id": "amt-kn-105", "lang": "kn", "category": "amount", "text": "ಮೂರೂವರೆ ಸಾವಿರ", "expected": {"amount": 3500}, "gloss": "three and a half thousand", "source": "m1-new"},
+    {"id": "amt-kn-106", "lang": "kn", "category": "amount", "text": "ಎರಡು ಮೂರು ಸಾವಿರ", "expected": {"amount": null}, "gloss": "two-three thousand: an approximation", "source": "m1-new"},
+    {"id": "amt-kn-107", "lang": "kn", "category": "amount", "text": "ಇಪ್ಪತ್ತೈದ ಸಾವಿರ", "expected": {"amount": null}, "gloss": "a clipped number word before thousand", "source": "m1-new"},
+    {"id": "amt-kn-108", "lang": "kn", "category": "amount", "text": "ಒಂದು ಸಾವಿರ ರೂಪಾಯನ್ನು ನಿಲ್ಲಿಸಿ ಎರಡು ಸಾವಿರ ರೂಪಾಯಿ ಕಳಿಸಿ", "expected": {"amount": null}, "gloss": "stop the 1000, send 2000: two amounts", "source": "indicvoices-annotated"},
+    {"id": "amt-kn-109", "lang": "kn", "category": "amount", "text": "ಹದಿನೆಂಟು ಹನ್ನೊಂದು ಎರಡು ಸಾವಿರದ ಹದಿನೆಂಟನೇ ತಾರೀಖು", "expected": {"amount": null}, "gloss": "on the 18-11-2018: a spoken date", "source": "indicvoices-annotated"},
+    {"id": "amt-kn-110", "lang": "kn", "category": "amount", "text": "ಐದು ಸೊನ್ನೆ ಸೊನ್ನೆ ರೂಪಾಯಿ", "expected": {"amount": 500}, "gloss": "five zero zero rupees, digit by digit (not supported in M1: expected to abstain)", "source": "indicvoices-annotated"},
+    {"id": "amt-kn-111", "lang": "kn", "category": "amount", "text": "ಖಾತೆ ಸಂಖ್ಯೆ 4521 ಗೆ ಎರಡು ಸಾವಿರ", "expected": {"amount": 2000}, "gloss": "two thousand to account number 4521", "source": "m1-new"},
+
+    {"id": "amt-en-101", "lang": "en", "category": "amount", "text": "2.5 lakh", "expected": {"amount": 250000}, "gloss": "", "source": "m1-new"},
+    {"id": "amt-en-102", "lang": "en", "category": "amount", "text": "5 thousand rupees", "expected": {"amount": 5000}, "gloss": "", "source": "m1-new"},
+    {"id": "amt-en-103", "lang": "en", "category": "amount", "text": "₹5000", "expected": {"amount": 5000}, "gloss": "", "source": "m1-new"},
+    {"id": "amt-en-104", "lang": "en", "category": "amount", "text": "transfer on 15-08-2024", "expected": {"amount": null}, "gloss": "a date", "source": "m1-new"},
+    {"id": "amt-en-105", "lang": "en", "category": "amount", "text": "I am on step 2", "expected": {"amount": null}, "gloss": "a step number", "source": "m1-new"},
+    {"id": "amt-en-106", "lang": "en", "category": "amount", "text": "account number 1234567890", "expected": {"amount": null}, "gloss": "an account number", "source": "m1-new"},
+    {"id": "amt-en-107", "lang": "en", "category": "amount", "text": "deposit 5000 from my 20000 balance", "expected": {"amount": null}, "gloss": "two amounts", "source": "m1-new"},
+    {"id": "amt-en-108", "lang": "en", "category": "amount", "text": "deposit thousand rupees", "expected": {"amount": null}, "gloss": "a scale word whose multiplier cannot be ruled out", "source": "m1-new"},
+    {"id": "amt-en-109", "lang": "en", "category": "amount", "text": "500.50", "expected": {"amount": 500}, "gloss": "plain decimal: whole rupees kept, as before M1", "source": "m1-new"}
+  ]
+}

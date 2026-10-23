@@ -30,9 +30,8 @@ export interface ConversationMessage {
 /**
  * Mirrors the engine's own WorkflowState enum.
  *
- * Carried on the reply so the UI can show task progress once workflows
- * are wired up. Nothing renders it yet -- it exists so adding that later
- * is additive rather than a contract change.
+ * Carried on every reply; the conversation screen shows it as task
+ * progress.
  */
 export type WorkflowState = 'none' | 'active' | 'suspended' | 'completed' | 'cancelled';
 
@@ -75,7 +74,7 @@ export interface AssistantReply {
    * was wrong.
    */
   transcript?: string | null;
-  /** Where the banking task has reached, once workflows are wired up. */
+  /** Where the banking task has reached. */
   workflow?: WorkflowSnapshot | null;
   /** True when the customer asked to end the session. */
   ended?: boolean;
@@ -95,8 +94,61 @@ export interface SpeechRequest {
   text: string;
 }
 
+/**
+ * Where the visit's conversation stands, read without changing it.
+ *
+ * Used only to re-sync after a turn whose reply never arrived: the
+ * assistant may have applied that turn anyway.
+ */
+export interface AssistantSnapshot {
+  /**
+   * False when the assistant holds no conversation for this visit. The
+   * progress is then UNKNOWN -- which is not the same as "no workflow",
+   * and must never be shown as one.
+   */
+  known: boolean;
+  /** The customer ended the conversation. */
+  ended: boolean;
+  /** Same shape as a reply's workflow. Null whenever `known` is false. */
+  workflow: WorkflowSnapshot | null;
+}
+
+/**
+ * An offer of help for a customer who has gone quiet on a step, or why
+ * there is none.
+ *
+ * The assistant decides whether an offer fits -- an active step, no
+ * question waiting for an answer -- and words it in the visit's language.
+ * An offer never moves the workflow.
+ */
+export interface AssistanceOffer {
+  offered: boolean;
+  /** offered, ended, pending_question, paused, no_active_step, unknown_session. */
+  reason: string;
+  /** The current step's field type, from the workflow definition. */
+  field: string | null;
+  /** Stable id of the wording; passed back so the next offer differs. */
+  promptId: string | null;
+  /** What to show and say. Null when nothing is offered. */
+  text: string | null;
+}
+
 export interface AssistantClient {
   sendMessage(request: AssistantRequest, signal?: AbortSignal): Promise<AssistantReply>;
+  /**
+   * Asks for an offer of help after a quiet spell. Optional: a client
+   * without it (the offline mock) simply never offers.
+   */
+  requestAssistance?(
+    sessionId: string,
+    avoid: string | null,
+    signal?: AbortSignal,
+  ): Promise<AssistanceOffer>;
+  /**
+   * Reads the visit's workflow progress. Optional: a client without it
+   * (the offline mock) simply never re-syncs, and nothing else changes.
+   */
+  getSnapshot?(sessionId: string, signal?: AbortSignal): Promise<AssistantSnapshot>;
   /**
    * Fetches the reply as audio for the browser to play.
    *
