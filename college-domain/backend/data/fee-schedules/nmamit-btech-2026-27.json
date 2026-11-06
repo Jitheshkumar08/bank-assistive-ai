@@ -1,0 +1,32 @@
+{
+  "institutionId": "nmamit",
+  "admissionYear": 2026,
+  "academicYear": "2026-27",
+  "title": "Annual Fee Structure for BTech Programs 2026-27 (NMAM Institute of Technology, Nitte section)",
+  "sourceUrl": "https://nitte.edu.in/fee/BTECH.pdf",
+  "sourceSha256": "7e986b55f89dc65e93e2f5f420e8257715d37940d18718e74bca765ad22c3d37",
+  "transcribedOn": "2026-10-27",
+  "confirmation": {
+    "status": "PENDING",
+    "confirmedBy": null,
+    "confirmedOn": null,
+    "note": "Transcribed by Claude from the official PDF. A person must compare every amount with the PDF, then set status to CONFIRMED with their name and date before running `npm run fees:load`."
+  },
+  "columns": "General and Scholarship = 'Through NUCAT 2026'; NRI = NRI Category; null = printed as NA. Exam fee is collected each academic year with the annual tuition fee.",
+  "programmes": [
+    { "programName": "Artificial Intelligence & Data Science", "aliases": [], "general": 350000, "scholarship": 200000, "nri": 400000, "examFee": 10000 },
+    { "programName": "Artificial Intelligence & Machine Learning", "aliases": [], "general": 350000, "scholarship": 200000, "nri": 400000, "examFee": 10000 },
+    { "programName": "Biotechnology", "aliases": [], "general": 150000, "scholarship": 130000, "nri": 200000, "examFee": 10000 },
+    { "programName": "Civil Engineering", "aliases": [], "general": 150000, "scholarship": 130000, "nri": 175000, "examFee": 10000 },
+    { "programName": "Computer & Communication", "aliases": [], "general": 250000, "scholarship": 200000, "nri": 300000, "examFee": 10000 },
+    { "programName": "Computer Science", "aliases": [], "general": 350000, "scholarship": 200000, "nri": 400000, "examFee": 10000 },
+    { "programName": "Computer Science (Cyber Security)", "aliases": [], "general": 350000, "scholarship": 200000, "nri": 400000, "examFee": 10000 },
+    { "programName": "Electrical & Electronics", "aliases": [], "general": 150000, "scholarship": 130000, "nri": 200000, "examFee": 10000 },
+    { "programName": "Electronics & Communication", "aliases": [], "general": 250000, "scholarship": 200000, "nri": 300000, "examFee": 10000 },
+    { "programName": "Electronics & Communication (Advanced Communication Technology)", "aliases": [], "general": 200000, "scholarship": 170000, "nri": 250000, "examFee": 10000 },
+    { "programName": "Electronics Engineering (VLSI Design & Technology)", "aliases": [], "general": 200000, "scholarship": 170000, "nri": 250000, "examFee": 10000 },
+    { "programName": "Information Science", "aliases": [], "general": 350000, "scholarship": 200000, "nri": 400000, "examFee": 10000 },
+    { "programName": "Mechanical", "aliases": [], "general": 150000, "scholarship": 130000, "nri": 200000, "examFee": 10000 },
+    { "programName": "Robotics & Artificial Intelligence", "aliases": [], "general": 250000, "scholarship": 200000, "nri": 300000, "examFee": 10000 }
+  ]
+}

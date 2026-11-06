@@ -1,0 +1,145 @@
+.login-form {
+  display: grid;
+  gap: 22px;
+}
+
+.login-form__header {
+  display: grid;
+  gap: 8px;
+}
+
+.login-form__title,
+.page-card__title {
+  color: var(--cg-navy-900);
+  font-family: var(--cg-font-display);
+  font-size: clamp(1.75rem, 3vw, 2.125rem);
+  font-weight: 600;
+  line-height: 1.15;
+  letter-spacing: -0.015em;
+}
+
+.login-form__subtitle,
+.page-card__text {
+  color: var(--cg-muted);
+  font-size: var(--cg-text-md);
+}
+
+.login-form__fields {
+  display: grid;
+  gap: 18px;
+}
+
+.login-form__options {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 4px 16px;
+  margin-top: -8px;
+}
+
+.login-form__link {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  color: var(--cg-blue-600);
+  font-size: var(--cg-text-sm);
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.login-form__link:hover {
+  color: var(--cg-navy-700);
+  text-decoration: underline;
+}
+
+.login-form__signup {
+  margin-top: -6px;
+  color: var(--cg-ink-soft);
+  font-size: var(--cg-text-sm);
+  text-align: center;
+}
+
+.login-form__signup .login-form__link {
+  /* Inline in a sentence: enlarge the tap area to 44px without changing the line height. */
+  min-height: 0;
+  padding: 12px 2px;
+  margin: -12px -2px;
+}
+
+.login-form__privacy {
+  display: flex;
+  gap: 10px;
+  padding-top: 18px;
+  color: var(--cg-muted);
+  border-top: 1px solid var(--cg-line);
+  font-size: var(--cg-text-xs);
+  line-height: 1.55;
+}
+
+.login-form__privacy svg {
+  flex: none;
+  margin-top: 1px;
+  color: var(--cg-blue-600);
+}
+
+/* Placeholder pages share the card typography above. */
+.page-card {
+  display: grid;
+  gap: 18px;
+}
+
+.page-card__icon {
+  display: grid;
+  place-items: center;
+  width: 52px;
+  height: 52px;
+  color: var(--cg-blue-600);
+  background: var(--cg-blue-50);
+  border-radius: var(--cg-radius-md);
+}
+
+.page-card__back {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  justify-self: start;
+  min-height: 44px;
+  color: var(--cg-blue-600);
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.page-card__back:hover {
+  text-decoration: underline;
+}
+
+.login-page__browse {
+  margin-top: 16px;
+  text-align: center;
+  font-size: var(--cg-text-sm);
+}
+
+.login-page__browse a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  font-weight: 600;
+}
+
+.login-form__inline-link {
+  color: inherit;
+  font-weight: 600;
+  text-decoration: underline;
+}
+
+.page-card__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px 16px;
+  align-items: center;
+}
+
+.login-page__notice {
+  margin-bottom: 20px;
+}

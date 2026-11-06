@@ -1,0 +1,241 @@
+.scanner {
+  min-height: 100vh;
+  min-height: 100dvh;
+  padding-bottom: 24px;
+  color: #fff;
+  background: radial-gradient(120% 70% at 50% 0%, #15306e 0%, #0b1d4a 55%, #071435 100%);
+  font-family: var(--cg-font-sans);
+}
+
+.scanner > * {
+  width: min(100%, 460px);
+  margin-inline: auto;
+}
+
+.scanner__top {
+  display: flex;
+  align-items: center;
+  min-height: 60px;
+  padding: 0 16px;
+}
+
+.scanner__brand {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+}
+
+.scanner__brand span { display: grid; }
+.scanner__brand strong { font-size: 0.9375rem; }
+.scanner__brand small { color: rgb(214 225 255 / 0.8); font-size: 0.625rem; }
+
+.scanner__title-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 10px 12px;
+}
+
+.scanner__title-row h1 {
+  font-size: 1.0625rem;
+  font-weight: 700;
+}
+
+.scanner__back {
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  color: #fff;
+  background: transparent;
+  border: 0;
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+.scanner__back:hover { background: rgb(255 255 255 / 0.1); }
+
+.scanner__stage {
+  display: grid;
+  gap: 14px;
+  padding: 0 16px;
+}
+
+.scanner__viewport {
+  position: relative;
+  display: grid;
+  place-items: center;
+  aspect-ratio: 3 / 4;
+  /* Leave room for the controls and Cancel button on short laptop screens. */
+  max-height: max(300px, calc(100vh - 330px));
+  max-height: max(300px, calc(100dvh - 330px));
+  overflow: hidden;
+  background: radial-gradient(circle at 50% 40%, #2b3f6c 0%, #17284f 60%, #101d3c 100%);
+  border: 1px solid rgb(255 255 255 / 0.08);
+  border-radius: 18px;
+}
+
+.scanner__video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0;
+  transition: opacity 200ms ease;
+}
+
+.scanner__viewport.is-live .scanner__video { opacity: 1; }
+
+.scanner__placeholder {
+  display: grid;
+  place-items: center;
+  width: 46%;
+  aspect-ratio: 1;
+  color: rgb(255 255 255 / 0.55);
+  background: rgb(255 255 255 / 0.06);
+  border-radius: 14px;
+}
+
+.scanner__frame {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 62%;
+  aspect-ratio: 1;
+  transform: translate(-50%, -58%);
+  pointer-events: none;
+}
+
+.scanner__frame span {
+  position: absolute;
+  width: 22%;
+  height: 22%;
+  border: 4px solid #3b7bff;
+  filter: drop-shadow(0 0 6px rgb(59 123 255 / 0.6));
+}
+
+.scanner__frame span:nth-child(1) { top: 0; left: 0; border-right: 0; border-bottom: 0; border-top-left-radius: 14px; }
+.scanner__frame span:nth-child(2) { top: 0; right: 0; border-left: 0; border-bottom: 0; border-top-right-radius: 14px; }
+.scanner__frame span:nth-child(3) { bottom: 0; left: 0; border-right: 0; border-top: 0; border-bottom-left-radius: 14px; }
+.scanner__frame span:nth-child(4) { bottom: 0; right: 0; border-left: 0; border-top: 0; border-bottom-right-radius: 14px; }
+
+.scanner__laser {
+  position: absolute;
+  left: 8%;
+  right: 8%;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, #6ea0ff, transparent);
+  box-shadow: 0 0 10px #3b7bff;
+  animation: scanner-laser 2.2s ease-in-out infinite;
+}
+
+@keyframes scanner-laser {
+  0%, 100% { top: 10%; }
+  50% { top: 88%; }
+}
+
+.scanner__instruction {
+  position: absolute;
+  bottom: 18px;
+  left: 0;
+  right: 0;
+  padding: 0 24px;
+  color: #fff;
+  font-size: 0.875rem;
+  font-weight: 500;
+  text-align: center;
+  text-shadow: 0 1px 6px rgb(0 0 0 / 0.6);
+}
+
+.scanner__status { min-height: 0; display: flex; justify-content: center; }
+
+.scanner__pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 12px;
+  color: #dbe6ff;
+  background: rgb(255 255 255 / 0.08);
+  border-radius: 999px;
+  font-size: 0.8125rem;
+}
+
+.scanner__error {
+  display: grid;
+  gap: 10px;
+  padding: 12px 14px;
+  color: #ffe1e1;
+  background: rgb(239 68 68 / 0.16);
+  border: 1px solid rgb(248 113 113 / 0.45);
+  border-radius: 12px;
+  font-size: 0.8125rem;
+  line-height: 1.5;
+}
+
+.scanner__error button {
+  display: inline-flex;
+  align-items: center;
+  justify-self: start;
+  gap: 6px;
+  min-height: 36px;
+  padding: 0 12px;
+  color: #fff;
+  background: rgb(255 255 255 / 0.12);
+  border: 0;
+  border-radius: 8px;
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.scanner__controls {
+  display: flex;
+  justify-content: center;
+  gap: 26px;
+}
+
+.scanner__control {
+  display: grid;
+  place-items: center;
+  width: 54px;
+  height: 54px;
+  color: #fff;
+  background: rgb(255 255 255 / 0.12);
+  border: 1px solid rgb(255 255 255 / 0.14);
+  border-radius: 50%;
+  cursor: pointer;
+  transition: background 150ms ease;
+}
+
+.scanner__control:hover:not(:disabled) { background: rgb(255 255 255 / 0.2); }
+.scanner__control[aria-pressed='true'] { color: #0b1d4a; background: #ffd75e; }
+.scanner__control:disabled { cursor: not-allowed; opacity: 0.4; }
+
+.scanner__cancel {
+  justify-self: center;
+  width: min(100%, 220px);
+  min-height: 48px;
+  margin-top: 4px;
+  color: #fff;
+  background: #1b2c57;
+  border: 1px solid rgb(255 255 255 / 0.12);
+  border-radius: 12px;
+  font: inherit;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.scanner__cancel:hover { background: #22366a; }
+
+.scanner__privacy {
+  color: rgb(214 225 255 / 0.7);
+  font-size: 0.72rem;
+  text-align: center;
+}
+
+.scanner :focus-visible { box-shadow: 0 0 0 2px #0b1d4a, 0 0 0 4px #8fb0ff; }
+
+.spin { animation: scanner-spin 0.9s linear infinite; }
+@keyframes scanner-spin { to { transform: rotate(360deg); } }

@@ -1,0 +1,292 @@
+/* ===== Post-scan banner + college strip ===== */
+.scan-banner {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 12px;
+  padding: 12px 14px;
+  background: var(--app-green-soft);
+  border: 1px solid var(--app-green-line);
+  border-radius: var(--app-radius);
+}
+
+.scan-banner__icon {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 32px;
+  height: 32px;
+  color: #fff;
+  background: var(--app-green);
+  border-radius: 50%;
+}
+
+.scan-banner__text { flex: 1; min-width: 0; }
+.scan-banner__text strong { display: block; color: var(--app-ink); font-size: 0.875rem; }
+.scan-banner__text span { color: var(--app-ink-soft); font-size: 0.72rem; }
+
+.scan-banner__close {
+  display: grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  color: var(--app-green);
+  background: transparent;
+  border: 0;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.college-strip {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-height: 72px;
+  margin-bottom: 12px;
+  padding: 12px 14px;
+  overflow: hidden;
+  background: var(--app-surface);
+  border: 1px solid var(--app-border);
+  border-radius: var(--app-radius);
+  box-shadow: var(--app-shadow);
+}
+
+.college-strip__logo {
+  position: relative;
+  flex: none;
+  color: var(--app-navy);
+}
+
+.college-strip__text { position: relative; flex: 1; min-width: 0; max-width: 62%; }
+.college-strip__text strong { display: block; color: var(--app-ink); font-size: 0.9375rem; }
+.college-strip__text span { display: block; color: var(--app-muted); font-size: 0.6875rem; }
+
+.college-strip__image {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 46%;
+  height: 100%;
+  object-fit: cover;
+  -webkit-mask-image: linear-gradient(90deg, transparent 0%, #000 45%);
+  mask-image: linear-gradient(90deg, transparent 0%, #000 45%);
+}
+
+.college-strip__change {
+  position: relative;
+  min-height: 32px;
+  margin-left: auto;
+  padding: 0 10px;
+  color: var(--app-blue);
+  background: rgb(255 255 255 / 0.92);
+  border: 1px solid var(--app-border);
+  border-radius: 8px;
+  font: inherit;
+  font-size: 0.72rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+/* ===== Result card ===== */
+.result-card {
+  display: grid;
+  gap: 12px;
+  padding: 16px;
+  background: var(--app-surface);
+  border: 1.5px solid #c9d8fb;
+  border-radius: var(--app-radius);
+  box-shadow: 0 10px 28px -18px rgb(31 94 255 / 0.55);
+}
+
+.result-card__head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.result-card__head h2 {
+  color: var(--app-ink);
+  font-size: 1.125rem;
+  font-weight: 800;
+  letter-spacing: -0.01em;
+}
+
+.result-card__status {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 18px 4px;
+  color: var(--app-muted);
+  font-size: 0.875rem;
+}
+
+.result-card__message {
+  display: grid;
+  justify-items: start;
+  gap: 10px;
+  padding: 12px 14px;
+  color: var(--app-ink-soft);
+  background: var(--app-surface-tint);
+  border: 1px solid var(--app-border);
+  border-radius: 10px;
+  font-size: 0.8125rem;
+  line-height: 1.55;
+}
+
+.result-card__message strong { color: var(--app-ink); }
+.result-card__message--info { background: #eef3ff; border-color: #d7e2fb; }
+.result-card__message--error { color: #9f1d1d; background: #fef2f2; border-color: #fecaca; }
+
+.result-card__footnote {
+  display: flex;
+  gap: 8px;
+  padding: 10px 12px;
+  color: var(--app-ink-soft);
+  background: #eef3ff;
+  border-radius: 10px;
+  font-size: 0.72rem;
+  line-height: 1.5;
+}
+
+.result-card__footnote svg { flex: none; margin-top: 1px; color: var(--app-blue); }
+
+.result-fields {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+  margin: 0;
+}
+
+.result-fields dt { color: var(--app-muted); font-size: 0.72rem; }
+.result-fields dd { margin: 2px 0 0; color: var(--app-ink); font-size: 0.95rem; font-weight: 700; line-height: 1.3; }
+
+.result-fields__name {
+  grid-column: 1 / -1;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 4px 4px 6px;
+}
+
+.result-fields__name dd { font-size: 1.0625rem; }
+
+.result-fields__avatar {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  color: var(--app-blue);
+  background: var(--app-blue-soft);
+  border-radius: 50%;
+}
+
+.result-fields__tile {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px;
+  background: var(--app-surface-tint);
+  border: 1px solid var(--app-border);
+  border-radius: 10px;
+}
+
+.result-fields__icon {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 40px;
+  height: 40px;
+  color: var(--tile-fg);
+  background: var(--tile-bg);
+  border-radius: 10px;
+}
+
+.result-fields__rank { font-size: 1.25rem !important; }
+
+.result-fields__status { grid-column: 1 / -1; padding: 0 4px; }
+
+.result-fields--empty dd { color: #9aa5bb; }
+
+/* ===== Fees to be paid ===== */
+.fee-summary {
+  display: grid;
+  gap: 10px;
+  margin-top: 12px;
+  padding: 12px 14px;
+  background: var(--app-surface-tint);
+  border: 1px solid var(--app-border);
+  border-radius: 10px;
+  font-size: 0.8125rem;
+}
+
+.fee-summary h3 {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--app-ink);
+  font-size: 0.9375rem;
+}
+
+.fee-summary h3 svg { color: var(--app-blue); }
+
+.fee-summary__rows { display: grid; gap: 6px; }
+
+.fee-summary__rows > div {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 4px 12px;
+  padding-bottom: 6px;
+  border-bottom: 1px solid var(--app-border);
+}
+
+.fee-summary__rows dt { color: var(--app-ink-soft); }
+.fee-summary__rows dd { margin: 0; color: var(--app-ink); font-weight: 600; font-variant-numeric: tabular-nums; }
+
+.fee-summary__total { padding-top: 2px; border-bottom: 0 !important; }
+.fee-summary__total dt { color: var(--app-ink); font-weight: 700; }
+.fee-summary__total dd { font-size: 1.0625rem; font-weight: 800; }
+
+.fee-summary__note { color: var(--app-muted); font-size: 0.75rem; line-height: 1.45; }
+
+.fee-summary__source {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  justify-self: start;
+  color: var(--app-blue-strong);
+  font-weight: 600;
+}
+
+.fee-summary__unconfirmed {
+  display: flex;
+  gap: 10px;
+  padding: 10px 12px;
+  color: var(--app-ink-soft);
+  background: #fff8eb;
+  border: 1px solid #f5dfb3;
+  border-radius: 9px;
+}
+
+.fee-summary__unconfirmed > svg { flex: none; margin-top: 1px; color: #b45309; }
+.fee-summary__unconfirmed > div { display: grid; gap: 6px; }
+.fee-summary__unconfirmed strong { color: var(--app-ink); }
+
+/* ===== Dashboard grid ===== */
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+  margin-top: 12px;
+}
+
+@media (max-width: 479px) {
+  .result-fields { grid-template-columns: minmax(0, 1fr); }
+  .dashboard-grid { grid-template-columns: minmax(0, 1fr); }
+  .college-strip__image { opacity: 0.25; width: 100%; mask-image: none; -webkit-mask-image: none; }
+  .college-strip__text { max-width: none; }
+  .reference-form__row { flex-direction: column; }
+}

@@ -1,0 +1,390 @@
+// CampusGuide data model (NMAMIT student portal).
+// Personal and admission data live in exactly one place: names, ranks and branches only in official AdmissionRecords;
+// accounts hold login data only (plus a display name for staff). Secrets (session / verification / reset tokens) are stored as SHA-256 hashes.
+
+generator client {
+  provider            = "prisma-client"
+  output              = "../src/generated/prisma"
+  moduleFormat        = "esm"
+  importFileExtension = "js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// ───────────────────────────── Accounts and authentication ─────────────────────────────
+
+enum AccountStatus {
+  ACTIVE
+  DISABLED
+}
+
+/// Authorisation role, checked server-side on every protected endpoint. Public registration always creates STUDENT;
+/// staff roles are granted only through StaffInvitation (COLLEGE_ADMIN by a Super Admin, SUPER_ADMIN by the one-time
+/// bootstrap command). Roles are never derived from email domains.
+enum AccountRole {
+  STUDENT
+  COLLEGE_ADMIN
+  SUPER_ADMIN
+}
+
+enum AccountTokenPurpose {
+  EMAIL_VERIFICATION
+  PASSWORD_RESET
+}
+
+/// Every login account: students and staff share one table, one login and one session system; `role` tells them apart.
+/// The model keeps its original name so existing data and references stay untouched.
+model StudentAccount {
+  id                  String        @id @default(uuid()) @db.Uuid
+  role                AccountRole   @default(STUDENT)
+  /// Staff only (from the invitation). Student names come from official admission records, never from here.
+  displayName         String?       @db.VarChar(120)
+  /// College a COLLEGE_ADMIN manages; null for students and super admins.
+  institutionId       String?       @db.VarChar(40)
+  /// Stored trimmed and lower-cased; uniqueness is therefore case-insensitive.
+  email               String        @unique @db.VarChar(254)
+  /// Argon2id PHC string; never returned by the API.
+  passwordHash        String        @db.VarChar(255)
+  emailVerifiedAt     DateTime?
+  status              AccountStatus @default(ACTIVE)
+  failedLoginAttempts Int           @default(0)
+  lockedUntil         DateTime?
+  passwordChangedAt   DateTime      @default(now())
+  createdAt           DateTime      @default(now())
+  updatedAt           DateTime      @updatedAt
+
+  sessions        StudentSession[]
+  tokens          AccountToken[]
+  admissionRecord AdmissionRecord?
+  institution     Institution?           @relation(fields: [institutionId], references: [id], onDelete: Restrict)
+  invitationsSent StaffInvitation[]      @relation("InvitedBy")
+  invitation      StaffInvitation?       @relation("AcceptedAccount")
+  importBatches   AdmissionImportBatch[]
+  qrCodesCreated  InstitutionQrCode[]
+
+  @@index([role, status])
+}
+
+/// Pending staff access. The account is created only when the invited person opens the emailed single-use link and
+/// sets a password, which also proves they control the email address.
+model StaffInvitation {
+  id                String          @id @default(uuid()) @db.Uuid
+  /// Lower-cased.
+  email             String          @db.VarChar(254)
+  displayName       String          @db.VarChar(120)
+  role              AccountRole
+  institutionId     String?         @db.VarChar(40)
+  /// SHA-256 of the activation token; resending replaces it.
+  tokenHash         String          @unique @db.Char(64)
+  expiresAt         DateTime
+  /// Null = created by the one-time Super Admin bootstrap command.
+  invitedById       String?         @db.Uuid
+  acceptedAt        DateTime?
+  acceptedAccountId String?         @unique @db.Uuid
+  revokedAt         DateTime?
+  createdAt         DateTime        @default(now())
+  updatedAt         DateTime        @updatedAt
+  invitedBy         StudentAccount? @relation("InvitedBy", fields: [invitedById], references: [id], onDelete: SetNull)
+  acceptedAccount   StudentAccount? @relation("AcceptedAccount", fields: [acceptedAccountId], references: [id], onDelete: SetNull)
+  institution       Institution?    @relation(fields: [institutionId], references: [id], onDelete: Restrict)
+
+  @@index([email])
+  @@index([role, acceptedAt, revokedAt])
+}
+
+/// Server-side session; the browser holds only the random token in an HttpOnly cookie.
+model StudentSession {
+  id         String         @id @default(uuid()) @db.Uuid
+  studentId  String         @db.Uuid
+  /// SHA-256 of the session token.
+  tokenHash  String         @unique @db.Char(64)
+  expiresAt  DateTime
+  revokedAt  DateTime?
+  lastUsedAt DateTime       @default(now())
+  createdAt  DateTime       @default(now())
+  student    StudentAccount @relation(fields: [studentId], references: [id], onDelete: Cascade)
+
+  @@index([studentId, revokedAt])
+  @@index([expiresAt])
+}
+
+/// Single-use email-verification and password-reset tokens.
+model AccountToken {
+  id         String              @id @default(uuid()) @db.Uuid
+  studentId  String              @db.Uuid
+  purpose    AccountTokenPurpose
+  /// SHA-256 of the token sent by email.
+  tokenHash  String              @unique @db.Char(64)
+  expiresAt  DateTime
+  consumedAt DateTime?
+  createdAt  DateTime            @default(now())
+  student    StudentAccount      @relation(fields: [studentId], references: [id], onDelete: Cascade)
+
+  @@index([studentId, purpose, consumedAt])
+}
+
+// ───────────────────────────── Institution context (QR) ─────────────────────────────
+
+/// College whose QR codes establish context. CampusGuide currently serves NMAMIT only.
+model Institution {
+  /// Short stable id used in QR payloads, e.g. "nmamit".
+  id         String   @id @db.VarChar(40)
+  name       String   @db.VarChar(160)
+  shortName  String   @db.VarChar(40)
+  parentName String?  @db.VarChar(160)
+  isActive   Boolean  @default(true)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  qrCodes          InstitutionQrCode[]
+  feeSchedules     FeeSchedule[]
+  branches         Branch[]
+  admissionRecords AdmissionRecord[]
+  importBatches    AdmissionImportBatch[]
+  staff            StudentAccount[]
+  staffInvitations StaffInvitation[]
+}
+
+/// Approved QR placements (e.g. the admission desk). The QR payload carries only institution id + area slug, which
+/// never change after creation; placements are deactivated, never deleted, so printed codes stay traceable.
+model InstitutionQrCode {
+  id            String          @id @default(uuid()) @db.Uuid
+  institutionId String          @db.VarChar(40)
+  areaSlug      String          @db.VarChar(40)
+  label         String          @db.VarChar(120)
+  isActive      Boolean         @default(true)
+  /// Super Admin who created it in QR Management; null for placements created by the seed or before that existed.
+  createdById   String?         @db.Uuid
+  createdAt     DateTime        @default(now())
+  updatedAt     DateTime        @updatedAt
+  institution   Institution     @relation(fields: [institutionId], references: [id], onDelete: Cascade)
+  createdBy     StudentAccount? @relation(fields: [createdById], references: [id], onDelete: SetNull)
+
+  @@unique([institutionId, areaSlug])
+}
+
+// ───────────────────────────── Official admission data ─────────────────────────────
+
+model Branch {
+  id            String            @id @default(uuid()) @db.Uuid
+  institutionId String            @db.VarChar(40)
+  /// Normalised short code from the official data (e.g. as published in the allotment list).
+  code          String            @db.VarChar(20)
+  name          String            @db.VarChar(160)
+  createdAt     DateTime          @default(now())
+  updatedAt     DateTime          @updatedAt
+  institution   Institution       @relation(fields: [institutionId], references: [id], onDelete: Restrict)
+  admissions    AdmissionRecord[]
+
+  @@unique([institutionId, code])
+  @@unique([institutionId, name])
+}
+
+/// One official admission row per NUCAT reference per admission year per institution. Every year lives in this one
+/// table; only College Admin imports (or audited edits) change rows — never seeds.
+model AdmissionRecord {
+  id                String    @id @default(uuid()) @db.Uuid
+  institutionId     String    @db.VarChar(40)
+  /// Admission cycle, e.g. 2025. Importing a year never touches records of other years.
+  admissionYear     Int
+  /// Normalised (trimmed, upper-case, no spaces) NUCAT reference number.
+  nucatReference    String    @db.VarChar(40)
+  studentName       String    @db.VarChar(160)
+  /// Email recorded in the official data, lower-cased; used to confirm the claiming account.
+  officialEmail     String?   @db.VarChar(254)
+  /// Null until ranks are published.
+  nucatRank         Int?
+  /// Null until a branch is allocated.
+  allocatedBranchId String?   @db.Uuid
+  /// Status text exactly as published officially (the vocabulary is not fixed yet).
+  admissionStatus   String?   @db.VarChar(80)
+  /// Fee category from the official data (optional import column "Fee Category"); null = not recorded, so no fee is shown.
+  feeCategory       FeeCategory?
+  /// Set once the signed-in student has verified this record.
+  studentAccountId  String?   @unique @db.Uuid
+  verifiedAt        DateTime?
+  lastImportBatchId String?   @db.Uuid
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
+
+  institution     Institution           @relation(fields: [institutionId], references: [id], onDelete: Restrict)
+  allocatedBranch Branch?               @relation(fields: [allocatedBranchId], references: [id], onDelete: SetNull)
+  studentAccount  StudentAccount?       @relation(fields: [studentAccountId], references: [id], onDelete: SetNull)
+  lastImportBatch AdmissionImportBatch? @relation(fields: [lastImportBatchId], references: [id], onDelete: SetNull)
+
+  // Year-scoped: NUCAT is held every year and the official rules do not (yet) guarantee that references are unique
+  // across cycles, so the same reference in two years is two records instead of one silently overwritten record.
+  @@unique([institutionId, admissionYear, nucatReference])
+  @@index([institutionId, nucatReference])
+  @@index([institutionId, officialEmail])
+  @@index([allocatedBranchId])
+}
+
+/// Fee categories used by the official Nitte B.Tech fee structure ("Through NUCAT": General / Scholarship; NRI).
+enum FeeCategory {
+  GENERAL
+  SCHOLARSHIP
+  NRI
+}
+
+/// Official annual fee per programme and category, transcribed from a published Nitte fee document and loaded only by
+/// the `fees:load` command after a person has confirmed the amounts. Amounts are whole rupees.
+model FeeSchedule {
+  id            String      @id @default(uuid()) @db.Uuid
+  institutionId String      @db.VarChar(40)
+  /// NUCAT admission year the schedule applies to (e.g. 2026 for the 2026-27 fee structure).
+  admissionYear Int
+  /// Academic year label exactly as printed, e.g. "2026-27".
+  academicYear  String      @db.VarChar(9)
+  /// Programme name exactly as printed in the fee document.
+  programName   String      @db.VarChar(160)
+  /// Normalised programme name (normalizeProgramName); matched against the admission record's branch name.
+  programKey    String      @db.VarChar(160)
+  /// Normalised alternative names confirmed to mean the same programme (e.g. as written in the allotment list).
+  aliasKeys     String[]    @default([])
+  category      FeeCategory
+  /// Null = printed as "NA" (category not offered for this programme).
+  annualTuition Int?
+  annualExamFee Int
+  sourceUrl     String      @db.VarChar(300)
+  /// SHA-256 of the fee document the amounts were transcribed from.
+  sourceSha256  String      @db.Char(64)
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+  institution   Institution @relation(fields: [institutionId], references: [id], onDelete: Restrict)
+
+  @@unique([institutionId, admissionYear, programKey, category])
+  @@index([institutionId, admissionYear])
+}
+
+/// Lifecycle: VALIDATED (previewed, awaiting confirmation) → PROCESSING → APPLIED | PARTIAL | FAILED, or CANCELLED.
+/// PENDING is unused (kept from the initial schema).
+enum ImportBatchStatus {
+  PENDING
+  VALIDATED
+  APPLIED
+  FAILED
+  PROCESSING
+  PARTIAL
+  CANCELLED
+}
+
+/// What to do with rows whose record already exists for the same year — chosen explicitly when confirming an import.
+enum ImportDuplicatePolicy {
+  SKIP_EXISTING
+  UPDATE_EXISTING
+}
+
+/// One upload of an official admission spreadsheet for one admission year.
+model AdmissionImportBatch {
+  id               String                 @id @default(uuid()) @db.Uuid
+  institutionId    String                 @db.VarChar(40)
+  admissionYear    Int
+  status           ImportBatchStatus      @default(PENDING)
+  sourceFileName   String                 @db.VarChar(200)
+  /// SHA-256 of the uploaded file; the file itself is not stored.
+  sourceSha256     String                 @db.Char(64)
+  /// Data rows in the file.
+  rowCount         Int                    @default(0)
+  validCount       Int                    @default(0)
+  invalidCount     Int                    @default(0)
+  duplicateCount   Int                    @default(0)
+  /// Preview plan for the valid rows.
+  newCount         Int                    @default(0)
+  changedCount     Int                    @default(0)
+  unchangedCount   Int                    @default(0)
+  /// Outcome after commit.
+  createdCount     Int                    @default(0)
+  updatedCount     Int                    @default(0)
+  skippedCount     Int                    @default(0)
+  rejectedCount    Int                    @default(0)
+  duplicatePolicy  ImportDuplicatePolicy?
+  /// Snapshot of the importing admin's email, kept even if the account is later removed.
+  importedBy       String?                @db.VarChar(120)
+  createdById      String?                @db.Uuid
+  failureReason    String?                @db.VarChar(300)
+  /// Header → field mapping detected in the file.
+  columnMapping    Json?
+  previewExpiresAt DateTime?
+  createdAt        DateTime               @default(now())
+  updatedAt        DateTime               @default(now()) @updatedAt
+  appliedAt        DateTime?
+  institution      Institution            @relation(fields: [institutionId], references: [id], onDelete: Restrict)
+  createdBy        StudentAccount?        @relation(fields: [createdById], references: [id], onDelete: SetNull)
+  records          AdmissionRecord[]
+  rows             AdmissionImportRow[]
+
+  @@index([institutionId, createdAt])
+  @@index([institutionId, admissionYear])
+}
+
+enum ImportRowOutcome {
+  VALID
+  INVALID
+  DUPLICATE_IN_FILE
+}
+
+enum ImportRowAction {
+  INSERT
+  UPDATE
+  UNCHANGED
+}
+
+enum ImportRowResult {
+  INSERTED
+  UPDATED
+  SKIPPED
+  REJECTED
+}
+
+/// Parsed spreadsheet row kept for the preview, the commit and the downloadable validation report.
+model AdmissionImportRow {
+  id               String               @id @default(uuid()) @db.Uuid
+  batchId          String               @db.Uuid
+  /// Row number as shown in the spreadsheet (header = row 1).
+  rowNumber        Int
+  outcome          ImportRowOutcome
+  /// Planned action for valid rows.
+  action           ImportRowAction?
+  result           ImportRowResult?
+  /// Normalised reference (null when missing in the file).
+  nucatReference   String?              @db.VarChar(40)
+  /// Normalised values: studentName, nucatRank, allocatedBranch, admissionStatus, officialEmail.
+  data             Json?
+  /// For UPDATE rows: { field: { from, to } }.
+  changes          Json?
+  /// Validation messages (strings).
+  messages         Json?
+  existingRecordId String?              @db.Uuid
+  batch            AdmissionImportBatch @relation(fields: [batchId], references: [id], onDelete: Cascade)
+
+  @@unique([batchId, rowNumber])
+  @@index([batchId, outcome])
+}
+
+// ───────────────────────────── Audit ─────────────────────────────
+
+enum AuditActorType {
+  STUDENT
+  ADMIN
+  SYSTEM
+  SUPER_ADMIN
+}
+
+/// Append-only security and data-change history. Never stores passwords, tokens or full request bodies.
+model AuditEvent {
+  id         String         @id @default(uuid()) @db.Uuid
+  actorType  AuditActorType
+  actorId    String?        @db.VarChar(64)
+  action     String         @db.VarChar(80)
+  entityType String         @db.VarChar(60)
+  entityId   String?        @db.VarChar(64)
+  metadata   Json?
+  createdAt  DateTime       @default(now())
+
+  @@index([entityType, entityId, createdAt])
+  @@index([actorType, actorId, createdAt])
+  @@index([action, createdAt])
+}

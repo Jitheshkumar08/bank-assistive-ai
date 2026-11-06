@@ -1,0 +1,11 @@
+studentName,email,nucatRank,branch,NUCAT Reference,Admission Year,Fee Category,Status
+Aarav Shetty,aarav.test@example.com,1250,Computer Science and Engineering,NC-2026-0001,2026,General,TEST DATA
+Diya Rao,diya.test@example.com,1842,Information Science and Engineering,NC-2026-0002,2026,Scholarship,TEST DATA
+Kiran Bhat,kiran.test@example.com,2310,Electronics and Communication Engineering,NC-2026-0003,2026,General,TEST DATA
+Ananya Pai,ananya.test@example.com,2765,Artificial Intelligence and Machine Learning,NC-2026-0004,2026,NRI,TEST DATA
+Rohan Kumar,rohan.test@example.com,3190,Computer Science and Engineering,NC-2026-0005,2026,Scholarship,TEST DATA
+Meera Nayak,meera.test@example.com,3675,Mechanical Engineering,NC-2026-0006,2026,General,TEST DATA
+Sanjay Hegde,sanjay.test@example.com,4120,Civil Engineering,NC-2026-0007,2026,General,TEST DATA
+Isha Shetty,isha.test@example.com,4588,Electronics and Communication Engineering,NC-2026-0008,2026,NRI,TEST DATA
+Aditya Prabhu,aditya.test@example.com,5032,Information Science and Engineering,NC-2026-0009,2026,Scholarship,TEST DATA
+Nisha D'Souza,nisha.test@example.com,5470,Artificial Intelligence and Machine Learning,NC-2026-0010,2026,General,TEST DATA

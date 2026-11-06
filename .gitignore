@@ -57,3 +57,10 @@ language_engine/outA.txt
 *.swp
 .DS_Store
 Thumbs.db
+
+# CampusGuide generated files and local database backups
+college-domain/**/.dev-outbox/
+college-domain/**/coverage/
+*.dump
+*.dump.*
+*.sql.gz
