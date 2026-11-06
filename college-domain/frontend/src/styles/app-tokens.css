@@ -1,0 +1,55 @@
+/* Student app design system (sampled from docs/reference/campusguide-ui-reference.webp). */
+:root {
+  /* Surfaces */
+  --app-bg: #f3f6fb;
+  --app-surface: #ffffff;
+  --app-surface-tint: #f7f9fe;
+  --app-border: #e3e8f2;
+  --app-border-strong: #cfd8e8;
+
+  /* Navy chrome (sidebar, mobile header, scanner) */
+  --app-navy: #0c1f4f;
+  --app-navy-deep: #091840;
+  --app-navy-line: rgb(255 255 255 / 0.12);
+
+  /* Text */
+  --app-ink: #0f1b3d;
+  --app-ink-soft: #33415f;
+  --app-muted: #66738f;
+
+  /* Accents */
+  --app-blue: #1f5eff;
+  --app-blue-strong: #1849d6;
+  --app-blue-soft: #e8efff;
+  --app-green: #16a34a;
+  --app-green-soft: #e8f7ee;
+  --app-green-line: #bfe6cc;
+  --app-red: #ef4444;
+  --app-red-strong: #e11d48;
+  --app-red-line: #f6c4c4;
+
+  /* Icon tile palette: solid fill + soft tint for each tone */
+  --tone-blue: #2f6bff;
+  --tone-blue-soft: #e7eeff;
+  --tone-purple: #7c4dff;
+  --tone-purple-soft: #efe9ff;
+  --tone-green: #16a34a;
+  --tone-green-soft: #e3f6ea;
+  --tone-red: #ef4444;
+  --tone-red-soft: #fdeaea;
+  --tone-orange: #f59e0b;
+  --tone-orange-soft: #fef3dc;
+  --tone-teal: #0f9fb4;
+  --tone-teal-soft: #e1f5f8;
+
+  /* Shape and depth */
+  --app-radius-sm: 8px;
+  --app-radius: 12px;
+  --app-radius-lg: 16px;
+  --app-shadow: 0 1px 2px rgb(15 27 61 / 0.04), 0 4px 14px -6px rgb(15 27 61 / 0.1);
+  --app-shadow-hover: 0 2px 4px rgb(15 27 61 / 0.05), 0 12px 24px -12px rgb(31 94 255 / 0.28);
+
+  /* Layout */
+  --app-sidebar-width: 228px;
+  --app-gap: 16px;
+}

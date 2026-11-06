@@ -1,0 +1,11 @@
+recordType,studentName,email,nucatRank,branch,admissionYear,feeCategory
+TEST_DATA_ONLY,Aarav Shetty,aarav.test@example.com,1250,Computer Science and Engineering,2026-27,GENERAL
+TEST_DATA_ONLY,Diya Rao,diya.test@example.com,1842,Information Science and Engineering,2026-27,SCHOLARSHIP
+TEST_DATA_ONLY,Kiran Bhat,kiran.test@example.com,2310,Electronics and Communication Engineering,2026-27,GENERAL
+TEST_DATA_ONLY,Ananya Pai,ananya.test@example.com,2765,Artificial Intelligence and Machine Learning,2026-27,NRI
+TEST_DATA_ONLY,Rohan Kumar,rohan.test@example.com,3190,Computer Science and Engineering,2026-27,SCHOLARSHIP
+TEST_DATA_ONLY,Meera Nayak,meera.test@example.com,3675,Mechanical Engineering,2026-27,GENERAL
+TEST_DATA_ONLY,Sanjay Hegde,sanjay.test@example.com,4120,Civil Engineering,2026-27,GENERAL
+TEST_DATA_ONLY,Isha Shetty,isha.test@example.com,4588,Electronics and Communication Engineering,2026-27,NRI
+TEST_DATA_ONLY,Aditya Prabhu,aditya.test@example.com,5032,Information Science and Engineering,2026-27,SCHOLARSHIP
+TEST_DATA_ONLY,Nisha D'Souza,nisha.test@example.com,5470,Artificial Intelligence and Machine Learning,2026-27,GENERAL

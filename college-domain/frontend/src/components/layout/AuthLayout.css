@@ -1,0 +1,196 @@
+.auth-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1.08fr) minmax(0, 1fr);
+  min-height: 100vh;
+  min-height: 100dvh;
+}
+
+/* ---------- Brand panel ---------- */
+.brand-panel {
+  position: relative;
+  display: grid;
+  grid-template-rows: auto auto minmax(0, 1fr);
+  gap: 28px;
+  padding: clamp(32px, 4.5vw, 64px);
+  overflow: hidden;
+  color: var(--cg-white);
+  background:
+    radial-gradient(120% 80% at 85% 10%, rgb(59 116 239 / 0.22), transparent 60%),
+    linear-gradient(160deg, var(--cg-navy-800) 0%, var(--cg-navy-900) 48%, var(--cg-navy-950) 100%);
+}
+
+.brand-panel__glow {
+  position: absolute;
+  inset: auto -20% -30% auto;
+  width: 70%;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgb(107 155 255 / 0.18), transparent 65%);
+  pointer-events: none;
+}
+
+.brand-panel__identity {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.brand-panel__name {
+  font-family: var(--cg-font-display);
+  font-size: 1.5rem;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+
+.brand-panel__copy {
+  position: relative;
+  display: grid;
+  gap: 14px;
+  max-width: 34rem;
+}
+
+.brand-panel__tagline {
+  font-family: var(--cg-font-display);
+  font-size: clamp(2rem, 3.4vw, 3.1rem);
+  font-weight: 500;
+  line-height: 1.08;
+  letter-spacing: -0.02em;
+}
+
+.brand-panel__description {
+  max-width: 30rem;
+  color: rgb(214 225 247 / 0.86);
+  font-size: var(--cg-text-lg);
+  line-height: 1.6;
+}
+
+.brand-panel__visual {
+  position: relative;
+  min-height: 280px;
+  margin: 0 calc(clamp(32px, 4.5vw, 64px) * -0.5);
+}
+
+.brand-panel__illustration {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+/* ---------- Main column ---------- */
+.auth-layout__main {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 24px;
+  padding: clamp(24px, 4vw, 56px) clamp(16px, 4vw, 48px);
+  background:
+    radial-gradient(70% 50% at 50% 0%, rgb(59 116 239 / 0.07), transparent 70%),
+    var(--cg-canvas);
+}
+
+.auth-layout__card {
+  width: min(100%, 440px);
+  padding: clamp(28px, 3.5vw, 40px);
+  background: rgb(255 255 255 / 0.92);
+  border: 1px solid rgb(223 229 239 / 0.9);
+  border-radius: var(--cg-radius-lg);
+  box-shadow: var(--cg-shadow-card);
+  backdrop-filter: blur(8px);
+  animation: auth-card-in 520ms var(--cg-ease) both;
+}
+
+.auth-layout__footer {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 6px;
+  color: var(--cg-muted);
+  font-size: var(--cg-text-xs);
+}
+
+@keyframes auth-card-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* ---------- Tablet and phone: stacked, form first in importance ---------- */
+@media (max-width: 959px) {
+  .auth-layout {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: auto 1fr;
+  }
+
+  .brand-panel {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 220px);
+    grid-template-rows: auto auto;
+    gap: 12px 24px;
+    padding: 28px clamp(16px, 5vw, 40px);
+  }
+
+  .brand-panel__identity,
+  .brand-panel__copy {
+    grid-column: 1;
+  }
+
+  .brand-panel__visual {
+    grid-column: 2;
+    grid-row: 1 / span 2;
+    align-self: center;
+    min-height: 0;
+    height: 150px;
+    margin: 0;
+  }
+
+  .brand-panel__tagline {
+    font-size: clamp(1.5rem, 4.5vw, 2rem);
+  }
+
+  .brand-panel__description {
+    font-size: var(--cg-text-md);
+  }
+
+  .auth-layout__main {
+    justify-content: flex-start;
+  }
+}
+
+@media (max-width: 599px) {
+  .brand-panel {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 10px;
+    padding: 20px 16px 22px;
+  }
+
+  .brand-panel__visual,
+  .brand-panel__description {
+    display: none;
+  }
+
+  .brand-panel__name {
+    font-size: 1.25rem;
+  }
+
+  .brand-panel__tagline {
+    font-size: 1.375rem;
+  }
+
+  .auth-layout__main {
+    padding: 20px 16px 28px;
+  }
+
+  .auth-layout__card {
+    padding: 24px 20px;
+    border-radius: var(--cg-radius-md);
+  }
+}
+
+/* Student Portal language selector on the sign-in style pages. */
+.auth-layout__language { align-self: flex-end; margin-bottom: 12px; color: var(--cg-ink-soft); }

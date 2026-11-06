@@ -1,0 +1,19 @@
+# Dependencies and build output
+node_modules
+dist
+coverage
+src/generated
+
+# Environment files contain credentials — never commit them
+.env
+.env.*
+!.env.example
+
+# Development email outbox (verification / reset links for local testing only)
+.dev-outbox
+
+# Logs and editor files
+*.log
+.vscode/*
+.idea
+.DS_Store

@@ -1,0 +1,56 @@
+/* CampusGuide design tokens. Change colours, type and spacing here rather than in component styles. */
+:root {
+  /* Brand */
+  --cg-navy-950: #050d22;
+  --cg-navy-900: #0a1834;
+  --cg-navy-800: #102449;
+  --cg-navy-700: #1a3463;
+  --cg-blue-600: #2459d6;
+  --cg-blue-500: #3b74ef;
+  --cg-blue-400: #6b9bff;
+  --cg-blue-200: #c7d8ff;
+  --cg-blue-50: #eef3ff;
+
+  /* Neutrals */
+  --cg-white: #ffffff;
+  --cg-canvas: #f6f8fc;
+  --cg-ink: #0d1a33;
+  --cg-ink-soft: #3c4b66;
+  --cg-muted: #5f6f8a;
+  --cg-line: #dfe5ef;
+  --cg-line-strong: #c6d0e0;
+
+  /* Feedback */
+  --cg-danger: #b42318;
+  --cg-danger-bg: #fef3f2;
+  --cg-danger-line: #fecdca;
+  --cg-info: #1d4ed8;
+  --cg-info-bg: #eff4ff;
+  --cg-info-line: #c7d7fe;
+
+  /* Typography */
+  --cg-font-sans: 'Inter Variable', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --cg-font-display: 'Fraunces Variable', Georgia, 'Times New Roman', serif;
+  --cg-text-xs: 0.8125rem;
+  --cg-text-sm: 0.875rem;
+  --cg-text-md: 1rem;
+  --cg-text-lg: 1.125rem;
+
+  /* Shape and depth */
+  --cg-radius-sm: 10px;
+  --cg-radius-md: 14px;
+  --cg-radius-lg: 22px;
+  --cg-shadow-card: 0 1px 2px rgb(13 26 51 / 0.04), 0 12px 32px -12px rgb(13 26 51 / 0.18);
+  --cg-shadow-button: 0 8px 20px -8px rgb(36 89 214 / 0.55);
+  --cg-focus-ring: 0 0 0 3px var(--cg-white), 0 0 0 6px var(--cg-blue-500);
+
+  /* Motion */
+  --cg-ease: cubic-bezier(0.22, 1, 0.36, 1);
+  --cg-duration: 220ms;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --cg-duration: 0ms;
+  }
+}

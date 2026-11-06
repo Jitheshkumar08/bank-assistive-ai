@@ -1,0 +1,40 @@
+.language-select {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+}
+
+.language-select__icon {
+  position: absolute;
+  left: 10px;
+  color: currentColor;
+  opacity: 0.75;
+  pointer-events: none;
+}
+
+.language-select select {
+  min-height: 36px;
+  padding: 0 10px 0 32px;
+  color: inherit;
+  background: transparent;
+  border: 1.5px solid currentColor;
+  border-radius: 9px;
+  font: inherit;
+  font-size: 0.8125rem;
+  cursor: pointer;
+}
+
+.language-select select:focus-visible {
+  outline: 3px solid #9bb8ff;
+  outline-offset: 1px;
+}
+
+.language-select option {
+  color: #0f1b3d;
+}
+
+/* Kannada and Devanagari need a little more line height than Latin text. */
+:root:lang(kn) body,
+:root:lang(hi) body {
+  line-height: 1.6;
+}
