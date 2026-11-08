@@ -331,6 +331,17 @@ export const en = {
   'chat.footnote': 'I can help with NMAMIT admission information. For the latest and official updates, please refer to Nitte’s notifications.',
   'chat.failed': 'The assistant could not answer right now. Please try again.',
   'chat.voiceUnavailable': 'Voice input and spoken answers are not available yet. Type your question instead.',
+  'error.assistantUnavailable': 'The CampusGuide assistant is not available right now. Please try again in a moment.',
+  'chat.details.title': 'Your admission details',
+  'chat.details.source': 'From the official admission records for your signed-in account.',
+  'chat.details.category': 'Admission Category',
+  'chat.details.batch': 'Assigned Batch',
+  'chat.details.hall': 'Admission Hall',
+  'chat.details.nextStep': 'Next Step',
+  'chat.details.notAvailable': 'Not available yet',
+  'chat.listen': 'Listen',
+  'chat.listenFailed': 'The spoken answer could not be played. You can still read the answer above.',
+  'chat.voiceInputUnavailable': 'Voice input is not available yet. Type your question; use Listen to hear an answer.',
 
   // ── Auth pages ──
   'auth.brandLabel': 'About CampusGuide',

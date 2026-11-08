@@ -20,8 +20,9 @@ from __future__ import annotations
 
 import os
 import tempfile
+import threading
 from dataclasses import dataclass
-from typing import Optional
+from typing import Callable, Dict, Optional
 
 from app.conversation.manager import ConversationManager
 from app.conversation.state import SessionState
@@ -52,6 +53,18 @@ class TurnResult:
     #: distinction the output boundary depends on is visible to callers
     #: and assertable by tests, rather than implied.
     canonical_reply: Optional[str] = None
+    #: Domain integration (Phase 4), filled by domain runtimes only; Banking
+    #: leaves them unset. The detected intent, the documents an answer was
+    #: grounded in (attribution metadata, never content), and how the turn
+    #: ended ("answered", "no_verified_information", "clarify", ...).
+    intent: Optional[str] = None
+    sources: Optional[list] = None
+    outcome: Optional[str] = None
+    #: Phase 5, domain workflows only: a step-by-step list already rendered
+    #: in the session language (directions), and a request for the calling
+    #: backend ({"id", "type", "workflow"}) -- never data.
+    steps: Optional[list] = None
+    action: Optional[dict] = None
 
 
 class _TurnHost:
@@ -327,3 +340,74 @@ def set_runtime(runtime: Optional[EngineRuntime]) -> None:
     """Injection point for tests; production never calls this."""
     global _runtime
     _runtime = runtime
+
+
+# ---------------------------------------------------------------------
+# Runtimes for the other application domains
+#
+# Banking is served by get_runtime() above, exactly as before domains
+# existed. Every other domain gets its OWN runtime -- its own intent
+# profile, knowledge collection, workflows and dialogue state -- built on
+# first use by a factory that domain registers. Expensive, immutable
+# models (the sentence encoder, Whisper) are shared between runtimes by
+# their own caches; nothing mutable is.
+#
+# A domain with no registered factory is not served: get_domain_runtime()
+# raises DomainRuntimeUnavailable rather than lending it Banking's runtime.
+# ---------------------------------------------------------------------
+
+
+class DomainRuntimeUnavailable(RuntimeError):
+    """The domain is registered but its engine components are not available."""
+
+
+_domain_factories: Dict[str, Callable[[], EngineRuntime]] = {}
+_domain_runtimes: Dict[str, EngineRuntime] = {}
+_domain_lock = threading.Lock()
+
+
+def register_domain_runtime(domain: str, factory: Callable[[], EngineRuntime]) -> None:
+    """Declares how to build `domain`'s runtime. Built lazily, once."""
+    with _domain_lock:
+        _domain_factories[domain] = factory
+        _domain_runtimes.pop(domain, None)
+
+
+def unregister_domain_runtime(domain: str) -> None:
+    """Removes a domain's factory and runtime (tests)."""
+    with _domain_lock:
+        _domain_factories.pop(domain, None)
+        _domain_runtimes.pop(domain, None)
+
+
+def get_domain_runtime(domain: str) -> EngineRuntime:
+    """`domain`'s own runtime, built on first use. Never another domain's."""
+    with _domain_lock:
+        runtime = _domain_runtimes.get(domain)
+
+        if runtime is None:
+            factory = _domain_factories.get(domain)
+
+            if factory is None:
+                raise DomainRuntimeUnavailable(domain)
+
+            try:
+                runtime = factory()
+            except Exception as error:
+                # A domain that cannot be built (an invalid manifest, a
+                # model that failed to load) is unavailable -- 503 for that
+                # domain only. Not cached, so a later request retries.
+                raise DomainRuntimeUnavailable(domain) from error
+            _domain_runtimes[domain] = runtime
+
+        return runtime
+
+
+def domain_runtime_status(domain: str) -> str:
+    """"ready", "registered" (not built yet) or "unavailable". Builds nothing."""
+    with _domain_lock:
+        if domain in _domain_runtimes:
+            return "ready"
+        if domain in _domain_factories:
+            return "registered"
+        return "unavailable"

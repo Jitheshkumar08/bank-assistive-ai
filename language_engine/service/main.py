@@ -24,7 +24,30 @@ from fastapi.responses import JSONResponse, Response
 from app.conversation.manager import ConversationManager
 from service import LOADED_ENV_NAMES
 from service.config import DEFAULT_ENV_PATH, describe
-from service.engine import EngineRuntime, TranscriptionError, get_runtime
+from service.domain_runtime import register_builtin_domain_runtimes
+from service.domains import (
+    Caller,
+    DEVELOPMENT,
+    DomainAuth,
+    DomainError,
+    DomainUnavailable,
+    ExpiredWorkflowAction,
+    InvalidContext,
+    InvalidWorkflowResult,
+    MismatchedWorkflowAction,
+    NoPendingWorkflowAction,
+    bound_context,
+    engine_environment,
+    validate_context,
+)
+from service.engine import (
+    DomainRuntimeUnavailable,
+    EngineRuntime,
+    TranscriptionError,
+    domain_runtime_status,
+    get_domain_runtime,
+    get_runtime,
+)
 from service.housekeeping import IdleSessionReaper, idle_timeout_from_env, purge_interval_from_env
 from service.assistance import offer_assistance
 from service.models import (
@@ -35,9 +58,12 @@ from service.models import (
     TextTurnRequest,
     TtsRequest,
     TurnResponse,
+    WorkflowResultRequest,
     WorkflowSnapshot,
 )
 from service.snapshot import workflow_snapshot
+from app.domains import domain_ids, get_domain
+from app.workflow.domain_runner import ActionExpired, ActionTypeMismatch, NoPendingAction, UnknownOutcome
 from app.workflow.loader import WorkflowLoader
 from service.tts import TtsError, UnsupportedLanguageError, synthesize
 from service.tts import request_id as tts_request_id
@@ -55,23 +81,97 @@ logging.basicConfig(level=logging.INFO, format="%(levelname)s:     %(message)s")
 #: calls this service.
 MAX_AUDIO_BYTES = int(os.getenv("MAX_AUDIO_BYTES", str(10 * 1024 * 1024)))
 
-#: Shared secret with NestJS. Optional so local development stays simple,
-#: but strongly recommended anywhere the port is reachable.
+#: Shared secret with the BANKING backend (the engine's original token).
+#: Optional in local development; required when AI_ENGINE_ENV=production.
 INTERNAL_TOKEN = os.getenv("AI_ENGINE_TOKEN", "").strip()
 
+#: Shared secret with the COLLEGE backend. Same rules as INTERNAL_TOKEN.
+COLLEGE_TOKEN = os.getenv("AI_ENGINE_COLLEGE_TOKEN", "").strip()
+
+#: "development" (default) or "production". Production refuses to start
+#: without a distinct token for every domain (service/domains.py).
+ENGINE_ENV = engine_environment()
+
+#: The service's single in-process Banking domain id.
+BANKING = "banking"
+
 registry = SessionRegistry(idle_timeout_seconds=idle_timeout_from_env())
+
+# Every non-Banking domain's runtime factory (Phase 4). Registration builds
+# nothing; the lifespan below warms them after Banking.
+register_builtin_domain_runtimes()
 
 # Releases conversations of customers who walked away without signing
 # out. Started and stopped by the lifespan below, never anywhere else.
 reaper = IdleSessionReaper(registry, purge_interval_from_env())
 
 
-def require_internal_token(x_internal_token: Optional[str] = Header(default=None)) -> None:
-    if not INTERNAL_TOKEN:
-        return
+def domain_auth() -> DomainAuth:
+    """
+    Token-to-domain resolution from the current configuration.
 
-    if x_internal_token != INTERNAL_TOKEN:
-        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Not authorised.")
+    Read from the module globals on every call (it is cheap), so a test that
+    sets INTERNAL_TOKEN or COLLEGE_TOKEN is honoured exactly as before.
+    """
+    return DomainAuth({BANKING: INTERNAL_TOKEN, "college": COLLEGE_TOKEN}, ENGINE_ENV)
+
+
+def authenticate_caller(
+    x_internal_token: Optional[str] = Header(default=None),
+    x_assistant_domain: Optional[str] = Header(default=None),
+) -> Caller:
+    """
+    Every route's gate: which domain's backend is calling.
+
+    401 for a missing or wrong token whenever any token is configured. The
+    declared domain is checked when the route resolves it (Caller.resolve).
+    """
+    auth = domain_auth()
+    return Caller(auth=auth, authenticated=auth.authenticate(x_internal_token), declared=x_assistant_domain)
+
+
+def require_known_domain(caller: Caller = Depends(authenticate_caller)) -> str:
+    """For routes that only need the domain checked, not used (e.g. /tts)."""
+    return caller.resolve()
+
+
+def _caller(value: object) -> Caller:
+    """
+    The route's Caller.
+
+    Over HTTP FastAPI always supplies one. A route function called directly
+    in-process -- as the debugging suites do -- receives the Depends marker
+    instead; that call carries no headers, so it resolves like an
+    unauthenticated pre-domain caller (declarations, else Banking).
+    """
+    if isinstance(value, Caller):
+        return value
+
+    return Caller(auth=DomainAuth({}, DEVELOPMENT), authenticated=None)
+
+
+def _form_value(value: object) -> Optional[str]:
+    """A form field's value; None for an absent field or a direct call's default marker."""
+    return value if isinstance(value, str) and value != "" else None
+
+
+def _runtime_for(domain: str) -> EngineRuntime:
+    """
+    The runtime that serves `domain`.
+
+    Banking keeps going through get_runtime() exactly as before. Any other
+    domain gets only its own runtime; one that is not available is refused
+    with 503, never answered by Banking's.
+    """
+    if domain == BANKING:
+        return get_runtime()
+
+    try:
+        return get_domain_runtime(domain)
+    except DomainRuntimeUnavailable as error:
+        raise DomainUnavailable(
+            "This assistant is not available yet. Please try again later."
+        ) from error
 
 
 def require_llm_key() -> None:
@@ -97,6 +197,19 @@ def require_llm_key() -> None:
 async def lifespan(_: FastAPI):
     # Names only. The values are secrets and are never logged.
     logger.info("Loaded from %s: %s", DEFAULT_ENV_PATH.name, describe(LOADED_ENV_NAMES))
+
+    # Before anything slow: a misconfigured deployment stops here.
+    auth = domain_auth()
+    problems = auth.startup_problems()
+    if problems:
+        raise RuntimeError("Engine authentication is misconfigured: " + " ".join(problems))
+    if not auth.auth_enabled:
+        logger.warning(
+            "Engine authentication is DISABLED (AI_ENGINE_ENV=%s and no domain token set). "
+            "Acceptable only on a loopback-only development machine.",
+            ENGINE_ENV,
+        )
+
     require_llm_key()
 
     # Whisper and two sentence-transformer encoders load here, once.
@@ -104,6 +217,18 @@ async def lifespan(_: FastAPI):
     logger.info("Loading engine models...")
     get_runtime()
     logger.info("Engine ready.")
+
+    # Other domains, after Banking and independently of it: a domain that
+    # fails to build is logged and answers 503 until it can be built, while
+    # Banking keeps serving.
+    for domain in domain_ids():
+        if domain == BANKING or domain_runtime_status(domain) == "unavailable":
+            continue
+        try:
+            get_domain_runtime(domain)
+            logger.info("Domain %s ready.", domain)
+        except Exception as error:  # noqa: BLE001
+            logger.error("Domain %s could not be loaded (%s); it will answer 503.", domain, type(error).__name__)
 
     reaper.start()
 
@@ -114,7 +239,7 @@ async def lifespan(_: FastAPI):
         registry.clear()
 
 
-app = FastAPI(title="Banking assistant engine", version="1.0.0", lifespan=lifespan)
+app = FastAPI(title="Shared assistant engine", version="1.1.0", lifespan=lifespan)
 
 
 def _snapshot(conversation: ConversationManager, runtime: EngineRuntime) -> WorkflowSnapshot:
@@ -128,44 +253,109 @@ def health() -> HealthResponse:
     # not be what triggers a multi-second model load.
     from service import engine as engine_module
 
+    models_loaded = engine_module._runtime is not None
+
     return HealthResponse(
         status="ok",
-        models_loaded=engine_module._runtime is not None,
+        models_loaded=models_loaded,
         active_sessions=len(registry),
+        domains={
+            domain: ("ready" if models_loaded else "registered")
+            if domain == BANKING
+            else domain_runtime_status(domain)
+            for domain in domain_ids()
+        },
     )
 
 
-@app.post("/turn", response_model=TurnResponse, dependencies=[Depends(require_internal_token)])
-def text_turn(request: TextTurnRequest) -> TurnResponse:
+@app.exception_handler(DomainError)
+async def domain_refused(_request: Request, error: DomainError) -> JSONResponse:
+    """Domain, authentication and context refusals: one shape, no echoed input."""
+    return JSONResponse(
+        status_code=error.status_code,
+        content={"detail": error.message, "error": error.code},
+    )
+
+
+def _run_turn(runtime: EngineRuntime, entry, text: str):
+    """
+    One turn on `runtime`. Domain runtimes receive the session's context
+    (its fixed institution plus the latest area/location); Banking's runtime
+    is called exactly as before.
+    """
+    if getattr(runtime, "accepts_context", False):
+        context = {**entry.context, **entry.bound_context}
+        return runtime.run_turn(entry.conversation, text, entry.localizer, context=context)
+    return runtime.run_turn(entry.conversation, text, entry.localizer)
+
+
+def _turn_response(result, workflow: WorkflowSnapshot, domain: str, transcript: Optional[str] = None) -> TurnResponse:
+    return TurnResponse(
+        reply=result.reply,
+        transcript=transcript,
+        workflow=workflow,
+        ended=result.ended,
+        domain=domain,
+        intent=getattr(result, "intent", None),
+        outcome=getattr(result, "outcome", None),
+        sources=getattr(result, "sources", None),
+        steps=getattr(result, "steps", None),
+        action=getattr(result, "action", None),
+    )
+
+
+def _session_for(caller: Caller, session_id: str, language: str, context: Optional[dict], declared: Optional[str] = None):
+    """
+    Resolves the domain, validates the context and finds or creates the visit.
+
+    Returns (domain, context, entry, runtime). The runtime is resolved before
+    the visit is created, so a refused domain never leaves a session behind.
+    """
+    domain = caller.resolve(declared)
+    checked = validate_context(domain, context)
+    runtime = _runtime_for(domain)
+    entry = registry.get_or_create(
+        session_id, language, domain=domain, bound=bound_context(domain, checked)
+    )
+    # None (not {}) when the turn carried no context: keep the visit's last one.
+    return domain, (checked if context else None), entry, runtime
+
+
+@app.post("/turn", response_model=TurnResponse)
+def text_turn(request: TextTurnRequest, caller: Caller = Depends(authenticate_caller)) -> TurnResponse:
     """A typed message. The same pipeline speech ends up in."""
-    entry = registry.get_or_create(request.session_id, request.language)
-    runtime = get_runtime()
+    context = request.context.model_dump(exclude_none=True) if request.context else None
+    caller = _caller(caller)
+    if request.model_extra and caller.resolve(request.domain) != BANKING:
+        # Phase 6: nothing but the defined fields is accepted from a domain
+        # backend -- in particular no student data. Refused before any session.
+        raise InvalidContext("The request carries fields this assistant does not accept.")
+    domain, context, entry, runtime = _session_for(
+        caller, request.session_id, request.language, context, request.domain
+    )
 
     # Serialised per session: two turns for one visit must not interleave
     # halfway through a workflow step. The turn's language is applied once
     # the lock is held, so a visit whose language changed answers in the
     # new one from this turn on.
-    with registry.in_turn(entry, request.language):
+    with registry.in_turn(entry, request.language, context):
         # The visit's own localizer, so the reply leaves in the visit's
         # language while canonical English stays in history.
-        result = runtime.run_turn(entry.conversation, request.text, entry.localizer)
+        result = _run_turn(runtime, entry, request.text)
 
-        return TurnResponse(
-            reply=result.reply,
-            workflow=_snapshot(entry.conversation, runtime),
-            ended=result.ended,
-        )
+        return _turn_response(result, _snapshot(entry.conversation, runtime), domain)
 
 
-@app.post(
-    "/turn/audio",
-    response_model=TurnResponse,
-    dependencies=[Depends(require_internal_token)],
-)
+@app.post("/turn/audio", response_model=TurnResponse)
 async def audio_turn(
     session_id: str = Form(...),
     language: str = Form("en"),
     audio: UploadFile = File(...),
+    institution_id: Optional[str] = Form(None),
+    branch_id: Optional[str] = Form(None),
+    area: Optional[str] = Form(None),
+    location_id: Optional[str] = Form(None),
+    caller: Caller = Depends(authenticate_caller),
 ) -> TurnResponse:
     """
     A spoken message.
@@ -185,23 +375,28 @@ async def audio_turn(
             detail="That recording is too long.",
         )
 
-    entry = registry.get_or_create(session_id, language)
-    runtime = get_runtime()
+    context = {
+        key: value
+        for key, value in (
+            ("institution_id", _form_value(institution_id)),
+            ("branch_id", _form_value(branch_id)),
+            ("area", _form_value(area)),
+            ("location_id", _form_value(location_id)),
+        )
+        if value is not None
+    }
+    domain, context, entry, runtime = _session_for(_caller(caller), session_id, language, context or None)
 
     suffix = os.path.splitext(audio.filename or "")[1] or ".webm"
 
-    with registry.in_turn(entry, language):
+    with registry.in_turn(entry, language, context):
         # A conversation the customer has left answers every turn with the
         # same farewell -- before transcription, so a recording sent after
         # an exit is neither transcribed nor able to fail differently.
         if runtime.has_exited(entry.conversation):
-            result = runtime.run_turn(entry.conversation, "", entry.localizer)
+            result = _run_turn(runtime, entry, "")
 
-            return TurnResponse(
-                reply=result.reply,
-                workflow=_snapshot(entry.conversation, runtime),
-                ended=result.ended,
-            )
+            return _turn_response(result, _snapshot(entry.conversation, runtime), domain)
 
         try:
             # The recording is transcribed and discarded. It is never
@@ -223,17 +418,12 @@ async def audio_turn(
                 detail="I could not hear anything in that recording.",
             )
 
-        result = runtime.run_turn(entry.conversation, transcript, entry.localizer)
+        result = _run_turn(runtime, entry, transcript)
 
-        return TurnResponse(
-            reply=result.reply,
-            # The RAW transcript, deliberately: this is shown back as the
-            # customer's own words, so it must be what was actually
-            # heard, not the normalized form the router used.
-            transcript=transcript,
-            workflow=_snapshot(entry.conversation, runtime),
-            ended=result.ended,
-        )
+        # The RAW transcript, deliberately: this is shown back as the
+        # customer's own words, so it must be what was actually heard, not
+        # the normalized form the router used.
+        return _turn_response(result, _snapshot(entry.conversation, runtime), domain, transcript)
 
 
 #: A correlation id from the caller is used only if it looks like one.
@@ -314,7 +504,7 @@ async def invalid_request(request: Request, error: RequestValidationError) -> JS
     )
 
 
-@app.post("/tts", dependencies=[Depends(require_internal_token)])
+@app.post("/tts", dependencies=[Depends(require_known_domain)])
 async def speak(
     request: TtsRequest,
     x_request_id: Annotated[Optional[str], Header()] = None,
@@ -367,15 +557,23 @@ SNAPSHOT_LOCK_TIMEOUT_SECONDS = 2.0
 #: Reads workflow definitions only, to total the steps. Its own instance, so
 #: a snapshot never constructs -- or waits on -- the model-loading runtime.
 _snapshot_loader = WorkflowLoader()
+_domain_snapshot_loaders: dict = {}
 
 
-@app.get(
-    "/sessions/{session_id}/snapshot",
-    response_model=SessionSnapshotResponse,
-    dependencies=[Depends(require_internal_token)],
-)
+def _snapshot_loader_for(domain: str) -> WorkflowLoader:
+    """The domain's own workflow definitions (Phase 5); Banking's as before."""
+    if domain == BANKING:
+        return _snapshot_loader
+    loader = _domain_snapshot_loaders.get(domain)
+    if loader is None:
+        loader = _domain_snapshot_loaders[domain] = WorkflowLoader(get_domain(domain).workflows_dir)
+    return loader
+
+
+@app.get("/sessions/{session_id}/snapshot", response_model=SessionSnapshotResponse)
 def session_snapshot(
     session_id: Annotated[str, Path(min_length=1, max_length=128)],
+    caller: Caller = Depends(authenticate_caller),
 ) -> SessionSnapshotResponse:
     """
     Where a visit's conversation stands, without changing it.
@@ -394,8 +592,11 @@ def session_snapshot(
     - The visit's own turn lock, held only to READ, so a snapshot is never
       a half-applied turn. If a turn is still running it answers 409 rather
       than waiting out the caller's timeout or reporting unsettled state.
+    - The caller's own domain only: another domain's visit with the same id
+      is reported as unknown.
     """
-    entry = registry.peek(session_id)
+    domain = _caller(caller).resolve()
+    entry = registry.peek(session_id, domain=domain)
 
     if entry is None:
         return SessionSnapshotResponse(known=False)
@@ -412,20 +613,17 @@ def session_snapshot(
         return SessionSnapshotResponse(
             known=True,
             ended=EngineRuntime.has_exited(conversation),
-            workflow=workflow_snapshot(conversation, _snapshot_loader),
+            workflow=workflow_snapshot(conversation, _snapshot_loader_for(domain)),
         )
     finally:
         entry.lock.release()
 
 
-@app.post(
-    "/sessions/{session_id}/assistance",
-    response_model=AssistanceResponse,
-    dependencies=[Depends(require_internal_token)],
-)
+@app.post("/sessions/{session_id}/assistance", response_model=AssistanceResponse)
 def session_assistance(
     session_id: Annotated[str, Path(min_length=1, max_length=128)],
     request: AssistanceRequest,
+    caller: Caller = Depends(authenticate_caller),
 ) -> AssistanceResponse:
     """
     An offer of help for a customer who has gone quiet on a step.
@@ -436,11 +634,18 @@ def session_assistance(
     never created, no touch() so an offer never keeps an idle visit alive,
     no runtime and no model, and the turn lock with a bounded wait -- 409
     while a turn is running, because a customer mid-turn is not quiet.
+    Looks only in the caller's own domain.
     """
-    entry = registry.peek(session_id)
+    domain = _caller(caller).resolve()
+    entry = registry.peek(session_id, domain=domain)
 
     if entry is None:
         return AssistanceResponse(offered=False, reason="unknown_session")
+
+    if domain != BANKING:
+        # Assistance offers are worded from Banking's form-filling steps;
+        # other domains' workflows have none (yet). Never Banking text.
+        return AssistanceResponse(offered=False, reason="not_available")
 
     if not entry.lock.acquire(timeout=SNAPSHOT_LOCK_TIMEOUT_SECONDS):
         raise HTTPException(
@@ -462,10 +667,49 @@ def session_assistance(
         entry.lock.release()
 
 
-@app.delete("/sessions/{session_id}", dependencies=[Depends(require_internal_token)])
-def end_session(session_id: str) -> JSONResponse:
-    """Frees a visit's conversation when the customer signs out."""
-    removed = registry.remove(session_id)
+@app.post("/sessions/{session_id}/workflow-result", response_model=TurnResponse)
+def workflow_result(
+    session_id: Annotated[str, Path(min_length=1, max_length=128)],
+    request: WorkflowResultRequest,
+    caller: Caller = Depends(authenticate_caller),
+) -> TurnResponse:
+    """
+    The calling backend's answer to a WorkflowAction it was given (Phase 5).
+
+    The backend authorised and performed the action itself (for admission
+    status: the signed-in student's own record, inside the College backend)
+    and sends back ONLY an outcome code. The reply is worded here, in the
+    visit's language, and the workflow completes. Refused -- and nothing
+    changes -- unless the visit exists in the caller's own domain, is waiting
+    for exactly this action, and the workflow defines the outcome.
+    """
+    domain = _caller(caller).resolve()
+    entry = registry.peek(session_id, domain=domain)
+    if entry is None:
+        raise NoPendingWorkflowAction("This visit has no pending request.")
+    runtime = _runtime_for(domain)
+    if not hasattr(runtime, "apply_workflow_result"):
+        raise NoPendingWorkflowAction("This visit has no pending request.")
+
+    with registry.in_turn(entry):
+        try:
+            result = runtime.apply_workflow_result(entry.conversation, request.action_id, request.outcome,
+                                                   entry.localizer, action_type=request.action_type)
+        except ActionExpired:
+            raise ExpiredWorkflowAction("This request has expired. Please ask again.") from None
+        except ActionTypeMismatch:
+            raise MismatchedWorkflowAction("This visit has no pending request of that kind.") from None
+        except NoPendingAction:
+            raise NoPendingWorkflowAction("This visit has no pending request.") from None
+        except UnknownOutcome:
+            raise InvalidWorkflowResult("That outcome is not defined for this request.") from None
+        return _turn_response(result, _snapshot(entry.conversation, runtime), domain)
+
+
+@app.delete("/sessions/{session_id}")
+def end_session(session_id: str, caller: Caller = Depends(authenticate_caller)) -> JSONResponse:
+    """Frees a visit's conversation when the customer signs out. Own domain only."""
+    removed = registry.remove(session_id, domain=_caller(caller).resolve())
 
     return JSONResponse({"removed": removed})
 

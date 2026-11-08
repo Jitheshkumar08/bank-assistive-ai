@@ -26,6 +26,7 @@ export type ApiErrorCode =
   | 'IMPORT_ALREADY_PROCESSED'
   | 'IMPORT_PREVIEW_EXPIRED'
   | 'IMPORT_STALE'
+  | 'ASSISTANT_UNAVAILABLE'
   | 'INTERNAL_ERROR'
 
 export type FieldError = { field: string; messages: string[] }

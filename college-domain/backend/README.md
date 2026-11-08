@@ -12,7 +12,7 @@ npm install
 cp .env.example .env            # then set DATABASE_URL (see "Database setup")
 npm run db:migrate:deploy       # apply migrations (never resets data)
 npm run db:seed                 # NMAMIT institution context only (no students, no admission data)
-npm run start:dev               # http://localhost:3000/api   ·   Swagger: http://localhost:3000/api/docs
+npm run start:dev               # http://localhost:3001/api   ·   Swagger: http://localhost:3001/api/docs (PORT=3001; Banking uses 3000)
 ```
 
 | Command | Purpose |
@@ -50,7 +50,7 @@ GRANT CONNECT, TEMPORARY ON DATABASE campusguide_dev, campusguide_test TO campus
 | Variable | Required | Notes |
 |---|---|---|
 | `DATABASE_URL` | yes | `postgresql://…/campusguide_dev?schema=public`; the `.env.example` placeholder is rejected |
-| `FRONTEND_ORIGIN` | yes | The **public app URL**: exact origin for CORS, email links and every generated QR code, e.g. `http://localhost:5173` locally. In production it must be the deployed `https://` address — localhost and private IPs are refused at startup. Never derived from request headers. |
+| `FRONTEND_ORIGIN` | yes | The **public app URL**: exact origin for CORS, email links and every generated QR code, e.g. `http://localhost:5174` locally. In production it must be the deployed `https://` address — localhost and private IPs are refused at startup. Never derived from request headers. |
 | `NODE_ENV` | | `development` (default), `test`, `production` |
 | `PORT` | | default `3000` |
 | `SESSION_TTL_HOURS` / `REMEMBER_ME_DAYS` | | default 12 h / 30 days |
@@ -208,6 +208,8 @@ inventing an `admissionYear` if admission rows already exist), `20261023100100_a
 | `GET /students/me/admission-details?collegeId=nmamit&area=admissions-desk` | cookie (STUDENT) | `200 {details}` (record found by the session account's email; fee from the fee service) · `404 NO_ADMISSION_RECORD` · `409 AMBIGUOUS_ADMISSION_RECORD` · `400 INVALID_QR` (college or QR placement inactive) |
 | `GET /students/me/admission-result?collegeId=nmamit` | cookie | `200 {result}` · `404 NOT_VERIFIED` (kept; the Student Portal now uses admission-details) |
 | `POST /students/me/admission-verification` `{collegeId, nucatReference}` | cookie | `200 {result}` · `400 REFERENCE_MISMATCH` |
+| `POST /assistant/messages` `{message, language, collegeId, area?, inputMode?, history?}` | cookie (STUDENT) | `200 {text, language, intent, outcome, steps, studentContext}` · `400 VALIDATION_FAILED` (any student field in the body) · `400 INVALID_QR` · `503 ASSISTANT_UNAVAILABLE` — Phase 6, see `docs/domain-integration/06-college-backend-integration.md` |
+| `POST /assistant/speech` `{text}` | cookie (STUDENT) | `200 audio/*` (only a reply this session was given) · `400` · `503 ASSISTANT_UNAVAILABLE` |
 | `POST /auth/invitations/inspect` · `POST /auth/invitations/accept` `{token, password}` | link token | staff activation (role from the invitation) |
 
 Student endpoints require role `STUDENT`. Staff APIs (full schema in Swagger):
@@ -244,4 +246,4 @@ fragment); the frontend pages that read them and call the API are not built yet.
 - Official spreadsheet layout and NUCAT reference rules (column names, global vs per-year uniqueness, status vocabulary).
 - Real email delivery (configure SMTP) — required for staff invitations and the Super Admin bootstrap in production.
 - Additional Super Admins (only the first is provisioned, by design), self-service staff password change while signed
-  in (use "forgot password"), multi-instance rate-limit store, AI assistant endpoints, social login.
+  in (use "forgot password"), multi-instance rate-limit store, social login. (The AI assistant endpoints exist since Phase 6.)

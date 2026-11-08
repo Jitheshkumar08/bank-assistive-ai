@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common'
 import { APP_FILTER, APP_GUARD } from '@nestjs/core'
 import { AdminModule } from './admin/admin.module.js'
 import { AdmissionModule } from './admission/admission.module.js'
+import { AssistantModule } from './assistant/assistant.module.js'
 import { AuditModule } from './audit/audit.module.js'
 import { AuthModule } from './auth/auth.module.js'
 import { AllExceptionsFilter } from './common/all-exceptions.filter.js'
@@ -23,6 +24,7 @@ import { StaffModule } from './staff/staff.module.js'
     AuthModule,
     ContextModule,
     AdmissionModule,
+    AssistantModule,
     StaffModule,
     AdminModule,
     QrCodesModule,

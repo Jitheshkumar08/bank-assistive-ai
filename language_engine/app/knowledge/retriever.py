@@ -103,9 +103,20 @@ def chunk_document(source, content):
 class KnowledgeRetriever:
 
     def __init__(self, model=None, documents=None, scoring="mean", expand_queries=True,
-                 min_score=MIN_SCORE):
+                 min_score=MIN_SCORE, encoder=None):
         """`scoring` is "mean" (production), "whole" or "sections" -- the
-        alternatives exist so the choice above stays measurable."""
+        alternatives exist so the choice above stays measurable.
+
+        Domain integration (Phase 3), both optional and unused by Banking:
+
+        `encoder`  a callable texts -> normalised vectors used for the
+                   articles and sections instead of encoding them afresh
+                   (app/knowledge/embedding_cache.py). Queries are always
+                   encoded by `model`. None = exactly the previous behaviour.
+        `metadata` a document dict may carry a "metadata" mapping; it is
+                   returned with that document's results, for source
+                   attribution. Documents without one return no such key.
+        """
 
         print("Loading knowledge retrieval model...")
 
@@ -118,15 +129,17 @@ class KnowledgeRetriever:
 
         self.sources = [d["source"] for d in self.documents]
         self._content = {d["source"]: d["content"] for d in self.documents}
+        self._metadata = {d["source"]: d["metadata"] for d in self.documents if "metadata" in d}
         self.chunks = [c for d in self.documents for c in chunk_document(d["source"], d["content"])
                        if c["heading"] not in META_SECTIONS]
 
-        self.document_embeddings = self.model.encode(
-            [d["content"] for d in self.documents], normalize_embeddings=True
-        )
-        self.chunk_embeddings = self.model.encode(
-            [c["text"] for c in self.chunks], normalize_embeddings=True
-        )
+        def encode(texts):
+            if encoder is not None:
+                return encoder(texts)
+            return self.model.encode(texts, normalize_embeddings=True)
+
+        self.document_embeddings = encode([d["content"] for d in self.documents])
+        self.chunk_embeddings = encode([c["text"] for c in self.chunks])
 
         print(
             f"Knowledge Retriever Ready ✅ "
@@ -171,12 +184,15 @@ class KnowledgeRetriever:
         for source, (score, heading, matched) in ranked[:top_k]:
             if self.min_score is not None and score < self.min_score:
                 break
-            results.append({
+            result = {
                 "source": source,
                 "content": self._content[source],
                 "score": float(score),
                 "section": heading,
                 "query": matched,
-            })
+            }
+            if source in self._metadata:
+                result["metadata"] = dict(self._metadata[source])
+            results.append(result)
 
         return results

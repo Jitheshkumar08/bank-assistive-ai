@@ -1,15 +1,46 @@
-import { Bot, Info, Languages, MicOff, RefreshCcw, SendHorizontal } from 'lucide-react'
+import { Bot, Info, Languages, LoaderCircle, MicOff, RefreshCcw, SendHorizontal, Volume2 } from 'lucide-react'
 import { useEffect, useId, useRef, useState, type FormEvent } from 'react'
 import { useCollegeContext } from '../../app/collegeContext'
 import { useServices } from '../../app/services'
 import { config } from '../../config'
-import type { ChatTurn } from '../../services/assistant/assistantService'
+import type { AssistantStudentContext, ChatTurn } from '../../services/assistant/assistantService'
 import { suggestedQuestions } from '../../content/assistant'
 import { languages, useI18n } from '../../i18n/I18nProvider'
 import './chat.css'
 
 
-type Message = { id: number; role: 'user' | 'assistant'; text: string; failed?: boolean; steps?: string[] | null }
+type Message = { id: number; role: 'user' | 'assistant'; text: string; failed?: boolean; steps?: string[] | null; studentContext?: AssistantStudentContext | null }
+
+/**
+ * The signed-in student's own admission details, exactly as the backend sent them (Phase 6). Labels follow the selected
+ * language; values are shown as officially recorded. Anything the backend has no trusted source for reads "Not available
+ * yet" — nothing is computed or guessed here.
+ */
+function StudentContextCard({ details }: { details: AssistantStudentContext }) {
+  const { t } = useI18n()
+  const missing = t('chat.details.notAvailable')
+  const rows: [string, string][] = [
+    [t('result.rank'), details.rank !== null ? String(details.rank) : t('result.notPublished')],
+    [t('result.branch'), details.allocatedBranch ?? t('result.notAllocated')],
+    [t('result.status'), details.admissionStatus ?? missing],
+    [t('chat.details.category'), details.category ?? missing],
+    [t('chat.details.batch'), details.assignedBatch ?? missing],
+    [t('chat.details.hall'), details.assignedHall ?? missing],
+    [t('chat.details.nextStep'), details.nextStep ?? missing],
+  ]
+  if (details.admissionYear !== null) rows.push([t('result.year'), String(details.admissionYear)])
+  return (
+    <section className="chat__details" aria-label={t('chat.details.title')}>
+      <h3 className="chat__details-title">{t('chat.details.title')}</h3>
+      <dl>
+        {rows.map(([label, value]) => (
+          <div key={label} className="chat__details-row"><dt>{label}</dt><dd>{value}</dd></div>
+        ))}
+      </dl>
+      <p className="chat__details-source">{t('chat.details.source')}</p>
+    </section>
+  )
+}
 
 /** Screen 8 chat. Replies come only from the assistant service; nothing is generated in the browser. */
 export default function ChatPanel() {
@@ -19,6 +50,9 @@ export default function ChatPanel() {
   const [messages, setMessages] = useState<Message[]>([])
   const [draft, setDraft] = useState('')
   const [pending, setPending] = useState(false)
+  const [speaking, setSpeaking] = useState<number | null>(null)
+  const [listenFailed, setListenFailed] = useState<number | null>(null)
+  const audioRef = useRef<HTMLAudioElement | null>(null)
   const nextId = useRef(1)
   const logRef = useRef<HTMLDivElement>(null)
   const inputId = useId()
@@ -32,8 +66,9 @@ export default function ChatPanel() {
     setPending(true)
     try {
       // The selected Student Portal language travels with every question so the assistant can answer in it.
-      const reply = await assistant.send({ message: text, history, collegeId: context?.collegeId ?? null, language, inputMode: 'text' })
-      setMessages((current) => [...current, { id: nextId.current++, role: 'assistant', text: reply.text, steps: reply.steps }])
+      // Only the QR context (college + placement) travels with the question; identity comes from the session cookie.
+      const reply = await assistant.send({ message: text, history, collegeId: context?.collegeId ?? null, area: context?.area ?? null, language, inputMode: 'text' })
+      setMessages((current) => [...current, { id: nextId.current++, role: 'assistant', text: reply.text, steps: reply.steps, studentContext: reply.studentContext ?? null }])
     } catch (error) {
       setMessages((current) => [...current, { id: nextId.current++, role: 'assistant', failed: true, text: err(error, 'chat.failed') }])
     } finally {
@@ -48,6 +83,30 @@ export default function ChatPanel() {
     setMessages((current) => [...current, { id: nextId.current++, role: 'user', text: question }])
     setDraft('')
     void ask(question, history)
+  }
+
+  useEffect(() => () => { audioRef.current?.pause() }, [])
+
+  /** Reads one reply aloud through the backend (the language is the one the reply was given in). */
+  async function listen(message: Message) {
+    if (!assistant.speak || speaking !== null) return
+    setSpeaking(message.id)
+    setListenFailed(null)
+    try {
+      const blob = await assistant.speak(message.text)
+      audioRef.current?.pause()
+      const url = URL.createObjectURL(blob)
+      const audio = new Audio(url)
+      audioRef.current = audio
+      const release = () => URL.revokeObjectURL(url)
+      audio.addEventListener('ended', release, { once: true })
+      audio.addEventListener('error', release, { once: true })
+      await audio.play()
+    } catch {
+      setListenFailed(message.id)
+    } finally {
+      setSpeaking(null)
+    }
   }
 
   function retryLast() {
@@ -81,6 +140,13 @@ export default function ChatPanel() {
               <span className="visually-hidden">{message.role === 'user' ? t('chat.youSaid') : t('chat.botSaid')}</span>
               <p>{message.text}</p>
               {message.steps?.length ? <ol className="chat__steps">{message.steps.map((step) => <li key={step}>{step}</li>)}</ol> : null}
+              {message.studentContext ? <StudentContextCard details={message.studentContext} /> : null}
+              {message.role === 'assistant' && !message.failed && assistant.speak ? (
+                <button type="button" className="chat__listen" onClick={() => void listen(message)} disabled={speaking !== null} aria-label={`${t('chat.listen')}: ${message.text.slice(0, 60)}`}>
+                  {speaking === message.id ? <LoaderCircle className="spin" size={14} aria-hidden="true" /> : <Volume2 size={14} aria-hidden="true" />} {t('chat.listen')}
+                </button>
+              ) : null}
+              {listenFailed === message.id && <p className="chat__listen-failed" role="status">{t('chat.listenFailed')}</p>}
               {message.failed && index === messages.length - 1 && (
                 <button type="button" className="chat__retry" onClick={retryLast} disabled={pending}><RefreshCcw size={14} aria-hidden="true" /> {t('chat.retry')}</button>
               )}
@@ -97,8 +163,8 @@ export default function ChatPanel() {
 
       <div className="chat__modes">
         <span className="chat__language"><Languages size={14} aria-hidden="true" /> {t('language.active', { language: languages.find((option) => option.code === language)!.name })}</span>
-        {/* No speech-to-text / text-to-speech engine is configured yet, so voice is reported as unavailable, never faked. */}
-        <span className="chat__voice" role="note"><MicOff size={14} aria-hidden="true" /> {t('chat.voiceUnavailable')}</span>
+        {/* Spoken answers come from the backend (Listen). Voice INPUT is not wired up yet, so it is reported as unavailable, never faked. */}
+        <span className="chat__voice" role="note"><MicOff size={14} aria-hidden="true" /> {t(assistant.speak ? 'chat.voiceInputUnavailable' : 'chat.voiceUnavailable')}</span>
       </div>
       <form className="chat__composer" onSubmit={(event: FormEvent<HTMLFormElement>) => { event.preventDefault(); send(draft) }}>
         <label htmlFor={inputId} className="visually-hidden">{t('chat.inputLabel')}</label>

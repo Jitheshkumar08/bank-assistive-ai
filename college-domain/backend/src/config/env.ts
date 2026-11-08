@@ -51,7 +51,16 @@ export const envSchema = z.object({
   RATE_LIMIT_IMPORT: z.coerce.number().int().min(1).max(1000).default(30),
   /** Extra spreadsheet header aliases for admission imports (until the official column layout is confirmed). */
   ADMISSION_IMPORT_COLUMN_ALIASES: columnAliases,
+  /** Shared language engine (internal service; never exposed to the browser). */
+  AI_ENGINE_URL: z.url().default('http://127.0.0.1:8000'),
+  /** College's own engine token (the engine's AI_ENGINE_COLLEGE_TOKEN). Never the Banking token; never sent to the browser. */
+  AI_ENGINE_COLLEGE_TOKEN: z.string().optional().default(''),
+  /** Budget for one engine call (an LLM answer can take several seconds). */
+  AI_ENGINE_TIMEOUT_MS: z.coerce.number().int().min(1000).max(120_000).default(30_000),
 }).superRefine((env, ctx) => {
+  if (env.NODE_ENV === 'production' && env.AI_ENGINE_COLLEGE_TOKEN && env.AI_ENGINE_COLLEGE_TOKEN.trim().length < 32) {
+    ctx.addIssue({ code: 'custom', path: ['AI_ENGINE_COLLEGE_TOKEN'], message: 'must be at least 32 characters in production' })
+  }
   if (env.EMAIL_TRANSPORT === 'smtp') {
     if (!/^smtps?:\/\//.test(env.SMTP_URL)) ctx.addIssue({ code: 'custom', path: ['SMTP_URL'], message: 'is required (smtp:// or smtps://) when EMAIL_TRANSPORT=smtp' })
     if (!env.EMAIL_FROM.trim()) ctx.addIssue({ code: 'custom', path: ['EMAIL_FROM'], message: 'is required when EMAIL_TRANSPORT=smtp' })

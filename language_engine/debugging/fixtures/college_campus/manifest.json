@@ -1,0 +1,28 @@
+{
+  "domain": "college",
+  "description": "SYNTHETIC TEST FIXTURES ONLY. Fictional campuses; every map is verified=false and must never be presented as real directions. Used by debugging/test_college_workflows.py.",
+  "maps": [
+    {
+      "id": "a-campus",
+      "path": "test-institute-a.json",
+      "domain": "college",
+      "institution_id": "test-institute-a",
+      "document_type": "synthetic_fixture",
+      "source": "synthetic_test_fixture",
+      "source_reference": null,
+      "version": "fixture-1",
+      "verified": false
+    },
+    {
+      "id": "b-campus",
+      "path": "test-institute-b.json",
+      "domain": "college",
+      "institution_id": "test-institute-b",
+      "document_type": "synthetic_fixture",
+      "source": "synthetic_test_fixture",
+      "source_reference": null,
+      "version": "fixture-1",
+      "verified": false
+    }
+  ]
+}

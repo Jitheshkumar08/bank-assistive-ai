@@ -20,7 +20,7 @@ describe('Ask CampusGuide', () => {
     const chips = await screen.findAllByRole('button', { name: /\?$|\.$/ })
     expect(chips.map((chip) => chip.textContent)).toEqual(['What is the admission process?', 'What documents do I need?', 'How do I check my result?', 'Tell me about the fee structure.', 'When is the next NUCAT exam?'])
     await user.click(screen.getByRole('button', { name: 'What documents do I need?' }))
-    expect(send).toHaveBeenCalledWith({ message: 'What documents do I need?', history: [], collegeId: 'nmamit', language: 'en', inputMode: 'text' })
+    expect(send).toHaveBeenCalledWith({ message: 'What documents do I need?', history: [], collegeId: 'nmamit', area: 'admissions-desk', language: 'en', inputMode: 'text' })
     expect(screen.getByText('CampusGuide is replying…')).toBeInTheDocument()
     expect(screen.getByRole('button', { name: 'What is the admission process?' })).toBeDisabled()
     resolve({ text: 'Answer from the CampusGuide server.', steps: ['First step'] })
@@ -53,4 +53,71 @@ describe('Ask CampusGuide', () => {
     expect(send).toHaveBeenCalledTimes(2)
     expect(send.mock.calls[1][0].message).toBe('When is the next NUCAT exam?')
   })
+
+  it('shows the student’s own admission details from the backend; unavailable fields say so, nothing is guessed', async () => {
+    const send = vi.fn().mockResolvedValue({
+      text: 'Your admission details from the official records are shown below.',
+      studentContext: { verified: true, admissionYear: 2026, rank: 145, category: null, allocatedBranch: null, assignedBatch: null, assignedHall: null, admissionStatus: 'Seat allotted', nextStep: null },
+    } satisfies AssistantReply)
+    const user = userEvent.setup()
+    renderWithRouter({ path: '/assistant', services: { assistant: { send } }, collegeContext: nmamitContext })
+    await user.type(await screen.findByPlaceholderText('Type your question here...'), 'What is my rank?{Enter}')
+    const card = await screen.findByRole('region', { name: 'Your admission details' })
+    const value = (label: string) => within(card).getByText(label).nextElementSibling?.textContent
+    expect(value('NUCAT Rank')).toBe('145')
+    expect(value('Allocated Branch')).toBe('Not yet allocated')
+    expect(value('Status')).toBe('Seat allotted')
+    expect(value('Admission Hall')).toBe('Not available yet')
+    expect(value('Assigned Batch')).toBe('Not available yet')
+    expect(value('Admission Category')).toBe('Not available yet')
+    expect(value('Next Step')).toBe('Not available yet')
+  })
+
+  it('without a speech service no Listen button is offered (never faked)', async () => {
+    const send = vi.fn().mockResolvedValue({ text: 'Plain reply.' })
+    const user = userEvent.setup()
+    renderWithRouter({ path: '/assistant', services: { assistant: { send } }, collegeContext: nmamitContext })
+    await user.type(await screen.findByPlaceholderText('Type your question here...'), 'Hi{Enter}')
+    await screen.findByText('Plain reply.')
+    expect(screen.queryByRole('button', { name: /^Listen/ })).not.toBeInTheDocument()
+  })
+
+  it('a plain answer shows no admission details card', async () => {
+    const send = vi.fn().mockResolvedValue({ text: 'General answer.', studentContext: null })
+    const user = userEvent.setup()
+    renderWithRouter({ path: '/assistant', services: { assistant: { send } }, collegeContext: nmamitContext })
+    await user.type(await screen.findByPlaceholderText('Type your question here...'), 'Hello{Enter}')
+    await screen.findByText('General answer.')
+    expect(screen.queryByRole('region', { name: 'Your admission details' })).not.toBeInTheDocument()
+  })
+
+  it('shows a clear message when the assistant is unavailable', async () => {
+    const send = vi.fn().mockRejectedValue(new ServiceError('ASSISTANT_UNAVAILABLE', 'The CampusGuide assistant is not available right now. Please try again in a moment.'))
+    const user = userEvent.setup()
+    renderWithRouter({ path: '/assistant', services: { assistant: { send } }, collegeContext: nmamitContext })
+    await user.click(await screen.findByRole('button', { name: 'What documents do I need?' }))
+    expect(await within(screen.getByRole('log')).findByText(/not available right now/)).toBeInTheDocument()
+  })
+
+  it('Listen reads a reply aloud through the backend; a playback failure is reported, the text stays', async () => {
+    const send = vi.fn().mockResolvedValue({ text: 'Spoken reply.' })
+    const speak = vi.fn().mockResolvedValue(new Blob(['ID3'], { type: 'audio/mpeg' }))
+    const play = vi.fn().mockRejectedValueOnce(new Error('autoplay blocked')).mockResolvedValue(undefined)
+    vi.stubGlobal('URL', Object.assign(URL, { createObjectURL: vi.fn(() => 'blob:x'), revokeObjectURL: vi.fn() }))
+    vi.spyOn(HTMLMediaElement.prototype, 'play').mockImplementation(play)
+    vi.spyOn(HTMLMediaElement.prototype, 'pause').mockImplementation(() => undefined)
+    const user = userEvent.setup()
+    renderWithRouter({ path: '/assistant', services: { assistant: { send, speak } }, collegeContext: nmamitContext })
+    await user.type(await screen.findByPlaceholderText('Type your question here...'), 'Hi{Enter}')
+    await screen.findByText('Spoken reply.')
+    expect(screen.getByRole('note')).toHaveTextContent('Voice input is not available yet')
+    await user.click(screen.getByRole('button', { name: /^Listen/ }))
+    expect(speak).toHaveBeenCalledWith('Spoken reply.')
+    expect(await screen.findByText(/spoken answer could not be played/)).toBeInTheDocument()
+    expect(screen.getByText('Spoken reply.')).toBeInTheDocument()
+    await user.click(screen.getByRole('button', { name: /^Listen/ }))
+    await waitFor(() => expect(play).toHaveBeenCalledTimes(2))
+    expect(screen.queryByText(/spoken answer could not be played/)).not.toBeInTheDocument()
+  })
 })
+

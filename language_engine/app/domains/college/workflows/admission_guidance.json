@@ -1,0 +1,66 @@
+{
+  "workflow": "admission guidance",
+  "topic": "the admission guidance",
+  "done": "That is the end of the admission guidance.",
+  "description": "Walks an applicant through the admission process, required documents, eligibility, the next step and where to get help. Every fact comes from the institution's verified knowledge collection; a step with no verified document says so and refers to the office.",
+  "steps": [
+    {
+      "step": 1,
+      "kind": "knowledge",
+      "name": "the admission process",
+      "instruction": "First, the admission process.",
+      "topic": "the admission process",
+      "question": "What is the admission process, and what are the application deadlines?",
+      "categories": [
+        "admission_process",
+        "application_deadlines"
+      ]
+    },
+    {
+      "step": 2,
+      "kind": "knowledge",
+      "name": "the documents you need",
+      "instruction": "Next, the documents you need.",
+      "topic": "admission documents",
+      "question": "Which documents are required for admission?",
+      "categories": [
+        "admission_documents"
+      ]
+    },
+    {
+      "step": 3,
+      "kind": "knowledge",
+      "name": "eligibility",
+      "instruction": "Next, eligibility.",
+      "topic": "admission eligibility",
+      "question": "Who is eligible for admission, and what are the eligibility requirements?",
+      "categories": [
+        "admission_eligibility"
+      ]
+    },
+    {
+      "step": 4,
+      "kind": "knowledge",
+      "name": "what to do now",
+      "instruction": "Next, what to do now.",
+      "topic": "the admission process",
+      "question": "What should an applicant do next to complete admission, and by when?",
+      "categories": [
+        "admission_process",
+        "application_deadlines"
+      ]
+    },
+    {
+      "step": 5,
+      "kind": "knowledge",
+      "name": "where to get help",
+      "instruction": "Finally, where to get help.",
+      "topic": "contact details",
+      "question": "Which office handles admissions, where is it, and how can it be contacted?",
+      "categories": [
+        "contacts",
+        "office_locations"
+      ]
+    }
+  ]
+}

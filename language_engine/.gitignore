@@ -7,3 +7,7 @@ __pycache__/
 project_structure.txt
 .env
 *.egg-info/
+
+# Domain integration (Phase 3): rebuildable embedding cache and runtime logs
+.cache/
+runtime/

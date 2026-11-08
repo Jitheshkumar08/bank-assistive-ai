@@ -1,0 +1,22 @@
+{
+  "workflow": "admission status",
+  "topic": "the admission status check",
+  "description": "Asks the College backend to look up the SIGNED-IN student's own admission details (AdmissionService.getDetails: session email + active QR context). The engine never receives the record, never asks for a reference number, and accepts only one of the outcome codes below back.",
+  "steps": [
+    {
+      "step": 1,
+      "kind": "backend_action",
+      "action": "admission_status",
+      "instruction": "I'll check your admission status in CampusGuide.",
+      "outcomes": {
+        "details_available": ["Your admission details from the official records are shown below."],
+        "not_signed_in": ["Please sign in to your CampusGuide account to see your admission status."],
+        "not_a_student": ["Admission status is available only to student accounts."],
+        "no_record": ["I couldn't find an admission record for the email address of your account.", "If you applied with a different email address, please contact the admission office."],
+        "ambiguous_record": ["More than one admission record matches your account, so I can't show one.", "Please contact the admission office."],
+        "context_invalid": ["Please scan the CampusGuide QR code again to continue."],
+        "unavailable": ["I can't check your admission status right now. Please try again later or open the Result page."]
+      }
+    }
+  ]
+}

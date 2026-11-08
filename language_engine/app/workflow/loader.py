@@ -13,8 +13,10 @@ class WorkflowLoader:
     safely instead of crashing the session.
     """
 
-    def __init__(self):
-        self.workflow_folder = Path(__file__).parent / "workflows"
+    def __init__(self, folder=None):
+        # `folder` (domain integration): another domain's own workflow
+        # directory. None = the original Banking workflows, as before.
+        self.workflow_folder = Path(folder) if folder is not None else Path(__file__).parent / "workflows"
 
     # =====================================================
     # NAME -> FILE RESOLUTION

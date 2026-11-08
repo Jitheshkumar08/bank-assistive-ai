@@ -1,0 +1,185 @@
+{
+ "note": "Labelled College utterances. Authored by the development assistant (not a native Kannada speaker), unreviewed. 'expect' is an intent name, or NOT_INTENT for anything that must not be treated as a College information request (out of scope, banking, acknowledgement). dev.json tunes thresholds; heldout.json only checks them.",
+ "cases": [
+  {
+   "text": "How can I get admitted to the engineering course?",
+   "expect": "admission_process"
+  },
+  {
+   "text": "What is the procedure for joining?",
+   "expect": "admission_process"
+  },
+  {
+   "text": "ಪ್ರವೇಶ ಹೇಗೆ ಪಡೆಯಬೇಕು",
+   "expect": "admission_process"
+  },
+  {
+   "text": "Which documents should I carry on admission day?",
+   "expect": "admission_documents"
+  },
+  {
+   "text": "ಪ್ರವೇಶದ ದಿನ ಯಾವ ದಾಖಲೆ ತರಬೇಕು",
+   "expect": "admission_documents"
+  },
+  {
+   "text": "What is the eligibility criteria for BTech?",
+   "expect": "admission_eligibility"
+  },
+  {
+   "text": "ಬಿಟೆಕ್‌ಗೆ ಅರ್ಹತೆ ಏನು",
+   "expect": "admission_eligibility"
+  },
+  {
+   "text": "Can you tell me my admission status?",
+   "expect": "admission_status"
+  },
+  {
+   "text": "ನನ್ನ ಪ್ರವೇಶ ಸ್ಥಿತಿ ತಿಳಿಸಿ",
+   "expect": "admission_status"
+  },
+  {
+   "text": "How much are the fees for the first year?",
+   "expect": "fee_information"
+  },
+  {
+   "text": "ಮೊದಲ ವರ್ಷದ ಶುಲ್ಕ ಎಷ್ಟು",
+   "expect": "fee_information"
+  },
+  {
+   "text": "Can I pay my fees by card?",
+   "expect": "payment_process"
+  },
+  {
+   "text": "ಶುಲ್ಕ ಪಾವತಿ ಹೇಗೆ ಮಾಡುವುದು",
+   "expect": "payment_process"
+  },
+  {
+   "text": "Do you offer any scholarships for merit students?",
+   "expect": "scholarship_information"
+  },
+  {
+   "text": "ವಿದ್ಯಾರ್ಥಿವೇತನ ಇದೆಯೇ",
+   "expect": "scholarship_information"
+  },
+  {
+   "text": "What branches of engineering do you have?",
+   "expect": "course_information"
+  },
+  {
+   "text": "ಯಾವ ಕೋರ್ಸ್ ಲಭ್ಯವಿದೆ",
+   "expect": "course_information"
+  },
+  {
+   "text": "Tell me about the civil engineering department",
+   "expect": "department_information"
+  },
+  {
+   "text": "ಸಿವಿಲ್ ವಿಭಾಗದ ಬಗ್ಗೆ ತಿಳಿಸಿ",
+   "expect": "department_information"
+  },
+  {
+   "text": "When does the new semester begin?",
+   "expect": "academic_calendar"
+  },
+  {
+   "text": "ಹೊಸ ಸೆಮಿಸ್ಟರ್ ಯಾವಾಗ",
+   "expect": "academic_calendar"
+  },
+  {
+   "text": "When are the final exams?",
+   "expect": "examination_information"
+  },
+  {
+   "text": "ಅಂತಿಮ ಪರೀಕ್ಷೆ ಯಾವಾಗ",
+   "expect": "examination_information"
+  },
+  {
+   "text": "Do you have hostel rooms for first year students?",
+   "expect": "hostel_information"
+  },
+  {
+   "text": "ಹಾಸ್ಟೆಲ್ ಇದೆಯಾ",
+   "expect": "hostel_information"
+  },
+  {
+   "text": "Is there a college bus from Udupi?",
+   "expect": "transport_information"
+  },
+  {
+   "text": "ಉಡುಪಿಯಿಂದ ಬಸ್ ಇದೆಯೇ",
+   "expect": "transport_information"
+  },
+  {
+   "text": "Does the campus have a gym?",
+   "expect": "student_services"
+  },
+  {
+   "text": "ಗ್ರಂಥಾಲಯ ಎಷ್ಟು ಹೊತ್ತು ತೆರೆದಿರುತ್ತದೆ",
+   "expect": "student_services"
+  },
+  {
+   "text": "What is the contact number of the college?",
+   "expect": "contact_information"
+  },
+  {
+   "text": "ಕಾಲೇಜಿನ ಫೋನ್ ಸಂಖ್ಯೆ ಏನು",
+   "expect": "contact_information"
+  },
+  {
+   "text": "How do I go to the library from the main gate?",
+   "expect": "campus_navigation"
+  },
+  {
+   "text": "ಮುಖ್ಯ ದ್ವಾರದಿಂದ ಗ್ರಂಥಾಲಯಕ್ಕೆ ದಾರಿ ಹೇಳಿ",
+   "expect": "campus_navigation"
+  },
+  {
+   "text": "Where is the examination section located?",
+   "expect": "office_location"
+  },
+  {
+   "text": "ಪರೀಕ್ಷಾ ವಿಭಾಗದ ಕಚೇರಿ ಎಲ್ಲಿದೆ",
+   "expect": "office_location"
+  },
+  {
+   "text": "Is this college accredited?",
+   "expect": "general_college_query"
+  },
+  {
+   "text": "ಕಾಲೇಜಿನ ಬಗ್ಗೆ ಸ್ವಲ್ಪ ತಿಳಿಸಿ",
+   "expect": "general_college_query"
+  },
+  {
+   "text": "I want to deposit money",
+   "expect": "NOT_INTENT"
+  },
+  {
+   "text": "How do I open a savings account?",
+   "expect": "NOT_INTENT"
+  },
+  {
+   "text": "What is the interest rate on a home loan?",
+   "expect": "NOT_INTENT"
+  },
+  {
+   "text": "ನನಗೆ ಹಣ ಜಮಾ ಮಾಡಬೇಕು",
+   "expect": "NOT_INTENT"
+  },
+  {
+   "text": "What is the capital of France?",
+   "expect": "NOT_INTENT"
+  },
+  {
+   "text": "Thank you",
+   "expect": "NOT_INTENT"
+  },
+  {
+   "text": "okay",
+   "expect": "NOT_INTENT"
+  },
+  {
+   "text": "Tell me a joke",
+   "expect": "NOT_INTENT"
+  }
+ ]
+}

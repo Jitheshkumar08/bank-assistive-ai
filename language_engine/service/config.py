@@ -27,7 +27,7 @@ from typing import Dict, List, Mapping, MutableMapping, Optional
 DEFAULT_ENV_PATH = Path(__file__).resolve().parent.parent / ".env"
 
 #: Names that must never be echoed, even in a "loaded these" line.
-SECRET_NAMES = frozenset({"GROQ_API_KEY", "AI_ENGINE_TOKEN"})
+SECRET_NAMES = frozenset({"GROQ_API_KEY", "AI_ENGINE_TOKEN", "AI_ENGINE_COLLEGE_TOKEN"})
 
 
 def make_console_utf8_safe() -> None:

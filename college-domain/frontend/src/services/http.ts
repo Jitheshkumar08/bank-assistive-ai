@@ -7,6 +7,7 @@ const knownCodes = new Set<string>([
   'UNAUTHENTICATED', 'NOT_FOUND', 'NOT_VERIFIED', 'REFERENCE_MISMATCH', 'NO_ADMISSION_RECORD', 'AMBIGUOUS_ADMISSION_RECORD', 'INVALID_QR', 'VALIDATION_FAILED', 'INVALID_CREDENTIALS',
   'EMAIL_NOT_VERIFIED', 'ACCOUNT_DISABLED', 'INVALID_OR_EXPIRED_TOKEN', 'EMAIL_PROVIDER_NOT_CONFIGURED', 'EMAIL_DELIVERY_FAILED', 'RATE_LIMITED',
   'FORBIDDEN', 'CONFLICT', 'INVALID_FILE', 'FILE_TOO_LARGE', 'IMPORT_ALREADY_PROCESSED', 'IMPORT_PREVIEW_EXPIRED', 'IMPORT_STALE',
+  'ASSISTANT_UNAVAILABLE',
 ])
 
 type Listener = () => void
@@ -38,8 +39,8 @@ export async function apiRequest<T>(path: string, init: RequestInit = {}, what =
 }
 
 /** Fetches a binary file from the API with the session cookie (e.g. a QR image to preview). */
-export async function apiBlob(path: string, what = 'This download'): Promise<{ blob: Blob; fileName: string | null }> {
-  const response = await send(path, {}, what, '*/*')
+export async function apiBlob(path: string, what = 'This download', init: RequestInit = {}): Promise<{ blob: Blob; fileName: string | null }> {
+  const response = await send(path, init, what, '*/*')
   if (!response.ok) throw toServiceError(response, await response.json().catch(() => null))
   const blob = await response.blob()
   return { blob, fileName: /filename="([^"]+)"/.exec(response.headers.get('Content-Disposition') ?? '')?.[1] ?? null }
@@ -78,7 +79,7 @@ async function send(path: string, init: RequestInit, what: string, accept: strin
 function toServiceError(response: Response, data: unknown) {
   const body = (data && typeof data === 'object' ? data : {}) as { code?: unknown; message?: unknown; details?: unknown }
   const code = typeof body.code === 'string' && knownCodes.has(body.code) ? body.code as ServiceErrorCode : statusCodes[response.status] ?? 'UNKNOWN'
-  const showServerMessage = response.status < 500 || code === 'EMAIL_PROVIDER_NOT_CONFIGURED' || code === 'EMAIL_DELIVERY_FAILED'
+  const showServerMessage = response.status < 500 || code === 'EMAIL_PROVIDER_NOT_CONFIGURED' || code === 'EMAIL_DELIVERY_FAILED' || code === 'ASSISTANT_UNAVAILABLE'
   const message = showServerMessage && typeof body.message === 'string' ? body.message : 'CampusGuide couldn’t complete the request. Please try again later.'
   if (code === 'UNAUTHENTICATED') unauthenticatedListeners.forEach((listener) => listener())
   return new ServiceError(code, message, parseDetails(body.details))

@@ -19,11 +19,27 @@ import threading
 import time
 from contextlib import contextmanager
 from dataclasses import dataclass, field
-from typing import Callable, Iterator, Optional
+from typing import Callable, Iterator, Mapping, Optional, Tuple
 
 from app.conversation.manager import ConversationManager
 from app.dialogue.localization import ResponseLocalizer
+from app.domains import UnknownDomainError, get_domain
+from service.domains import LEGACY_DOMAIN, ContextConflict
 from service.language import normalise_language
+
+def _localizer_for(domain: str, language: str) -> ResponseLocalizer:
+    """The domain's own reply localizer (Phase 4); the shared one by default."""
+    try:
+        factory = get_domain(domain).localizer
+    except UnknownDomainError:
+        factory = None
+    return factory(language) if factory is not None else ResponseLocalizer(language)
+
+
+#: Domain used by in-process callers that name none (the debugging suites and
+#: anything written before domains existed). The HTTP layer always passes the
+#: domain it resolved, so this never decides a web request's domain.
+DEFAULT_DOMAIN = LEGACY_DOMAIN
 
 
 @dataclass
@@ -50,9 +66,22 @@ class SessionEntry:
     # never disagree with the entry's however the entry was built.
     localizer: Optional[ResponseLocalizer] = None
 
+    #: The application domain this visit belongs to. Part of the registry
+    #: key, so a College visit and a Banking visit can never share state,
+    #: even when their backends happen to use the same session id.
+    domain: str = DEFAULT_DOMAIN
+
+    #: Context fixed when the visit began (College: institution_id). A later
+    #: turn naming a different value is refused, never followed.
+    bound_context: dict = field(default_factory=dict)
+
+    #: The latest per-turn context (area, location). Replaced by each turn
+    #: that carries context; left as it was by turns that carry none.
+    context: dict = field(default_factory=dict)
+
     def __post_init__(self) -> None:
         if self.localizer is None:
-            self.localizer = ResponseLocalizer(self.language)
+            self.localizer = _localizer_for(self.domain, self.language)
 
     def apply_language(self, language: str) -> bool:
         """
@@ -102,7 +131,8 @@ class SessionRegistry:
         factory: Callable[[], ConversationManager] = ConversationManager,
         clock: Callable[[], float] = time.monotonic,
     ) -> None:
-        self._entries: dict[str, SessionEntry] = {}
+        # Keyed by (domain, session_id): sessions are isolated per domain.
+        self._entries: dict[Tuple[str, str], SessionEntry] = {}
         self._lock = threading.Lock()
         self._idle_timeout_seconds = idle_timeout_seconds
         self._max_sessions = max_sessions
@@ -118,7 +148,14 @@ class SessionRegistry:
     # Lookup
     # -----------------------------------------------------------------
 
-    def get_or_create(self, session_id: str, language: str = "en") -> SessionEntry:
+    def get_or_create(
+        self,
+        session_id: str,
+        language: str = "en",
+        *,
+        domain: str = DEFAULT_DOMAIN,
+        bound: Optional[Mapping[str, str]] = None,
+    ) -> SessionEntry:
         """
         Returns the conversation for `session_id`, creating it on first use.
 
@@ -131,14 +168,30 @@ class SessionRegistry:
         session's language is changed by in_turn(), under that session's
         turn lock, so a turn already running never sees its language change
         halfway through.
+
+        `domain` selects which domain's sessions to look in. `bound` is the
+        context fixed for the session (see SessionEntry.bound_context): it
+        is recorded when the session is created, and a returning session
+        whose bound value differs raises ContextConflict -- the turn is
+        refused rather than continued under another institution or branch.
         """
         if not session_id:
             raise ValueError("session_id is required.")
 
         language = normalise_language(language)
+        bound = dict(bound or {})
+        key = (domain, session_id)
 
         with self._lock:
-            entry = self._entries.get(session_id)
+            entry = self._entries.get(key)
+
+            if entry is not None:
+                for name, value in bound.items():
+                    if entry.bound_context.get(name) != value:
+                        raise ContextConflict(
+                            "This conversation belongs to a different context. "
+                            "Start a new session for it."
+                        )
 
             if entry is None:
                 self._evict_locked()
@@ -151,8 +204,10 @@ class SessionRegistry:
                     conversation=conversation,
                     language=language,
                     last_used_at=self._clock(),
+                    domain=domain,
+                    bound_context=bound,
                 )
-                self._entries[session_id] = entry
+                self._entries[key] = entry
 
             entry.last_used_at = self._clock()
 
@@ -168,6 +223,7 @@ class SessionRegistry:
         self,
         entry: SessionEntry,
         language: Optional[str] = None,
+        context: Optional[Mapping[str, str]] = None,
     ) -> Iterator[SessionEntry]:
         """
         Holds a conversation for one turn.
@@ -186,24 +242,30 @@ class SessionRegistry:
         recognition to the rendered reply, uses one language, and a
         concurrent turn on the same visit can never switch it mid-way.
         None leaves the language as it is (callers written before M2).
+
+        `context` is this turn's validated context, applied the same way:
+        under the lock, so a running turn never sees it change. None leaves
+        it as it is.
         """
         with entry.lock:
             if language is not None:
                 entry.apply_language(normalise_language(language))
+            if context is not None:
+                entry.context = dict(context)
             try:
                 yield entry
             finally:
                 self.touch(entry)
 
-    def peek(self, session_id: str) -> Optional[SessionEntry]:
-        """Returns an existing entry without creating one."""
+    def peek(self, session_id: str, *, domain: str = DEFAULT_DOMAIN) -> Optional[SessionEntry]:
+        """Returns an existing entry of `domain` without creating one."""
         with self._lock:
-            return self._entries.get(session_id)
+            return self._entries.get((domain, session_id))
 
-    def remove(self, session_id: str) -> bool:
+    def remove(self, session_id: str, *, domain: str = DEFAULT_DOMAIN) -> bool:
         """Drops a visit's conversation. Returns whether anything was removed."""
         with self._lock:
-            return self._entries.pop(session_id, None) is not None
+            return self._entries.pop((domain, session_id), None) is not None
 
     def clear(self) -> None:
         with self._lock:
@@ -213,9 +275,10 @@ class SessionRegistry:
         with self._lock:
             return len(self._entries)
 
-    def session_ids(self) -> Iterator[str]:
+    def session_ids(self, *, domain: Optional[str] = None) -> Iterator[str]:
+        """Session ids held, for one domain or (domain=None) for all of them."""
         with self._lock:
-            return iter(list(self._entries))
+            return iter([sid for (dom, sid) in self._entries if domain is None or dom == domain])
 
     # -----------------------------------------------------------------
     # Housekeeping

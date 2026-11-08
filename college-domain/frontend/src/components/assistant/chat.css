@@ -186,3 +186,15 @@
 .chat__language, .chat__voice { display: inline-flex; align-items: center; gap: 6px; padding: 4px 10px; border-radius: 999px; }
 .chat__language { color: var(--app-blue-strong); background: var(--app-blue-soft); font-weight: 600; }
 .chat__voice { color: var(--app-muted); background: #eef1f7; }
+
+/* Phase 6: the student's own admission details inside an assistant reply, and the Listen control. */
+.chat__details { margin-top: 0.75rem; padding: 0.75rem; border-radius: 0.75rem; background: #fff; border: 1px solid var(--app-border-strong); }
+.chat__details-title { margin: 0 0 0.5rem; font-size: 0.95rem; }
+.chat__details dl { margin: 0; display: grid; gap: 0.35rem; }
+.chat__details-row { display: flex; justify-content: space-between; gap: 1rem; font-size: 0.875rem; }
+.chat__details-row dt { color: var(--app-muted); }
+.chat__details-row dd { margin: 0; font-weight: 600; text-align: right; overflow-wrap: anywhere; }
+.chat__details-source { margin: 0.5rem 0 0; font-size: 0.75rem; color: var(--app-muted); }
+.chat__listen { margin-top: 0.5rem; display: inline-flex; align-items: center; gap: 0.35rem; padding: 0.25rem 0.6rem; border-radius: 999px; border: 1px solid var(--app-border-strong); background: transparent; color: var(--app-blue-strong); font-size: 0.8rem; cursor: pointer; }
+.chat__listen:disabled { opacity: 0.6; cursor: default; }
+.chat__listen-failed { margin: 0.35rem 0 0; font-size: 0.8rem; color: var(--app-muted); }

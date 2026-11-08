@@ -23,6 +23,7 @@ export type ServiceErrorCode =
   | 'IMPORT_ALREADY_PROCESSED'
   | 'IMPORT_PREVIEW_EXPIRED'
   | 'IMPORT_STALE'
+  | 'ASSISTANT_UNAVAILABLE'
   | 'NETWORK'
   | 'UNKNOWN'
 
