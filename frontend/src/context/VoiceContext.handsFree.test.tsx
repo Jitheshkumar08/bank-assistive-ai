@@ -520,7 +520,7 @@ describe('hands-free listening', () => {
     const hook = renderVoice();
 
     act(() => {
-      for (const listener of replyListeners) listener({ text: REPLY, input: 'text' });
+      for (const listener of replyListeners) listener({ text: REPLY, input: 'text', workflow: null });
     });
     await waitFor(() => expect(played).toHaveLength(1));
     playbackEnds();
@@ -528,5 +528,164 @@ describe('hands-free listening', () => {
     await pastReopen();
     expect(mic.attempts).toBe(0);
     expect(hook.result.current.activity).toBe('idle');
+  });
+
+  describe('resuming after the assistant speaks outside a voice turn', () => {
+    const OFFER = 'Do you need any help?';
+
+    /** Hands-free running, one turn done, then the customer stays quiet. */
+    async function pausedBySilence(hook: ReturnType<typeof renderVoice>) {
+      press(hook);
+      await utteranceEndsAndReplyPlays(hook);
+      playbackEnds();
+      await waitFor(() => expect(mic.starts).toBe(2));
+      act(() => mic.endpoint!('no_speech'));
+      await pastReopen();
+      // Silence alone reopens nothing.
+      expect(mic.attempts).toBe(2);
+      expect(hook.result.current.activity).toBe('idle');
+    }
+
+    /** The proactive offer of help is read out (AssistantPage -> speak()). */
+    async function offerPlays(hook: ReturnType<typeof renderVoice>, nth: number) {
+      act(() => {
+        void hook.result.current.speak(OFFER);
+      });
+      await waitFor(() => expect(played).toHaveLength(nth));
+      await waitFor(() => expect(hook.result.current.activity).toBe('speaking'));
+    }
+
+    it('reopens after an offer of help has finished, and the next turn goes through', async () => {
+      const hook = renderVoice();
+      await pausedBySilence(hook);
+
+      await offerPlays(hook, 2);
+      // Not while the offer is still playing.
+      await pastReopen();
+      expect(mic.attempts).toBe(2);
+
+      playbackEnds();
+      await waitFor(() => expect(mic.starts).toBe(3));
+      await waitFor(() => expect(hook.result.current.activity).toBe('listening'));
+
+      // The customer answers, and the conversation carries on by itself.
+      // (The third thing spoken: reply, offer, reply.)
+      await utteranceEndsAndReplyPlays(hook, 3);
+      expect(sendVoice).toHaveBeenCalledTimes(2);
+      playbackEnds();
+      await waitFor(() => expect(mic.starts).toBe(4));
+    });
+
+    it('reopens with an automatic start, once', async () => {
+      const hook = renderVoice();
+      await pausedBySilence(hook);
+      await offerPlays(hook, 2);
+      playbackEnds();
+      await waitFor(() => expect(mic.starts).toBe(3));
+
+      await pastReopen();
+      expect(mic.attempts).toBe(3);
+      // The press was the only start with a tap behind it.
+      expect(mic.automaticStarts).toBe(2);
+    });
+
+    it('does not resume when voice is turned off while the offer plays', async () => {
+      const hook = renderVoice();
+      await pausedBySilence(hook);
+      await offerPlays(hook, 2);
+
+      act(() => hook.result.current.disable());
+      playbackEnds();
+      await pastReopen();
+
+      expect(mic.attempts).toBe(2);
+      expect(hook.result.current.activity).toBe('idle');
+    });
+
+    it('does not resume after the customer stopped hands-free themselves', async () => {
+      const hook = renderVoice();
+      press(hook);
+      act(() => hook.result.current.stopListening());
+      await waitFor(() => expect(played).toHaveLength(1));
+      playbackEnds();
+      await pastReopen();
+
+      await offerPlays(hook, 2);
+      playbackEnds();
+      await pastReopen();
+
+      expect(mic.attempts).toBe(1);
+      expect(sendVoice).toHaveBeenCalledTimes(1);
+    });
+
+    it('does not resume after cancelling', async () => {
+      const hook = renderVoice();
+      press(hook);
+      act(() => hook.result.current.reset());
+
+      await offerPlays(hook, 1);
+      playbackEnds();
+      await pastReopen();
+
+      expect(mic.attempts).toBe(1);
+      expect(sendVoice).not.toHaveBeenCalled();
+    });
+
+    it('never opens the microphone for an offer outside a hands-free session', async () => {
+      const hook = renderVoice();
+
+      await offerPlays(hook, 1);
+      playbackEnds();
+      await pastReopen();
+
+      expect(mic.attempts).toBe(0);
+    });
+
+    it('does not resume when the offer could not be played', async () => {
+      const hook = renderVoice();
+      await pausedBySilence(hook);
+
+      // The browser refuses to play it. The written offer is on screen; a
+      // line spoken outside a turn fails quietly.
+      playBehaviour = 'reject';
+      act(() => {
+        void hook.result.current.speak(OFFER);
+      });
+      await waitFor(() => expect(played).toHaveLength(2));
+      await pastReopen();
+
+      expect(mic.attempts).toBe(2);
+      expect(hook.result.current.activity).toBe('idle');
+    });
+  });
+
+  describe('a browser that measures audio only inside a tap (Safari)', () => {
+    it('does not reopen by itself; it asks for a tap, and a tap works', async () => {
+      mic.automaticUnmeasurable = true;
+      const hook = renderVoice();
+      press(hook);
+      await utteranceEndsAndReplyPlays(hook);
+      playbackEnds();
+      await waitFor(() => expect(mic.automaticStarts).toBe(1));
+      await pastReopen();
+
+      // The automatic reopen was tried, opened nothing, and said why.
+      expect(mic.starts).toBe(1);
+      expect(hook.result.current.activity).toBe('idle');
+      expect(hook.result.current.speechError).toMatch(/tap the microphone/i);
+
+      // The session is over: a later spoken line does not retry in a loop.
+      act(() => {
+        void hook.result.current.speak('Do you need any help?');
+      });
+      await waitFor(() => expect(played).toHaveLength(2));
+      playbackEnds();
+      await pastReopen();
+      expect(mic.attempts).toBe(2);
+
+      // A tap is a gesture, and opens the microphone normally.
+      press(hook);
+      expect(mic.starts).toBe(2);
+    });
   });
 });

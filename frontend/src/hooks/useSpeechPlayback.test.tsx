@@ -412,3 +412,111 @@ describe('useSpeechPlayback', () => {
     expect(revoked).toEqual(created);
   });
 });
+
+/**
+ * Output routing over a mocked setSinkId: the element's own sinkId is what
+ * is checked, as in the browser. No real device is involved.
+ */
+describe('useSpeechPlayback output routing', () => {
+  /** What each element's mocked setSinkId actually does. */
+  let sinkBehaviour: 'switch' | 'ignore' | 'reject';
+
+  beforeEach(() => {
+    sinkBehaviour = 'switch';
+    Object.defineProperty(window.HTMLMediaElement.prototype, 'sinkId', {
+      get(this: HTMLMediaElement & { _sink?: string }) {
+        return this._sink ?? '';
+      },
+      configurable: true,
+    });
+    Object.defineProperty(window.HTMLMediaElement.prototype, 'setSinkId', {
+      value: vi.fn(async function (this: HTMLMediaElement & { _sink?: string }, id: string) {
+        if (sinkBehaviour === 'reject') throw new DOMException('gone', 'NotFoundError');
+        if (sinkBehaviour === 'switch') this._sink = id;
+      }),
+      configurable: true,
+      writable: true,
+    });
+  });
+
+  afterEach(() => {
+    delete (window.HTMLMediaElement.prototype as { setSinkId?: unknown }).setSinkId;
+    delete (window.HTMLMediaElement.prototype as { sinkId?: unknown }).sinkId;
+  });
+
+  it('switches the element and confirms it from the element’s own sinkId', async () => {
+    const { result } = renderHook(() => useSpeechPlayback());
+
+    await act(() => result.current.setOutputDevice('spk-1'));
+
+    act(() => void result.current.play(audio()));
+    await waitFor(() => expect(elements).toHaveLength(1));
+    expect(elements[0].sinkId).toBe('spk-1');
+  });
+
+  it('rejects when the browser resolves but does not actually switch', async () => {
+    sinkBehaviour = 'ignore';
+    const { result } = renderHook(() => useSpeechPlayback());
+
+    await expect(result.current.setOutputDevice('spk-1')).rejects.toMatchObject({
+      name: 'InvalidStateError',
+    });
+  });
+
+  it('rejects with the browser’s error for a missing device', async () => {
+    sinkBehaviour = 'reject';
+    const { result } = renderHook(() => useSpeechPlayback());
+
+    await expect(result.current.setOutputDevice('bt-1')).rejects.toMatchObject({ name: 'NotFoundError' });
+  });
+
+  it('rejects as unsupported where outputs cannot be chosen', async () => {
+    delete (window.HTMLMediaElement.prototype as { setSinkId?: unknown }).setSinkId;
+    const { result } = renderHook(() => useSpeechPlayback());
+
+    await expect(result.current.setOutputDevice('bt-1')).rejects.toMatchObject({ name: 'NotSupportedError' });
+  });
+
+  it('fails a clip, unplayed, when a routed player cannot reach its device', async () => {
+    const { result } = renderHook(() => useSpeechPlayback());
+    await act(() => result.current.setOutputDevice('bt-1'));
+
+    // The element no longer reports the chosen device (as after a remount),
+    // and switching back fails: the device is gone.
+    Object.defineProperty(window.HTMLMediaElement.prototype, 'sinkId', {
+      get: () => 'something-else',
+      configurable: true,
+    });
+    sinkBehaviour = 'reject';
+
+    let outcome!: PlaybackOutcome;
+    await act(async () => {
+      outcome = await result.current.play(audio());
+    });
+
+    expect(outcome).toBe('failed');
+    expect(elements).toHaveLength(0);
+  });
+
+  it('leaves an unrouted player exactly as before', async () => {
+    const setSinkId = window.HTMLMediaElement.prototype.setSinkId;
+    const { result } = renderHook(() => useSpeechPlayback());
+
+    act(() => void result.current.play(audio()));
+
+    await waitFor(() => expect(elements).toHaveLength(1));
+    expect(setSinkId).not.toHaveBeenCalled();
+  });
+
+  it('sets the element’s own volume, clamped, including on an element made later', async () => {
+    const { result } = renderHook(() => useSpeechPlayback());
+
+    act(() => result.current.setVolume(0.6));
+    act(() => void result.current.play(audio()));
+    await waitFor(() => expect(elements).toHaveLength(1));
+    expect(elements[0].volume).toBeCloseTo(0.6);
+
+    act(() => result.current.setVolume(5));
+    expect(elements[0].volume).toBe(1);
+  });
+});

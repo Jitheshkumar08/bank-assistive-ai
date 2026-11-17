@@ -3,6 +3,7 @@ import { AuthProvider } from '@/context/AuthContext';
 import { SessionProvider } from '@/context/SessionContext';
 import { ConversationProvider } from '@/context/ConversationContext';
 import { VoiceProvider } from '@/context/VoiceContext';
+import { VOICE_ENDPOINTING, VOICE_RELISTEN_DELAY_MS } from '@/lib/voiceTiming';
 
 /**
  * Sits above every route so the providers live inside the router
@@ -25,7 +26,7 @@ export function RootLayout() {
     <AuthProvider>
       <SessionProvider>
         <ConversationProvider>
-          <VoiceProvider>
+          <VoiceProvider relistenDelayMs={VOICE_RELISTEN_DELAY_MS} endpointing={VOICE_ENDPOINTING}>
             <Outlet />
           </VoiceProvider>
         </ConversationProvider>

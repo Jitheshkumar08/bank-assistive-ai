@@ -3,6 +3,7 @@ import type {
   Microphone,
   MicrophoneStatus,
   RecordingEnd,
+  StartOptions,
   UseMicrophoneOptions,
 } from '@/hooks/useMicrophone';
 import type { EndpointReason } from '@/lib/speechDetector';
@@ -27,6 +28,13 @@ export const fakeMicrophoneControls = {
   attempts: 0,
   /** start() calls that actually opened the (fake) microphone. */
   starts: 0,
+  /** start() calls made without a tap (hands-free reopening). */
+  automaticStarts: 0,
+  /**
+   * Models a browser that measures audio only inside a tap (Safari): an
+   * automatic start ends at once as 'unmeasurable' and opens nothing.
+   */
+  automaticUnmeasurable: false,
   /**
    * Ends the live recording the way end-of-speech detection would:
    * 'speech_ended' / 'max_duration' emit it, 'no_speech' drops it. Set while
@@ -39,6 +47,8 @@ export const fakeMicrophoneControls = {
     this.blobSize = 2048;
     this.attempts = 0;
     this.starts = 0;
+    this.automaticStarts = 0;
+    this.automaticUnmeasurable = false;
     this.endpoint = null;
   },
 };
@@ -53,9 +63,16 @@ export function fakeUseMicrophone({ onRecorded }: UseMicrophoneOptions): Microph
   const statusRef = useRef(status);
   statusRef.current = status;
 
-  const start = useCallback(async (): Promise<void> => {
+  const start = useCallback(async ({ automatic = false }: StartOptions = {}): Promise<void> => {
     fakeMicrophoneControls.attempts += 1;
+    if (automatic) fakeMicrophoneControls.automaticStarts += 1;
     const failure = fakeMicrophoneControls.failWith;
+
+    if (automatic && fakeMicrophoneControls.automaticUnmeasurable) {
+      setStatus('idle');
+      setLastEnd('unmeasurable');
+      return;
+    }
 
     if (failure) {
       setStatus(failure.status);

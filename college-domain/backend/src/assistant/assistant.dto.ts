@@ -41,6 +41,25 @@ export class AssistantMessageDto {
   history?: unknown[]
 }
 
+/**
+ * The form fields that come with a spoken question (multipart/form-data, the recording in the `audio` file part).
+ * The same context rules as AssistantMessageDto: language and scanned college context only — no identity or student
+ * field is accepted (the strict validation pipe refuses unknown fields with 400).
+ */
+export class AssistantVoiceDto {
+  @ApiProperty({ enum: ASSISTANT_LANGUAGES, example: 'en', description: 'The language the student speaks and wants the answer in.' })
+  @IsIn(ASSISTANT_LANGUAGES)
+  language: AssistantLanguage
+
+  @ApiProperty({ example: 'nmamit', description: 'College from the scanned QR code; re-checked on every question.' })
+  @IsString() @Matches(/^[a-z0-9][a-z0-9-]{1,39}$/, { message: 'collegeId is invalid' })
+  collegeId: string
+
+  @ApiPropertyOptional({ example: 'admissions-desk', description: 'QR placement (location) from the scan; re-checked.' })
+  @IsOptional() @IsString() @Matches(/^[a-z0-9][a-z0-9-]{0,39}$/, { message: 'area is invalid' })
+  area?: string
+}
+
 /** Reads one assistant reply aloud. Only a reply this session was actually given can be spoken. */
 export class AssistantSpeechDto {
   @ApiProperty({ minLength: 1, maxLength: 2000 })
@@ -68,4 +87,6 @@ export class AssistantReplyDto {
   @ApiProperty({ type: [String], nullable: true, description: 'Step-by-step list (e.g. verified directions).' }) steps: string[] | null
   @ApiProperty({ type: AssistantStudentContextDto, nullable: true, description: 'Only after an admission-status lookup that found the student’s own record.' })
   studentContext: AssistantStudentContextDto | null
+  @ApiPropertyOptional({ description: 'Spoken questions only: what was heard, in the student’s own words.' })
+  transcript?: string
 }

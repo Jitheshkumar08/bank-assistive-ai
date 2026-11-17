@@ -50,10 +50,23 @@ from service.engine import (
 )
 from service.housekeeping import IdleSessionReaper, idle_timeout_from_env, purge_interval_from_env
 from service.assistance import offer_assistance
+from service import interpreter
+from service.language import normalise_language
+from app.translation.interpreter_translator import (
+    EmptyTextError,
+    INTERPRETER_LANGUAGES,
+    InterpreterTranslationError,
+    UnsupportedLanguagePairError,
+    language_name,
+)
 from service.models import (
     AssistanceRequest,
     AssistanceResponse,
     HealthResponse,
+    InterpreterLanguagesResponse,
+    InterpreterTranscriptResponse,
+    InterpreterTranslateRequest,
+    InterpreterTranslateResponse,
     SessionSnapshotResponse,
     TextTurnRequest,
     TtsRequest,
@@ -135,6 +148,22 @@ def require_known_domain(caller: Caller = Depends(authenticate_caller)) -> str:
     return caller.resolve()
 
 
+def require_internal_token(caller: Caller = Depends(authenticate_caller)) -> None:
+    """
+    The face-to-face interpreter's gate (restored Banking feature).
+
+    The interpreter belongs to the Banking visit -- it keeps that visit alive
+    and uses Banking's speech recognition -- so only the Banking backend may
+    call it: its token, or no token at all in development, exactly as the
+    original check allowed. Any other domain's token is refused.
+    """
+    if caller.resolve() != BANKING:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="The interpreter is not available for this assistant.",
+        )
+
+
 def _caller(value: object) -> Caller:
     """
     The route's Caller.
@@ -172,6 +201,21 @@ def _runtime_for(domain: str) -> EngineRuntime:
         raise DomainUnavailable(
             "This assistant is not available yet. Please try again later."
         ) from error
+
+
+def require_maintenance_token(x_internal_token: Optional[str] = Header(default=None)) -> None:
+    """
+    The knowledge maintenance endpoints (Phase 3A). Unlike the customer
+    endpoints these never run open: they re-index the knowledge and expose
+    the gap review, which nothing in the customer flow needs. Without
+    AI_ENGINE_TOKEN they are switched off.
+    """
+    if not INTERNAL_TOKEN:
+        raise HTTPException(status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+                            detail="Knowledge maintenance needs AI_ENGINE_TOKEN to be set.")
+
+    if x_internal_token != INTERNAL_TOKEN:
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Not authorised.")
 
 
 def require_llm_key() -> None:
@@ -424,6 +468,132 @@ async def audio_turn(
         # customer's own words, so it must be what was actually heard, not
         # the normalized form the router used.
         return _turn_response(result, _snapshot(entry.conversation, runtime), domain, transcript)
+
+
+# ---------------------------------------------------------------------------
+# Face-to-face interpreter
+#
+# Transcription and translation ONLY. None of these routes reaches
+# run_turn(), intent detection or the dialogue manager, so an interpreted
+# sentence -- "I'd like to deposit this cheque" from a member of staff --
+# can never start, advance or cancel the customer's workflow. A visit's
+# conversation is only touched, so it does not idle out while paused.
+# ---------------------------------------------------------------------------
+
+
+def _keep_visit_alive(session_id: Optional[str]) -> None:
+    """Marks an existing conversation as in use. Never creates or reads one."""
+    if not session_id:
+        return
+
+    entry = registry.peek(session_id)
+
+    if entry is not None:
+        registry.touch(entry)
+
+
+def _interpreter_language(value: str) -> str:
+    language = normalise_language(value)
+
+    if language not in INTERPRETER_LANGUAGES:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=f"The interpreter does not support {language_name(language)}.",
+        )
+
+    return language
+
+
+@app.get(
+    "/interpret/languages",
+    response_model=InterpreterLanguagesResponse,
+    dependencies=[Depends(require_internal_token)],
+)
+def interpreter_languages() -> InterpreterLanguagesResponse:
+    """The languages the interpreter offers, and which can be spoken."""
+    return InterpreterLanguagesResponse(languages=interpreter.capabilities())
+
+
+@app.post(
+    "/interpret/transcribe",
+    response_model=InterpreterTranscriptResponse,
+    dependencies=[Depends(require_internal_token)],
+)
+async def interpreter_transcribe(
+    language: str = Form(...),
+    session_id: Optional[str] = Form(None),
+    audio: UploadFile = File(...),
+) -> InterpreterTranscriptResponse:
+    """
+    What one interpreter speaker said, in the language they speak.
+
+    The same speech recognition a voice turn uses, and nothing after it:
+    the text is returned, not routed. The recording is discarded and never
+    logged.
+    """
+    spoken = _interpreter_language(language)
+    payload = await audio.read()
+
+    if not payload:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="The recording was empty.")
+
+    if len(payload) > MAX_AUDIO_BYTES:
+        raise HTTPException(
+            status_code=status.HTTP_413_REQUEST_ENTITY_TOO_LARGE,
+            detail="That recording is too long.",
+        )
+
+    _keep_visit_alive(session_id)
+
+    suffix = os.path.splitext(audio.filename or "")[1] or ".webm"
+
+    try:
+        text = get_runtime().transcribe(payload, language=spoken, suffix=suffix)
+    except TranscriptionError as error:
+        raise HTTPException(status_code=status.HTTP_422_UNPROCESSABLE_ENTITY, detail=str(error)) from error
+
+    if not text:
+        raise HTTPException(
+            status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+            detail="I could not hear anything in that recording.",
+        )
+
+    return InterpreterTranscriptResponse(text=text, language=spoken)
+
+
+@app.post(
+    "/interpret/translate",
+    response_model=InterpreterTranslateResponse,
+    dependencies=[Depends(require_internal_token)],
+)
+def interpreter_translate(request: InterpreterTranslateRequest) -> InterpreterTranslateResponse:
+    """
+    One utterance, translated. Nothing is answered, and no conversation is read.
+
+    400 for a language the interpreter does not offer, 422 for text that is
+    empty, 502 when the translation could not be produced. The text itself is
+    never logged.
+    """
+    source = _interpreter_language(request.source_language)
+    target = _interpreter_language(request.target_language)
+
+    _keep_visit_alive(request.session_id)
+
+    try:
+        translation = interpreter.get_translator().translate(request.text, source, target)
+    except UnsupportedLanguagePairError as error:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=error.message) from error
+    except EmptyTextError as error:
+        raise HTTPException(status_code=status.HTTP_422_UNPROCESSABLE_ENTITY, detail=error.message) from error
+    except InterpreterTranslationError as error:
+        logger.warning("interpreter.translate failed source=%s target=%s", source, target)
+        raise HTTPException(status_code=status.HTTP_502_BAD_GATEWAY, detail=error.message) from error
+
+    return InterpreterTranslateResponse(
+        translation=translation,
+        source_language=source,
+        target_language=target,
+    )
 
 
 #: A correlation id from the caller is used only if it looks like one.
@@ -707,11 +877,57 @@ def workflow_result(
 
 
 @app.delete("/sessions/{session_id}")
-def end_session(session_id: str, caller: Caller = Depends(authenticate_caller)) -> JSONResponse:
-    """Frees a visit's conversation when the customer signs out. Own domain only."""
+def end_session(
+    session_id: Annotated[str, Path(min_length=1, max_length=128)],
+    caller: Caller = Depends(authenticate_caller),
+) -> JSONResponse:
+    """
+    Frees a visit's conversation when the customer signs out. Own domain only.
+
+    Phase 7A: the id is bounded like every other /sessions/{id} route (422
+    beyond 128 characters), so an oversized id is refused before it reaches
+    the registry.
+    """
     removed = registry.remove(session_id, domain=_caller(caller).resolve())
 
     return JSONResponse({"removed": removed})
+
+
+# ---------------------------------------------------------------------------
+# Knowledge maintenance (Phase 2). Internal-token only, like every route.
+# ---------------------------------------------------------------------------
+
+
+@app.get("/knowledge/gaps", dependencies=[Depends(require_maintenance_token)])
+def knowledge_gaps(limit: int = 100, grouped: bool = False, include_resolved: bool = True) -> JSONResponse:
+    """
+    Recent questions the assistant could not answer well, for review.
+
+    Redacted (no digits, no e-mail addresses, no "my name is ..." names),
+    held in memory only unless KNOWLEDGE_GAP_LOG is set; see
+    app/knowledge/gaps.py. grouped=true returns one row per question.
+    """
+    runtime = get_runtime()
+    if grouped:
+        return JSONResponse({"groups": runtime.knowledge_gap_groups(include_resolved)[: max(1, min(limit, 500))]})
+    return JSONResponse({"gaps": runtime.knowledge_gaps(max(1, min(limit, 500)))})
+
+
+@app.post("/knowledge/gaps/{question_hash}/resolve", dependencies=[Depends(require_maintenance_token)])
+def knowledge_gap_resolve(question_hash: str, resolution: str, note: str = "") -> JSONResponse:
+    """Records what a maintainer did about one group of gap records."""
+    try:
+        return JSONResponse(get_runtime().resolve_knowledge_gap(question_hash, resolution, note))
+    except ValueError as error:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(error))
+    except KeyError:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="No such question.")
+
+
+@app.post("/knowledge/refresh", dependencies=[Depends(require_maintenance_token)])
+def knowledge_refresh() -> JSONResponse:
+    """Re-reads the knowledge collection; only changed articles are re-embedded."""
+    return JSONResponse(get_runtime().refresh_knowledge())
 
 
 @app.exception_handler(Exception)

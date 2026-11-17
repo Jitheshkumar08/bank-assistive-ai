@@ -225,6 +225,63 @@ describe('College backend ⇄ language engine (cross-process, Phase 6)', () => {
     expect(res.status).toBe(401)
   })
 
+  // ── Phase 7: spoken questions through the engine's real /turn/audio route. The harness's SyntheticSpeech "hears" the
+  //    UTF-8 text after SYNTHETIC-SPEECH: in the uploaded bytes (anything else is silence); no real audio, no Whisper.
+  const speech = (words: string) => Buffer.from(`SYNTHETIC-SPEECH:${words}`, 'utf8')
+  const speak = (account: FakeAccount, audio: Buffer, fields: Record<string, string> = {}) => {
+    let req = api().post('/api/assistant/voice-messages').set('Cookie', cookie(db.signIn(account)))
+    for (const [name, value] of Object.entries({ language: 'en', collegeId: COLLEGE, area: 'admissions-desk', ...fields })) req = req.field(name, value)
+    return req.attach('audio', audio, { filename: 'q.webm', contentType: 'audio/webm' })
+  }
+
+  it('voice: a spoken admission-status question runs the real workflow and returns what was heard', async () => {
+    const res = await speak(STUDENT_A, speech('What is my admission status?'))
+    expect(res.status).toBe(200)
+    expect(res.body).toMatchObject({
+      transcript: 'What is my admission status?',
+      text: 'Your admission details from the official records are shown below.',
+      intent: 'admission_status', outcome: 'workflow_result',
+      studentContext: { verified: true, rank: 145, allocatedBranch: 'Synthetic Engineering' },
+    })
+    expect(JSON.stringify(res.body)).not.toContain('Synthetic Integration A')
+  })
+
+  it('voice: student B speaking the same question gets only B’s record', async () => {
+    const res = await speak(STUDENT_B, speech('What is my rank?'))
+    expect(res.status).toBe(200)
+    expect(res.body.studentContext).toMatchObject({ rank: null })
+    expect(JSON.stringify(res.body)).not.toContain('145')
+  })
+
+  it('voice: a spoken knowledge question is answered in the selected language', async () => {
+    const res = await speak(STUDENT_A, speech('What documents do I need for admission?'), { language: 'kn' })
+    expect(res.status).toBe(200)
+    expect(res.body.language).toBe('kn')
+    expect(res.body.transcript).toBe('What documents do I need for admission?')
+    expect(res.body.studentContext).toBeNull()
+  })
+
+  it('voice: a recording the engine hears nothing in → 422 VOICE_NOT_UNDERSTOOD', async () => {
+    const res = await speak(STUDENT_A, Buffer.from('not-speech-just-noise'))
+    expect(res.status).toBe(422)
+    expect(res.body.code).toBe('VOICE_NOT_UNDERSTOOD')
+  })
+
+  it('voice: the engine refuses the Banking token and an undeclared institution on /turn/audio (no fallback)', async () => {
+    const form = () => {
+      const data = new FormData()
+      data.set('session_id', 'cg-voice-direct-check')
+      data.set('language', 'en')
+      data.set('audio', new Blob([speech('What is my admission status?')], { type: 'audio/webm' }), 'q.webm')
+      return data
+    }
+    const banking = await fetch(`${engineUrl}/turn/audio`, { method: 'POST', headers: { 'X-Internal-Token': BANK_TOKEN, 'X-Assistant-Domain': 'college' }, body: form() })
+    expect(banking.status).toBe(403)
+    const noInstitution = await fetch(`${engineUrl}/turn/audio`, { method: 'POST', headers: { 'X-Internal-Token': COLLEGE_TOKEN, 'X-Assistant-Domain': 'college' }, body: form() })
+    expect(noInstitution.status).toBe(422)
+    expect(((await noInstitution.json()) as { error?: string }).error).toBe('invalid_context')
+  })
+
   it('engine down → 503 ASSISTANT_UNAVAILABLE (no internals)', async () => {
     engine.kill()
     await new Promise((done) => setTimeout(done, 500))

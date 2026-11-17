@@ -164,6 +164,41 @@
 
 .chat__send:disabled { cursor: not-allowed; opacity: 0.55; }
 
+/* Phase 7: ask by voice. Same size as Send; red while the microphone is open so recording is obvious at a glance. */
+.chat__mic {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 48px;
+  height: 48px;
+  color: var(--app-blue-strong);
+  background: var(--app-blue-soft);
+  border: 1px solid var(--app-border-strong);
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+.chat__mic--live {
+  color: #fff;
+  background: var(--app-red-strong);
+  border-color: var(--app-red-strong);
+  animation: chat-mic-pulse 1.4s ease-in-out infinite;
+}
+
+.chat__mic:disabled { cursor: not-allowed; opacity: 0.55; }
+
+@keyframes chat-mic-pulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgb(225 29 72 / 0.35); }
+  50% { box-shadow: 0 0 0 6px rgb(225 29 72 / 0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .chat__mic--live { animation: none; }
+}
+
+.chat__recording { margin: 0; font-size: 0.8rem; color: var(--app-muted); }
+.chat__recording--live { color: var(--app-red-strong); font-weight: 600; }
+
 .chat__footnote {
   display: flex;
   gap: 10px;

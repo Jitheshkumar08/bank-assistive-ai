@@ -139,6 +139,26 @@ describe('ConversationProvider', () => {
       // speaks again instead.
       expect(result.current.canRetry).toBe(false);
     });
+
+    it('shows a 422 as the reason, sends once, and is ready for the next turn', async () => {
+      sendMessage.mockRejectedValueOnce(
+        new ApiError('I could not hear anything in that recording.', 422),
+      );
+
+      const { result } = render();
+      await act(() => result.current.sendVoice(audio(), 'audio/webm'));
+
+      expect(result.current.error).toBe('I could not hear anything in that recording.');
+      expect(result.current.messages[0].status).toBe('failed');
+      expect(result.current.canRetry).toBe(false);
+      expect(result.current.isSending).toBe(false);
+      expect(sendMessage).toHaveBeenCalledTimes(1);
+
+      // Speaking again is a fresh turn, and it goes through.
+      await act(() => result.current.sendVoice(audio(), 'audio/webm'));
+      expect(sendMessage).toHaveBeenCalledTimes(2);
+      expect(result.current.error).toBeNull();
+    });
   });
 
   describe('announcing replies', () => {
@@ -151,7 +171,7 @@ describe('ConversationProvider', () => {
 
       await act(() => result.current.send('I want to withdraw money'));
 
-      expect(heard).toEqual([{ text: 'Please take a withdrawal slip.', input: 'text' }]);
+      expect(heard).toEqual([{ text: 'Please take a withdrawal slip.', input: 'text', workflow: null }]);
     });
 
     it('announces a spoken reply, and says it was spoken', async () => {
@@ -165,7 +185,7 @@ describe('ConversationProvider', () => {
 
       // Voice decides for itself what to do with a spoken turn's reply,
       // and can only do that if it is told which kind of turn this was.
-      expect(heard).toEqual([{ text: 'Please take a withdrawal slip.', input: 'voice' }]);
+      expect(heard).toEqual([{ text: 'Please take a withdrawal slip.', input: 'voice', workflow: null }]);
     });
 
     it('announces nothing for a failed turn, then the reply once a retry succeeds', async () => {
@@ -181,7 +201,7 @@ describe('ConversationProvider', () => {
       expect(heard).toEqual([]);
 
       await act(() => result.current.retry());
-      expect(heard).toEqual([{ text: 'Please take a withdrawal slip.', input: 'text' }]);
+      expect(heard).toEqual([{ text: 'Please take a withdrawal slip.', input: 'text', workflow: null }]);
     });
 
     it('stops announcing once unsubscribed', async () => {

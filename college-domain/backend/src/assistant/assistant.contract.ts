@@ -43,6 +43,8 @@ export const engineTurnResponseSchema = z.object({
   steps: z.array(z.string().max(2000)).max(50).nullable().optional(),
   action: engineActionSchema.nullable().optional(),
   ended: z.boolean().optional(),
+  /** Spoken turns only: what the engine heard, in the student's own words. */
+  transcript: z.string().max(4000).nullable().optional(),
 })
 export type EngineTurnResponse = z.infer<typeof engineTurnResponseSchema>
 export type EngineAction = z.infer<typeof engineActionSchema>
@@ -56,6 +58,16 @@ export type EngineTurnRequest = {
   text: string
   institutionId: string
   area: string | null
+}
+
+/**
+ * A spoken question (Phase 7): the recording replaces the text; everything else is the same as EngineTurnRequest. The
+ * engine transcribes it with its shared speech recogniser and runs exactly the same turn a typed question takes.
+ */
+export type EngineAudioTurnRequest = Omit<EngineTurnRequest, 'text'> & {
+  audio: Buffer
+  /** A normalised audio MIME type from the allow-list (never the browser's file name). */
+  mimeType: string
 }
 
 export type EngineWorkflowResult = { actionId: string; actionType: string; outcome: string }
@@ -108,4 +120,6 @@ export type AssistantReply = {
   steps: string[] | null
   /** Present only after an admission-status lookup that found the student's own record. */
   studentContext: AssistantStudentContext | null
+  /** Spoken questions only: what the engine heard, shown back as the student's own message. */
+  transcript?: string
 }

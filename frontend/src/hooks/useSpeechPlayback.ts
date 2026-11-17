@@ -38,6 +38,37 @@ export interface SpeechPlayback {
    * does anything.
    */
   unlock: () => void;
+  /**
+   * Sends this player's audio to one output device, by the id
+   * enumerateDevices() reported ('' is the browser's default output).
+   *
+   * Resolves only once the element itself reports that device as its
+   * sink; rejects with the browser's error (NotFoundError,
+   * NotAllowedError, ...) or NotSupportedError where a page cannot choose
+   * an output at all. Unused by players that never call it.
+   */
+  setOutputDevice: (deviceId: string) => Promise<void>;
+  /**
+   * This player's own volume, 0 to 1. It scales the element only: the
+   * operating system's volume still applies on top, and some browsers
+   * (iOS Safari) ignore it entirely.
+   */
+  setVolume: (volume: number) => void;
+}
+
+/** Points `audio` at a device and confirms the browser actually switched. */
+async function routeElement(audio: HTMLAudioElement, deviceId: string): Promise<void> {
+  if (typeof audio.setSinkId !== 'function') {
+    throw new DOMException('This browser cannot choose an audio output.', 'NotSupportedError');
+  }
+
+  await audio.setSinkId(deviceId);
+
+  // A resolved promise is the browser's word; the element's own sinkId is
+  // the evidence.
+  if (audio.sinkId !== deviceId) {
+    throw new DOMException('The browser did not switch to that audio output.', 'InvalidStateError');
+  }
 }
 
 /**
@@ -70,6 +101,10 @@ export function useSpeechPlayback(): SpeechPlayback {
   // Settles the current clip's promise. release() detaches the element's
   // handlers, so without this an interrupted clip would never resolve.
   const settleRef = useRef<((outcome: PlaybackOutcome) => void) | null>(null);
+  // The output device and volume asked for, kept apart from the element so
+  // an element created later still honours them. Null: never routed.
+  const sinkRef = useRef<string | null>(null);
+  const volumeRef = useRef(1);
 
   /** Resolves whatever clip is pending as interrupted. */
   const interrupt = useCallback((): void => {
@@ -79,7 +114,10 @@ export function useSpeechPlayback(): SpeechPlayback {
   }, []);
 
   const element = useCallback((): HTMLAudioElement => {
-    audioRef.current ??= new Audio();
+    if (!audioRef.current) {
+      audioRef.current = new Audio();
+      audioRef.current.volume = volumeRef.current;
+    }
     return audioRef.current;
   }, []);
 
@@ -183,6 +221,12 @@ export function useSpeechPlayback(): SpeechPlayback {
       audio.src = url;
       setIsSpeaking(true);
 
+      // A player that was routed plays nowhere else: an element that is
+      // not (or no longer) on the chosen device is switched before it
+      // makes a sound, and a switch that fails is a failed clip.
+      const sink = sinkRef.current;
+      const routing = sink === null || audio.sinkId === sink ? null : routeElement(audio, sink);
+
       return new Promise<PlaybackOutcome>((resolve) => {
         let settled = false;
 
@@ -212,17 +256,44 @@ export function useSpeechPlayback(): SpeechPlayback {
         audio.onended = () => finish('ended');
         audio.onerror = () => finish('failed');
 
-        const started = audio.play?.();
+        const start = (): void => {
+          const started = audio.play?.();
 
-        if (started && typeof started.catch === 'function') {
-          // Autoplay refusal, an unsupported codec, or a stopped clip.
-          // The customer keeps the written reply either way.
-          started.catch(() => finish('failed'));
+          if (started && typeof started.catch === 'function') {
+            // Autoplay refusal, an unsupported codec, or a stopped clip.
+            // The customer keeps the written reply either way.
+            started.catch(() => finish('failed'));
+          }
+        };
+
+        if (routing) {
+          routing.then(
+            () => {
+              if (playbackRef.current === playbackId) start();
+            },
+            () => finish('failed'),
+          );
+        } else {
+          start();
         }
       });
     },
     [element, interrupt, release],
   );
+
+  const setOutputDevice = useCallback(
+    (deviceId: string): Promise<void> => {
+      sinkRef.current = deviceId;
+      return routeElement(element(), deviceId);
+    },
+    [element],
+  );
+
+  const setVolume = useCallback((volume: number): void => {
+    const clamped = Math.min(1, Math.max(0, volume));
+    volumeRef.current = clamped;
+    if (audioRef.current) audioRef.current.volume = clamped;
+  }, []);
 
   // Audio must never outlive the page that started it.
   useEffect(() => {
@@ -235,5 +306,5 @@ export function useSpeechPlayback(): SpeechPlayback {
     };
   }, [interrupt, release]);
 
-  return { isSpeaking, play, stop, unlock };
+  return { isSpeaking, play, stop, unlock, setOutputDevice, setVolume };
 }

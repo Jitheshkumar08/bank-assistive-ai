@@ -16,7 +16,7 @@ const lastCall = () => {
   const [url, init] = fetchMock.mock.calls.at(-1)!
   return { url: String(url), init: init!, body: init?.body ? JSON.parse(String(init.body)) : undefined }
 }
-const request = { message: 'What is my admission status?', history: [], collegeId: 'nmamit', area: 'admissions-desk', language: 'kn' as const, inputMode: 'text' as const }
+const request = { message: 'What is my admission status?', collegeId: 'nmamit', area: 'admissions-desk', language: 'kn' as const, inputMode: 'text' as const }
 
 beforeEach(() => { fetchMock.mockReset(); vi.stubGlobal('fetch', fetchMock) })
 afterEach(() => { vi.unstubAllGlobals(); vi.useRealTimers() })
@@ -32,6 +32,18 @@ describe('assistant API contract (Phase 6)', () => {
     expect(call.body).toEqual(request)
     expect(new Headers(call.init.headers).has('Authorization')).toBe(false)
     expect(reply).toEqual({ text: 'ಉತ್ತರ', intent: 'admission_status', outcome: 'workflow_result', steps: null, studentContext })
+  })
+
+  it('never sends a conversation history or any extra field, even if a caller passes one (Phase 7A)', async () => {
+    respond(200, { text: 'Answer' })
+    const history = Array.from({ length: 150 }, (_, i) => ({ role: i % 2 ? 'assistant' : 'user', text: `turn ${i} `.repeat(200) }))
+    const studentId = 'forged'
+    await httpAssistantService.send({ ...request, history, studentId } as unknown as typeof request)
+    const { body, init } = lastCall()
+    expect(body).toEqual(request)
+    expect(body).not.toHaveProperty('history')
+    expect(body).not.toHaveProperty('studentId')
+    expect(String(init.body).length).toBeLessThan(1000)
   })
 
   it('a reply without student context stays without it', async () => {

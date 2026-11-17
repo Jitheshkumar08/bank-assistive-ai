@@ -27,6 +27,7 @@ export type ApiErrorCode =
   | 'IMPORT_PREVIEW_EXPIRED'
   | 'IMPORT_STALE'
   | 'ASSISTANT_UNAVAILABLE'
+  | 'VOICE_NOT_UNDERSTOOD'
   | 'INTERNAL_ERROR'
 
 export type FieldError = { field: string; messages: string[] }

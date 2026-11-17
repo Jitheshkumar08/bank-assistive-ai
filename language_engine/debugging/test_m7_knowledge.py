@@ -80,12 +80,15 @@ def model():
     return _MODEL
 
 
-def retriever(scoring="mean", expand=True):
-    key = (scoring, expand)
+def retriever(scoring="mean", expand=True, lexical=None):
+    """`lexical=0` turns off Phase 2 rare-term matching, to compare the M7
+    scoring choices on the signal they were chosen on."""
+    key = (scoring, expand, lexical)
     if key not in _RETRIEVERS:
-        from app.knowledge.retriever import KnowledgeRetriever
+        from app.knowledge.retriever import KnowledgeRetriever, LEXICAL_BOOST
         with contextlib.redirect_stdout(io.StringIO()):
-            _RETRIEVERS[key] = KnowledgeRetriever(model=model(), scoring=scoring, expand_queries=expand)
+            _RETRIEVERS[key] = KnowledgeRetriever(model=model(), scoring=scoring, expand_queries=expand,
+                                                  lexical_boost=LEXICAL_BOOST if lexical is None else lexical)
     return _RETRIEVERS[key]
 
 
@@ -189,9 +192,14 @@ def test_late_sections_are_found():
     def top1(r):
         return sum(1 for q, src in LATE_SECTION_PROBE if r.search(routing_text(q), 1)[0]["source"] == src)
 
-    whole, mean = top1(retriever("whole")), top1(retriever("mean"))
+    # The M7 comparison is between scoring rules, so it is made without
+    # Phase 2's rare-term matching, which lifts both rules (with it, whole
+    # and mean tie at 14/16). Production -- mean plus the boost -- is held
+    # to the absolute bar below.
+    whole, mean = top1(retriever("whole", lexical=0)), top1(retriever("mean", lexical=0))
     check(f"late-section questions: mean scoring {mean}/16 beats whole-article {whole}/16", mean > whole)
-    check("at least 14 of 16 late-section questions find their article", mean >= 14, f"{mean}")
+    production = top1(retriever("mean"))
+    check("at least 14 of 16 late-section questions find their article", production >= 14, f"{production}")
 
 
 def test_dev_retrieval_does_not_regress():

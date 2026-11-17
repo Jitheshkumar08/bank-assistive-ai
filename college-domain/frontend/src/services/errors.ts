@@ -24,6 +24,7 @@ export type ServiceErrorCode =
   | 'IMPORT_PREVIEW_EXPIRED'
   | 'IMPORT_STALE'
   | 'ASSISTANT_UNAVAILABLE'
+  | 'VOICE_NOT_UNDERSTOOD'
   | 'NETWORK'
   | 'UNKNOWN'
 

@@ -1,15 +1,17 @@
-import { Bot, Info, Languages, LoaderCircle, MicOff, RefreshCcw, SendHorizontal, Volume2 } from 'lucide-react'
+import { Bot, Info, Languages, LoaderCircle, Mic, MicOff, RefreshCcw, SendHorizontal, Square, Volume2 } from 'lucide-react'
 import { useEffect, useId, useRef, useState, type FormEvent } from 'react'
 import { useCollegeContext } from '../../app/collegeContext'
 import { useServices } from '../../app/services'
 import { config } from '../../config'
-import type { AssistantStudentContext, ChatTurn } from '../../services/assistant/assistantService'
+import type { AssistantStudentContext } from '../../services/assistant/assistantService'
 import { suggestedQuestions } from '../../content/assistant'
 import { languages, useI18n } from '../../i18n/I18nProvider'
+import { useVoiceRecorder } from '../../lib/useVoiceRecorder'
 import './chat.css'
 
 
-type Message = { id: number; role: 'user' | 'assistant'; text: string; failed?: boolean; steps?: string[] | null; studentContext?: AssistantStudentContext | null }
+/** `voice`: a spoken question's failure, retried by speaking again (there is no text to resend). */
+type Message = { id: number; role: 'user' | 'assistant'; text: string; failed?: boolean; voice?: boolean; steps?: string[] | null; studentContext?: AssistantStudentContext | null }
 
 /**
  * The signed-in student's own admission details, exactly as the backend sent them (Phase 6). Labels follow the selected
@@ -62,12 +64,13 @@ export default function ChatPanel() {
     if (log) log.scrollTop = log.scrollHeight
   }, [messages, pending])
 
-  async function ask(text: string, history: ChatTurn[]) {
+  async function ask(text: string) {
     setPending(true)
     try {
       // The selected Student Portal language travels with every question so the assistant can answer in it.
       // Only the QR context (college + placement) travels with the question; identity comes from the session cookie.
-      const reply = await assistant.send({ message: text, history, collegeId: context?.collegeId ?? null, area: context?.area ?? null, language, inputMode: 'text' })
+      // No chat history is sent: the conversation is kept server-side by the language engine.
+      const reply = await assistant.send({ message: text, collegeId: context?.collegeId ?? null, area: context?.area ?? null, language, inputMode: 'text' })
       setMessages((current) => [...current, { id: nextId.current++, role: 'assistant', text: reply.text, steps: reply.steps, studentContext: reply.studentContext ?? null }])
     } catch (error) {
       setMessages((current) => [...current, { id: nextId.current++, role: 'assistant', failed: true, text: err(error, 'chat.failed') }])
@@ -76,13 +79,51 @@ export default function ChatPanel() {
     }
   }
 
+  /**
+   * A spoken question (Phase 7): the recording goes to the backend, which has the shared language engine transcribe and
+   * answer it like a typed question. What was heard is shown as the student's message, and the answer is read aloud —
+   * a spoken question earns a spoken answer (the tap on the microphone is what lets the browser play it).
+   */
+  async function askByVoice(audio: Blob) {
+    if (!assistant.sendVoice) return
+    setPending(true)
+    try {
+      const reply = await assistant.sendVoice({ audio, collegeId: context?.collegeId ?? null, area: context?.area ?? null, language })
+      const answer: Message = { id: nextId.current + 1, role: 'assistant', text: reply.text, steps: reply.steps, studentContext: reply.studentContext ?? null }
+      setMessages((current) => [...current, { id: nextId.current, role: 'user', text: reply.transcript ?? t('chat.voiceQuestion') }, answer])
+      nextId.current += 2
+      void listen(answer)
+    } catch (error) {
+      setMessages((current) => [...current,
+        { id: nextId.current++, role: 'user', text: t('chat.voiceQuestion') },
+        { id: nextId.current++, role: 'assistant', failed: true, voice: true, text: err(error, 'chat.failed') }])
+    } finally {
+      setPending(false)
+    }
+  }
+
+  const recorder = useVoiceRecorder({ onRecorded: (audio) => { void askByVoice(audio) } })
+  const canAskByVoice = Boolean(assistant.sendVoice) && recorder.supported
+  const recording = recorder.state !== 'idle'
+
+  function toggleRecording() {
+    if (recording) { recorder.stop(); return }
+    if (pending) return
+    audioRef.current?.pause() // never record the assistant's own voice
+    void recorder.start()
+  }
+
+  const recorderNote = recording ? 'chat.listening'
+    : recorder.problem === 'denied' ? 'chat.micDenied'
+      : recorder.problem === 'unavailable' ? 'chat.micUnavailable'
+        : recorder.problem === 'no_speech' ? 'chat.noSpeech' : null
+
   function send(text: string) {
     const question = text.trim()
     if (!question || pending) return
-    const history: ChatTurn[] = messages.filter((message) => !message.failed).map(({ role, text: body }) => ({ role, text: body }))
     setMessages((current) => [...current, { id: nextId.current++, role: 'user', text: question }])
     setDraft('')
-    void ask(question, history)
+    void ask(question)
   }
 
   useEffect(() => () => { audioRef.current?.pause() }, [])
@@ -113,7 +154,7 @@ export default function ChatPanel() {
     const lastUser = [...messages].reverse().find((message) => message.role === 'user')
     if (!lastUser || pending) return
     setMessages((current) => current.filter((message, index) => !(message.failed && index === current.length - 1)))
-    void ask(lastUser.text, messages.filter((message) => !message.failed && message.id !== lastUser.id).map(({ role, text }) => ({ role, text })))
+    void ask(lastUser.text)
   }
 
   return (
@@ -147,7 +188,7 @@ export default function ChatPanel() {
                 </button>
               ) : null}
               {listenFailed === message.id && <p className="chat__listen-failed" role="status">{t('chat.listenFailed')}</p>}
-              {message.failed && index === messages.length - 1 && (
+              {message.failed && !message.voice && index === messages.length - 1 && (
                 <button type="button" className="chat__retry" onClick={retryLast} disabled={pending}><RefreshCcw size={14} aria-hidden="true" /> {t('chat.retry')}</button>
               )}
             </div>
@@ -163,12 +204,23 @@ export default function ChatPanel() {
 
       <div className="chat__modes">
         <span className="chat__language"><Languages size={14} aria-hidden="true" /> {t('language.active', { language: languages.find((option) => option.code === language)!.name })}</span>
-        {/* Spoken answers come from the backend (Listen). Voice INPUT is not wired up yet, so it is reported as unavailable, never faked. */}
-        <span className="chat__voice" role="note"><MicOff size={14} aria-hidden="true" /> {t(assistant.speak ? 'chat.voiceInputUnavailable' : 'chat.voiceUnavailable')}</span>
+        {/* Voice input needs the backend's voice endpoint and a browser that can record; otherwise it is reported as unavailable, never faked. */}
+        {canAskByVoice
+          ? <span className="chat__voice" role="note"><Mic size={14} aria-hidden="true" /> {t('chat.voiceHint')}</span>
+          : <span className="chat__voice" role="note"><MicOff size={14} aria-hidden="true" /> {t(assistant.speak ? 'chat.voiceInputUnavailable' : 'chat.voiceUnavailable')}</span>}
       </div>
+      {canAskByVoice && recorderNote && (
+        <p className={`chat__recording${recording ? ' chat__recording--live' : ''}`} role="status">{t(recorderNote)}</p>
+      )}
       <form className="chat__composer" onSubmit={(event: FormEvent<HTMLFormElement>) => { event.preventDefault(); send(draft) }}>
         <label htmlFor={inputId} className="visually-hidden">{t('chat.inputLabel')}</label>
-        <input id={inputId} lang={language} value={draft} onChange={(event) => setDraft(event.target.value)} placeholder={t('chat.placeholder')} maxLength={500} autoComplete="off" />
+        <input id={inputId} lang={language} value={draft} onChange={(event) => setDraft(event.target.value)} placeholder={t('chat.placeholder')} maxLength={500} autoComplete="off" disabled={recording} />
+        {canAskByVoice && (
+          <button type="button" className={`chat__mic${recording ? ' chat__mic--live' : ''}`} onClick={toggleRecording}
+            disabled={(pending && !recording) || recorder.state === 'starting'} aria-pressed={recording} aria-label={t(recording ? 'chat.stopRecording' : 'chat.record')}>
+            {recording ? <Square size={18} aria-hidden="true" /> : <Mic size={20} aria-hidden="true" />}
+          </button>
+        )}
         <button type="submit" className="chat__send" disabled={pending || !draft.trim()} aria-label={t('chat.send')}><SendHorizontal size={20} /></button>
       </form>
       <p className="chat__footnote"><Info size={16} aria-hidden="true" /> {t('chat.footnote')}</p>

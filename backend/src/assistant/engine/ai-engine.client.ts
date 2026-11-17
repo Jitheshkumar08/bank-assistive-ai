@@ -85,6 +85,63 @@ export abstract class AiEngineClient {
     void avoid;
     throw new AiEngineError('Assistance offers are not available from this engine.', 501);
   }
+
+  /**
+   * The face-to-face interpreter. Recognition and translation only: none of
+   * these reaches the conversation's turn pipeline, so nothing interpreted
+   * can move a workflow. Not abstract, for the same reason as getSnapshot().
+   */
+  async interpreterLanguages(): Promise<EngineInterpreterLanguage[]> {
+    throw new AiEngineError('The interpreter is not available from this engine.', 501);
+  }
+
+  async interpretTranscribe(request: EngineInterpreterAudio): Promise<EngineInterpreterTranscript> {
+    void request;
+    throw new AiEngineError('The interpreter is not available from this engine.', 501);
+  }
+
+  async interpretTranslate(
+    request: EngineInterpreterTranslation,
+  ): Promise<EngineInterpreterTranslated> {
+    void request;
+    throw new AiEngineError('The interpreter is not available from this engine.', 501);
+  }
+}
+
+/** A language the interpreter offers. */
+export interface EngineInterpreterLanguage {
+  code: string;
+  name: string;
+  /** Whether a translation into it can be read aloud. */
+  speech: boolean;
+}
+
+export interface EngineInterpreterAudio {
+  /** Only so the visit's conversation is kept from idling out. */
+  sessionId: string;
+  /** The language the person speaking speaks. */
+  language: string;
+  audio: Buffer;
+  mimeType: string;
+  filename: string;
+}
+
+export interface EngineInterpreterTranscript {
+  text: string;
+  language: string;
+}
+
+export interface EngineInterpreterTranslation {
+  sessionId: string;
+  text: string;
+  sourceLanguage: string;
+  targetLanguage: string;
+}
+
+export interface EngineInterpreterTranslated {
+  translation: string;
+  sourceLanguage: string;
+  targetLanguage: string;
 }
 
 /** An offer of help, or why there is none. */

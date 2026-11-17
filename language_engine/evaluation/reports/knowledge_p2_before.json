@@ -1,0 +1,1053 @@
+{
+  "name": "knowledge_p2_before",
+  "summary": {
+    "dev": {
+      "answerable": 20,
+      "top1": 19,
+      "top2": 19,
+      "correct_top_scores": [
+        0.343,
+        0.377,
+        0.489,
+        0.544,
+        0.584,
+        0.608,
+        0.655,
+        0.665,
+        0.678,
+        0.685,
+        0.691,
+        0.692,
+        0.694,
+        0.7,
+        0.711,
+        0.745,
+        0.755,
+        0.779,
+        0.806
+      ],
+      "unanswerable_top_scores": [
+        0.074,
+        0.186,
+        0.231,
+        0.273,
+        0.309,
+        0.35,
+        0.512,
+        0.557,
+        0.58,
+        0.656
+      ]
+    },
+    "heldout": {
+      "answerable": 15,
+      "top1": 14,
+      "top2": 14,
+      "correct_top_scores": [
+        0.232,
+        0.523,
+        0.545,
+        0.626,
+        0.649,
+        0.673,
+        0.684,
+        0.694,
+        0.699,
+        0.707,
+        0.714,
+        0.747,
+        0.763,
+        0.768
+      ],
+      "unanswerable_top_scores": [
+        0.135,
+        0.157,
+        0.362,
+        0.487,
+        0.581
+      ]
+    }
+  },
+  "sweep": [
+    {
+      "threshold": 0.2,
+      "keep": 1.0,
+      "reject": 0.2
+    },
+    {
+      "threshold": 0.22,
+      "keep": 1.0,
+      "reject": 0.2
+    },
+    {
+      "threshold": 0.24,
+      "keep": 1.0,
+      "reject": 0.3
+    },
+    {
+      "threshold": 0.26,
+      "keep": 1.0,
+      "reject": 0.3
+    },
+    {
+      "threshold": 0.28,
+      "keep": 1.0,
+      "reject": 0.4
+    },
+    {
+      "threshold": 0.3,
+      "keep": 1.0,
+      "reject": 0.4
+    },
+    {
+      "threshold": 0.32,
+      "keep": 1.0,
+      "reject": 0.5
+    },
+    {
+      "threshold": 0.34,
+      "keep": 1.0,
+      "reject": 0.5
+    },
+    {
+      "threshold": 0.36,
+      "keep": 0.947,
+      "reject": 0.6
+    },
+    {
+      "threshold": 0.38,
+      "keep": 0.895,
+      "reject": 0.6
+    },
+    {
+      "threshold": 0.4,
+      "keep": 0.895,
+      "reject": 0.6
+    },
+    {
+      "threshold": 0.42,
+      "keep": 0.895,
+      "reject": 0.6
+    },
+    {
+      "threshold": 0.44,
+      "keep": 0.895,
+      "reject": 0.6
+    },
+    {
+      "threshold": 0.46,
+      "keep": 0.895,
+      "reject": 0.6
+    },
+    {
+      "threshold": 0.48,
+      "keep": 0.895,
+      "reject": 0.6
+    },
+    {
+      "threshold": 0.5,
+      "keep": 0.842,
+      "reject": 0.6
+    },
+    {
+      "threshold": 0.52,
+      "keep": 0.842,
+      "reject": 0.7
+    },
+    {
+      "threshold": 0.54,
+      "keep": 0.842,
+      "reject": 0.7
+    },
+    {
+      "threshold": 0.56,
+      "keep": 0.789,
+      "reject": 0.8
+    },
+    {
+      "threshold": 0.58,
+      "keep": 0.789,
+      "reject": 0.8
+    },
+    {
+      "threshold": 0.6,
+      "keep": 0.737,
+      "reject": 0.9
+    },
+    {
+      "threshold": 0.62,
+      "keep": 0.684,
+      "reject": 0.9
+    },
+    {
+      "threshold": 0.64,
+      "keep": 0.684,
+      "reject": 0.9
+    },
+    {
+      "threshold": 0.66,
+      "keep": 0.632,
+      "reject": 1.0
+    },
+    {
+      "threshold": 0.68,
+      "keep": 0.526,
+      "reject": 1.0
+    },
+    {
+      "threshold": 0.7,
+      "keep": 0.316,
+      "reject": 1.0
+    }
+  ],
+  "best_dev_threshold": {
+    "threshold": 0.32,
+    "keep": 1.0,
+    "reject": 0.5
+  },
+  "heldout_at_best": {
+    "keep": 0.929,
+    "reject": 0.4
+  },
+  "latency": {
+    "cold_first_query_ms": 17.23,
+    "first_pass_mean_ms": 21.97,
+    "first_pass_p95_ms": 37.26,
+    "repeat_pass_mean_ms": 22.02,
+    "repeat_pass_p95_ms": 34.81,
+    "queries": 50,
+    "index_build_ms_including_model_load": 3491.39
+  },
+  "rows": [
+    {
+      "split": "dev",
+      "lang": "en",
+      "q": "What is a deposit slip?",
+      "kind": "answerable",
+      "expected": [
+        "deposit_slip.md",
+        "deposit.md"
+      ],
+      "got": [
+        "deposit_slip.md",
+        "deposit.md"
+      ],
+      "top_score": 0.806,
+      "top1": true,
+      "top2": true,
+      "ms": 18.26
+    },
+    {
+      "split": "dev",
+      "lang": "en",
+      "q": "Why do I need to sign the withdrawal slip?",
+      "kind": "answerable",
+      "expected": [
+        "withdrawal_slip.md",
+        "withdrawal.md"
+      ],
+      "got": [
+        "withdrawal.md",
+        "withdrawal_slip.md"
+      ],
+      "top_score": 0.678,
+      "top1": true,
+      "top2": true,
+      "ms": 26.79
+    },
+    {
+      "split": "dev",
+      "lang": "en",
+      "q": "What does KYC mean?",
+      "kind": "answerable",
+      "expected": [
+        "account_opening_requirements.md"
+      ],
+      "got": [
+        "account_opening_requirements.md",
+        "loan_basics.md"
+      ],
+      "top_score": 0.377,
+      "top1": true,
+      "top2": true,
+      "ms": 20.08
+    },
+    {
+      "split": "dev",
+      "lang": "en",
+      "q": "What is an EMI?",
+      "kind": "answerable",
+      "expected": [
+        "loan_basics.md"
+      ],
+      "got": [
+        "loan_basics.md",
+        "bank_transfer.md"
+      ],
+      "top_score": 0.343,
+      "top1": true,
+      "top2": true,
+      "ms": 22.06
+    },
+    {
+      "split": "dev",
+      "lang": "en",
+      "q": "How is a current account different from a savings account?",
+      "kind": "answerable",
+      "expected": [
+        "current_account.md",
+        "savings_account.md"
+      ],
+      "got": [
+        "current_account.md",
+        "savings_account.md"
+      ],
+      "top_score": 0.755,
+      "top1": true,
+      "top2": true,
+      "ms": 22.68
+    },
+    {
+      "split": "dev",
+      "lang": "en",
+      "q": "What details are needed to transfer money to another account?",
+      "kind": "answerable",
+      "expected": [
+        "bank_transfer.md"
+      ],
+      "got": [
+        "bank_transfer.md",
+        "current_account.md"
+      ],
+      "top_score": 0.685,
+      "top1": true,
+      "top2": true,
+      "ms": 21.76
+    },
+    {
+      "split": "dev",
+      "lang": "en",
+      "q": "What does a passbook record?",
+      "kind": "answerable",
+      "expected": [
+        "passbook.md"
+      ],
+      "got": [
+        "passbook.md",
+        "account_number.md"
+      ],
+      "top_score": 0.584,
+      "top1": true,
+      "top2": true,
+      "ms": 17.65
+    },
+    {
+      "split": "dev",
+      "lang": "en",
+      "q": "Why should I keep my cheque book safe?",
+      "kind": "answerable",
+      "expected": [
+        "cheque_book.md"
+      ],
+      "got": [
+        "cheque_book.md",
+        "savings_account.md"
+      ],
+      "top_score": 0.694,
+      "top1": true,
+      "top2": true,
+      "ms": 19.57
+    },
+    {
+      "split": "dev",
+      "lang": "en",
+      "q": "What happens if I write the wrong account number?",
+      "kind": "answerable",
+      "expected": [
+        "account_number.md"
+      ],
+      "got": [
+        "account_number.md",
+        "current_account.md"
+      ],
+      "top_score": 0.665,
+      "top1": true,
+      "top2": true,
+      "ms": 19.38
+    },
+    {
+      "split": "dev",
+      "lang": "en",
+      "q": "What is the difference between a secured and unsecured loan?",
+      "kind": "answerable",
+      "expected": [
+        "loan_basics.md"
+      ],
+      "got": [
+        "loan_basics.md",
+        "loan.md"
+      ],
+      "top_score": 0.655,
+      "top1": true,
+      "top2": true,
+      "ms": 20.44
+    },
+    {
+      "split": "dev",
+      "lang": "en",
+      "q": "What services does a bank provide?",
+      "kind": "answerable",
+      "expected": [
+        "banking_services.md"
+      ],
+      "got": [
+        "banking_services.md",
+        "loan_basics.md"
+      ],
+      "top_score": 0.692,
+      "top1": true,
+      "top2": true,
+      "ms": 18.78
+    },
+    {
+      "split": "dev",
+      "lang": "en",
+      "q": "What is NEFT?",
+      "kind": "answerable",
+      "expected": [
+        "bank_transfer.md"
+      ],
+      "got": [
+        "deposit_slip.md",
+        "withdrawal_slip.md"
+      ],
+      "top_score": 0.309,
+      "top1": false,
+      "top2": false,
+      "ms": 18.61
+    },
+    {
+      "split": "dev",
+      "lang": "kn",
+      "q": "ಠೇವಣಿ ಚೀಟಿ ಎಂದರೇನು",
+      "kind": "answerable",
+      "expected": [
+        "deposit_slip.md",
+        "deposit.md"
+      ],
+      "got": [
+        "deposit_slip.md",
+        "deposit.md"
+      ],
+      "top_score": 0.745,
+      "top1": true,
+      "top2": true,
+      "ms": 37.47
+    },
+    {
+      "split": "dev",
+      "lang": "kn",
+      "q": "ಸಾಲಕ್ಕೆ ಯಾವ ದಾಖಲೆಗಳು ಬೇಕು",
+      "kind": "answerable",
+      "expected": [
+        "loan.md",
+        "loan_basics.md"
+      ],
+      "got": [
+        "loan.md",
+        "loan_basics.md"
+      ],
+      "top_score": 0.608,
+      "top1": true,
+      "top2": true,
+      "ms": 35.81
+    },
+    {
+      "split": "dev",
+      "lang": "kn",
+      "q": "ಉಳಿತಾಯ ಖಾತೆ ಎಂದರೇನು",
+      "kind": "answerable",
+      "expected": [
+        "savings_account.md"
+      ],
+      "got": [
+        "savings_account.md",
+        "current_account.md"
+      ],
+      "top_score": 0.779,
+      "top1": true,
+      "top2": true,
+      "ms": 33.97
+    },
+    {
+      "split": "dev",
+      "lang": "hi",
+      "q": "पासबुक क्या होती है",
+      "kind": "answerable",
+      "expected": [
+        "passbook.md"
+      ],
+      "got": [
+        "passbook.md",
+        "account_number.md"
+      ],
+      "top_score": 0.7,
+      "top1": true,
+      "top2": true,
+      "ms": 16.85
+    },
+    {
+      "split": "dev",
+      "lang": "hi",
+      "q": "लोन पर ब्याज क्या होता है",
+      "kind": "answerable",
+      "expected": [
+        "loan_basics.md"
+      ],
+      "got": [
+        "loan_basics.md",
+        "loan.md"
+      ],
+      "top_score": 0.691,
+      "top1": true,
+      "top2": true,
+      "ms": 30.97
+    },
+    {
+      "split": "dev",
+      "lang": "hi",
+      "q": "खाता खोलने के लिए क्या चाहिए",
+      "kind": "answerable",
+      "expected": [
+        "account_opening_requirements.md",
+        "account_opening.md"
+      ],
+      "got": [
+        "account_opening.md",
+        "account_opening_requirements.md"
+      ],
+      "top_score": 0.711,
+      "top1": true,
+      "top2": true,
+      "ms": 32.48
+    },
+    {
+      "split": "dev",
+      "lang": "rom",
+      "q": "cheque book kaise milta hai",
+      "kind": "answerable",
+      "expected": [
+        "cheque_book.md"
+      ],
+      "got": [
+        "cheque_book.md",
+        "passbook.md"
+      ],
+      "top_score": 0.489,
+      "top1": true,
+      "top2": true,
+      "ms": 17.29
+    },
+    {
+      "split": "dev",
+      "lang": "rom",
+      "q": "withdrawal slip mein kya likhna hai",
+      "kind": "answerable",
+      "expected": [
+        "withdrawal_slip.md",
+        "withdrawal.md"
+      ],
+      "got": [
+        "withdrawal_slip.md",
+        "withdrawal.md"
+      ],
+      "top_score": 0.544,
+      "top1": true,
+      "top2": true,
+      "ms": 16.32
+    },
+    {
+      "split": "dev",
+      "lang": "en",
+      "q": "What is the IFSC code of this branch?",
+      "kind": "gap",
+      "expected": null,
+      "got": [
+        "loan_basics.md",
+        "account_number.md"
+      ],
+      "top_score": 0.35,
+      "top1": false,
+      "top2": false,
+      "ms": 17.84
+    },
+    {
+      "split": "dev",
+      "lang": "en",
+      "q": "What is the minimum balance for a savings account here?",
+      "kind": "gap",
+      "expected": null,
+      "got": [
+        "savings_account.md",
+        "current_account.md"
+      ],
+      "top_score": 0.656,
+      "top1": false,
+      "top2": false,
+      "ms": 17.45
+    },
+    {
+      "split": "dev",
+      "lang": "en",
+      "q": "What is the interest rate on a home loan?",
+      "kind": "gap",
+      "expected": null,
+      "got": [
+        "loan_basics.md",
+        "loan.md"
+      ],
+      "top_score": 0.557,
+      "top1": false,
+      "top2": false,
+      "ms": 19.55
+    },
+    {
+      "split": "dev",
+      "lang": "en",
+      "q": "What time does the branch close?",
+      "kind": "gap",
+      "expected": null,
+      "got": [
+        "loan_basics.md",
+        "withdrawal.md"
+      ],
+      "top_score": 0.231,
+      "top1": false,
+      "top2": false,
+      "ms": 18.71
+    },
+    {
+      "split": "dev",
+      "lang": "en",
+      "q": "How do I activate net banking?",
+      "kind": "gap",
+      "expected": null,
+      "got": [
+        "banking_services.md",
+        "account_opening_requirements.md"
+      ],
+      "top_score": 0.512,
+      "top1": false,
+      "top2": false,
+      "ms": 18.84
+    },
+    {
+      "split": "dev",
+      "lang": "en",
+      "q": "What is a fixed deposit?",
+      "kind": "gap",
+      "expected": null,
+      "got": [
+        "deposit.md",
+        "deposit_slip.md"
+      ],
+      "top_score": 0.58,
+      "top1": false,
+      "top2": false,
+      "ms": 18.08
+    },
+    {
+      "split": "dev",
+      "lang": "en",
+      "q": "What is the capital of France?",
+      "kind": "unrelated",
+      "expected": null,
+      "got": [
+        "cheque_book.md",
+        "banking_services.md"
+      ],
+      "top_score": 0.273,
+      "top1": false,
+      "top2": false,
+      "ms": 16.74
+    },
+    {
+      "split": "dev",
+      "lang": "en",
+      "q": "Tell me a joke about cricket.",
+      "kind": "unrelated",
+      "expected": null,
+      "got": [
+        "passbook.md",
+        "bank_transfer.md"
+      ],
+      "top_score": 0.074,
+      "top1": false,
+      "top2": false,
+      "ms": 16.34
+    },
+    {
+      "split": "dev",
+      "lang": "kn",
+      "q": "ಇಂದು ಚಿನ್ನದ ಬೆಲೆ ಎಷ್ಟು",
+      "kind": "gap",
+      "expected": null,
+      "got": [
+        "cheque_book.md",
+        "current_account.md"
+      ],
+      "top_score": 0.186,
+      "top1": false,
+      "top2": false,
+      "ms": 18.98
+    },
+    {
+      "split": "dev",
+      "lang": "hi",
+      "q": "मेरा डेबिट कार्ड खो गया है तो क्या करूं",
+      "kind": "gap",
+      "expected": null,
+      "got": [
+        "withdrawal.md",
+        "withdrawal_slip.md"
+      ],
+      "top_score": 0.309,
+      "top1": false,
+      "top2": false,
+      "ms": 18.25
+    },
+    {
+      "split": "heldout",
+      "lang": "en",
+      "q": "What is a paying-in slip used for?",
+      "kind": "answerable",
+      "expected": [
+        "deposit_slip.md",
+        "deposit.md"
+      ],
+      "got": [
+        "deposit_slip.md",
+        "withdrawal_slip.md"
+      ],
+      "top_score": 0.699,
+      "top1": true,
+      "top2": true,
+      "ms": 18.11
+    },
+    {
+      "split": "heldout",
+      "lang": "en",
+      "q": "What is the principal of a loan?",
+      "kind": "answerable",
+      "expected": [
+        "loan_basics.md"
+      ],
+      "got": [
+        "loan_basics.md",
+        "banking_services.md"
+      ],
+      "top_score": 0.747,
+      "top1": true,
+      "top2": true,
+      "ms": 19.5
+    },
+    {
+      "split": "heldout",
+      "lang": "en",
+      "q": "Do I need an initial deposit to open an account?",
+      "kind": "answerable",
+      "expected": [
+        "account_opening_requirements.md",
+        "account_opening.md"
+      ],
+      "got": [
+        "account_opening_requirements.md",
+        "account_opening.md"
+      ],
+      "top_score": 0.707,
+      "top1": true,
+      "top2": true,
+      "ms": 17.59
+    },
+    {
+      "split": "heldout",
+      "lang": "en",
+      "q": "Can I make a transfer at an ATM?",
+      "kind": "answerable",
+      "expected": [
+        "bank_transfer.md"
+      ],
+      "got": [
+        "bank_transfer.md",
+        "banking_services.md"
+      ],
+      "top_score": 0.626,
+      "top1": true,
+      "top2": true,
+      "ms": 16.54
+    },
+    {
+      "split": "heldout",
+      "lang": "en",
+      "q": "How does a passbook get updated?",
+      "kind": "answerable",
+      "expected": [
+        "passbook.md"
+      ],
+      "got": [
+        "passbook.md",
+        "bank_transfer.md"
+      ],
+      "top_score": 0.694,
+      "top1": true,
+      "top2": true,
+      "ms": 16.92
+    },
+    {
+      "split": "heldout",
+      "lang": "en",
+      "q": "What is a cheque?",
+      "kind": "answerable",
+      "expected": [
+        "cheque_book.md"
+      ],
+      "got": [
+        "cheque_book.md",
+        "deposit.md"
+      ],
+      "top_score": 0.763,
+      "top1": true,
+      "top2": true,
+      "ms": 16.81
+    },
+    {
+      "split": "heldout",
+      "lang": "en",
+      "q": "Who is a current account meant for?",
+      "kind": "answerable",
+      "expected": [
+        "current_account.md"
+      ],
+      "got": [
+        "current_account.md",
+        "account_number.md"
+      ],
+      "top_score": 0.684,
+      "top1": true,
+      "top2": true,
+      "ms": 18.88
+    },
+    {
+      "split": "heldout",
+      "lang": "en",
+      "q": "What is loan tenure?",
+      "kind": "answerable",
+      "expected": [
+        "loan_basics.md"
+      ],
+      "got": [
+        "loan_basics.md",
+        "loan.md"
+      ],
+      "top_score": 0.714,
+      "top1": true,
+      "top2": true,
+      "ms": 17.87
+    },
+    {
+      "split": "heldout",
+      "lang": "en",
+      "q": "What is a branch code?",
+      "kind": "answerable",
+      "expected": [
+        "account_number.md"
+      ],
+      "got": [
+        "loan_basics.md",
+        "loan.md"
+      ],
+      "top_score": 0.402,
+      "top1": false,
+      "top2": false,
+      "ms": 17.85
+    },
+    {
+      "split": "heldout",
+      "lang": "en",
+      "q": "What will I get after my account is opened?",
+      "kind": "answerable",
+      "expected": [
+        "account_opening_requirements.md"
+      ],
+      "got": [
+        "account_opening_requirements.md",
+        "account_opening.md"
+      ],
+      "top_score": 0.523,
+      "top1": true,
+      "top2": true,
+      "ms": 19.21
+    },
+    {
+      "split": "heldout",
+      "lang": "kn",
+      "q": "ಖಾತೆ ಸಂಖ್ಯೆ ಏಕೆ ಬೇಕು",
+      "kind": "answerable",
+      "expected": [
+        "account_number.md"
+      ],
+      "got": [
+        "account_number.md",
+        "deposit.md"
+      ],
+      "top_score": 0.673,
+      "top1": true,
+      "top2": true,
+      "ms": 33.49
+    },
+    {
+      "split": "heldout",
+      "lang": "kn",
+      "q": "ಚಾಲ್ತಿ ಖಾತೆ ಎಂದರೇನು",
+      "kind": "answerable",
+      "expected": [
+        "current_account.md"
+      ],
+      "got": [
+        "current_account.md",
+        "account_number.md"
+      ],
+      "top_score": 0.649,
+      "top1": true,
+      "top2": true,
+      "ms": 34.36
+    },
+    {
+      "split": "heldout",
+      "lang": "hi",
+      "q": "पैसे ट्रांसफर करने के लिए क्या जानकारी चाहिए",
+      "kind": "answerable",
+      "expected": [
+        "bank_transfer.md"
+      ],
+      "got": [
+        "bank_transfer.md",
+        "savings_account.md"
+      ],
+      "top_score": 0.545,
+      "top1": true,
+      "top2": true,
+      "ms": 32.47
+    },
+    {
+      "split": "heldout",
+      "lang": "hi",
+      "q": "निकासी पर्ची पर हस्ताक्षर क्यों करना होता है",
+      "kind": "answerable",
+      "expected": [
+        "withdrawal_slip.md",
+        "withdrawal.md"
+      ],
+      "got": [
+        "withdrawal_slip.md",
+        "withdrawal.md"
+      ],
+      "top_score": 0.768,
+      "top1": true,
+      "top2": true,
+      "ms": 37.72
+    },
+    {
+      "split": "heldout",
+      "lang": "rom",
+      "q": "emi ka matlab kya hai",
+      "kind": "answerable",
+      "expected": [
+        "loan_basics.md"
+      ],
+      "got": [
+        "loan_basics.md",
+        "bank_transfer.md"
+      ],
+      "top_score": 0.232,
+      "top1": true,
+      "top2": true,
+      "ms": 18.79
+    },
+    {
+      "split": "heldout",
+      "lang": "en",
+      "q": "What are the charges for a demand draft?",
+      "kind": "gap",
+      "expected": null,
+      "got": [
+        "current_account.md",
+        "deposit.md"
+      ],
+      "top_score": 0.362,
+      "top1": false,
+      "top2": false,
+      "ms": 17.65
+    },
+    {
+      "split": "heldout",
+      "lang": "en",
+      "q": "How long does loan approval take at this bank?",
+      "kind": "gap",
+      "expected": null,
+      "got": [
+        "loan_basics.md",
+        "loan.md"
+      ],
+      "top_score": 0.487,
+      "top1": false,
+      "top2": false,
+      "ms": 52.53
+    },
+    {
+      "split": "heldout",
+      "lang": "en",
+      "q": "What is a recurring deposit?",
+      "kind": "gap",
+      "expected": null,
+      "got": [
+        "deposit_slip.md",
+        "deposit.md"
+      ],
+      "top_score": 0.581,
+      "top1": false,
+      "top2": false,
+      "ms": 19.32
+    },
+    {
+      "split": "heldout",
+      "lang": "en",
+      "q": "Who won the football world cup?",
+      "kind": "unrelated",
+      "expected": null,
+      "got": [
+        "cheque_book.md",
+        "deposit_slip.md"
+      ],
+      "top_score": 0.135,
+      "top1": false,
+      "top2": false,
+      "ms": 19.97
+    },
+    {
+      "split": "heldout",
+      "lang": "hi",
+      "q": "आज मौसम कैसा है",
+      "kind": "unrelated",
+      "expected": null,
+      "got": [
+        "banking_services.md",
+        "cheque_book.md"
+      ],
+      "top_score": 0.157,
+      "top1": false,
+      "top2": false,
+      "ms": 20.44
+    }
+  ]
+}

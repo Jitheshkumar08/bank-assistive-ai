@@ -1,0 +1,88 @@
+{
+  "name": "banking",
+  "description": "Branch banking guidance: the assistant guides customers through branch procedures and answers general banking questions. It has no access to accounts and performs no transactions.",
+
+  "knowledge_collection": "knowledge/documents",
+
+  "scope_description": "banking questions and the branch services this assistant guides: depositing money, withdrawing money, checking a balance, applying for a loan and opening an account",
+
+  "unrelated_questions": "redirect",
+
+  "replies": {
+    "refusal": "I can't help with that. I can help you deposit money, withdraw money, check your balance, apply for a loan or open an account. Which would you like?",
+    "redirect": "I can't help with that. I can help you deposit money, withdraw money, check your balance, apply for a loan or open an account. Which would you like?",
+    "no_access": "I can't access accounts or carry out transactions, but I can guide you through the steps.",
+    "missing_figure": "I don't have the exact figure for that. Please check with the branch staff.",
+    "dynamic_information": "I don't have current details for this bank or branch, so I can't confirm that. Please check with the branch staff.",
+    "clarify_service": "Which service is this about? I can help you deposit money, withdraw money, check your balance, apply for a loan or open an account."
+  },
+
+  "policy": {
+    "harmful_patterns": [
+      "\\b(?:launder|laundering)\\s+(?:black\\s+)?(?:money|cash|funds)\\b",
+      "\\b(?:bypass|skip|avoid|get\\s+around)\\s+(?:the\\s+)?kyc\\b",
+      "\\b(?:make|create|write|print|produce|use|cash|deposit|submit)\\s+(?:a\\s+)?(?:fake|forged|counterfeit)\\s+(?:cheques?|checks?|passbooks?|pay(?:ing)?[\\s-]?in\\s+slips?|deposit\\s+slips?|withdrawal\\s+slips?)\\b"
+    ],
+    "authorization_actions": ["transfer", "send", "move", "pay", "block", "unblock", "freeze", "close", "approve", "sanction", "credit", "debit"],
+    "private_records": ["transactions", "transaction history", "statement", "account details", "pin", "otp", "password"]
+  },
+
+  "answerability": {
+      "note": "Phase 3A, see app/knowledge/answerability.py. Written from the dev split of evaluation/fixtures/knowledge/knowledge_p3_answer_policy.json only. Account and clarification patterns are English; the Kannada, Hindi and romanised dynamic patterns were authored by the development assistant and are unreviewed.",
+      "account_patterns": [
+          "\\b(?:has|have|had|did|does|is|was|were|are|will)\\s+my\\s+(?:\\w+\\s+){0,3}?(?:been\\s+|get\\s+|got\\s+|gotten\\s+|be\\s+)?(?:cleared|clear|credited|debited|deducted|received|reached|arrived|approved|rejected|sanctioned|disbursed|processed|active|inactive|blocked|frozen|closed|dormant|bounced|pending|ready|updated|completed|go\\s+through|gone\\s+through|went\\s+through|come\\s+through)\\b",
+          "\\bstatus\\s+of\\s+(?:my|our)\\b",
+          "\\bmy\\s+(?:\\w+\\s+){0,2}status\\b"
+      ],
+      "dynamic_patterns": [
+          "\\bwhat\\s+(?:is|are|'s|r)\\s+(?:the|your|today'?s|this\\s+bank'?s|the\\s+bank'?s)\\b[^?.!]*?\\b(?:(?:interest\\s+)?rates?|charges?|fees?|costs?|prices?|penalt(?:y|ies)|minimum|maximum|limits?|ifsc|micr|swift|branch\\s+code|timings?|hours|processing\\s+time)\\b",
+          "\\bhow\\s+much\\b[^?.!]*?\\b(?:cost|costs|charge|charges|charged|fee|fees|rate|rates|interest|limit|minimum|maximum|price)\\b",
+          "\\bwhat\\s+time\\b",
+          "\\bwhen\\s+(?:does|do|will|is)\\s+(?:the\\s+|this\\s+|your\\s+)?(?:bank|branch|counter|cash\\s+counter)\\b[^?.!]*?\\b(?:open|opens|close|closes|shut|shuts|closed)\\b",
+          "\\bis\\s+(?:the\\s+|this\\s+|your\\s+)?(?:bank|branch)\\s+open\\b",
+          "\\b(?:opening|closing|working|banking|business|office|bank|branch)\\s+(?:hours|times|timings?)\\b",
+          "ಎಷ್ಟು[^?.!]*(?:ದರ|ಶುಲ್ಕ|ಬಡ್ಡಿ|ಮಿತಿ|ಕನಿಷ್ಠ|ಗರಿಷ್ಠ|ಗಂಟೆ|ಸಮಯ)|(?:ದರ|ಶುಲ್ಕ|ಬಡ್ಡಿ|ಮಿತಿ|ಕನಿಷ್ಠ|ಗರಿಷ್ಠ|ಗಂಟೆ|ಸಮಯ)[^?.!]*ಎಷ್ಟು",
+          "(?:कितना|कितनी|कितने)[^?.!]*(?:दर|शुल्क|चार्ज|फीस|ब्याज|सीमा|लिमिट|न्यूनतम|अधिकतम|बजे|समय)|(?:दर|शुल्क|चार्ज|फीस|ब्याज|सीमा|लिमिट|न्यूनतम|अधिकतम|बजे|समय)[^?.!]*(?:कितना|कितनी|कितने)",
+          "\\bkitn[aie]\\b[^?.!]*\\b(?:charge|charges|fee|fees|rate|byaj|limit|baje|time|minimum)\\b"
+      ],
+      "concept_patterns": [
+          "\\b(?:mean|means|meaning|meant|stand\\s+for|stands\\s+for|definition|define|difference|differ|explain|purpose|used\\s+for|why)\\b",
+          "\\bwhat\\s+(?:is|are)\\s+(?:a|an)\\s",
+          "मतलब|क्या\\s+होत[ाीे]|ಎಂದರೇನು|ಅರ್ಥ|\\bmatlab\\b|\\bkya\\s+hot[aie]\\b"
+      ],
+      "generic_words": [
+          "documents",
+          "document",
+          "papers",
+          "paper",
+          "form",
+          "forms",
+          "process",
+          "procedure",
+          "steps",
+          "step",
+          "requirements",
+          "write",
+          "fill",
+          "submit",
+          "proof",
+          "proofs"
+      ],
+      "ignore_words": [
+          "bank",
+          "banking",
+          "branch",
+          "money",
+          "services",
+          "service",
+          "customer",
+          "details",
+          "information",
+          "general",
+          "basics"
+      ]
+  },
+
+  "faq_file": "faq.json",
+  "terminology_file": "terminology.json"
+}

@@ -20,7 +20,7 @@ describe('Ask CampusGuide', () => {
     const chips = await screen.findAllByRole('button', { name: /\?$|\.$/ })
     expect(chips.map((chip) => chip.textContent)).toEqual(['What is the admission process?', 'What documents do I need?', 'How do I check my result?', 'Tell me about the fee structure.', 'When is the next NUCAT exam?'])
     await user.click(screen.getByRole('button', { name: 'What documents do I need?' }))
-    expect(send).toHaveBeenCalledWith({ message: 'What documents do I need?', history: [], collegeId: 'nmamit', area: 'admissions-desk', language: 'en', inputMode: 'text' })
+    expect(send).toHaveBeenCalledWith({ message: 'What documents do I need?', collegeId: 'nmamit', area: 'admissions-desk', language: 'en', inputMode: 'text' })
     expect(screen.getByText('CampusGuide is replying…')).toBeInTheDocument()
     expect(screen.getByRole('button', { name: 'What is the admission process?' })).toBeDisabled()
     resolve({ text: 'Answer from the CampusGuide server.', steps: ['First step'] })
@@ -28,18 +28,29 @@ describe('Ask CampusGuide', () => {
     expect(screen.getByText('First step')).toBeInTheDocument()
   })
 
-  it('types and sends with Enter, keeping conversation history', async () => {
-    const send = vi.fn().mockResolvedValue({ text: 'Reply one' })
+  it('types and sends with Enter; never sends the conversation history, however long the chat gets', async () => {
+    let n = 0
+    const send = vi.fn(async () => ({ text: `Reply ${++n}` }))
     const user = userEvent.setup()
     renderWithRouter({ path: '/assistant', services: { assistant: { send } }, collegeContext: nmamitContext })
     const input = await screen.findByPlaceholderText('Type your question here...')
     expect(screen.getByRole('button', { name: 'Send question' })).toBeDisabled()
-    await user.type(input, 'First question{Enter}')
-    await screen.findByText('Reply one')
-    await user.type(input, 'Second question{Enter}')
-    await waitFor(() => expect(send).toHaveBeenCalledTimes(2))
-    expect(send.mock.calls[1][0].history).toEqual([{ role: 'user', text: 'First question' }, { role: 'assistant', text: 'Reply one' }])
-  })
+    await user.type(input, 'Question 1{Enter}')
+    await screen.findByText('Reply 1')
+    // 51 exchanges = 102 chat messages: more than the 100-entry cap that used to break long conversations.
+    for (let i = 2; i <= 51; i++) {
+      await user.click(input)
+      await user.paste(`Question ${i}`)
+      await user.keyboard('{Enter}')
+      await screen.findByText(`Reply ${i}`)
+    }
+    expect(send).toHaveBeenCalledTimes(51)
+    for (const [request] of send.mock.calls as unknown as [Record<string, unknown>][]) {
+      expect(request).not.toHaveProperty('history')
+      expect(Object.keys(request).sort()).toEqual(['area', 'collegeId', 'inputMode', 'language', 'message'])
+    }
+    expect(send.mock.calls.at(-1)).toEqual([{ message: 'Question 51', collegeId: 'nmamit', area: 'admissions-desk', language: 'en', inputMode: 'text' }])
+  }, 60_000)
 
   it('shows a clear not-connected message (no invented answer) and can retry', async () => {
     const send = vi.fn().mockRejectedValueOnce(new ServiceError('BACKEND_NOT_CONNECTED', 'The CampusGuide assistant isn’t connected yet.')).mockResolvedValueOnce({ text: 'Now connected.' })

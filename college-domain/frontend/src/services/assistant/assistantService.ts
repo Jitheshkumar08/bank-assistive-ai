@@ -5,19 +5,31 @@ import { apiBlob, apiRequest } from '../http'
 /** Student Portal languages sent with each question (en / kn / hi). 'tcy' (Tulu) is paused but kept for later. */
 export type GuidanceLanguage = 'en' | 'kn' | 'hi' | 'tcy'
 
-export type ChatTurn = { role: 'user' | 'assistant'; text: string }
-
+/**
+ * One question to the assistant. There is deliberately NO conversation history: the language engine keeps the
+ * conversation server-side, the backend ignored any history it was sent, and sending the whole chat every time made
+ * long conversations fail (the backend accepts at most 100 entries in a 100 kB body).
+ */
 export type AssistantRequest = {
   message: string
-  /** Kept for compatibility; the backend ignores it (the conversation is held server-side). */
-  history: ChatTurn[]
   /** Validated college context from the QR scan, or null before scanning. */
   collegeId: string | null
   /** QR placement (location) from the same scan, if any. Context only — never identity. */
   area?: string | null
   language: GuidanceLanguage
-  /** How the question was entered; 'voice' is reserved for future speech-to-text. */
+  /** How the question was entered. Spoken questions use AssistantService.sendVoice instead. */
   inputMode: 'text' | 'voice'
+}
+
+/**
+ * One spoken question (Phase 7): the recording plus the same context a typed question carries. The language engine
+ * transcribes it and answers it exactly like a typed question; the recording is not kept anywhere.
+ */
+export type AssistantVoiceRequest = {
+  audio: Blob
+  collegeId: string | null
+  area?: string | null
+  language: GuidanceLanguage
 }
 
 /**
@@ -42,10 +54,14 @@ export type AssistantReply = {
   steps?: string[] | null
   outcome?: string | null
   studentContext?: AssistantStudentContext | null
+  /** Spoken questions only: what the assistant heard, shown as the student's own message. */
+  transcript?: string | null
 }
 
 export interface AssistantService {
   send(request: AssistantRequest): Promise<AssistantReply>
+  /** Asks a spoken question. Optional: absent = voice input unavailable. */
+  sendVoice?(request: AssistantVoiceRequest): Promise<AssistantReply>
   /** Reads an assistant reply aloud (audio from the backend). Optional: absent = spoken answers unavailable. */
   speak?(text: string): Promise<Blob>
 }
@@ -93,18 +109,43 @@ async function withTimeout<T>(run: (signal: AbortSignal) => Promise<T>): Promise
   }
 }
 
+type ReplyBody = { text?: unknown; intent?: unknown; steps?: unknown; outcome?: unknown; studentContext?: unknown; transcript?: unknown }
+
+/** The backend's reply, checked field by field; anything malformed is dropped rather than rendered. */
+function parseReply(body: ReplyBody): AssistantReply {
+  if (typeof body.text !== 'string' || !body.text.trim()) throw new ServiceError('INVALID_RESPONSE', 'The assistant returned an empty answer. Please try again.')
+  const transcript = textOrNull(body.transcript)
+  return {
+    text: body.text,
+    intent: typeof body.intent === 'string' ? body.intent : null,
+    steps: Array.isArray(body.steps) ? body.steps.filter((step): step is string => typeof step === 'string') : null,
+    outcome: typeof body.outcome === 'string' ? body.outcome : null,
+    studentContext: parseStudentContext(body.studentContext),
+    // Spoken questions only; a typed reply keeps exactly its earlier shape.
+    ...(transcript ? { transcript } : {}),
+  }
+}
+
+/** File name sent with a recording; the backend ignores it and uses the type. */
+const recordingName = (type: string) => (type.includes('ogg') ? 'question.ogg' : type.includes('mp4') ? 'question.m4a' : 'question.webm')
+
 export const httpAssistantService: AssistantService = {
   async send(request) {
-    const body = await withTimeout((signal) => apiRequest<{ text?: unknown; intent?: unknown; steps?: unknown; outcome?: unknown; studentContext?: unknown }>(
-      '/assistant/messages', { method: 'POST', body: JSON.stringify(request), signal }, 'The CampusGuide assistant'))
-    if (typeof body.text !== 'string' || !body.text.trim()) throw new ServiceError('INVALID_RESPONSE', 'The assistant returned an empty answer. Please try again.')
-    return {
-      text: body.text,
-      intent: typeof body.intent === 'string' ? body.intent : null,
-      steps: Array.isArray(body.steps) ? body.steps.filter((step): step is string => typeof step === 'string') : null,
-      outcome: typeof body.outcome === 'string' ? body.outcome : null,
-      studentContext: parseStudentContext(body.studentContext),
-    }
+    // Only these fields are sent, even if a caller passes more (e.g. an old `history` array).
+    const { message, collegeId, area, language, inputMode } = request
+    const payload = JSON.stringify({ message, collegeId, area, language, inputMode })
+    return parseReply(await withTimeout((signal) => apiRequest<ReplyBody>(
+      '/assistant/messages', { method: 'POST', body: payload, signal }, 'The CampusGuide assistant')))
+  },
+  async sendVoice({ audio, collegeId, area, language }) {
+    // Only the recording, the language and the scanned QR context; identity comes from the session cookie.
+    const form = new FormData()
+    form.set('language', language)
+    if (collegeId) form.set('collegeId', collegeId)
+    if (area) form.set('area', area)
+    form.set('audio', audio, recordingName(audio.type))
+    return parseReply(await withTimeout((signal) => apiRequest<ReplyBody>(
+      '/assistant/voice-messages', { method: 'POST', body: form, signal }, 'The CampusGuide assistant')))
   },
   async speak(text) {
     const { blob } = await withTimeout((signal) => apiBlob('/assistant/speech', 'The spoken answer', { method: 'POST', body: JSON.stringify({ text }), signal }))
