@@ -196,6 +196,14 @@
   mask-image: linear-gradient(90deg, transparent 0%, #000 34%);
 }
 
+.welcome-banner__photo {
+  background-image: url('/images/DJI_0049.jpg');
+  background-size: cover;
+  /* Centre on the main campus buildings (they sit just below the middle of the photo). */
+  background-position: 55% 58%;
+  background-repeat: no-repeat;
+}
+
 .welcome-banner__content {
   position: relative;
   max-width: 58%;
@@ -390,6 +398,12 @@
   .welcome-banner { padding: 18px 14px 12px; }
   .welcome-banner__content { max-width: 100%; }
   .welcome-banner__image { width: 100%; opacity: 0.32; mask-image: none; -webkit-mask-image: none; }
+  /* Phones: photo across the whole banner under a light wash so the heading and cards stay readable. */
+  .welcome-banner__photo {
+    opacity: 1;
+    background-image: linear-gradient(180deg, rgb(242 246 255 / 0.9) 0%, rgb(242 246 255 / 0.78) 55%, rgb(242 246 255 / 0.55) 100%), url('/images/DJI_0049.jpg');
+    background-position: center, 50% 60%;
+  }
   .welcome-banner__shortcuts { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .qr-gate { flex-wrap: wrap; }
   .qr-gate__button { width: 100%; }

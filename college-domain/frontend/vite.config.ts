@@ -7,8 +7,8 @@ export default defineConfig({
   // 5174 (strict): Banking's frontend uses 5173 on the same machine, and FRONTEND_ORIGIN/CORS must match exactly.
   server: { port: 5174, strictPort: true },
   build: {
-    // The lazily-loaded 3D chunk (three.js core + React Three Fiber, ~250 kB gzip) loads after the login form is
-    // usable. Budget it explicitly; any other chunk growing past 1 MB should still be investigated.
+    // The main bundle (~0.9 MB, ~260 kB gzip) includes the app and admin portals; budget it explicitly so any chunk
+    // growing past 1 MB is still flagged.
     chunkSizeWarningLimit: 1000,
   },
 })
