@@ -18,6 +18,7 @@ Two rules shape this file:
 
 from __future__ import annotations
 
+import functools
 import os
 import tempfile
 import threading
@@ -30,6 +31,8 @@ from app.dialogue.localization import ResponseLocalizer
 from app.dialogue.manager import DialogueManager
 from app.dialogue.text_normalization import normalize_turn
 from app.intent.detector import IntentDetector
+from app.knowledge.answerability import for_domain
+from app.observability.latency import stage, turn_timer
 from app.pipeline.voice_pipeline import VoiceAssistantPipeline
 from app.speech.stt import SpeechToText
 
@@ -40,6 +43,10 @@ class TranscriptionError(RuntimeError):
 
 #: Said when the customer leaves, and to anything said after that.
 FAREWELL = "Thank you for using the banking assistant."
+
+#: One knowledge refresh at a time: retriever, FAQ index, answerability and
+#: answer cache are swapped together.
+_REFRESH_LOCK = threading.Lock()
 
 
 @dataclass
@@ -65,6 +72,33 @@ class TurnResult:
     #: backend ({"id", "type", "workflow"}) -- never data.
     steps: Optional[list] = None
     action: Optional[dict] = None
+    #: Stage latencies in milliseconds (Phase 2): normalization,
+    #: policy, exact_lookup, intent_detection, embedding, retrieval,
+    #: llm_understand, llm_answer and total -- whichever the turn used.
+    timings: Optional[dict] = None
+
+
+def timed_turn(method):
+    """
+    Times one turn stage by stage (Phase 2; observability.latency).
+
+    A decorator rather than code inside run_turn, so run_turn's own body
+    stays the sequence the CLI parity suite reads. The timings are attached
+    to the result and logged as one line -- durations only, never the
+    customer's words.
+    """
+
+    @functools.wraps(method)
+    def wrapper(self, *args, **kwargs):
+        with turn_timer() as timer:
+            result = method(self, *args, **kwargs)
+
+        result.timings = timer.as_dict()
+        print(f"[LATENCY] {timer.summary()}")
+
+        return result
+
+    return wrapper
 
 
 class _TurnHost:
@@ -203,6 +237,47 @@ class EngineRuntime:
             canonical_reply=FAREWELL,
         )
 
+    # -----------------------------------------------------------------
+    # Knowledge maintenance (Phase 2)
+    # -----------------------------------------------------------------
+
+    def refresh_knowledge(self) -> dict:
+        """
+        Re-reads the knowledge collection after an article was added,
+        edited, activated or removed.
+
+        Only changed articles are re-embedded, an article is never
+        indexed twice, the FAQ answers are rebuilt from the new text,
+        and cached answers are dropped (their knowledge version is
+        gone). Returns what changed.
+        """
+        understanding = self.dialogue.dialogue_understanding
+        with _REFRESH_LOCK:
+            retriever = understanding.knowledge_retriever
+            summary = retriever.refresh()
+            self.dialogue.fast_path.refresh(retriever.documents)
+            understanding.answerability = for_domain(understanding.domain, retriever.documents)
+            understanding.answer_cache.clear()
+        # What a maintainer needs to see (Phase 3A): which articles were
+        # left out and why, and what in the manifest or FAQ index is broken.
+        summary["skipped"] = dict(retriever.loader.skip_reasons)
+        summary["problems"] = list(retriever.loader.problems)
+        summary["faq_problems"] = list(self.dialogue.fast_path.structured.problems)
+        return summary
+
+    def knowledge_gaps(self, limit: int = 100) -> list:
+        """The most recent knowledge-gap records (app/knowledge/gaps.py)."""
+        return self.dialogue.dialogue_understanding.gap_log.recent(limit)
+
+    def knowledge_gap_groups(self, include_resolved: bool = True) -> list:
+        """One row per question, with its count and review status."""
+        return self.dialogue.dialogue_understanding.gap_log.grouped(include_resolved)
+
+    def resolve_knowledge_gap(self, question_hash: str, resolution: str, note: str = "") -> dict:
+        """Closes one group; ValueError / KeyError for a bad resolution / question."""
+        return self.dialogue.dialogue_understanding.gap_log.resolve(question_hash, resolution, note)
+
+    @timed_turn
     def run_turn(
         self,
         conversation: ConversationManager,
@@ -268,7 +343,8 @@ class EngineRuntime:
         # The ORIGINAL is what goes into history below, keeping debugging
         # honest about what was actually heard. Only the routing path sees
         # the routing text.
-        turn = normalize_turn(raw_text)
+        with stage("normalization"):
+            turn = normalize_turn(raw_text)
         text = turn.routing
 
         # Deterministic and LLM-free, so leaving a session still works

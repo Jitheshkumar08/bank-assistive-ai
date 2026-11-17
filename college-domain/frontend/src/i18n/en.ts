@@ -342,6 +342,15 @@ export const en = {
   'chat.listen': 'Listen',
   'chat.listenFailed': 'The spoken answer could not be played. You can still read the answer above.',
   'chat.voiceInputUnavailable': 'Voice input is not available yet. Type your question; use Listen to hear an answer.',
+  'error.voiceNotUnderstood': 'Sorry, I could not hear that clearly. Please try again, or type your question.',
+  'chat.record': 'Ask by voice',
+  'chat.stopRecording': 'Stop and send',
+  'chat.listening': 'Listening… I’ll send your question when you pause, or tap stop.',
+  'chat.voiceQuestion': '(voice question)',
+  'chat.voiceHint': 'Tap the microphone to ask by voice, or type your question.',
+  'chat.micDenied': 'Microphone access was blocked. Allow it in your browser settings, or type your question.',
+  'chat.micUnavailable': 'The microphone could not be started on this device. Please type your question.',
+  'chat.noSpeech': 'I didn’t hear anything. Tap the microphone and try again.',
 
   // ── Auth pages ──
   'auth.brandLabel': 'About CampusGuide',

@@ -1,0 +1,108 @@
+{
+  "llm_calls_before": {
+    "spelling": {
+      "llm_calls": 2,
+      "outcome": "model answer"
+    },
+    "spelling (romanised Hindi)": {
+      "llm_calls": 2,
+      "outcome": "model answer"
+    },
+    "approved FAQ": {
+      "llm_calls": 2,
+      "outcome": "model answer"
+    },
+    "approved FAQ (Kannada session)": {
+      "llm_calls": 2,
+      "outcome": "model answer"
+    },
+    "harmful question": {
+      "llm_calls": 2,
+      "outcome": "model answer"
+    },
+    "prompt injection": {
+      "llm_calls": 0,
+      "outcome": "intent detection"
+    },
+    "request to transact": {
+      "llm_calls": 2,
+      "outcome": "model answer"
+    },
+    "open knowledge question": {
+      "llm_calls": 2,
+      "outcome": "model answer"
+    },
+    "unrelated question": {
+      "llm_calls": 2,
+      "outcome": "model answer"
+    }
+  },
+  "llm_calls_after": {
+    "spelling": {
+      "llm_calls": 0,
+      "outcome": "decided locally"
+    },
+    "spelling (romanised Hindi)": {
+      "llm_calls": 0,
+      "outcome": "decided locally"
+    },
+    "approved FAQ": {
+      "llm_calls": 0,
+      "outcome": "decided locally"
+    },
+    "approved FAQ (Kannada session)": {
+      "llm_calls": 2,
+      "outcome": "model answer"
+    },
+    "harmful question": {
+      "llm_calls": 0,
+      "outcome": "decided locally"
+    },
+    "prompt injection": {
+      "llm_calls": 0,
+      "outcome": "decided locally"
+    },
+    "request to transact": {
+      "llm_calls": 0,
+      "outcome": "decided locally"
+    },
+    "open knowledge question": {
+      "llm_calls": 2,
+      "outcome": "model answer"
+    },
+    "unrelated question": {
+      "llm_calls": 2,
+      "outcome": "model answer"
+    }
+  },
+  "local_stages": {
+    "policy_screen": {
+      "mean_ms": 0.0203,
+      "p95_ms": 0.0258
+    },
+    "exact_lookup_miss": {
+      "mean_ms": 0.0016,
+      "p95_ms": 0.0015
+    },
+    "exact_lookup_spelling_hit": {
+      "mean_ms": 0.0025,
+      "p95_ms": 0.003
+    },
+    "answerability_hit": {
+      "mean_ms": 0.0094,
+      "p95_ms": 0.0122
+    },
+    "answerability_miss": {
+      "mean_ms": 0.0184,
+      "p95_ms": 0.0289
+    },
+    "retrieval_new_query": {
+      "mean_ms": 16.26,
+      "max_ms": 20.32
+    },
+    "retrieval_repeated_query": {
+      "mean_ms": 0.3774,
+      "p95_ms": 0.1066
+    }
+  }
+}

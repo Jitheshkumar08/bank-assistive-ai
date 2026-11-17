@@ -21,6 +21,11 @@ export interface ProactiveAssistanceOptions {
   /** Called once per offer, e.g. to read it aloud. */
   onOffer?: (offer: AssistanceOffer) => void;
   thresholdMs?: number;
+  /**
+   * The assistant is set aside -- the customer is talking to staff through
+   * the interpreter. No offer is made, and any request in flight is dropped.
+   */
+  paused?: boolean;
 }
 
 export interface ProactiveAssistance {
@@ -67,6 +72,7 @@ export function useProactiveAssistance({
   client,
   onOffer,
   thresholdMs = ASSISTANCE_INACTIVITY_MS,
+  paused = false,
 }: ProactiveAssistanceOptions): ProactiveAssistance {
   const [offer, setOffer] = useState<AssistanceOffer | null>(null);
   // A new quiet spell. Bumped by activity, turns and workflow changes.
@@ -78,6 +84,7 @@ export function useProactiveAssistance({
   const micBusy = micStatus === 'starting' || micStatus === 'recording';
 
   const eligible =
+    !paused &&
     canAsk &&
     Boolean(sessionId) &&
     !ended &&

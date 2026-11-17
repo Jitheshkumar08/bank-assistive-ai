@@ -8,6 +8,7 @@ from app.conversation.state import SessionState, WorkflowState
 from app.dialogue.localization import ResponseLocalizer
 from app.dialogue.manager import DialogueManager, contains_negation
 from app.dialogue.text_normalization import normalize_turn
+from app.observability.latency import stage
 
 
 LANGUAGES = {
@@ -421,9 +422,10 @@ class VoiceAssistantPipeline:
         # Intent Detection
         # ---------------------------------------------
 
-        intent_result = self.intent_detector.detect_intent(
-            user_input
-        )
+        with stage("intent_detection"):
+            intent_result = self.intent_detector.detect_intent(
+                user_input
+            )
 
         print()
         print(

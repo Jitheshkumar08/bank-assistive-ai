@@ -178,3 +178,36 @@ class HealthResponse(BaseModel):
     active_sessions: int
     #: Per domain: "ready", "registered" (built on first use) or "unavailable".
     domains: Dict[str, str] = {}
+
+
+class InterpreterLanguage(BaseModel):
+    code: str
+    name: str
+    #: Whether a translation INTO this language can be read aloud.
+    speech: bool
+
+
+class InterpreterLanguagesResponse(BaseModel):
+    languages: list[InterpreterLanguage]
+
+
+class InterpreterTranscriptResponse(BaseModel):
+    """What one interpreter speaker said, in their own language. Nothing else."""
+
+    text: str
+    language: str
+
+
+class InterpreterTranslateRequest(BaseModel):
+    #: The visit the interpreter is used in, so its conversation is kept from
+    #: idling out. Never read or changed.
+    session_id: Optional[str] = Field(default=None, min_length=1, max_length=128)
+    text: str = Field(min_length=1, max_length=1000)
+    source_language: str = Field(min_length=2, max_length=16)
+    target_language: str = Field(min_length=2, max_length=16)
+
+
+class InterpreterTranslateResponse(BaseModel):
+    translation: str
+    source_language: str
+    target_language: str

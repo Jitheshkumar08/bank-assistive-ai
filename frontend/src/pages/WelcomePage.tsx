@@ -4,7 +4,9 @@ import { LinkButton } from '@/components/ui/LinkButton';
 import { useAuth } from '@/context/useAuth';
 import { useSession } from '@/context/useSession';
 import { useWelcomeGreeting } from '@/hooks/useWelcomeGreeting';
+import { useOpenAssistantOnVoiceService } from '@/hooks/useOpenAssistantOnVoiceService';
 import { RequestIcon } from '@/components/requests/RequestIcon';
+import { ASSISTANT_PATH, assistantRouteState } from '@/lib/assistantRoute';
 import { COMMON_REQUESTS } from '@/lib/commonRequests';
 import { firstName } from '@/lib/greeting';
 
@@ -28,6 +30,9 @@ export function WelcomePage() {
   // Called before the early return below so the hook order never
   // changes between renders.
   const greeting = useWelcomeGreeting();
+
+  // Saying a service out loud opens the assistant, like tapping its tile.
+  useOpenAssistantOnVoiceService();
 
   // RequireContext already guarantees both. If that ever changes,
   // sending the customer back to scan beats rendering a screen with
@@ -118,8 +123,8 @@ export function WelcomePage() {
                 {/* Opens the assistant with the request already on its way,
                     so the usual visit takes one tap instead of typing. */}
                 <Link
-                  to="/assistant"
-                  state={{ request: item.request }}
+                  to={ASSISTANT_PATH}
+                  state={assistantRouteState(item)}
                   className="flex h-full min-h-28 flex-col items-center justify-center gap-2.5 rounded-2xl bg-white px-2 py-4 text-center shadow-[0_1px_2px_rgb(16_24_40/0.04)] ring-1 ring-ink-200/70 transition-[box-shadow,background-color] hover:bg-ink-50/60 hover:ring-ink-300"
                 >
                   <span

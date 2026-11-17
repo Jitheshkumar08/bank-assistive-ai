@@ -6,6 +6,11 @@ import {
   AiEngineError,
   type EngineAssistance,
   type EngineAudioTurn,
+  type EngineInterpreterAudio,
+  type EngineInterpreterLanguage,
+  type EngineInterpreterTranscript,
+  type EngineInterpreterTranslated,
+  type EngineInterpreterTranslation,
   type EngineReply,
   type EngineSnapshot,
   type EngineSpeech,
@@ -471,5 +476,144 @@ export class HttpAiEngineClient extends AiEngineClient {
       promptId: typeof payload.prompt_id === 'string' ? payload.prompt_id : null,
       text: payload.offered ? text : null,
     };
+  }
+
+  async interpreterLanguages(): Promise<EngineInterpreterLanguage[]> {
+    const payload = await this.interpreterCall<{ languages?: unknown }>(
+      '/interpret/languages',
+      { method: 'GET', headers: this.authHeader() },
+      'The interpreter is unavailable right now.',
+    );
+
+    if (!Array.isArray(payload.languages)) {
+      throw new AiEngineError('The interpreter is unavailable right now.', 502);
+    }
+
+    return payload.languages.flatMap((item: Record<string, unknown>) =>
+      typeof item?.code === 'string' && typeof item?.name === 'string'
+        ? [{ code: item.code, name: item.name, speech: item.speech === true }]
+        : [],
+    );
+  }
+
+  async interpretTranscribe(request: EngineInterpreterAudio): Promise<EngineInterpreterTranscript> {
+    const form = new FormData();
+
+    form.append('session_id', request.sessionId);
+    form.append('language', request.language);
+    form.append(
+      'audio',
+      new Blob([new Uint8Array(request.audio)], { type: request.mimeType }),
+      request.filename,
+    );
+
+    // Content-Type is left to FormData so the multipart boundary is set.
+    const payload = await this.interpreterCall<{ text?: unknown; language?: unknown }>(
+      '/interpret/transcribe',
+      { method: 'POST', headers: this.authHeader(), body: form },
+      'The recording could not be recognised. Please try again.',
+    );
+
+    if (typeof payload.text !== 'string' || !payload.text.trim()) {
+      throw new AiEngineError('I could not hear anything in that recording.', 422);
+    }
+
+    return {
+      text: payload.text,
+      language: typeof payload.language === 'string' ? payload.language : request.language,
+    };
+  }
+
+  async interpretTranslate(
+    request: EngineInterpreterTranslation,
+  ): Promise<EngineInterpreterTranslated> {
+    const payload = await this.interpreterCall<{
+      translation?: unknown;
+      source_language?: unknown;
+      target_language?: unknown;
+    }>(
+      '/interpret/translate',
+      {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', ...this.authHeader() },
+        body: JSON.stringify({
+          session_id: request.sessionId,
+          text: request.text,
+          source_language: request.sourceLanguage,
+          target_language: request.targetLanguage,
+        }),
+      },
+      'The translation could not be produced. Please try again.',
+    );
+
+    if (typeof payload.translation !== 'string' || !payload.translation.trim()) {
+      throw new AiEngineError('The translation could not be produced. Please try again.', 502);
+    }
+
+    return {
+      translation: payload.translation,
+      sourceLanguage:
+        typeof payload.source_language === 'string' ? payload.source_language : request.sourceLanguage,
+      targetLanguage:
+        typeof payload.target_language === 'string' ? payload.target_language : request.targetLanguage,
+    };
+  }
+
+  /**
+   * One interpreter request. Errors follow the turn's rules: a 4xx detail
+   * passes through (a language not offered, nothing heard), a 5xx becomes
+   * `failure` with 502, unreachable or too slow is 504. Neither the words
+   * nor the audio are ever logged.
+   */
+  private async interpreterCall<T>(path: string, init: RequestInit, failure: string): Promise<T> {
+    const controller = new AbortController();
+    const timer = setTimeout(() => controller.abort(), this.timeoutMs);
+
+    let response: Response;
+
+    try {
+      response = await fetch(`${this.baseUrl}${path}`, { ...init, signal: controller.signal });
+    } catch (error) {
+      const aborted = error instanceof Error && error.name === 'AbortError';
+
+      this.logger.error(
+        `Assistant engine unreachable (${path}): ${error instanceof Error ? error.message : 'unknown'}`,
+      );
+
+      throw new AiEngineError(
+        aborted
+          ? 'The interpreter took too long. Please try again.'
+          : 'The interpreter is temporarily unavailable. Please try again shortly.',
+        504,
+      );
+    } finally {
+      clearTimeout(timer);
+    }
+
+    let payload: (T & { detail?: unknown }) | null = null;
+
+    try {
+      payload = (await response.json()) as T & { detail?: unknown };
+    } catch {
+      payload = null;
+    }
+
+    if (!response.ok) {
+      const detail = typeof payload?.detail === 'string' ? payload.detail : null;
+      const isClientProblem = response.status >= 400 && response.status < 500;
+
+      this.logger.warn(`Assistant engine returned ${response.status} for ${path}`);
+
+      throw new AiEngineError(
+        isClientProblem && detail ? detail : failure,
+        isClientProblem ? response.status : 502,
+      );
+    }
+
+    if (!payload) {
+      throw new AiEngineError(failure, 502);
+    }
+
+    return payload;
   }
 }

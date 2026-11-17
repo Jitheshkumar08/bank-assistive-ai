@@ -107,6 +107,26 @@ describe('HttpAssistantClient', () => {
       expect(fetchMock.mock.calls[0][1].headers['Content-Type']).toBeUndefined();
     });
 
+    it('surfaces a 422 (nothing recognisable was heard) once, without retrying', async () => {
+      // The body NestJS's exception filter sends for the engine's 422.
+      const fetchMock = vi.fn().mockResolvedValue(
+        jsonResponse(422, {
+          statusCode: 422,
+          message: 'I could not hear anything in that recording.',
+        }),
+      );
+      vi.stubGlobal('fetch', fetchMock);
+
+      await expect(
+        client.sendMessage({
+          ...BASE_REQUEST,
+          input: { type: 'voice', audio: new Blob(['x'], { type: 'audio/webm' }), mimeType: 'audio/webm' },
+        }),
+      ).rejects.toMatchObject({ status: 422, message: 'I could not hear anything in that recording.' });
+
+      expect(fetchMock).toHaveBeenCalledTimes(1);
+    });
+
     it('names the upload with an extension the decoder understands', async () => {
       const fetchMock = vi.fn().mockResolvedValue(jsonResponse(200, { reply: 'ok' }));
       vi.stubGlobal('fetch', fetchMock);

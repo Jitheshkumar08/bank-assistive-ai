@@ -117,6 +117,33 @@ describe('createWebAudioLevelMeter', () => {
     expect(meter.read()).toBeNull();
   });
 
+  it('reports "cannot measure" while the microphone is still warming up', () => {
+    const meter = createWebAudioLevelMeter()!;
+    const context = FakeAudioContext.instances[0];
+    meter.attach(stream);
+
+    // The analyser's window is zero-filled until samples arrive. Reported
+    // as -100 dBFS, it set the speech detector's floor far below the room.
+    context.analyser.samples = new Float32Array(4096);
+    expect(meter.read()).toBeNull();
+    expect(meter.read()).toBeNull();
+
+    context.analyser.samples = new Float32Array(4096).fill(0.003);
+    expect(meter.read()).toBeCloseTo(-50.5, 0);
+  });
+
+  it('reports real silence as silence once the microphone has been heard', () => {
+    const meter = createWebAudioLevelMeter()!;
+    const context = FakeAudioContext.instances[0];
+    meter.attach(stream);
+
+    context.analyser.samples = new Float32Array(4096).fill(0.1);
+    meter.read();
+
+    context.analyser.samples = new Float32Array(4096);
+    expect(meter.read()).toBe(SILENCE_DB);
+  });
+
   it('resumes a context that starts suspended, inside the gesture', () => {
     FakeAudioContext.initialState = 'suspended';
     createWebAudioLevelMeter();

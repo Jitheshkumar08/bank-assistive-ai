@@ -2,7 +2,7 @@ import { act, renderHook, waitFor } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import type { LevelMeter } from '@/lib/audioLevelMeter';
 import { DEFAULT_ENDPOINTING, type EndpointingConfig } from '@/lib/speechDetector';
-import { useMicrophone } from './useMicrophone';
+import { UNMEASURABLE_AFTER_MS, useMicrophone } from './useMicrophone';
 
 /**
  * A controllable MediaRecorder.
@@ -471,6 +471,94 @@ describe('useMicrophone', () => {
       advance(20_000);
       expect(onRecorded).toHaveBeenCalledTimes(1);
       expect(meter.read.mock.calls.length).toBe(reads);
+    });
+
+    it('submits by itself, once, in a real room after the microphone warms up', async () => {
+      // Two frames of digital silence, a -50 dBFS room, 1.5 s of speech.
+      const room = -50;
+      const meter = scriptedMeter((f) => (f < 2 ? -100 : f >= 32 && f < 79 ? -25 : room));
+      const { result } = renderWith(meter);
+      await act(() => result.current.start());
+
+      advance((79 + 25) * FRAME + 1);
+
+      expect(onRecorded).toHaveBeenCalledTimes(1);
+      expect(result.current.lastEnd).toBe('speech_ended');
+      expect(result.current.status).toBe('idle');
+      expect(tracks.stop).toHaveBeenCalled();
+
+      advance(20_000);
+      expect(onRecorded).toHaveBeenCalledTimes(1);
+    });
+
+    describe('an automatic start (hands-free reopening, no tap)', () => {
+      it('records and submits once, like any other, when levels can be measured', async () => {
+        const { result } = renderWith(scriptedMeter(utterance(10, 20)));
+        await act(() => result.current.start({ automatic: true }));
+
+        advance(endFrame(10, 20) * FRAME + 1);
+
+        expect(onRecorded).toHaveBeenCalledTimes(1);
+        expect(result.current.lastEnd).toBe('speech_ended');
+        expect(FakeMediaRecorder.instances).toBe(1);
+      });
+
+      it('survives the microphone warming up', async () => {
+        // A few unmeasurable frames, well inside the grace window.
+        const speech = utterance(20, 20);
+        const meter = scriptedMeter((f) => (f < 10 ? null : speech(f)));
+        const { result } = renderWith(meter);
+        await act(() => result.current.start({ automatic: true }));
+
+        advance(endFrame(20, 20) * FRAME + 1);
+
+        expect(onRecorded).toHaveBeenCalledTimes(1);
+      });
+
+      it('is dropped, not left listening, when nothing can be measured', async () => {
+        // Safari outside a tap: the audio context stays suspended.
+        const meter = scriptedMeter(() => null);
+        const { result } = renderWith(meter);
+        await act(() => result.current.start({ automatic: true }));
+        expect(result.current.status).toBe('recording');
+
+        advance(UNMEASURABLE_AFTER_MS + FRAME);
+
+        expect(result.current.status).toBe('idle');
+        expect(result.current.lastEnd).toBe('unmeasurable');
+        expect(onRecorded).not.toHaveBeenCalled();
+        expect(tracks.stop).toHaveBeenCalled();
+        expect(meter.close).toHaveBeenCalled();
+      });
+
+      it('never opens the microphone where nothing could end the recording', async () => {
+        const { result } = renderWith(null);
+        await act(() => result.current.start({ automatic: true }));
+
+        expect(navigator.mediaDevices.getUserMedia).not.toHaveBeenCalled();
+        expect(result.current.status).toBe('idle');
+        expect(result.current.lastEnd).toBe('unmeasurable');
+      });
+
+      it('is dropped when the stream cannot be analysed', async () => {
+        const { result } = renderWith(scriptedMeter(() => -30, false));
+        await act(() => result.current.start({ automatic: true }));
+
+        expect(result.current.status).toBe('idle');
+        expect(result.current.lastEnd).toBe('unmeasurable');
+        expect(tracks.stop).toHaveBeenCalled();
+      });
+
+      it('leaves a tapped start with an unmeasurable microphone as tap-to-stop', async () => {
+        const { result } = renderWith(scriptedMeter(() => null));
+        await act(() => result.current.start());
+
+        advance(UNMEASURABLE_AFTER_MS * 4);
+        expect(result.current.status).toBe('recording');
+
+        act(() => result.current.stop());
+        expect(onRecorded).toHaveBeenCalledTimes(1);
+      });
     });
 
     it('rejects speech shorter than 300 ms and keeps listening', async () => {

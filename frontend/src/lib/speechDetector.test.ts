@@ -212,6 +212,30 @@ describe('createSpeechDetector', () => {
     });
   });
 
+  describe('a microphone warming up', () => {
+    // A real room (-50 dBFS) after two frames of digital silence. The mean
+    // of those five calibration frames was -70 dBFS, so the room itself
+    // cleared the -55 dBFS start threshold and "speech" never ended.
+    const ROOM = -50;
+    const warmUp = [-100, -100];
+
+    it('calibrates on the room, not on the silent first frames', () => {
+      const { decision } = run([...warmUp, ...repeat(ROOM, NO_SPEECH)]);
+
+      // The room is learned as the floor: nothing starts, nothing submits.
+      expect(decision).toEqual({ reason: 'no_speech', submit: false });
+    });
+
+    it('still ends the utterance by itself after 800 ms of silence', () => {
+      const lead = [...warmUp, ...repeat(ROOM, 30)];
+      const speech = repeat(-25, 47); // 1.5 s
+      const { decision, frame } = run([...lead, ...speech, ...repeat(ROOM, 200)]);
+
+      expect(decision).toEqual({ reason: 'speech_ended', submit: true });
+      expect(frame).toBe(lead.length + speech.length + END_SILENCE);
+    });
+  });
+
   it('does not detect during calibration', () => {
     // Speech from the first frame calibrates the floor high; a later voice
     // at the same level is then not 15 dB above it.

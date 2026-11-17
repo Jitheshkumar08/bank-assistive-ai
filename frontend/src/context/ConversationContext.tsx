@@ -10,6 +10,8 @@ export interface DeliveredReply {
   text: string;
   /** Typed text or a recording -- whoever listens may treat them differently. */
   input: AssistantInput['type'];
+  /** Where the banking task stands after this turn, as the reply reported it. */
+  workflow: WorkflowSnapshot | null;
 }
 
 export type ReplyListener = (reply: DeliveredReply) => void;
@@ -263,7 +265,7 @@ export function ConversationProvider({ children }: { children: ReactNode }) {
         // from in there would read the same reply aloud twice.
         for (const listener of listenersRef.current) {
           try {
-            listener({ text: reply, input: input.type });
+            listener({ text: reply, input: input.type, workflow: nextWorkflow ?? null });
           } catch {
             // A listener's failure is its own. The reply is delivered and
             // on screen either way.

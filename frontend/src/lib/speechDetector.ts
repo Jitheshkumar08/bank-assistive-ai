@@ -23,7 +23,10 @@
  * browser without a new dependency, so this uses LEVEL against an ADAPTIVE
  * NOISE FLOOR:
  *
- *   - The first `calibrationMs` set the floor from the room itself.
+ *   - The first `calibrationMs` set the floor from the room itself, as the
+ *     MEDIAN level: a mean in dB is dragged far down by one or two near-silent
+ *     frames while the microphone warms up, and a floor set that low lets
+ *     ordinary room noise pass for speech that never ends.
  *   - While waiting, the floor follows the room: down quickly, up slowly, so a
  *     fan or a corridor raises the bar instead of being mistaken for speech.
  *   - Speech must rise `startMarginDb` above the floor to start, and stay
@@ -105,6 +108,12 @@ function frames(ms: number, frameMs: number): number {
   return Math.max(1, Math.round(ms / frameMs));
 }
 
+function median(values: number[]): number {
+  const sorted = [...values].sort((a, b) => a - b);
+  const middle = Math.floor(sorted.length / 2);
+  return sorted.length % 2 ? sorted[middle] : (sorted[middle - 1] + sorted[middle]) / 2;
+}
+
 export function createSpeechDetector(overrides: Partial<EndpointingConfig> = {}): SpeechDetector {
   const config: EndpointingConfig = { ...DEFAULT_ENDPOINTING, ...overrides };
 
@@ -154,7 +163,7 @@ export function createSpeechDetector(overrides: Partial<EndpointingConfig> = {})
       calibration.push(level);
 
       if (calibration.length >= calibrationFrames) {
-        floor = clampFloor(calibration.reduce((sum, value) => sum + value, 0) / calibration.length);
+        floor = clampFloor(median(calibration));
         state = 'waiting';
       }
 

@@ -45,8 +45,29 @@ def main() -> int:
     main.get_runtime = lambda: banking
     engine_module.get_runtime = lambda: banking
     main.INTERNAL_TOKEN, main.COLLEGE_TOKEN = args.bank_token, args.college_token
+    class SyntheticSpeech:
+        """
+        Phase 7 stand-in for Whisper: a SYNTHETIC "recording" is UTF-8 text after
+        the marker below, and that text is what is "heard". Anything else is
+        silence. Lets the cross-process test drive /turn/audio end to end.
+        """
+
+        MARKER = b"SYNTHETIC-SPEECH:"
+
+        def transcribe(self, path, language="en"):
+            with open(path, "rb") as file:
+                data = file.read()
+            if not data.startswith(self.MARKER):
+                return {"text": ""}
+            return {"text": data[len(self.MARKER):].decode("utf-8", "replace")}
+
+    def college_runtime():
+        rt = runtime()[0]
+        rt._stt = SyntheticSpeech()
+        return rt
+
     engine_module.unregister_domain_runtime("college")
-    engine_module.register_domain_runtime("college", lambda: runtime()[0])
+    engine_module.register_domain_runtime("college", college_runtime)
 
     config = uvicorn.Config(main.app, host="127.0.0.1", port=args.port, log_level="warning")
     server = uvicorn.Server(config)

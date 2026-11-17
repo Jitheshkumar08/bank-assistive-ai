@@ -83,6 +83,16 @@ class GeneratedText(str):
         return obj
 
 
+class FixedReply(str):
+    """A fixed engine sentence returned from a path that otherwise carries LLM
+    text (Phase 2: a policy refusal, or an answer replaced by validation).
+
+    Rendered like any fixed reply. Its only purpose is to tell
+    mark_generated() not to label it as LLM-written, which would make the
+    output boundary pass the English through untranslated.
+    """
+
+
 class ComposedReply(str):
     """A reply built from parts, some generated. Remembers which is which."""
 

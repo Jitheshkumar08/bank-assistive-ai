@@ -1,4 +1,4 @@
-import type { EngineTurnRequest, EngineTurnResponse, EngineWorkflowResult } from '../../src/assistant/assistant.contract.js'
+import type { EngineAudioTurnRequest, EngineTurnRequest, EngineTurnResponse, EngineWorkflowResult } from '../../src/assistant/assistant.contract.js'
 import { CollegeEngineClient, EngineCallError, type EngineSpeech } from '../../src/assistant/engine/college-engine.client.js'
 
 /**
@@ -40,6 +40,21 @@ export class FakeEngine extends CollegeEngineClient {
       return { reply: 'I’ll check your admission status in CampusGuide.', domain: 'college', intent: 'admission_status', outcome: 'action_required', steps: null, action }
     }
     return { reply: `[${request.language}] I don’t have verified information about that yet.`, domain: 'college', intent: 'admission_documents', outcome: 'no_verified_information', steps: null, action: null }
+  }
+
+  /** Spoken turns: what each recording "says" is set by the test (default: a knowledge question). */
+  readonly audioTurns: (Omit<EngineAudioTurnRequest, 'audio'> & { size: number })[] = []
+  heard = 'What documents do I need?'
+  failAudio: EngineCallError | null = null
+
+  async turnAudio(request: EngineAudioTurnRequest): Promise<EngineTurnResponse> {
+    const { audio, ...rest } = request
+    this.audioTurns.push({ ...rest, size: audio.length })
+    if (this.failAudio) throw this.failAudio
+    const { sessionId, language, institutionId, area } = request
+    const reply = await this.turn({ sessionId, language, text: this.heard, institutionId, area })
+    this.turns.pop() // recorded as an audio turn, not a typed one
+    return { ...reply, transcript: this.heard }
   }
 
   async workflowResult(sessionId: string, result: EngineWorkflowResult): Promise<EngineTurnResponse> {

@@ -2,7 +2,8 @@ import { createContext, useCallback, useEffect, useMemo, useRef, useState } from
 import type { ReactNode } from 'react';
 import { useConversation } from '@/context/useConversation';
 import { useSession } from '@/context/useSession';
-import { useMicrophone, type MicrophoneStatus } from '@/hooks/useMicrophone';
+import { useMicrophone, type MicrophoneStatus, type StartOptions } from '@/hooks/useMicrophone';
+import type { EndpointingConfig } from '@/lib/speechDetector';
 import { useSpeechPlayback, type PlaybackOutcome } from '@/hooks/useSpeechPlayback';
 import { assistantClient } from '@/services/assistant';
 import { voicePreferenceStorage } from '@/lib/voicePreference';
@@ -102,6 +103,12 @@ export const RELISTEN_DELAY_MS = 300;
 /** Shown when a voice turn's reply was fetched but could not be played. */
 const PLAYBACK_FAILED = 'The spoken reply could not be played. The written answer is above.';
 
+/**
+ * Shown when the browser would not let listening resume by itself -- it
+ * only allows audio analysis inside a tap -- so the next turn needs one.
+ */
+const TAP_TO_CONTINUE = 'Tap the microphone when you are ready to speak.';
+
 /** How speaking one reply ended, from the caller's point of view. */
 type SpeechOutcome = PlaybackOutcome | 'skipped';
 
@@ -132,13 +139,23 @@ type SpeechOutcome = PlaybackOutcome | 'skipped';
  *   speaking        the reply is playing
  *   error           a microphone failure, or speechError
  *
+ * Any line the assistant reads aloud within the session continues it the
+ * same way -- including an offer of help after a quiet spell, and the reply
+ * to something typed -- because finishing speaking is what hands the turn
+ * back to the customer.
+ *
+ * Nothing said within the detector's timeout PAUSES the session: the
+ * microphone closes, and only the assistant's next line, played to its
+ * end, reopens it. Silence alone never reopens anything.
+ *
  * The session ends -- and nothing reopens the microphone -- on any of:
  * the customer's own stop, a tap while sending or speaking, disable,
- * reset, nothing said within the detector's timeout, a microphone error,
- * no reply, a reply that could not be played or was interrupted, the visit
- * ending, or this provider unmounting. A reply that cannot be spoken stops
- * the session with a visible message rather than listening again: the
- * customer has to read it, and a loop must never run on failures.
+ * reset, a microphone error, a browser that will not measure an automatic
+ * reopen, no reply, a reply that could not be played or was interrupted,
+ * the visit ending, or this provider unmounting. A reply that cannot be
+ * spoken stops the session with a visible message rather than listening
+ * again: the customer has to read it, and a loop must never run on
+ * failures.
  *
  * Words never control any of this. "Stop" and "wait" are banking-dialogue
  * commands handled by the engine; only on-screen controls stop listening.
@@ -147,8 +164,31 @@ type SpeechOutcome = PlaybackOutcome | 'skipped';
  * same send() a typed message uses. Voice depends on the conversation;
  * the conversation knows nothing about voice.
  */
-export function VoiceProvider({ children }: { children: ReactNode }) {
+export interface VoiceProviderProps {
+  children: ReactNode;
+  /**
+   * Pause between a spoken line ending and hands-free listening resuming.
+   * Defaults to RELISTEN_DELAY_MS; the app sets its own (lib/voiceTiming).
+   */
+  relistenDelayMs?: number;
+  /**
+   * End-of-speech detection settings for the microphone, e.g. how long a
+   * silence ends an utterance. Defaults to the CLI recorder's timings; the
+   * app sets its own (lib/voiceTiming).
+   */
+  endpointing?: Partial<EndpointingConfig>;
+}
+
+export function VoiceProvider({
+  children,
+  relistenDelayMs = RELISTEN_DELAY_MS,
+  endpointing,
+}: VoiceProviderProps) {
   const { send, sendVoice, subscribeToReplies, isSending, ended } = useConversation();
+
+  // Read when a reopen is scheduled, so a changed value never restarts one.
+  const relistenDelayRef = useRef(relistenDelayMs);
+  relistenDelayRef.current = relistenDelayMs;
   const { session } = useSession();
   const playback = useSpeechPlayback();
 
@@ -241,7 +281,7 @@ export function VoiceProvider({ children }: { children: ReactNode }) {
   );
 
   // The latest microphone start, for a reopen that fires after renders.
-  const micStartRef = useRef<() => Promise<void>>(async () => {});
+  const micStartRef = useRef<(options?: StartOptions) => Promise<void>>(async () => {});
   const micStatusRef = useRef<MicrophoneStatus>('idle');
 
   /**
@@ -275,9 +315,11 @@ export function VoiceProvider({ children }: { children: ReactNode }) {
         }
 
         // Like a press: any reply still in flight belongs to nothing now.
+        // Unlike a press, there is no tap behind it, which the microphone
+        // needs to know (see StartOptions.automatic).
         turnRef.current += 1;
-        void micStartRef.current();
-      }, RELISTEN_DELAY_MS);
+        void micStartRef.current({ automatic: true });
+      }, relistenDelayRef.current);
     },
     [cancelRelisten, endHandsFree],
   );
@@ -337,14 +379,16 @@ export function VoiceProvider({ children }: { children: ReactNode }) {
     cancel: micCancel,
     retry: retryMicrophone,
     readLevel: readMicLevel,
-  } = useMicrophone({ onRecorded: handleRecorded });
+  } = useMicrophone({ onRecorded: handleRecorded, endpointing });
 
   micStartRef.current = micStart;
   micStatusRef.current = micStatus;
 
-  // A microphone that failed, or an attempt that ended without an
-  // utterance -- nothing said, cancelled -- ends the session. Silence is
-  // never a turn, and never a reason to keep listening by itself.
+  // A microphone that failed, or an attempt that was cancelled, ends the
+  // session. Nothing said ('no_speech') only pauses it: the microphone is
+  // already closed, and nothing but the assistant's next spoken line
+  // reopens it. Silence is never a turn, and never a reason to keep
+  // listening by itself.
   useEffect(() => {
     if (micStatus === 'denied' || micStatus === 'unavailable' || micStatus === 'error') {
       endHandsFree();
@@ -352,8 +396,15 @@ export function VoiceProvider({ children }: { children: ReactNode }) {
   }, [micStatus, endHandsFree]);
 
   useEffect(() => {
-    if (micLastEnd === 'no_speech' || micLastEnd === 'cancelled' || micLastEnd === 'error') {
+    if (micLastEnd === 'cancelled' || micLastEnd === 'error') {
       endHandsFree();
+    }
+
+    // The browser would not let listening resume without a tap. Say so,
+    // rather than leaving a resting microphone that looks like a fault.
+    if (micLastEnd === 'unmeasurable') {
+      endHandsFree();
+      setSpeechError(TAP_TO_CONTINUE);
     }
   }, [micLastEnd, endHandsFree]);
 
@@ -479,20 +530,30 @@ export function VoiceProvider({ children }: { children: ReactNode }) {
       // A greeting is not a reason to override a settled choice.
       if (preference !== 'enabled') return;
 
+      // Also retires any reopen scheduled for an earlier line: that timer
+      // checks the turn when it fires, so it cannot cut in on this one.
       const turn = ++turnRef.current;
 
+      let outcome: SpeechOutcome = 'skipped';
+
       try {
-        await speakReply(text, turn);
+        outcome = await speakReply(text, turn);
       } finally {
         // Undo only what speaking did. The customer may have started
         // recording in the meantime, and dropping that to idle would show
         // a resting microphone while it is still listening.
         if (turnRef.current === turn) {
           setActivity((current) => (current === 'speaking' ? 'idle' : current));
+
+          // Finishing speaking hands the turn back. Within a hands-free
+          // session -- running or paused by silence -- listening resumes
+          // exactly as it does after a voice turn's reply; outside one,
+          // scheduleRelisten does nothing.
+          if (outcome === 'ended') scheduleRelisten(turn);
         }
       }
     },
-    [preference, speakReply],
+    [preference, speakReply, scheduleRelisten],
   );
 
   // The latest speak(), so the subscription below is made once rather

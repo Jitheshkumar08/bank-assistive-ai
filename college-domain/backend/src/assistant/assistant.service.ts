@@ -10,8 +10,9 @@ import {
   toStudentContext,
   type AssistantLanguage,
   type AssistantReply,
+  type EngineTurnResponse,
 } from './assistant.contract.js'
-import type { AssistantMessageDto } from './assistant.dto.js'
+import type { AssistantMessageDto, AssistantVoiceDto } from './assistant.dto.js'
 import { AssistantAdmissionStatusService, type AdmissionStatusLookup } from './admission-status.service.js'
 import { CollegeEngineClient, EngineCallError, type EngineSpeech } from './engine/college-engine.client.js'
 
@@ -25,6 +26,33 @@ const unavailable = () => new ApiError(HttpStatus.SERVICE_UNAVAILABLE, 'ASSISTAN
   'The CampusGuide assistant is not available right now. Please try again in a moment.')
 
 const speechNotAllowed = () => new ApiError(HttpStatus.BAD_REQUEST, 'VALIDATION_FAILED', 'Only an assistant reply from this conversation can be read aloud.')
+
+const notUnderstood = () => new ApiError(HttpStatus.UNPROCESSABLE_ENTITY, 'VOICE_NOT_UNDERSTOOD',
+  'Sorry, I could not hear that clearly. Please try again, or type your question.')
+
+/** Largest recording accepted for a spoken question (the engine accepts up to 10 MB). About 5 minutes of Opus audio. */
+export const MAX_VOICE_BYTES = 5 * 1024 * 1024
+
+const recordingTooLarge = () => new ApiError(HttpStatus.PAYLOAD_TOO_LARGE, 'FILE_TOO_LARGE', 'That recording is too long. Please ask a shorter question.')
+
+/** Recording types the browser's MediaRecorder produces (and the engine's decoder reads). Parameters such as codecs are dropped. */
+export const VOICE_MIME_TYPES = ['audio/webm', 'audio/ogg', 'audio/mp4', 'audio/mpeg', 'audio/wav', 'audio/x-wav'] as const
+
+/** The uploaded recording as multer hands it over; only these fields are read. */
+export type VoiceRecording = { buffer: Buffer; mimetype: string; size: number }
+
+/** The recording, or 400 for a missing, empty or non-audio upload (nothing reaches the engine). */
+function checkRecording(recording: VoiceRecording | undefined): { buffer: Buffer; mimeType: string } {
+  const mimeType = recording?.mimetype?.split(';')[0].trim().toLowerCase() ?? ''
+  if (!recording || !Buffer.isBuffer(recording.buffer) || recording.buffer.length === 0) {
+    throw new ApiError(HttpStatus.BAD_REQUEST, 'VALIDATION_FAILED', 'Please record your question before sending it.')
+  }
+  if (!(VOICE_MIME_TYPES as readonly string[]).includes(mimeType)) {
+    throw new ApiError(HttpStatus.BAD_REQUEST, 'INVALID_FILE', 'That recording format is not supported.')
+  }
+  if (recording.buffer.length > MAX_VOICE_BYTES) throw recordingTooLarge()
+  return { buffer: recording.buffer, mimeType }
+}
 
 const sha256 = (value: string) => createHash('sha256').update(value).digest('hex')
 
@@ -129,15 +157,40 @@ export class AssistantService implements OnModuleInit, OnModuleDestroy {
 
   async sendMessage(account: AuthenticatedAccount, message: AssistantMessageDto): Promise<AssistantReply> {
     const area = message.area ?? null
+    return this.converse(account, message.collegeId, area, message.language, (sessionId) => this.call(() => this.engine.turn({
+      sessionId, language: message.language, text: message.message, institutionId: message.collegeId, area,
+    })))
+  }
+
+  /**
+   * Phase 7: a spoken question. The recording goes to the engine, which transcribes it with its shared speech recogniser
+   * and runs exactly the same turn a typed question takes (including the admission-status action). The recording is
+   * passed through and never stored or logged; the transcript is returned to the student only.
+   */
+  async sendVoice(account: AuthenticatedAccount, form: AssistantVoiceDto, recording: VoiceRecording | undefined): Promise<AssistantReply> {
+    const audio = checkRecording(recording)
+    const area = form.area ?? null
+    return this.converse(account, form.collegeId, area, form.language, (sessionId) => this.callVoice(() => this.engine.turnAudio({
+      sessionId, language: form.language, institutionId: form.collegeId, area, audio: audio.buffer, mimeType: audio.mimeType,
+    })))
+  }
+
+  /**
+   * One question, typed or spoken: re-check the scanned context, run the engine turn, perform the admission-status
+   * action if the engine asks for it, and remember the reply for /assistant/speech.
+   */
+  private async converse(
+    account: AuthenticatedAccount, collegeId: string, area: string | null, language: AssistantLanguage,
+    firstTurn: (sessionId: string) => Promise<EngineTurnResponse>,
+  ): Promise<AssistantReply> {
     // Throws INVALID_QR (400) for an inactive or unknown college / placement; nothing reaches the engine.
-    await this.context.requireActiveContext(message.collegeId, area)
-    const sessionId = engineSessionId(account, message.collegeId)
+    await this.context.requireActiveContext(collegeId, area)
+    const sessionId = engineSessionId(account, collegeId)
     const opened = this.engineSessions.get(account.sessionId) ?? new Set<string>()
     this.engineSessions.set(account.sessionId, opened.add(sessionId))
 
-    let response = await this.call(() => this.engine.turn({
-      sessionId, language: message.language, text: message.message, institutionId: message.collegeId, area,
-    }))
+    let response = await firstTurn(sessionId)
+    const transcript = response.transcript?.trim() || undefined
 
     let lookup: AdmissionStatusLookup | null = null
     if (response.action) {
@@ -147,18 +200,19 @@ export class AssistantService implements OnModuleInit, OnModuleDestroy {
         this.logger.warn(`Unexpected engine action type=${/^[a-z_]{1,40}$/.test(action.type) ? action.type : 'invalid'}`)
         throw unavailable()
       }
-      lookup = await this.lookup(account, message.collegeId, area)
+      lookup = await this.lookup(account, collegeId, area)
       response = await this.call(() => this.engine.workflowResult(sessionId, { actionId: action.id, actionType: action.type, outcome: lookup!.outcome }))
       if (response.action) throw unavailable() // a result never asks for another action
     }
 
     const reply: AssistantReply = {
       text: response.reply,
-      language: message.language,
+      language,
       intent: response.intent ?? null,
       outcome: response.outcome ?? null,
       steps: response.steps?.length ? response.steps : null,
       studentContext: lookup?.outcome === 'details_available' && lookup.details ? toStudentContext(lookup.details) : null,
+      ...(transcript ? { transcript } : {}),
     }
     this.served.remember(account.sessionId, reply.text, reply.language)
     return reply
@@ -181,6 +235,24 @@ export class AssistantService implements OnModuleInit, OnModuleDestroy {
       return await Promise.race([this.admissionStatus.lookup(account, collegeId, area), timeout])
     } finally {
       clearTimeout(timer)
+    }
+  }
+
+  /**
+   * A spoken turn's engine call. The engine refuses a recording it cannot use (empty, nothing heard, undecodable) with
+   * 400/422 and NO error code; that is the student's to retry, so it becomes VOICE_NOT_UNDERSTOOD (422). A recording
+   * the engine finds too large is FILE_TOO_LARGE. Every coded refusal (domain, token, context) and every other failure
+   * stays the same safe 503 as a typed turn.
+   */
+  private async callVoice<T>(run: () => Promise<T>): Promise<T> {
+    try {
+      return await run()
+    } catch (error) {
+      if (error instanceof EngineCallError && error.failure === 'refused' && error.code === null) {
+        if (error.status === 400 || error.status === 422) throw notUnderstood()
+        if (error.status === 413) throw recordingTooLarge()
+      }
+      return this.call(() => Promise.reject(error))
     }
   }
 

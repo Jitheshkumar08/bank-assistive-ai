@@ -3,6 +3,7 @@ import { AppConfig } from '../../config/app-config.service.js'
 import {
   engineErrorSchema,
   engineTurnResponseSchema,
+  type EngineAudioTurnRequest,
   type EngineTurnRequest,
   type EngineTurnResponse,
   type EngineWorkflowResult,
@@ -23,6 +24,8 @@ export type EngineSpeech = { audio: Buffer; contentType: string }
 /** DI token: the assistant service depends on this, tests substitute it. */
 export abstract class CollegeEngineClient {
   abstract turn(request: EngineTurnRequest): Promise<EngineTurnResponse>
+  /** A spoken question: transcribed by the engine, then the same turn as `turn`. The reply carries the transcript. */
+  abstract turnAudio(request: EngineAudioTurnRequest): Promise<EngineTurnResponse>
   abstract workflowResult(sessionId: string, result: EngineWorkflowResult): Promise<EngineTurnResponse>
   abstract synthesize(text: string, language: string): Promise<EngineSpeech>
   /** Ends an engine conversation (logout / revoked or expired session). True when the engine held it. */
@@ -31,6 +34,11 @@ export abstract class CollegeEngineClient {
 
 const AUDIO_TYPES = /^audio\/[a-z0-9.+-]{1,40}$/i
 const MAX_AUDIO_BYTES = 5 * 1024 * 1024
+
+/** File extension the engine uses to pick a decoder, from the (already allow-listed) recording type. */
+const RECORDING_SUFFIX: Record<string, string> = {
+  'audio/webm': '.webm', 'audio/ogg': '.ogg', 'audio/mp4': '.m4a', 'audio/mpeg': '.mp3', 'audio/wav': '.wav', 'audio/x-wav': '.wav',
+}
 
 /**
  * Backend-to-engine calls for the College domain (Phase 6). Same pattern as the Banking backend's HttpAiEngineClient:
@@ -66,6 +74,21 @@ export class HttpCollegeEngineClient extends CollegeEngineClient {
       domain: 'college',
       context: { institution_id: request.institutionId, ...(request.area ? { area: request.area } : {}) },
     })
+  }
+
+  /**
+   * The engine's /turn/audio: the same session, language and College context as a typed turn, sent as multipart form
+   * fields. The file name is generated here from the type; the browser's own file name is never forwarded.
+   */
+  turnAudio(request: EngineAudioTurnRequest) {
+    const form = new FormData()
+    form.set('session_id', request.sessionId)
+    form.set('language', request.language)
+    form.set('institution_id', request.institutionId)
+    if (request.area) form.set('area', request.area)
+    const suffix = RECORDING_SUFFIX[request.mimeType] ?? '.webm'
+    form.set('audio', new Blob([new Uint8Array(request.audio)], { type: request.mimeType }), `question${suffix}`)
+    return this.json('/turn/audio', form)
   }
 
   workflowResult(sessionId: string, result: EngineWorkflowResult) {
@@ -108,12 +131,13 @@ export class HttpCollegeEngineClient extends CollegeEngineClient {
   private async send(path: string, method: 'POST' | 'DELETE', body?: unknown): Promise<Response> {
     // Production never calls the engine without College's own token (the engine would refuse it anyway).
     if (this.production && !this.token) throw this.fail(new EngineCallError('not_configured'))
-    const headers: Record<string, string> = { 'Content-Type': 'application/json', 'X-Assistant-Domain': 'college' }
+    // A multipart body (a recording) sets its own Content-Type with its boundary; everything else is JSON.
+    const multipart = body instanceof FormData
+    const headers: Record<string, string> = { 'X-Assistant-Domain': 'college', ...(multipart ? {} : { 'Content-Type': 'application/json' }) }
     if (this.token) headers['X-Internal-Token'] = this.token
+    const payload = body === undefined ? {} : { body: multipart ? body : JSON.stringify(body) }
     try {
-      return await fetch(`${this.baseUrl}${path}`, {
-        method, headers, ...(body === undefined ? {} : { body: JSON.stringify(body) }), signal: AbortSignal.timeout(this.timeoutMs),
-      })
+      return await fetch(`${this.baseUrl}${path}`, { method, headers, ...payload, signal: AbortSignal.timeout(this.timeoutMs) })
     } catch (error) {
       // Read structurally: fetch's DOMException may come from another realm, where instanceof Error is false.
       const name = typeof error === 'object' && error !== null && 'name' in error ? String((error as { name: unknown }).name) : ''

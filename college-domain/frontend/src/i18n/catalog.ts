@@ -47,6 +47,7 @@ const errorKeys: Partial<Record<string, MessageKey>> = {
   INVALID_RESPONSE: 'error.invalidResponse',
   VALIDATION_FAILED: 'error.validation',
   ASSISTANT_UNAVAILABLE: 'error.assistantUnavailable',
+  VOICE_NOT_UNDERSTOOD: 'error.voiceNotUnderstood',
 }
 
 /**

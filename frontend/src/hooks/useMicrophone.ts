@@ -24,8 +24,29 @@ export type MicrophoneStatus =
  * `speech_ended` and `max_duration` were submitted by end-of-speech
  * detection; `manual` by the customer's own stop. `no_speech` was dropped
  * without reaching speech recognition: silence is never a turn.
+ * `unmeasurable` was an automatic start dropped because end-of-speech
+ * detection could not hear the microphone (see StartOptions).
  */
-export type RecordingEnd = EndpointReason | 'manual' | 'cancelled' | 'error';
+export type RecordingEnd = EndpointReason | 'manual' | 'cancelled' | 'error' | 'unmeasurable';
+
+export interface StartOptions {
+  /**
+   * Opened without a tap -- hands-free listening resuming after a reply.
+   *
+   * Such a recording can only end by itself, so it is kept only if
+   * end-of-speech detection can measure the microphone. A browser that
+   * allows audio analysis only inside a gesture (Safari, outside one)
+   * reports nothing measurable; the attempt is then dropped with
+   * `unmeasurable` rather than left listening indefinitely.
+   */
+  automatic?: boolean;
+}
+
+/**
+ * How long an automatic start may go without one measurable level before
+ * it is dropped. Comfortably longer than a microphone warming up.
+ */
+export const UNMEASURABLE_AFTER_MS = 1_500;
 
 export interface UseMicrophoneOptions {
   /**
@@ -56,7 +77,7 @@ export interface Microphone {
   /** How the most recent attempt ended; null before any has, or while one runs. */
   lastEnd: RecordingEnd | null;
   /** Asks for permission if needed, then starts recording. */
-  start: () => Promise<void>;
+  start: (options?: StartOptions) => Promise<void>;
   /** Finishes the recording and emits the audio. */
   stop: () => void;
   /** Abandons the recording. Nothing is emitted. */
@@ -286,7 +307,7 @@ export function useMicrophone({
     setMessage(null);
   }, []);
 
-  const start = useCallback(async (): Promise<void> => {
+  const start = useCallback(async ({ automatic = false }: StartOptions = {}): Promise<void> => {
     // A refusal is not retried silently. The customer has to ask again,
     // which is what retry() is for.
     if (status === 'denied' || status === 'unavailable') return;
@@ -327,6 +348,13 @@ export function useMicrophone({
     const config = endpointingRef.current;
     const meter = config === false ? null : createLevelMeterRef.current();
     meterRef.current = meter;
+
+    // Nothing could ever end an automatic recording: do not open one.
+    if (automatic && !meter) {
+      setStatus('idle');
+      setLastEnd('unmeasurable');
+      return;
+    }
 
     let stream: MediaStream;
 
@@ -415,6 +443,9 @@ export function useMicrophone({
     if (meter && meter.attach(stream)) {
       const detector = createSpeechDetector(config || {});
       const frameMs = (config && config.frameMs) || DEFAULT_ENDPOINTING.frameMs;
+      // For an automatic start: frames read before the first measurable one.
+      let unmeasured = 0;
+      let measured = false;
 
       analysisRef.current = setInterval(() => {
         // A timer from a cancelled, finished or unmounted attempt does
@@ -425,8 +456,17 @@ export function useMicrophone({
         // turn a customer who is speaking into "nothing was said". Such a
         // frame counts towards nothing, and the manual stop still works.
         const level = meter.read();
-        if (level === null) return;
 
+        if (level === null) {
+          // ...but an automatic start has no manual stop behind it.
+          unmeasured += 1;
+          if (automatic && !measured && unmeasured * frameMs >= UNMEASURABLE_AFTER_MS) {
+            abandon('unmeasurable');
+          }
+          return;
+        }
+
+        measured = true;
         levelRef.current = level;
         const decision = detector.push(level);
         if (!decision) return;
@@ -434,6 +474,8 @@ export function useMicrophone({
         if (decision.submit) finish(decision.reason);
         else abandon(decision.reason);
       }, frameMs);
+    } else if (automatic) {
+      abandon('unmeasurable');
     } else {
       stopAnalysis();
     }

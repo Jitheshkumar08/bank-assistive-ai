@@ -2,6 +2,11 @@ import { z } from 'zod'
 
 const booleanString = z.enum(['true', 'false']).transform((value) => value === 'true')
 
+/** Same minimum as the engine (language_engine/service/domains.py MIN_PRODUCTION_TOKEN_LENGTH). */
+export const MIN_PRODUCTION_TOKEN_LENGTH = 32
+/** Header-safe token characters (URL-safe and standard base64, hex). */
+const TOKEN_PATTERN = /^[A-Za-z0-9._~+/=-]+$/
+
 const importFields = ['nucatReference', 'studentName', 'admissionYear', 'nucatRank', 'allocatedBranch', 'admissionStatus', 'officialEmail', 'feeCategory'] as const
 const columnAliases = z.string().optional().transform((value, ctx): Partial<Record<(typeof importFields)[number], string[]>> => {
   if (!value?.trim()) return {}
@@ -53,13 +58,22 @@ export const envSchema = z.object({
   ADMISSION_IMPORT_COLUMN_ALIASES: columnAliases,
   /** Shared language engine (internal service; never exposed to the browser). */
   AI_ENGINE_URL: z.url().default('http://127.0.0.1:8000'),
-  /** College's own engine token (the engine's AI_ENGINE_COLLEGE_TOKEN). Never the Banking token; never sent to the browser. */
-  AI_ENGINE_COLLEGE_TOKEN: z.string().optional().default(''),
+  /**
+   * College's own engine token (the engine's AI_ENGINE_COLLEGE_TOKEN). Never the Banking token; never sent to the browser.
+   * Trimmed, as the engine trims its copy. Required in production (see superRefine); optional in development, where the
+   * engine may run without tokens. When set, it must be header-safe (e.g. secrets.token_urlsafe output).
+   */
+  AI_ENGINE_COLLEGE_TOKEN: z.string().optional().default('').transform((value) => value.trim())
+    .refine((value) => value === '' || TOKEN_PATTERN.test(value), 'must contain only letters, digits and - _ . ~ + / = (no spaces)'),
   /** Budget for one engine call (an LLM answer can take several seconds). */
   AI_ENGINE_TIMEOUT_MS: z.coerce.number().int().min(1000).max(120_000).default(30_000),
 }).superRefine((env, ctx) => {
-  if (env.NODE_ENV === 'production' && env.AI_ENGINE_COLLEGE_TOKEN && env.AI_ENGINE_COLLEGE_TOKEN.trim().length < 32) {
-    ctx.addIssue({ code: 'custom', path: ['AI_ENGINE_COLLEGE_TOKEN'], message: 'must be at least 32 characters in production' })
+  // Phase 7A: production refuses to start without College's own engine token, instead of answering every assistant
+  // question with 503 at runtime.
+  if (env.NODE_ENV === 'production' && !env.AI_ENGINE_COLLEGE_TOKEN) {
+    ctx.addIssue({ code: 'custom', path: ['AI_ENGINE_COLLEGE_TOKEN'], message: 'is required in production' })
+  } else if (env.NODE_ENV === 'production' && env.AI_ENGINE_COLLEGE_TOKEN.length < MIN_PRODUCTION_TOKEN_LENGTH) {
+    ctx.addIssue({ code: 'custom', path: ['AI_ENGINE_COLLEGE_TOKEN'], message: `must be at least ${MIN_PRODUCTION_TOKEN_LENGTH} characters in production` })
   }
   if (env.EMAIL_TRANSPORT === 'smtp') {
     if (!/^smtps?:\/\//.test(env.SMTP_URL)) ctx.addIssue({ code: 'custom', path: ['SMTP_URL'], message: 'is required (smtp:// or smtps://) when EMAIL_TRANSPORT=smtp' })

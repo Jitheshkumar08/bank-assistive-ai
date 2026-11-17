@@ -392,6 +392,36 @@ def test_http_sessions_are_isolated_between_domains():
               offer.json().get("reason") == "unknown_session", offer.text)
 
 
+def test_http_end_session_bounds_the_session_id():
+    # Phase 7A: DELETE /sessions/{id} is bounded like the other /sessions/{id} routes.
+    with Service(BANK_TOKEN, COLLEGE_TOKEN) as svc:
+        college = {"X-Internal-Token": COLLEGE_TOKEN, "X-Assistant-Domain": "college"}
+        at_limit = "c" * 128
+        svc.turn("fees", session=at_limit, token=COLLEGE_TOKEN, context=NMAMIT)
+        check("a 128-character session can be created", main.registry.peek(at_limit, domain="college") is not None)
+
+        too_long = svc.client.delete("/sessions/" + "c" * 129, headers=college)
+        check("129-character id -> 422 string_too_long",
+              too_long.status_code == 422 and "string_too_long" in too_long.text, too_long.text[:200])
+        huge = svc.client.delete("/sessions/" + "x" * 5000, headers=college)
+        check("5000-character id -> 422", huge.status_code == 422, str(huge.status_code))
+        check("oversized ids removed nothing", main.registry.peek(at_limit, domain="college") is not None)
+
+        unauthenticated = svc.client.delete("/sessions/" + "c" * 129)
+        check("auth still checked: no token -> 401 or 422, never 200",
+              unauthenticated.status_code in (401, 422), str(unauthenticated.status_code))
+
+        ok = svc.client.delete("/sessions/" + at_limit, headers=college)
+        check("128-character id is accepted and removed", ok.status_code == 200 and ok.json() == {"removed": True}, ok.text)
+        again = svc.client.delete("/sessions/" + at_limit, headers=college)
+        check("removing again -> removed false", again.json() == {"removed": False}, again.text)
+
+        svc.turn("deposit", session="bank-uuid-0f8b2c1e-1234-4abc-9def-000000000001", token=BANK_TOKEN)
+        bank = svc.client.delete("/sessions/bank-uuid-0f8b2c1e-1234-4abc-9def-000000000001",
+                                 headers={"X-Internal-Token": BANK_TOKEN})
+        check("banking sign-out unchanged", bank.status_code == 200 and bank.json() == {"removed": True}, bank.text)
+
+
 def test_http_institution_cannot_change_mid_session():
     with Service(BANK_TOKEN, COLLEGE_TOKEN) as svc:
         first = svc.turn("hello", session="C1", token=COLLEGE_TOKEN, context=NMAMIT)

@@ -15,9 +15,16 @@
  * stream is attached afterwards (attach).
  *
  * read() returns null whenever the meter cannot actually hear -- context not
- * running, nothing attached, closed. Null is "unknown", never "silent": the
- * caller must not treat an unmeasurable microphone as a customer who said
- * nothing.
+ * running, nothing attached, closed, or no audio delivered yet. Null is
+ * "unknown", never "silent": the caller must not treat an unmeasurable
+ * microphone as a customer who said nothing.
+ *
+ * A freshly attached analyser's window is zero-filled until the microphone
+ * starts delivering samples. Those first reads are pure digital silence that
+ * no real room produces; reported as -100 dBFS they dragged the speech
+ * detector's calibrated noise floor down, so ordinary room noise then cleared
+ * the speech threshold and end-of-speech was never detected. They are
+ * reported as null until the first window that carries any signal.
  */
 
 export interface LevelMeter {
@@ -80,6 +87,8 @@ export const createWebAudioLevelMeter: LevelMeterFactory = () => {
   let analyser: AnalyserNode | null = null;
   let buffer: Float32Array<ArrayBuffer> | null = null;
   let closed = false;
+  // False until the microphone has delivered any signal at all.
+  let heard = false;
 
   return {
     attach(stream) {
@@ -105,7 +114,14 @@ export const createWebAudioLevelMeter: LevelMeterFactory = () => {
       if (closed || !analyser || !buffer || context.state !== 'running') return null;
 
       analyser.getFloatTimeDomainData(buffer);
-      return rmsDb(buffer);
+      const level = rmsDb(buffer);
+
+      // Still the zero-filled window of a microphone warming up: unknown,
+      // not silent. Once anything has been heard, silence is real silence.
+      if (!heard && level <= SILENCE_DB) return null;
+
+      heard = true;
+      return level;
     },
 
     close() {

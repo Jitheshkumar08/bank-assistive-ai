@@ -33,7 +33,7 @@ const replyListeners = new Set<ReplyListener>();
 
 /** Plays the part of the conversation delivering a reply. */
 function deliverReply(text: string, input: 'text' | 'voice' = 'text'): void {
-  for (const listener of replyListeners) listener({ text, input });
+  for (const listener of replyListeners) listener({ text, input, workflow: null });
 }
 
 function conversation(overrides: Partial<ConversationState> = {}): ConversationState {

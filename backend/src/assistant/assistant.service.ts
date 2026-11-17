@@ -260,7 +260,7 @@ export class AssistantService {
 }
 
 /** Maps a recording's MIME type onto the extension Whisper expects. */
-function extensionFor(mimeType: string): string {
+export function extensionFor(mimeType: string): string {
   if (mimeType.includes('webm')) return '.webm';
   if (mimeType.includes('ogg')) return '.ogg';
   if (mimeType.includes('mp4') || mimeType.includes('m4a')) return '.m4a';

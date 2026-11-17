@@ -1,9 +1,16 @@
-import { render, screen, waitFor } from '@testing-library/react';
+import { act, render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { RouterProvider, createMemoryRouter } from 'react-router-dom';
+import { RouterProvider, createMemoryRouter, useLocation } from 'react-router-dom';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { AuthContext, type AuthContextValue } from '@/context/AuthContext';
+import {
+  ConversationContext,
+  type ConversationState,
+  type DeliveredReply,
+  type ReplyListener,
+} from '@/context/ConversationContext';
 import { SessionContext, type SessionContextValue } from '@/context/SessionContext';
+import { useSession } from '@/context/useSession';
 import { VoiceContext, type VoiceContextValue } from '@/context/VoiceContext';
 import { WelcomePage } from './WelcomePage';
 import type { AuthenticatedUser } from '@/types/auth';
@@ -86,18 +93,69 @@ function voice(overrides: Partial<VoiceContextValue> = {}): VoiceContextValue {
   };
 }
 
+/** Every reply listener the screen has subscribed, for announcing replies. */
+const replyListeners = new Set<ReplyListener>();
+const sendVoice = vi.fn<ConversationState['sendVoice']>();
+const send = vi.fn<ConversationState['send']>();
+
+const CONVERSATION: ConversationState = {
+  messages: [],
+  isSending: false,
+  error: null,
+  isEmpty: true,
+  canRetry: false,
+  workflow: null,
+  ended: false,
+  send,
+  sendVoice,
+  retry: async () => {},
+  subscribeToReplies: (listener) => {
+    replyListeners.add(listener);
+    return () => {
+      replyListeners.delete(listener);
+    };
+  },
+};
+
+/** The conversation announcing a reply, as it does after every turn. */
+function announce(reply: DeliveredReply): void {
+  act(() => {
+    for (const listener of [...replyListeners]) listener(reply);
+  });
+}
+
 beforeEach(() => {
+  replyListeners.clear();
+  sendVoice.mockReset();
+  send.mockReset();
   speak.mockReset();
   speak.mockResolvedValue(undefined);
   acknowledgeArrival.mockReset();
   sessionStorage.clear();
 });
 
+/** Stands in for the assistant: shows what it was handed and the visit it sees. */
+function AssistantProbe() {
+  const location = useLocation();
+  const { session: visit } = useSession();
+  const request = (location.state as { request?: string } | null)?.request ?? 'none';
+
+  return (
+    <div>
+      <p>assistant screen</p>
+      <p>handed request: {request}</p>
+      <p>
+        visit: {visit?.branch.code} {visit?.language}
+      </p>
+    </div>
+  );
+}
+
 function routerFor() {
   return createMemoryRouter(
     [
       { path: '/welcome', element: <WelcomePage /> },
-      { path: '/assistant', element: <p>assistant screen</p> },
+      { path: '/assistant', element: <AssistantProbe /> },
       { path: '/scan', element: <p>scan screen</p> },
     ],
     { initialEntries: ['/welcome'] },
@@ -114,9 +172,11 @@ function rerenderWith(
   rerender?.(
     <AuthContext.Provider value={auth()}>
       <SessionContext.Provider value={sessionValue}>
-        <VoiceContext.Provider value={voice()}>
-          <RouterProvider router={routerFor()} />
-        </VoiceContext.Provider>
+        <ConversationContext.Provider value={CONVERSATION}>
+          <VoiceContext.Provider value={voice()}>
+            <RouterProvider router={routerFor()} />
+          </VoiceContext.Provider>
+        </ConversationContext.Provider>
       </SessionContext.Provider>
     </AuthContext.Provider>,
   );
@@ -132,9 +192,11 @@ function renderWelcome(
   const result = render(
     <AuthContext.Provider value={authValue}>
       <SessionContext.Provider value={sessionValue}>
-        <VoiceContext.Provider value={voiceValue}>
-          <RouterProvider router={router} />
-        </VoiceContext.Provider>
+        <ConversationContext.Provider value={CONVERSATION}>
+          <VoiceContext.Provider value={voiceValue}>
+            <RouterProvider router={router} />
+          </VoiceContext.Provider>
+        </ConversationContext.Provider>
       </SessionContext.Provider>
     </AuthContext.Provider>,
   );
@@ -317,6 +379,7 @@ describe('WelcomePage', () => {
       await userEvent.click(deposit);
 
       expect(await screen.findByText('assistant screen')).toBeInTheDocument();
+      expect(screen.getByText('handed request: I want to deposit money')).toBeInTheDocument();
     });
 
     it('offers a way back to scanning without signing out', async () => {
@@ -341,6 +404,93 @@ describe('WelcomePage', () => {
         'href',
         '/scan',
       );
+    });
+  });
+
+  describe('a spoken request', () => {
+    const active = (name: string) => ({ name, state: 'active' as const, step: 1, totalSteps: 3 });
+    const settle = () => new Promise((resolve) => setTimeout(resolve, 20));
+
+    // The engine reports its intent label ("deposit money"); the file-stem
+    // spelling ("deposit") is the same workflow and must match too.
+    it.each(['deposit money', 'withdraw money', 'apply for loan', 'deposit', 'apply_for_loan'])(
+      'that starts the "%s" workflow opens the assistant on it',
+      async (workflow) => {
+        renderWelcome();
+
+        announce({ text: 'Step one.', input: 'voice', workflow: active(workflow) });
+
+        expect(await screen.findByText('assistant screen')).toBeInTheDocument();
+        // The spoken request already started the workflow; handing it over
+        // as well would make the assistant page start it a second time.
+        expect(screen.getByText('handed request: none')).toBeInTheDocument();
+        expect(send).not.toHaveBeenCalled();
+        expect(sendVoice).not.toHaveBeenCalled();
+      },
+    );
+
+    it('keeps the branch and the language of the visit', async () => {
+      renderWelcome(auth(), session({ session: { ...SESSION, language: 'kn' } }));
+
+      announce({ text: 'Step one.', input: 'voice', workflow: active('deposit money') });
+
+      expect(await screen.findByText('visit: BR001 kn')).toBeInTheDocument();
+    });
+
+    it('stays here when the assistant asks which service was meant', async () => {
+      renderWelcome();
+
+      announce({ text: 'Did you want to deposit or withdraw?', input: 'voice', workflow: null });
+      announce({
+        text: 'Did you want to deposit or withdraw?',
+        input: 'voice',
+        workflow: { name: null, state: 'none', step: null, totalSteps: null },
+      });
+
+      await settle();
+      expect(screen.queryByText('assistant screen')).not.toBeInTheDocument();
+      expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent('Welcome, Anita');
+    });
+
+    it('stays here for a general question', async () => {
+      renderWelcome();
+
+      announce({ text: 'We open at ten.', input: 'voice', workflow: null });
+
+      await settle();
+      expect(screen.queryByText('assistant screen')).not.toBeInTheDocument();
+    });
+
+    it('ignores a workflow that is not one of the services', async () => {
+      renderWelcome();
+
+      announce({ text: 'Step one.', input: 'voice', workflow: active('something_else') });
+
+      await settle();
+      expect(screen.queryByText('assistant screen')).not.toBeInTheDocument();
+    });
+
+    it('navigates once, however many replies arrive', async () => {
+      const router = routerFor();
+      render(
+        <AuthContext.Provider value={auth()}>
+          <SessionContext.Provider value={session()}>
+            <ConversationContext.Provider value={CONVERSATION}>
+              <VoiceContext.Provider value={voice()}>
+                <RouterProvider router={router} />
+              </VoiceContext.Provider>
+            </ConversationContext.Provider>
+          </SessionContext.Provider>
+        </AuthContext.Provider>,
+      );
+      const navigate = vi.spyOn(router, 'navigate');
+
+      announce({ text: 'Step one.', input: 'voice', workflow: active('deposit money') });
+      announce({ text: 'Step two.', input: 'voice', workflow: active('deposit money') });
+
+      expect(await screen.findByText('assistant screen')).toBeInTheDocument();
+      expect(navigate).toHaveBeenCalledTimes(1);
+      expect(router.state.location.pathname).toBe('/assistant');
     });
   });
 

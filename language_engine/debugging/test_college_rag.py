@@ -345,8 +345,14 @@ def test_college_and_banking_retrieval_are_isolated():
     results = banking.search("What documents are required for admission to the college?", top_k=15)
     check("Banking retrieval never returns College documents",
           all(r["source"] in banking_files for r in results))
-    check("Banking results keep their original shape (no metadata key)",
-          all(set(r) == {"source", "content", "score", "section", "query"} for r in results))
+    # Banking's own knowledge work (Phase 2, restored from the 6 November
+    # stash) attaches each article's manifest metadata to its results. What
+    # must hold is isolation: that metadata is Banking's, never College's.
+    check("Banking results keep their shape: original fields plus Banking's own metadata",
+          all(set(r) == {"source", "content", "score", "section", "query", "metadata"} for r in results))
+    check("Banking result metadata is Banking's, never a College institution's",
+          all(r["metadata"].get("domain") == "banking" and r["metadata"].get("collection") == "banking"
+              and "institution_id" not in r["metadata"] for r in results))
     check("Banking retriever still expands queries (unchanged default)", banking.expand_queries is True)
 
 

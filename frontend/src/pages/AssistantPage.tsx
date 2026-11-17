@@ -2,6 +2,7 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { Navigate, useLocation, useNavigate } from 'react-router-dom';
 import { BrandMark } from '@/components/brand/BrandMark';
 import { AssistanceCard } from '@/components/chat/AssistanceCard';
+import { InterpreterPanel } from '@/components/interpreter/InterpreterPanel';
 import { Composer } from '@/components/chat/Composer';
 import { MessageList } from '@/components/chat/MessageList';
 import { WorkflowProgress } from '@/components/chat/WorkflowProgress';
@@ -12,10 +13,11 @@ import { useSession } from '@/context/useSession';
 import { useConversation } from '@/context/useConversation';
 import { useOptionalVoice } from '@/context/useVoice';
 import { useProactiveAssistance } from '@/hooks/useProactiveAssistance';
+import type { AssistantRouteState } from '@/lib/assistantRoute';
 import { COMMON_REQUESTS, isCommonRequest } from '@/lib/commonRequests';
 import { firstName } from '@/lib/greeting';
 import { assistantClient } from '@/services/assistant';
-import type { AssistanceOffer, ConversationMessage } from '@/types/assistant';
+import type { AssistanceOffer, ConversationMessage, WorkflowSnapshot } from '@/types/assistant';
 
 /**
  * What the Help control sends: the word the assistant's own offers tell the
@@ -23,6 +25,22 @@ import type { AssistanceOffer, ConversationMessage } from '@/types/assistant';
  * in the engine's control tier, so help is answered deterministically.
  */
 const HELP_WORD: Record<string, string> = { en: 'help', kn: 'ಸಹಾಯ', hi: 'मदद' };
+
+/**
+ * The task waiting while the customer talks to staff, in a sentence, or
+ * null when nothing is under way.
+ */
+function savedTaskNote(workflow: WorkflowSnapshot | null): string | null {
+  if (!workflow?.name || (workflow.state !== 'active' && workflow.state !== 'suspended')) return null;
+
+  const task = workflow.name.charAt(0).toUpperCase() + workflow.name.slice(1);
+  const where =
+    workflow.step !== null
+      ? ` at step ${workflow.step}${workflow.totalSteps !== null ? ` of ${workflow.totalSteps}` : ''}`
+      : '';
+
+  return `${task} is saved${where}. Return to AI to carry on from there.`;
+}
 
 function latest(messages: ConversationMessage[], author: ConversationMessage['author']): string | null {
   for (let index = messages.length - 1; index >= 0; index -= 1) {
@@ -52,13 +70,16 @@ export function AssistantPage() {
   const { messages, isSending, error, isEmpty, canRetry, workflow, ended, send, retry } =
     useConversation();
   const [isLeaving, setIsLeaving] = useState(false);
+  // The face-to-face interpreter, in place of the conversation. The
+  // conversation and its workflow are not touched while it is open.
+  const [interpreting, setInterpreting] = useState(false);
   const voice = useOptionalVoice();
   const location = useLocation();
   const navigate = useNavigate();
 
   // A shortcut on the welcome screen arrives with its request attached.
   // It is sent once, and only if it is one of the known requests.
-  const handedOver = (location.state as { request?: unknown } | null)?.request;
+  const handedOver: unknown = (location.state as AssistantRouteState | null)?.request;
   const handedOverSentRef = useRef(false);
 
   useEffect(() => {
@@ -89,6 +110,7 @@ export function AssistantPage() {
     turnKey: messages.length,
     client: assistantClient,
     onOffer: speakOffer,
+    paused: interpreting,
   });
 
   const { noteActivity } = assistance;
@@ -97,6 +119,24 @@ export function AssistantPage() {
     noteActivity();
     void send(HELP_WORD[session?.language ?? 'en'] ?? HELP_WORD.en);
   }, [noteActivity, send, session?.language]);
+
+  /**
+   * Sets the assistant aside for the interpreter.
+   *
+   * Its voice session is stopped first -- hands-free listening, a recording
+   * or a reply being read -- so the interpreter's microphone is the only one
+   * open. Nothing is sent: the workflow stays exactly where it is.
+   */
+  const openInterpreter = useCallback((): void => {
+    voice?.reset();
+    setInterpreting(true);
+  }, [voice]);
+
+  const closeInterpreter = useCallback((): void => {
+    setInterpreting(false);
+    // Back to the assistant is activity: a new quiet spell starts here.
+    noteActivity();
+  }, [noteActivity]);
 
   /**
    * Closes the visit after the assistant has said goodbye.
@@ -139,6 +179,20 @@ export function AssistantPage() {
         onActivity={noteActivity}
       />
     );
+
+  if (interpreting) {
+    return (
+      <div className="flex min-h-0 flex-1 flex-col">
+        <h1 className="sr-only">Face-to-face interpreter</h1>
+        <InterpreterPanel
+          sessionId={session.id}
+          customerLanguage={session.language}
+          savedTask={savedTaskNote(workflow)}
+          onReturn={closeInterpreter}
+        />
+      </div>
+    );
+  }
 
   return (
     <div className="flex min-h-0 flex-1 flex-col">
@@ -224,6 +278,22 @@ export function AssistantPage() {
           {voiceConsole('compact')}
           <MessageList messages={messages} isSending={isSending} />
         </>
+      )}
+
+      {!ended && (
+        // Talking to the person at the counter, through the phone. Offered
+        // throughout a visit: staff are part of every banking task.
+        <div className="mb-2 flex justify-end">
+          <button
+            type="button"
+            onClick={openInterpreter}
+            disabled={isSending}
+            className="inline-flex min-h-10 items-center gap-1.5 rounded-full bg-white px-3.5 text-sm font-semibold text-ink-800 ring-1 ring-ink-200 transition-colors hover:bg-ink-50 disabled:cursor-not-allowed disabled:opacity-45"
+          >
+            <span aria-hidden="true">⇄</span>
+            Speak with staff
+          </button>
+        </div>
       )}
 
       <AssistanceCard

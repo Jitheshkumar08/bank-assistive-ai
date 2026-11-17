@@ -209,6 +209,7 @@ inventing an `admissionYear` if admission rows already exist), `20261023100100_a
 | `GET /students/me/admission-result?collegeId=nmamit` | cookie | `200 {result}` · `404 NOT_VERIFIED` (kept; the Student Portal now uses admission-details) |
 | `POST /students/me/admission-verification` `{collegeId, nucatReference}` | cookie | `200 {result}` · `400 REFERENCE_MISMATCH` |
 | `POST /assistant/messages` `{message, language, collegeId, area?, inputMode?, history?}` | cookie (STUDENT) | `200 {text, language, intent, outcome, steps, studentContext}` · `400 VALIDATION_FAILED` (any student field in the body) · `400 INVALID_QR` · `503 ASSISTANT_UNAVAILABLE` — Phase 6, see `docs/domain-integration/06-college-backend-integration.md` |
+| `POST /assistant/voice-messages` multipart `{audio, language, collegeId, area?}` | cookie (STUDENT) | `200 {…same as messages, transcript}` · `400 VALIDATION_FAILED` / `INVALID_FILE` / `INVALID_QR` · `413 FILE_TOO_LARGE` (5 MB) · `422 VOICE_NOT_UNDERSTOOD` · `503 ASSISTANT_UNAVAILABLE` — Phase 7, see `docs/domain-integration/07-college-voice-input.md` |
 | `POST /assistant/speech` `{text}` | cookie (STUDENT) | `200 audio/*` (only a reply this session was given) · `400` · `503 ASSISTANT_UNAVAILABLE` |
 | `POST /auth/invitations/inspect` · `POST /auth/invitations/accept` `{token, password}` | link token | staff activation (role from the invitation) |
 

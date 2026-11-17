@@ -179,6 +179,22 @@ SENTENCES = [
       "hi": "मैं पैसे जमा करने, निकालने, बैलेंस देखने, लोन के आवेदन या नया खाता खोलने में मदद कर सकता हूँ."}),
     ("Which would you like?", {"kn": "ಯಾವುದು ಬೇಕು?", "hi": "आपको क्या चाहिए?"}),
 
+    # --- Phase 2: no account access, and no invented figures (domain replies)
+    ("I can't access accounts or carry out transactions, but I can guide you through the steps.",
+     {"kn": "ನಾನು ಖಾತೆಗಳನ್ನು ನೋಡಲು ಅಥವಾ ವಹಿವಾಟುಗಳನ್ನು ಮಾಡಲು ಸಾಧ್ಯವಿಲ್ಲ, ಆದರೆ ಹಂತಗಳ ಮೂಲಕ ನಿಮಗೆ ಮಾರ್ಗದರ್ಶನ ನೀಡಬಲ್ಲೆ.",
+      "hi": "मैं खाते नहीं देख सकता और लेन-देन नहीं कर सकता, लेकिन मैं आपको चरणों में मार्गदर्शन दे सकता हूँ."}),
+    ("I don't have the exact figure for that.",
+     {"kn": "ಅದರ ನಿಖರವಾದ ಮೊತ್ತ ನನ್ನ ಬಳಿ ಇಲ್ಲ.", "hi": "इसका सटीक आंकड़ा मेरे पास नहीं है."}),
+    ("Please check with the branch staff.",
+     {"kn": "ದಯವಿಟ್ಟು ಶಾಖೆಯ ಸಿಬ್ಬಂದಿಯನ್ನು ಕೇಳಿ.", "hi": "कृपया शाखा के कर्मचारियों से पूछिए."}),
+
+    # --- Phase 3A: cannot verify a current bank figure, and asking which service
+    ("I don't have current details for this bank or branch, so I can't confirm that.",
+     {"kn": "ಈ ಬ್ಯಾಂಕ್ ಅಥವಾ ಶಾಖೆಯ ಪ್ರಸ್ತುತ ವಿವರಗಳು ನನ್ನ ಬಳಿ ಇಲ್ಲ, ಆದ್ದರಿಂದ ಅದನ್ನು ಖಚಿತಪಡಿಸಲು ಸಾಧ್ಯವಿಲ್ಲ.",
+      "hi": "मेरे पास इस बैंक या शाखा की मौजूदा जानकारी नहीं है, इसलिए मैं इसकी पुष्टि नहीं कर सकता."}),
+    ("Which service is this about?",
+     {"kn": "ಇದು ಯಾವ ಸೇವೆಗೆ ಸಂಬಂಧಿಸಿದ್ದು?", "hi": "यह किस सेवा के बारे में है?"}),
+
     # --- not catching the customer
     ("Sorry, I didn't catch that.",
      {"kn": "ಕ್ಷಮಿಸಿ, ನನಗೆ ಅದು ಅರ್ಥವಾಗಲಿಲ್ಲ.", "hi": "क्षमा करें, मैं वह समझ नहीं पाया."}),
