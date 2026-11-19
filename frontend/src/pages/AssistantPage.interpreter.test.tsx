@@ -80,6 +80,7 @@ const USER: AuthenticatedUser = {
   fullName: 'Anita Rao',
   preferredLanguage: 'kn',
   role: 'CUSTOMER',
+  suggestionsEnabled: true,
 };
 
 const SESSION: Session = {
