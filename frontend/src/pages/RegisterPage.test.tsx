@@ -24,6 +24,7 @@ function auth(overrides: Partial<AuthContextValue> = {}): AuthContextValue {
       fullName: 'Demo Customer',
       preferredLanguage: 'en',
       role: 'CUSTOMER' as const,
+      suggestionsEnabled: true,
     }),
     register,
     updateProfile: async () => {},

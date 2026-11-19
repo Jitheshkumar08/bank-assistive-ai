@@ -4,6 +4,21 @@ import { useAuth } from '@/context/useAuth';
 import { useSession } from '@/context/useSession';
 import { useVoice } from '@/context/useVoice';
 
+export interface UseWelcomeGreetingOptions {
+  /**
+   * An extra sentence spoken as part of the same utterance -- the
+   * remembered payments. One utterance, never two: a second clip a
+   * moment later sounds like the assistant interrupting itself.
+   */
+  suffix?: string | null;
+  /**
+   * Held back until this is true, so the greeting is not spoken before
+   * the suffix is known. Whatever supplies it must guarantee it becomes
+   * true -- a greeting that waits forever is worse than a plain one.
+   */
+  ready?: boolean;
+}
+
 export interface WelcomeGreeting {
   /** The exact words being spoken, or null when there is nothing to say. */
   text: string | null;
@@ -31,12 +46,16 @@ export interface WelcomeGreeting {
  * before this hook does anything, and every failure path here leaves
  * that screen exactly as it is.
  */
-export function useWelcomeGreeting(): WelcomeGreeting {
+export function useWelcomeGreeting(
+  options: UseWelcomeGreetingOptions = {},
+): WelcomeGreeting {
+  const { suffix = null, ready = true } = options;
+
   const { user } = useAuth();
   const { session, arrivalAt, acknowledgeArrival } = useSession();
   const { speak, isEnabled } = useVoice();
 
-  const text =
+  const greeting =
     user && session
       ? composeGreeting({
           language: session.language,
@@ -44,6 +63,9 @@ export function useWelcomeGreeting(): WelcomeGreeting {
           branchName: session.branch.name,
         })
       : null;
+
+  // The welcome and the offer are one sentence to the ear.
+  const text = greeting && suffix ? greeting + ' ' + suffix : greeting;
 
   const say = useCallback(
     (line: string) => {
@@ -63,6 +85,10 @@ export function useWelcomeGreeting(): WelcomeGreeting {
   useEffect(() => {
     if (arrivalAt === null || handledRef.current === arrivalAt) return;
 
+    // Not yet known whether there is anything to add. Nothing is
+    // consumed, so this effect runs again once it is.
+    if (!ready) return;
+
     handledRef.current = arrivalAt;
 
     // Consumed whether or not it is spoken. Leaving the signal set would
@@ -73,7 +99,7 @@ export function useWelcomeGreeting(): WelcomeGreeting {
     if (!isEnabled || !text) return;
 
     say(text);
-  }, [arrivalAt, acknowledgeArrival, isEnabled, text, say]);
+  }, [arrivalAt, acknowledgeArrival, isEnabled, ready, text, say]);
 
   const replay = useCallback(() => {
     if (text) say(text);

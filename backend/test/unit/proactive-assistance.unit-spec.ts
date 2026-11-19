@@ -3,6 +3,7 @@ import type { ConfigService } from '@nestjs/config';
 import { plainToInstance } from 'class-transformer';
 import { validate } from 'class-validator';
 import { AssistantController } from '../../src/assistant/assistant.controller';
+import { ActivityService } from '../../src/activity/activity.service';
 import { AssistantService } from '../../src/assistant/assistant.service';
 import { AssistanceDto } from '../../src/assistant/dto/assistance.dto';
 import {
@@ -12,6 +13,15 @@ import {
 } from '../../src/assistant/engine/ai-engine.client';
 import { HttpAiEngineClient } from '../../src/assistant/engine/http-ai-engine.client';
 import type { SessionsService } from '../../src/sessions/sessions.service';
+
+/**
+ * The assistant now tells an open assisted activity which workflow state
+ * the engine reported. Stubbed here: these suites are about the turn
+ * itself, and a real one would need a database.
+ */
+const activityStub = () =>
+  ({ followWorkflow: jest.fn().mockResolvedValue(undefined) }) as unknown as ActivityService;
+
 
 /**
  * Proactive assistance, NestJS side.
@@ -181,7 +191,12 @@ describe('AssistantService.assistance', () => {
         .mockResolvedValue(activeId ? { id: activeId, language: 'kn', status: 'ACTIVE' } : null),
     };
     const engine = { requestAssistance } as unknown as AiEngineClient;
-    return new AssistantService(sessions as unknown as SessionsService, engine, config);
+    return new AssistantService(
+      sessions as unknown as SessionsService,
+      engine,
+      activityStub(),
+      config,
+    );
   }
 
   beforeEach(() => jest.spyOn(Logger.prototype, 'error').mockImplementation(() => undefined));

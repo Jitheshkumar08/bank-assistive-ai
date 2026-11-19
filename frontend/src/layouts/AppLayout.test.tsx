@@ -26,6 +26,7 @@ const USER: AuthenticatedUser = {
   fullName: 'Demo Customer',
   preferredLanguage: 'en',
   role: 'CUSTOMER',
+  suggestionsEnabled: true,
 };
 
 const SESSION: Session = {

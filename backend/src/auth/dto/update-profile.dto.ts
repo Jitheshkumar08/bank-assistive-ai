@@ -1,4 +1,12 @@
-import { IsEmail, IsIn, IsOptional, IsString, MaxLength, MinLength } from 'class-validator';
+import {
+  IsBoolean,
+  IsEmail,
+  IsIn,
+  IsOptional,
+  IsString,
+  MaxLength,
+  MinLength,
+} from 'class-validator';
 
 /**
  * Changes to the signed-in account.
@@ -27,6 +35,12 @@ export class UpdateProfileDto {
   @IsOptional()
   @IsIn(['en', 'kn', 'hi'], { message: 'Language must be one of: en, kn, hi.' })
   preferredLanguage?: string;
+
+  // Whether the welcome screen may offer remembered payments. The
+  // customer's own switch; no password needed to turn a suggestion off.
+  @IsOptional()
+  @IsBoolean({ message: 'That setting must be true or false.' })
+  suggestionsEnabled?: boolean;
 
   @IsOptional()
   @IsString()

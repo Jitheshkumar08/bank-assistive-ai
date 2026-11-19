@@ -12,6 +12,7 @@ const USER: AuthenticatedUser = {
   fullName: 'Anita Rao',
   preferredLanguage: 'en',
   role: 'CUSTOMER',
+  suggestionsEnabled: true,
 };
 
 function auth(user: AuthenticatedUser | null): AuthContextValue {

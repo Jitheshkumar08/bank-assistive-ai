@@ -37,6 +37,28 @@ export function AdminLayout() {
           </NavLink>
 
           <div className="flex min-w-0 items-center gap-2">
+            {/*
+              Development builds only. import.meta.env.DEV is false in a
+              production bundle, so the link is not merely hidden -- it
+              is not in the shipped JavaScript at all, which matches the
+              API module not being registered there.
+            */}
+            {import.meta.env.DEV && (
+              <NavLink
+                to="/admin/demo"
+                className={({ isActive }) =>
+                  cn(
+                    'inline-flex min-h-touch shrink-0 items-center rounded-xl px-3 text-sm font-medium transition-colors',
+                    isActive
+                      ? 'bg-ink-100 text-ink-900'
+                      : 'text-ink-700 hover:bg-ink-100 hover:text-ink-900',
+                  )
+                }
+              >
+                Personalisation
+              </NavLink>
+            )}
+
             <span className="hidden max-w-48 truncate text-sm text-ink-500 sm:block">
               {user?.email}
             </span>

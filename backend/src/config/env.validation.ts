@@ -2,6 +2,7 @@ import { plainToInstance } from 'class-transformer';
 import {
   IsEmail,
   IsEnum,
+  IsIn,
   IsNotEmpty,
   IsNumber,
   IsOptional,
@@ -81,6 +82,46 @@ export class EnvironmentVariables {
   @IsString()
   @MinLength(8, { message: 'ADMIN_PASSWORD must be at least 8 characters.' })
   ADMIN_PASSWORD?: string;
+
+  // --- Remembered payments ------------------------------------------
+  //
+  // Kept as strings on purpose. With implicit conversion a declared
+  // boolean turns any non-empty string into true, so DEMO_HISTORY_ENABLED
+  // of "false" would switch demonstration data ON. These are validated
+  // as the two words they may be and read through isEnabled() below.
+
+  @IsIn(['true', 'false'], { message: 'SUGGESTIONS_ENABLED must be "true" or "false".' })
+  SUGGESTIONS_ENABLED: string = 'true';
+
+  // Whether SEEDED DEMONSTRATION payment history may be read.
+  //
+  // FALSE UNLESS AN EXPLICIT DEMONSTRATION ENVIRONMENT TURNS IT ON.
+  // Demo rows are not bank records; with this off, no suggestion can be
+  // built from them. Unset means false.
+  @IsIn(['true', 'false'], { message: 'DEMO_HISTORY_ENABLED must be "true" or "false".' })
+  DEMO_HISTORY_ENABLED: string = 'false';
+
+  // Ceiling for an amount a customer may enter on the review screen, in
+  // minor units. 1000000 paise = Rs 10,000.
+  @IsNumber()
+  @Min(1)
+  ACTIVITY_MAX_AMOUNT_MINOR: number = 1_000_000;
+
+  // Whether the DEVELOPMENT-ONLY personalisation testing dashboard is
+  // served at all.
+  //
+  // FALSE UNLESS A DEVELOPER TURNS IT ON, and it is only one of four
+  // conditions: the dashboard also requires a non-production NODE_ENV,
+  // DEMO_HISTORY_ENABLED=true, and an authenticated ADMIN. In
+  // production the module is never registered, so its routes do not
+  // exist however this is set.
+  @IsIn(['true', 'false'], { message: 'DEMO_DASHBOARD_ENABLED must be "true" or "false".' })
+  DEMO_DASHBOARD_ENABLED: string = 'false';
+}
+
+/** The only reading of a flag: exactly the word "true" enables it. */
+export function isEnabled(value: string | undefined): boolean {
+  return value === 'true';
 }
 
 export function validateEnv(config: Record<string, unknown>): EnvironmentVariables {

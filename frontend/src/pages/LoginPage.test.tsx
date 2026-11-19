@@ -13,6 +13,7 @@ const CUSTOMER: AuthenticatedUser = {
   fullName: 'Demo Customer',
   preferredLanguage: 'en',
   role: 'CUSTOMER',
+  suggestionsEnabled: true,
 };
 
 const ADMIN: AuthenticatedUser = { ...CUSTOMER, id: 'a1', fullName: 'Administrator', role: 'ADMIN' };

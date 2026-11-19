@@ -57,13 +57,38 @@ function workflowKey(name: string): string {
 }
 
 /**
+ * Phrases a remembered-payment card hands over with.
+ *
+ * Keyed by what the SERVER decided, never by anything typed on the
+ * page, and worded in English exactly as the tiles above are: the
+ * engine's intent detection is what turns a phrase into a workflow, and
+ * these go through the same door as every other request rather than a
+ * special one of their own.
+ */
+export const HAND_OVER_REQUESTS = {
+  PAYMENT: 'I want to make a payment',
+  DEPOSIT: 'I want to deposit money',
+  WITHDRAWAL: 'I want to withdraw money',
+  LOAN: 'How do I apply for a loan?',
+} as const;
+
+export type HandOverRequestKey = keyof typeof HAND_OVER_REQUESTS;
+
+/**
  * True only for one of the requests above.
  *
  * Navigation state can be written by anything running on the page, so a
- * request handed over that way is sent only if it is one of these.
+ * request handed over that way is sent only if it is one of these --
+ * the common tiles, or a phrase the server chose for a remembered
+ * payment. Never arbitrary text.
  */
 export function isCommonRequest(value: unknown): value is string {
-  return typeof value === 'string' && COMMON_REQUESTS.some((item) => item.request === value);
+  if (typeof value !== 'string') return false;
+
+  return (
+    COMMON_REQUESTS.some((item) => item.request === value) ||
+    Object.values(HAND_OVER_REQUESTS).some((phrase) => phrase === value)
+  );
 }
 
 /** The common request whose workflow the engine reports, or null. */

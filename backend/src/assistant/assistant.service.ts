@@ -7,6 +7,7 @@ import {
   PayloadTooLargeException,
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
+import { ActivityService } from '../activity/activity.service';
 import { SessionsService } from '../sessions/sessions.service';
 import {
   AiEngineClient,
@@ -51,6 +52,7 @@ export class AssistantService {
   constructor(
     private readonly sessions: SessionsService,
     private readonly engine: AiEngineClient,
+    private readonly activity: ActivityService,
     config: ConfigService,
   ) {
     this.maxAudioBytes = Number(config.get<string>('MAX_AUDIO_BYTES', String(10 * 1024 * 1024)));
@@ -77,10 +79,34 @@ export class AssistantService {
     return active;
   }
 
+  /**
+   * Lets an open assisted activity follow the workflow the engine just
+   * reported.
+   *
+   * The snapshot arrives with every reply, so this costs no extra call
+   * and asks the engine nothing new. It is awaited but never allowed to
+   * fail a turn: the customer's answer is already on screen.
+   *
+   * What it records is that a set of INSTRUCTIONS finished. It is not,
+   * and must never be read as, confirmation that a payment was made.
+   */
+  private async followWorkflow(
+    userId: string,
+    sessionId: string,
+    reply: AssistantReplyView,
+  ): Promise<void> {
+    if (!reply.workflow) return;
+
+    await this.activity.followWorkflow(userId, sessionId, {
+      name: reply.workflow.name,
+      state: reply.workflow.state,
+    });
+  }
+
   async sendText(userId: string, sessionId: string, text: string): Promise<AssistantReplyView> {
     const session = await this.resolveSession(userId, sessionId);
 
-    return this.deliver(() =>
+    const reply = await this.deliver(() =>
       this.engine.sendText({
         sessionId: session.id,
         // The language settled when the visit began, from the account's
@@ -89,6 +115,10 @@ export class AssistantService {
         text,
       }),
     );
+
+    await this.followWorkflow(userId, session.id, reply);
+
+    return reply;
   }
 
   async sendVoice(
@@ -112,7 +142,7 @@ export class AssistantService {
       throw new BadRequestException('That file is not a supported recording.');
     }
 
-    return this.deliver(() =>
+    const reply = await this.deliver(() =>
       this.engine.sendAudio({
         sessionId: session.id,
         language: session.language,
@@ -123,6 +153,10 @@ export class AssistantService {
         filename: `utterance${extensionFor(mimeType)}`,
       }),
     );
+
+    await this.followWorkflow(userId, session.id, reply);
+
+    return reply;
   }
 
   /**

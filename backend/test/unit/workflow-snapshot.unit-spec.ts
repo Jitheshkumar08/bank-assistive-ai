@@ -1,6 +1,7 @@
 import { ForbiddenException, HttpException, Logger, RequestMethod } from '@nestjs/common';
 import type { ConfigService } from '@nestjs/config';
 import { AssistantController } from '../../src/assistant/assistant.controller';
+import { ActivityService } from '../../src/activity/activity.service';
 import { AssistantService } from '../../src/assistant/assistant.service';
 import {
   AiEngineClient,
@@ -9,6 +10,15 @@ import {
 } from '../../src/assistant/engine/ai-engine.client';
 import { HttpAiEngineClient } from '../../src/assistant/engine/http-ai-engine.client';
 import type { SessionsService } from '../../src/sessions/sessions.service';
+
+/**
+ * The assistant now tells an open assisted activity which workflow state
+ * the engine reported. Stubbed here: these suites are about the turn
+ * itself, and a real one would need a database.
+ */
+const activityStub = () =>
+  ({ followWorkflow: jest.fn().mockResolvedValue(undefined) }) as unknown as ActivityService;
+
 
 /**
  * P4: the read-only workflow snapshot, NestJS side.
@@ -208,6 +218,7 @@ describe('AssistantService.snapshot', () => {
     const service = new AssistantService(
       sessions as unknown as SessionsService,
       engine,
+      activityStub(),
       config,
     );
     return { service, sessions };

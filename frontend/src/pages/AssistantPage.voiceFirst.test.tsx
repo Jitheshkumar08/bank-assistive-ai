@@ -45,6 +45,7 @@ const USER: AuthenticatedUser = {
   fullName: 'Anita Rao',
   preferredLanguage: 'en',
   role: 'CUSTOMER',
+  suggestionsEnabled: true,
 };
 
 function sessionFor(language: string): Session {

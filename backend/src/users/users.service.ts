@@ -10,6 +10,7 @@ export const PUBLIC_USER_FIELDS = {
   fullName: true,
   preferredLanguage: true,
   role: true,
+  suggestionsEnabled: true,
 } as const;
 
 @Injectable()
@@ -58,7 +59,12 @@ export class UsersService {
    */
   async updateProfile(
     id: string,
-    changes: { fullName?: string; email?: string; preferredLanguage?: string },
+    changes: {
+      fullName?: string;
+      email?: string;
+      preferredLanguage?: string;
+      suggestionsEnabled?: boolean;
+    },
   ): Promise<AuthenticatedUser> {
     const data: Prisma.UserUpdateInput = {};
 
@@ -66,6 +72,9 @@ export class UsersService {
     if (changes.email !== undefined) data.email = changes.email.toLowerCase();
     if (changes.preferredLanguage !== undefined) {
       data.preferredLanguage = changes.preferredLanguage;
+    }
+    if (changes.suggestionsEnabled !== undefined) {
+      data.suggestionsEnabled = changes.suggestionsEnabled;
     }
 
     try {

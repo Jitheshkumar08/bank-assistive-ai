@@ -5,7 +5,9 @@ import { Alert } from '@/components/ui/Alert';
 import { Button } from '@/components/ui/Button';
 import { Card } from '@/components/ui/Card';
 import { Field } from '@/components/ui/Field';
+import { cn } from '@/lib/cn';
 import { LinkButton } from '@/components/ui/LinkButton';
+import { activitiesApi } from '@/api/activities.api';
 import { LanguageChoice } from '@/components/auth/LanguageChoice';
 import type { LanguageCode } from '@/components/auth/LanguageChoice';
 import { useAuth } from '@/context/useAuth';
@@ -64,6 +66,11 @@ export function SettingsPage() {
         initialLanguage={isLanguage(user.preferredLanguage) ? user.preferredLanguage : 'en'}
         onSave={saveProfile}
         saved={profileSaved}
+      />
+
+      <RememberedPayments
+        enabled={user.suggestionsEnabled}
+        onToggle={(suggestionsEnabled) => saveProfile({ suggestionsEnabled })}
       />
 
       <PasswordForm onSave={changePassword} />
@@ -198,6 +205,115 @@ function ProfileForm({
           {submitting ? 'Saving' : 'Save changes'}
         </Button>
       </form>
+    </Card>
+  );
+}
+
+/**
+ * Remembered payments: the switch, and the way to erase them.
+ *
+ * Both belong to the customer rather than to the branch. "Forget" is a
+ * real delete -- the activities and the offers go, not a flag that
+ * hides them -- so someone who asks to be forgotten on a shared device
+ * actually is.
+ */
+function RememberedPayments({
+  enabled,
+  onToggle,
+}: {
+  enabled: boolean;
+  onToggle: (enabled: boolean) => Promise<void>;
+}) {
+  const [saving, setSaving] = useState(false);
+  const [forgetting, setForgetting] = useState(false);
+  const [forgot, setForgot] = useState<number | null>(null);
+  const [error, setError] = useState<string | null>(null);
+
+  async function handleToggle(): Promise<void> {
+    setSaving(true);
+    setError(null);
+
+    try {
+      await onToggle(!enabled);
+    } catch (cause: unknown) {
+      setError(cause instanceof Error ? cause.message : 'That could not be saved.');
+    } finally {
+      setSaving(false);
+    }
+  }
+
+  async function handleForget(): Promise<void> {
+    setForgetting(true);
+    setError(null);
+    setForgot(null);
+
+    try {
+      const result = await activitiesApi.forget();
+      setForgot(result.deleted);
+    } catch (cause: unknown) {
+      setError(cause instanceof Error ? cause.message : 'That could not be deleted.');
+    } finally {
+      setForgetting(false);
+    }
+  }
+
+  return (
+    <Card>
+      <h2 className="text-lg font-semibold text-ink-900">Remembered payments</h2>
+      <p className="mt-1 text-sm text-ink-600">
+        When this is on, the welcome screen can offer you a payment you have made before. It never
+        pays anyone on its own.
+      </p>
+
+      {error && (
+        <Alert tone="error" className="mt-4">
+          {error}
+        </Alert>
+      )}
+
+      {forgot !== null && (
+        <Alert tone="success" className="mt-4">
+          {forgot === 0
+            ? 'There was nothing left to forget.'
+            : `Deleted ${forgot} remembered ${forgot === 1 ? 'item' : 'items'}.`}
+        </Alert>
+      )}
+
+      <div className="mt-4 flex flex-col gap-2">
+        <button
+          type="button"
+          role="switch"
+          aria-checked={enabled}
+          aria-busy={saving || undefined}
+          disabled={saving}
+          onClick={() => void handleToggle()}
+          className="flex min-h-touch items-center justify-between gap-4 rounded-xl px-1 text-left"
+        >
+          <span className="text-sm font-medium text-ink-900">Suggest my recent payments</span>
+          <span
+            aria-hidden="true"
+            className={cn(
+              'relative inline-flex h-6 w-11 shrink-0 rounded-full transition-colors',
+              enabled ? 'bg-brand-600' : 'bg-ink-200',
+            )}
+          >
+            <span
+              className={cn(
+                'absolute top-0.5 size-5 rounded-full bg-white transition-[left]',
+                enabled ? 'left-[1.375rem]' : 'left-0.5',
+              )}
+            />
+          </span>
+        </button>
+
+        <Button
+          variant="secondary"
+          loading={forgetting}
+          onClick={() => void handleForget()}
+        >
+          {forgetting ? 'Forgetting' : 'Forget my payment history'}
+        </Button>
+      </div>
     </Card>
   );
 }

@@ -50,10 +50,20 @@ model User {
   isActive          Boolean @default(true) @map("is_active")
   role              Role    @default(CUSTOMER)
 
+  // Whether the welcome screen may offer remembered payments. The
+  // customer's own switch, and the only thing that silences the offer
+  // for an individual account.
+  suggestionsEnabled Boolean @default(true) @map("suggestions_enabled")
+
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 
   sessions Session[]
+
+  payees           Payee[]
+  demoPayments     DemoPaymentHistory[]
+  activities       AssistedActivity[]
+  suggestionOffers SuggestionOffer[]
 
   @@map("users")
 }
@@ -79,7 +89,8 @@ model Branch {
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 
-  sessions Session[]
+  sessions   Session[]
+  activities AssistedActivity[]
 
   @@map("branches")
 }
@@ -129,8 +140,237 @@ model Session {
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
   branch Branch @relation(fields: [branchId], references: [id], onDelete: Restrict)
 
+  activities AssistedActivity[]
+
   @@unique([activeUserId])
   @@index([userId, status])
   @@index([branchId])
   @@map("sessions")
+}
+
+// =========================================================
+// Remembered payments
+//
+// Three provenances, three tables, deliberately never merged:
+//
+//   DemoPaymentHistory  demonstration data, seeded, read-only at runtime
+//   AssistedActivity    what the assistant GUIDED someone through
+//   (future)            a genuine bank transaction feed
+//
+// NOTHING IN THIS SECTION IS EVIDENCE THAT MONEY MOVED. This system
+// cannot observe a counter transaction. GUIDANCE_COMPLETED means a set
+// of instructions finished, and no code may read it as a successful
+// payment.
+// =========================================================
+
+// How much a destination can be trusted. DEMO_SEEDED must never be
+// shown or spoken as a bank-verified recipient. Only a genuine banking
+// source may ever write BANK_VERIFIED, and this version has no such
+// source, so nothing writes it.
+enum PayeeTrust {
+  DEMO_SEEDED
+  CUSTOMER_PROVIDED
+  BANK_VERIFIED
+
+  @@map("payee_trust")
+}
+
+model Payee {
+  id String @id @default(uuid()) @db.Uuid
+
+  userId String @map("user_id") @db.Uuid
+
+  // Spoken aloud, so a first name and nothing else.
+  displayName String  @map("display_name")
+  fullName    String? @map("full_name")
+
+  // Masked at rest and in every response. There is deliberately no
+  // column for the full number, so no endpoint can leak one and no
+  // future caller can be tempted to add one quietly.
+  accountLast4 String? @map("account_last4")
+
+  trust PayeeTrust @default(CUSTOMER_PROVIDED)
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  user         User                 @relation(fields: [userId], references: [id], onDelete: Cascade)
+  activities   AssistedActivity[]
+  demoPayments DemoPaymentHistory[]
+  offers       SuggestionOffer[]
+
+  @@index([userId, trust])
+  @@map("payees")
+}
+
+// How a demonstration payment ended.
+//
+// Only COMPLETED may influence a suggestion. A failed or pending
+// payment is not evidence of a habit, and offering to repeat one would
+// be the system inventing a payment that never happened. The filter
+// that enforces this lives in DemoHistorySource, so nothing
+// non-completed ever reaches a detector.
+enum DemoPaymentStatus {
+  COMPLETED
+  FAILED
+  PENDING
+
+  @@map("demo_payment_status")
+}
+
+// Seeded demonstration payment history, and nothing else. Written by
+// the seed script, never at runtime. It has its own table so demo data
+// can never be mistaken for -- or silently merged with -- something a
+// bank said. Switched off by DEMO_HISTORY_ENABLED, which is false
+// unless a demonstration environment turns it on.
+model DemoPaymentHistory {
+  id String @id @default(uuid()) @db.Uuid
+
+  userId  String @map("user_id") @db.Uuid
+  payeeId String @map("payee_id") @db.Uuid
+
+  amountMinor Int    @map("amount_minor")
+  currency    String @default("INR")
+
+  // Defaults to COMPLETED so every row written before this column
+  // existed keeps the meaning it already had: a payment that happened.
+  // Only COMPLETED rows are read into a suggestion.
+  status DemoPaymentStatus @default(COMPLETED)
+
+  // The historical date this demonstration payment represents.
+  occurredAt DateTime @map("occurred_at")
+
+  createdAt DateTime @default(now()) @map("created_at")
+
+  user  User  @relation(fields: [userId], references: [id], onDelete: Cascade)
+  payee Payee @relation(fields: [payeeId], references: [id], onDelete: Cascade)
+
+  @@index([userId, payeeId, occurredAt])
+  @@map("demo_payment_history")
+}
+
+// Every kind is named *_GUIDANCE so the distinction from a financial
+// transaction is structural rather than a comment someone can skip.
+enum AssistedActivityKind {
+  PAYMENT_GUIDANCE
+  DEPOSIT_GUIDANCE
+  WITHDRAWAL_GUIDANCE
+  LOAN_ENQUIRY
+
+  @@map("assisted_activity_kind")
+}
+
+// STARTED            the review screen was opened
+// CONFIRMED          the customer reviewed the details and agreed
+// GUIDANCE_COMPLETED the guided steps finished -- NOT a payment
+// ABANDONED          left without confirming
+// CANCELLED          the workflow was cancelled
+enum AssistedActivityStatus {
+  STARTED
+  CONFIRMED
+  GUIDANCE_COMPLETED
+  ABANDONED
+  CANCELLED
+
+  @@map("assisted_activity_status")
+}
+
+model AssistedActivity {
+  id String @id @default(uuid()) @db.Uuid
+
+  userId    String  @map("user_id") @db.Uuid
+  payeeId   String? @map("payee_id") @db.Uuid
+  sessionId String? @map("session_id") @db.Uuid
+  branchId  String? @map("branch_id") @db.Uuid
+
+  kind   AssistedActivityKind
+  status AssistedActivityStatus @default(STARTED)
+
+  // Minor units (paise). Money is never a float, and never a value that
+  // has to survive a JSON round trip as a decimal.
+  amountMinor Int?   @map("amount_minor")
+  currency    String @default("INR")
+
+  // The date this activity belongs to. Detectors read this, never
+  // createdAt, so history sorts by when it happened.
+  occurredAt DateTime @map("occurred_at")
+
+  // Which existing workflow the engine actually ran, copied from the
+  // snapshot this backend already receives. Recorded here, never chosen
+  // here.
+  workflowName String? @map("workflow_name")
+
+  confirmedAt DateTime? @map("confirmed_at")
+  completedAt DateTime? @map("completed_at")
+  createdAt   DateTime  @default(now()) @map("created_at")
+  updatedAt   DateTime  @updatedAt @map("updated_at")
+
+  user    User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  payee   Payee?   @relation(fields: [payeeId], references: [id], onDelete: SetNull)
+  session Session? @relation(fields: [sessionId], references: [id], onDelete: SetNull)
+  branch  Branch?  @relation(fields: [branchId], references: [id], onDelete: SetNull)
+
+  @@index([userId, status, occurredAt])
+  @@index([userId, payeeId, occurredAt])
+  @@map("assisted_activities")
+}
+
+enum SuggestionType {
+  LAST_PAYMENT
+  RECURRING_TODAY
+
+  @@map("suggestion_type")
+}
+
+enum SuggestionOutcome {
+  SHOWN
+  ACCEPTED
+  DECLINED
+  EXPIRED
+  SUPERSEDED
+
+  @@map("suggestion_outcome")
+}
+
+// Where a suggestion's evidence came from. This is what drives the
+// Demo History badge and the spoken marker, so it travels with the
+// offer rather than being inferred later.
+enum HistoryProvenance {
+  DEMO_HISTORY
+  ASSISTED_ACTIVITY
+  BANK_VERIFIED
+
+  @@map("history_provenance")
+}
+
+// The opaque handle handed to the browser AND the audit trail, in one
+// row. /continue reads the payee and amount from here, so a tampered
+// client can never name a destination.
+//
+// Ids only -- no names, no digits -- so the audit trail cannot leak.
+model SuggestionOffer {
+  id String @id @default(uuid()) @db.Uuid
+
+  userId    String  @map("user_id") @db.Uuid
+  sessionId String? @map("session_id") @db.Uuid
+
+  type       SuggestionType
+  provenance HistoryProvenance
+  kind       AssistedActivityKind
+
+  payeeId     String? @map("payee_id") @db.Uuid
+  amountMinor Int?    @map("amount_minor")
+
+  outcome SuggestionOutcome @default(SHOWN)
+
+  shownAt     DateTime  @default(now()) @map("shown_at")
+  respondedAt DateTime? @map("responded_at")
+  expiresAt   DateTime  @map("expires_at")
+
+  user  User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  payee Payee? @relation(fields: [payeeId], references: [id], onDelete: SetNull)
+
+  @@index([userId, type, shownAt])
+  @@index([userId, payeeId, outcome, respondedAt])
+  @@map("suggestion_offers")
 }

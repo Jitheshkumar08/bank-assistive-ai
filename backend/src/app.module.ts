@@ -4,12 +4,15 @@ import { APP_GUARD } from '@nestjs/core';
 import { ThrottlerModule, seconds } from '@nestjs/throttler';
 import { validateEnv } from './config/env.validation';
 import { PrismaModule } from './prisma/prisma.module';
+import { ActivityModule } from './activity/activity.module';
+import { SuggestionsModule } from './suggestions/suggestions.module';
 import { HealthModule } from './health/health.module';
 import { BranchesModule } from './branches/branches.module';
 import { ContextModule } from './context/context.module';
 import { AssistantModule } from './assistant/assistant.module';
 import { SessionsModule } from './sessions/sessions.module';
 import { AdminModule } from './admin/admin.module';
+import { AdminDemoModule } from './admin-demo/admin-demo.module';
 import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/users.module';
 import { JwtAuthGuard } from './auth/guards/jwt-auth.guard';
@@ -37,6 +40,11 @@ import { ThrottlerBehindProxyGuard } from './common/guards/throttler-behind-prox
     SessionsModule,
     AssistantModule,
     AdminModule,
+    ActivityModule,
+    SuggestionsModule,
+    // Development-only. Contributes no controller and no provider when
+    // NODE_ENV=production, so /api/admin/demo does not exist there.
+    AdminDemoModule.register(),
   ],
   providers: [
     // Authentication is the default. A route is reachable without a

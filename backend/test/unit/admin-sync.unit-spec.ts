@@ -27,6 +27,7 @@ function adminRow(overrides: Partial<User> = {}): User {
     preferredLanguage: 'en',
     isActive: true,
     role: Role.ADMIN,
+    suggestionsEnabled: true,
     createdAt: new Date(),
     updatedAt: new Date(),
     ...overrides,

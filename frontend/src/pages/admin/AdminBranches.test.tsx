@@ -47,6 +47,7 @@ const ADMIN: AuthenticatedUser = {
   fullName: 'Administrator',
   preferredLanguage: 'en',
   role: 'ADMIN',
+  suggestionsEnabled: true,
 };
 
 const CUSTOMER: AuthenticatedUser = { ...ADMIN, id: 'u1', fullName: 'Anita Rao', role: 'CUSTOMER' };

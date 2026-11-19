@@ -27,6 +27,7 @@ const USER: AuthenticatedUser = {
   fullName: 'Anita Rao',
   preferredLanguage: 'en',
   role: 'CUSTOMER',
+  suggestionsEnabled: true,
 };
 
 const SESSION: Session = {

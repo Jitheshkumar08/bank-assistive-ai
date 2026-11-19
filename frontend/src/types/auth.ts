@@ -12,6 +12,12 @@ export interface AuthenticatedUser {
   fullName: string;
   preferredLanguage: string;
   role: UserRole;
+  /**
+   * Whether the welcome screen may offer this customer their remembered
+   * payments. On the account rather than this device, so turning it off
+   * on a branch tablet also turns it off on their own phone.
+   */
+  suggestionsEnabled: boolean;
 }
 
 export interface AuthResult {
@@ -44,6 +50,7 @@ export interface UpdateProfileRequest {
   fullName?: string;
   email?: string;
   preferredLanguage?: string;
+  suggestionsEnabled?: boolean;
   currentPassword?: string;
 }
 

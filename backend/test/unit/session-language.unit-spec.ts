@@ -1,10 +1,20 @@
 import type { ConfigService } from '@nestjs/config';
 import { SessionStatus } from '@prisma/client';
+import { ActivityService } from '../../src/activity/activity.service';
 import { AssistantService } from '../../src/assistant/assistant.service';
 import type { AiEngineClient } from '../../src/assistant/engine/ai-engine.client';
 import type { PrismaService } from '../../src/prisma/prisma.service';
 import type { SessionsService } from '../../src/sessions/sessions.service';
 import { UsersService } from '../../src/users/users.service';
+
+/**
+ * The assistant now tells an open assisted activity which workflow state
+ * the engine reported. Stubbed here: these suites are about the turn
+ * itself, and a real one would need a database.
+ */
+const activityStub = () =>
+  ({ followWorkflow: jest.fn().mockResolvedValue(undefined) }) as unknown as ActivityService;
+
 
 /**
  * M2: the visit's language is the single source of truth.
@@ -52,6 +62,7 @@ function setupAssistant(initialLanguage: string) {
   const service = new AssistantService(
     sessions as unknown as SessionsService,
     engine as unknown as AiEngineClient,
+    activityStub(),
     config,
   );
 

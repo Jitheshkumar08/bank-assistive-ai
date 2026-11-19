@@ -14,10 +14,12 @@ import { RegisterPage } from '@/pages/RegisterPage';
 import { ScanPage } from '@/pages/ScanPage';
 import { SettingsPage } from '@/pages/SettingsPage';
 import { WelcomePage } from '@/pages/WelcomePage';
+import { ReviewActivityPage } from '@/pages/ReviewActivityPage';
 import { AssistantPage } from '@/pages/AssistantPage';
 import { AdminOverviewPage } from '@/pages/admin/AdminOverviewPage';
 import { AdminNewBranchPage } from '@/pages/admin/AdminNewBranchPage';
 import { AdminBranchPage } from '@/pages/admin/AdminBranchPage';
+import { AdminDemoPage } from '@/pages/admin/AdminDemoPage';
 import { NotFoundPage } from '@/pages/NotFoundPage';
 
 /**
@@ -63,6 +65,11 @@ export const router = createBrowserRouter([
                   { path: '/admin', element: <AdminOverviewPage /> },
                   { path: '/admin/branches/new', element: <AdminNewBranchPage /> },
                   { path: '/admin/branches/:id', element: <AdminBranchPage /> },
+                  // Development-only testing dashboard. The route always
+                  // exists; the API behind it does not outside a
+                  // development environment, and the page says so
+                  // plainly when it gets the 404.
+                  { path: '/admin/demo', element: <AdminDemoPage /> },
                 ],
               },
             ],
@@ -86,6 +93,10 @@ export const router = createBrowserRouter([
                 element: <RequireContext />,
                 children: [
                   { path: '/welcome', element: <WelcomePage /> },
+                  // The deterministic step between a remembered payment
+                  // and the assistant. Behind the same guards as the
+                  // welcome screen: a branch, and the customer's own visit.
+                  { path: '/review/:activityId', element: <ReviewActivityPage /> },
                   {
                     path: '/assistant',
                     element: <AssistantPage />,

@@ -1,14 +1,19 @@
-import type { ReactNode } from 'react';
-import { Link, Navigate } from 'react-router-dom';
+import { useCallback, useState, type ReactNode } from 'react';
+import { Link, Navigate, useNavigate } from 'react-router-dom';
 import { LinkButton } from '@/components/ui/LinkButton';
 import { useAuth } from '@/context/useAuth';
 import { useSession } from '@/context/useSession';
 import { useWelcomeGreeting } from '@/hooks/useWelcomeGreeting';
 import { useOpenAssistantOnVoiceService } from '@/hooks/useOpenAssistantOnVoiceService';
+import { useSuggestions } from '@/hooks/useSuggestions';
 import { RequestIcon } from '@/components/requests/RequestIcon';
+import { SuggestionList } from '@/components/suggestions/SuggestionList';
 import { ASSISTANT_PATH, assistantRouteState } from '@/lib/assistantRoute';
 import { COMMON_REQUESTS } from '@/lib/commonRequests';
 import { firstName } from '@/lib/greeting';
+import { composeSuggestionSpeech } from '@/lib/suggestionCopy';
+import { suggestionsApi } from '@/api/suggestions.api';
+import type { Suggestion } from '@/types/suggestions';
 
 /**
  * Confirmation screen shown once branch context exists.
@@ -25,11 +30,56 @@ import { firstName } from '@/lib/greeting';
 export function WelcomePage() {
   const { user } = useAuth();
   const { session } = useSession();
+  const navigate = useNavigate();
 
-  // Speaks the arrival greeting once, if the customer asked for speech.
-  // Called before the early return below so the hook order never
-  // changes between renders.
-  const greeting = useWelcomeGreeting();
+  const language = session?.language ?? user?.preferredLanguage ?? 'en';
+
+  // Remembered payments, if this customer has any. Fetched with a short
+  // budget; a slow or failed lookup leaves this screen exactly as it
+  // would be for someone with no history at all.
+  const { suggestions, settled, dismiss } = useSuggestions(session?.id ?? null);
+
+  const [busyId, setBusyId] = useState<string | null>(null);
+
+  // Speaks the arrival greeting once, if the customer asked for speech,
+  // with the offer in the same breath. Called before the early return
+  // below so the hook order never changes between renders.
+  const greeting = useWelcomeGreeting({
+    suffix: composeSuggestionSpeech({ language, suggestions }),
+    ready: settled,
+  });
+
+  /**
+   * Accepting opens a review screen. The request carries no payee and
+   * no amount -- the server reads those back from its own offer -- so
+   * nothing here can redirect a payment.
+   */
+  const handleContinue = useCallback(
+    async (suggestion: Suggestion): Promise<void> => {
+      setBusyId(suggestion.id);
+
+      try {
+        const opened = await suggestionsApi.continue(suggestion.id);
+        navigate(`/review/${opened.activityId}`);
+      } catch {
+        // Already paid, expired, or offline. The card goes rather than
+        // explaining itself: the tiles below do the same job.
+        dismiss(suggestion.id);
+      } finally {
+        setBusyId(null);
+      }
+    },
+    [dismiss, navigate],
+  );
+
+  /** "Not now." Recorded, because twice means stop asking. */
+  const handleDecline = useCallback(
+    (suggestion: Suggestion): void => {
+      dismiss(suggestion.id);
+      void suggestionsApi.decline(suggestion.id).catch(() => {});
+    },
+    [dismiss],
+  );
 
   // Saying a service out loud opens the assistant, like tapping its tile.
   useOpenAssistantOnVoiceService();
@@ -111,6 +161,14 @@ export function WelcomePage() {
             Change
           </Link>
         </section>
+
+        <SuggestionList
+          suggestions={suggestions}
+          language={language}
+          busyId={busyId}
+          onContinue={(suggestion) => void handleContinue(suggestion)}
+          onDecline={handleDecline}
+        />
 
         <section aria-labelledby="welcome-start" className="mt-8">
           <h2 id="welcome-start" className="text-sm font-medium text-ink-900">

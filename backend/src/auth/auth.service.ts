@@ -126,6 +126,7 @@ export class AuthService implements OnModuleInit {
       email: record.email,
       fullName: record.fullName,
       preferredLanguage: record.preferredLanguage,
+      suggestionsEnabled: record.suggestionsEnabled,
       role: record.role,
     });
   }
@@ -171,6 +172,7 @@ export class AuthService implements OnModuleInit {
       // never touches the unique index.
       email: isChangingEmail ? email : undefined,
       preferredLanguage: dto.preferredLanguage,
+      suggestionsEnabled: dto.suggestionsEnabled,
     });
 
     // A fresh token: the old one carries the previous email in its
@@ -207,6 +209,7 @@ export class AuthService implements OnModuleInit {
       email: record.email,
       fullName: record.fullName,
       preferredLanguage: record.preferredLanguage,
+      suggestionsEnabled: record.suggestionsEnabled,
       role: record.role,
     });
   }

@@ -29,4 +29,10 @@ export interface AuthenticatedUser {
   fullName: string;
   preferredLanguage: string;
   role: UserRole;
+  /**
+   * Whether the welcome screen may offer this customer their remembered
+   * payments. Carried on the account so the switch survives a new
+   * device, and read by the browser to render the setting.
+   */
+  suggestionsEnabled: boolean;
 }
