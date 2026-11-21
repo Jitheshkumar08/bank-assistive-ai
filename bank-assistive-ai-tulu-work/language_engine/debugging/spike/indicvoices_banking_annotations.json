@@ -1,0 +1,4079 @@
+{
+ "schema_version": "1",
+ "phase": "3.2B-9",
+ "step": "2 (banking reference annotation)",
+ "created": "2026-09-23",
+ "status": "FIRST_PASS_ANNOTATED_NOT_HUMAN_VERIFIED",
+ "schema_doc": "banking_annotation_schema.md",
+ "manifest": {
+  "file": "indicvoices_banking_manifest.json",
+  "sha256": "02a773066224781dc9db08ed0049cc09ec7fa2de9f99d29b12aabe0799979427",
+  "revision": "c96f9088f138cf89d419da7e8e643e1f05c00a87",
+  "split": "train",
+  "utterances": 200,
+  "note": "The frozen manifest is not modified by this step. Annotations live only in this file and are joined to the manifest by id."
+ },
+ "annotation_source": "reference_transcript only (the IndicVoices 'normalized' field, copied from the frozen manifest). No audio was heard and no ASR output was consulted; ASR has not been run on this set.",
+ "annotator": {
+  "type": "model_first_pass",
+  "model": "Claude Opus 5",
+  "human_verified": false,
+  "caution": "Every value is a first-pass reading of the reference text and needs human review before it is used as evaluation ground truth. Rows in review.needs_manual_review are the ones the annotator could not settle from the reference alone; the rest are confident readings, not verified facts."
+ },
+ "interpretation_rules": [
+  "Destination decides payment vs transfer: a person or organisation, or the speaker's own other account, is transfer even when the spoken verb is 'pay'; a merchant, biller or service is payment.",
+  "Money moved into the speaker's own wallet or account is deposit, even when the spoken verb is 'transfer'. This overlaps the schema's transfer definition and is the main call a reviewer may want to flip; it affects ivb_kn_017, ivb_kn_051, ivb_kn_060, ivb_kn_077, ivb_kn_079, ivb_hi_022, ivb_hi_055.",
+  "A capability or limit question is annotated with the intent of the action it asks about (for example 'what is my maximum withdrawal' is withdrawal), not as other.",
+  "Loan and insurance queries are other, as the schema specifies.",
+  "control_type is non-none only for dialogue or session control, or for stopping the action in progress. Cancelling or disabling a standing instruction (autopay, SIP deduction) is a banking operation, so control_type stays none and the request is described in notes.",
+  "For multi-request utterances the primary intent is the first request in utterance order; the rest go in notes. Where that choice also moves the amount, the row is flagged for review.",
+  "amount holds only the value tied to the primary intent. Thresholds ('alert below X') and intended transaction sizes ('enough for a X transaction') are recorded with a note. Fractions ('a quarter of it'), dates, times and durations are not amounts.",
+  "Identifier digits follow the schema: grouped numbers and 'double'/'triple' expand, leading letters and grammatical case suffixes stay in span but not in digits, and an ambiguous sequence sets digits to null and flags the row.",
+  "negation is positive unless an explicit negation bears on the request. Alternative questions ('has it come or not'), lexical failure words ('विफल', failed) and cancel verbs are not negation."
+ ],
+ "annotations": [
+  {
+   "id": "ivb_kn_001",
+   "language": "kn",
+   "speaker_id": "S4259828000396991",
+   "reference_transcript": "ವಾರಕ್ಕೊಮ್ಮೆ ಸರ್ವ ಹರಿಯಾಣ ಗ್ರಾಮೀಣ ಬ್ಯಾಂಕ್ನಲ್ಲಿರೋ ನನ್ನ ಅಕೌಂಟ್ ಒಂದು ಆರು ಒಂಬತ್ತು ಒಂಬತ್ತು ಎರಡು ಐದು ಎರಡು ನಾಲ್ಕು ಮೂರು ಐದು ಎಂಟಕ್ಕೆ ಎಂಟು ಇದಕ್ಕೆ ಗೂಗಲ್ ಪೇ ಮೂಲಕ ಹತ್ತು ಸಾವಿರ ರೂಪಾಯಿ ಟ್ರಾನ್ಸ್ಫರ್ ಮಾಡುಕಾಗುತ್ತೆ ಹಾಗೆ ಅಕಸ್ಮಾತು ಬ್ಯಾಲೆನ್ಸ್ ಏನಾದರು ಅದಕ್ಕಿಂತ ಕಡ್ಮೆ ಆದರೆ ನನಗೆ ಅಲರ್ಟ್ ಮಾಡು",
+   "project_annotations": {
+    "intent": "transfer",
+    "amount": 10000,
+    "identifier": [
+     {
+      "type": "account_number",
+      "digits": null,
+      "span": "ಒಂದು ಆರು ಒಂಬತ್ತು ಒಂಬತ್ತು ಎರಡು ಐದು ಎರಡು ನಾಲ್ಕು ಮೂರು ಐದು ಎಂಟಕ್ಕೆ ಎಂಟು"
+     }
+    ],
+    "negation": "positive",
+    "control_type": "none",
+    "completion_signal": "not_applicable",
+    "notes": "Weekly transfer of 10000 via Google Pay to own Sarva Haryana Gramin Bank account. Digit sequence ambiguous: 'ಎಂಟಕ್ಕೆ ಎಂಟು' may be one 8 with the dative case suffix or two 8s (11 vs 12 digits), so digits is null. Secondary request: alert if balance falls below that."
+   },
+   "review": {
+    "needs_manual_review": true,
+    "reasons": [
+     "ambiguous digit count in account number"
+    ]
+   }
+  },
+  {
+   "id": "ivb_kn_002",
+   "language": "kn",
+   "speaker_id": "S4259425000395472",
+   "reference_transcript": "ಮೊಬಿಕ್ವಿಕ್ ಆ್ಯಪಿನಲ್ಲಿ ಮಾರುತಿ ಕಾಮತ್ ಅವರಿಗೆ ತಿಂಗಳಿಗೊಮ್ಮೆ ಅಟೋಮೆಟಿಕ್ ಆಗಿ ಕಳಿಸ್ತಿರೋ ಒಂದು ಸಾವಿರ ರೂಪಾಯನ್ನು ನಿಲ್ಲಿಸಿ ಅದರ ಬದ್ ಬದಲಿಗೆ ಎರಡು ಸಾವಿರ ರೂಪಾಯಿ ಕಳ್ಸಕ್ಕಾಗುತ್ತಾ",
+   "project_annotations": {
+    "intent": "transfer",
+    "amount": 2000,
+    "identifier": null,
+    "negation": "positive",
+    "control_type": "none",
+    "completion_signal": "not_applicable",
+    "notes": "Asks to stop an existing monthly auto-payment of 1000 to a person in MobiKwik and send 2000 instead; amount is the requested new value, 1000 is the stopped standing instruction. 'ನಿಲ್ಲಿಸಿ' (stop) targets a standing instruction, a banking operation, not a dialogue control."
+   },
+   "review": {
+    "needs_manual_review": false,
+    "reasons": []
+   }
+  },
+  {
+   "id": "ivb_kn_003",
+   "language": "kn",
+   "speaker_id": "S4259159400309850",
+   "reference_transcript": "ನಿಶ್ಚಿತ ಅವಧಿಯ ಜೀವ ವಿಮೆಗೆ ನಾಲ್ಕುನೂರು ರೂಪಾಯಿಯ ವಿಮೆ ಮೊತ್ತವನ್ನು ಆಯ್ಕೆ ಮಾಡು",
+   "project_annotations": {
+    "intent": "other",
+    "amount": 400,
+    "identifier": null,
+    "negation": "positive",
+    "control_type": "none",
+    "completion_signal": "not_applicable",
+    "notes": "Term life insurance: select a 400 rupee insurance amount. Insurance selection is not one of the listed banking intents."
+   },
+   "review": {
+    "needs_manual_review": false,
+    "reasons": []
+   }
+  },
+  {
+   "id": "ivb_kn_004",
+   "language": "kn",
+   "speaker_id": "S4257047800324220",
+   "reference_transcript": "ನಾನು ನನ್ನ ಜಮ್ಮು ಆ್ಯಂಡ್ ಕಾಶ್ಮೀರ್ ಬ್ಯಾಂಕ್ ಖಾತೆಯಿಂದ ನನ್ನ ಜಿಯೋ ಪೇಮೆಂಟ್ಸ್ ಬ್ಯಾಂಕ್ ಖಾತೆಗೆ ಗರಿಷ್ಠ ಎಷ್ಟು ಹಣ ಟ್ರಾನ್ಸ್ಫರ್ ಮಾಡ್ಬೋದು",
+   "project_annotations": {
+    "intent": "transfer",
+    "amount": null,
+    "identifier": null,
+    "negation": "positive",
+    "control_type": "none",
+    "completion_signal": "not_applicable",
+    "notes": "Asks the maximum amount transferable from a bank account to a payments-bank account. Capability/limit question about a transfer; no amount spoken."
+   },
+   "review": {
+    "needs_manual_review": false,
+    "reasons": []
+   }
+  },
+  {
+   "id": "ivb_kn_005",
+   "language": "kn",
+   "speaker_id": "S4259963900351976",
+   "reference_transcript": "ಸತ್ಯನಾರಾಯಣ್ ಹಣಗಲ್ ಅವರಿಗೆ ನನ್ನ ಮೊಬಿಕ್ವಿಕಿಂದ ಐನೂರು ರೂಪಾಯಿ ಕಳಿಸು",
+   "project_annotations": {
+    "intent": "transfer",
+    "amount": 500,
+    "identifier": null,
+    "negation": "positive",
+    "control_type": "none",
+    "completion_signal": "not_applicable",
+    "notes": "Send 500 to a named person from MobiKwik. Payee name is not an identifier."
+   },
+   "review": {
+    "needs_manual_review": false,
+    "reasons": []
+   }
+  },
+  {
+   "id": "ivb_kn_006",
+   "language": "kn",
+   "speaker_id": "S4257502600333186",
+   "reference_transcript": "ಈ ಕ್ಯೂ ಆರ್ ಕೋಡನ್ನ ಸ್ಕ್ಯಾನ್ ಮಾಡಿ ನನ್ನ ಪಂಜಾಬ್ ನ್ಯಾಷ್ನಲ್ ಬ್ಯಾಂಕ್ ಖಾತೆಯನ್ನು ಅಥೆಂಟಿಕೇಟ್ ಮಾಡ್ತಿಯಾ",
+   "project_annotations": {
+    "intent": "other",
+    "amount": null,
+    "identifier": null,
+    "negation": "positive",
+    "control_type": "none",
+    "completion_signal": "not_applicable",
+    "notes": "Scan a QR code to authenticate a bank account."
+   },
+   "review": {
+    "needs_manual_review": false,
+    "reasons": []
+   }
+  },
+  {
+   "id": "ivb_kn_007",
+   "language": "kn",
+   "speaker_id": "S4259143800310192",
+   "reference_transcript": "ನನ್ಗೆ ಎರಡೆರಡು ಸಾರಿ ಡೆಬಿಟ್ ಆಗಿರೋ ಐದು ನೂರು ರೂಪಾಯಿ ರೀಫಂಡ್ ಆಗಬೇಕು",
+   "project_annotations": {
+    "intent": "other",
+    "amount": 500,
+    "identifier": null,
+    "negation": "positive",
+    "control_type": "none",
+    "completion_signal": "not_applicable",
+    "notes": "Refund request for 500 debited twice."
+   },
+   "review": {
+    "needs_manual_review": false,
+    "reasons": []
+   }
+  },
+  {
+   "id": "ivb_kn_008",
+   "language": "kn",
+   "speaker_id": "S4259051000390499",
+   "reference_transcript": "ನನ್ನ ನೈನಿತಾಲ್ ಬ್ಯಾಂಕ್ ಖಾತೇಲಿ ಎಷ್ಟು ಹಣ ಇದೆ",
+   "project_annotations": {
+    "intent": "balance",
+    "amount": null,
+    "identifier": null,
+    "negation": "positive",
+    "control_type": "none",
+    "completion_signal": "not_applicable",
+    "notes": null
+   },
+   "review": {
+    "needs_manual_review": false,
+    "reasons": []
+   }
+  },
+  {
+   "id": "ivb_kn_009",
+   "language": "kn",
+   "speaker_id": "S4259662000394131",
+   "reference_transcript": "ಟ್ಯಾಪ್ ಆ್ಯಂಡ್ ಪೇ ಮೆಥೆಡಲ್ಲಿ ನನ್ನ ಡಿಫಾಲ್ಟ್ ಕಾರ್ಡನ್ನು ಮೇಘಾಲಯ ರೂರಲ್ ಬ್ಯಾಂಕ್ ಡೆಬಿಟ್ ಕಾರ್ಡಿಂದ ಯುಕೋ ಬ್ಯಾಂಕ್ ಡೆಬಿಟ್ ಕಾರ್ಡಿಗೆ ಬದಲಾಯ್ಸು",
+   "project_annotations": {
+    "intent": "other",
+    "amount": null,
+    "identifier": null,
+    "negation": "positive",
+    "control_type": "none",
+    "completion_signal": "not_applicable",
+    "notes": "Change the default tap-and-pay card from one bank debit card to another. Bank and card names are not identifiers; no card number is spoken."
+   },
+   "review": {
+    "needs_manual_review": false,
+    "reasons": []
+   }
+  },
+  {
+   "id": "ivb_kn_010",
+   "language": "kn",
+   "speaker_id": "S4259086300390904",
+   "reference_transcript": "ಯುನಿಶೆಫ್ಗೆ ಅನಾಮಧೇಯವಾಗಿ ಎರಡ್ನೂರು ರೂಪಾಯಿಯನ್ನ ಟ್ರಾನ್ಸ್ಫರ್ ಮಾಡೋಕ್ಕಾಗತ್ತಾ",
+   "project_annotations": {
+    "intent": "transfer",
+    "amount": 200,
+    "identifier": null,
+    "negation": "positive",
+    "control_type": "none",
+    "completion_signal": "not_applicable",
+    "notes": "Anonymous donation of 200 to an organisation; treated as transfer to a recipient."
+   },
+   "review": {
+    "needs_manual_review": false,
+    "reasons": []
+   }
+  },
+  {
+   "id": "ivb_kn_011",
+   "language": "kn",
+   "speaker_id": "S4257992900396931",
+   "reference_transcript": "ಸ್ವಿಗ್ಗಿಯಿಂದ ಒಂದು ಸಾವಿರ ರೂಪಾಯಿ ರೀಫಂಡ್ ಬಂದಿದೆಯಾ ಇಲ್ಲವಾ ಚಕ್ ಮಾಡು",
+   "project_annotations": {
+    "intent": "other",
+    "amount": 1000,
+    "identifier": null,
+    "negation": "positive",
+    "control_type": "none",
+    "completion_signal": "not_applicable",
+    "notes": "Check whether a 1000 refund has arrived. 'ಇಲ್ಲವಾ' (or not) is part of the fixed alternative question 'ಬಂದಿದೆಯಾ ಇಲ್ಲವಾ' and does not negate the request, so negation is positive."
+   },
+   "review": {
+    "needs_manual_review": false,
+    "reasons": []
+   }
+  },
+  {
+   "id": "ivb_kn_012",
+   "language": "kn",
+   "speaker_id": "S4259005400392509",
+   "reference_transcript": "ನನ್ನ ಬ್ಯಾಂಕ್ ಅಕೌಂಟ್ ಒಂದು ಒಂಬತ್ತು ಒಂಬತ್ತು ಮೂರು ನಾಲ್ಕು ಆರು ಎಂಟು ಎರಡು ಒಂದು ಒಂದು ಮೂರು ಎಂಟು ಒಂದು ಎರಡು ನಾಲ್ಕು ಎರಡು ಇದನ್ನು ಡಿಜಿಟಲ್ ಪೇಮೆಂಟ್ ಆ್ಯಪ್ ಆಕ್ಸಿಜನ್ಗೆ ಲಿಂಕ್ ಮಾಡಬೇಕಾಗುತ್ತಾ ಅಂತ ವೆರಿಫೈ ಮಾಡು ಪ್ಲೀಸ್",
+   "project_annotations": {
+    "intent": "other",
+    "amount": null,
+    "identifier": [
+     {
+      "type": "account_number",
+      "digits": "1993468211381242",
+      "span": "ಒಂದು ಒಂಬತ್ತು ಒಂಬತ್ತು ಮೂರು ನಾಲ್ಕು ಆರು ಎಂಟು ಎರಡು ಒಂದು ಒಂದು ಮೂರು ಎಂಟು ಒಂದು ಎರಡು ನಾಲ್ಕು ಎರಡು"
+     }
+    ],
+    "negation": "positive",
+    "control_type": "none",
+    "completion_signal": "not_applicable",
+    "notes": "Verify whether the account must be linked to a digital payment app. 16 digits spoken one by one."
+   },
+   "review": {
+    "needs_manual_review": false,
+    "reasons": []
+   }
+  },
+  {
+   "id": "ivb_kn_013",
+   "language": "kn",
+   "speaker_id": "S4257912000389284",
+   "reference_transcript": "ಪೇಪಾಲಲ್ಲಿ ಫಾಸ್ಟ್ಯಾಗ್ ಬಿಲ್ ಪೇಮೆಂಟ್ಸ್ದು ನೋಟಿಫಿಕೇಷನ್ಸ್ ಆನ್ ಮಾಡು",
+   "project_annotations": {
+    "intent": "other",
+    "amount": null,
+    "identifier": null,
+    "negation": "positive",
+    "control_type": "none",
+    "completion_signal": "not_applicable",
+    "notes": "Turn on notifications for FASTag bill payments in a payment app."
+   },
+   "review": {
+    "needs_manual_review": false,
+    "reasons": []
+   }
+  },
+  {
+   "id": "ivb_kn_014",
+   "language": "kn",
+   "speaker_id": "S4259825500343801",
+   "reference_transcript": "ನನ್ನ ರಿಜಿಸ್ಟರ್ಡ್ ಕಾಂಟ್ಯಾಕ್ಟ್ ನಂಬರ್ ಆರು ನಾಲ್ಕು ಒಂಬತ್ತು ಏಳು ಆರು ಎಂಟು ಎಂಟು ಒಂದು ಒಂಬತ್ತು ಮೂರು ಒಂದು ಇದರಿಂದ ಒಂದು ಹೆಚ್ ಪಿ ಗ್ಯಾಸ್ ಸಿಲಿಂಡರ್ ಬುಕ್ ಮಾಡು",
+   "project_annotations": {
+    "intent": "other",
+    "amount": null,
+    "identifier": [
+     {
+      "type": "phone_number",
+      "digits": "64976881931",
+      "span": "ಆರು ನಾಲ್ಕು ಒಂಬತ್ತು ಏಳು ಆರು ಎಂಟು ಎಂಟು ಒಂದು ಒಂಬತ್ತು ಮೂರು ಒಂದು"
+     }
+    ],
+    "negation": "positive",
+    "control_type": "none",
+    "completion_signal": "not_applicable",
+    "notes": "Book a gas cylinder from the registered contact number. 11 digits are spoken where an Indian mobile number has 10; recorded exactly as spoken."
+   },
+   "review": {
+    "needs_manual_review": false,
+    "reasons": []
+   }
+  },
+  {
+   "id": "ivb_kn_015",
+   "language": "kn",
+   "speaker_id": "S4258829000384196",
+   "reference_transcript": "ನನ್ನ ರಿಜಿಸ್ಟರ್ಡ್ ಕಾಂಟ್ಯಾಕ್ಟ್ ನಂಬರ್ ಒಂಬತ್ತು ಐದು ಆರು ಐದು ಒಂಬತ್ತು ಮೂರು ಏಳು ಆರು ಆರು ಒಂಬತ್ತು ಎರಡು ಇದರಿಂದ ಒಂದು ಎಚ್ ಪಿ ಗ್ಯಾಸ್ ಸಿಲಿಂಡರ್ ಬುಕ್ ಮಾಡು",
+   "project_annotations": {
+    "intent": "other",
+    "amount": null,
+    "identifier": [
+     {
+      "type": "phone_number",
+      "digits": "95659376692",
+      "span": "ಒಂಬತ್ತು ಐದು ಆರು ಐದು ಒಂಬತ್ತು ಮೂರು ಏಳು ಆರು ಆರು ಒಂಬತ್ತು ಎರಡು"
+     }
+    ],
+    "negation": "positive",
+    "control_type": "none",
+    "completion_signal": "not_applicable",
+    "notes": "Book a gas cylinder from the registered contact number. 11 digits are spoken where an Indian mobile number has 10; recorded exactly as spoken."
+   },
+   "review": {
+    "needs_manual_review": false,
+    "reasons": []
+   }
+  },
+  {
+   "id": "ivb_kn_016",
+   "language": "kn",
+   "speaker_id": "S4259815600330817",
+   "reference_transcript": "ಈ ತಿಂಗಳ ಸಂಬಳ ಬ್ಯಾಂಕ್ ಆಫ್ ಇಂಡಿಯಾನಲ್ಲಿರೋ ನನ್ನ ಬ್ಯಾಂಕ್ ಅಕೌಂಟ್ ಆರು ಎಂಟು ಮೂರು ಎರಡು ಏಳು ಎರಡು ನಾಲ್ಕು ಒಂದು ಎಂಟು ಒಂಬತ್ತು ಎಂಟು ಇದಕ್ಕೆ ಕ್ರೆಡಿಟ್ ಆಗಿದೆಯಾ ಚೆಕ್ ಮಾಡ್ತಿಯಾ ಆಗಿದ್ದರೆ ಎಂಸ್ವೈಪ್ ಮೂಲಕ ಏಳುನೂರು ರೂಪಾಯನ್ನ ಎಸ್ ಬಿ ಐನಲ್ಲಿರೋ ಎಂಟು ಎರಡು ಒಂದು ಮೂರು ಐದು ಐದು ಒಂದು ಎಂಟು ಏಳು ಒಂದು ಐದು ಒಂದು ಎರಡು ಏಳು ಇದಕ್ಕೆ ಟ್ರಾನ್ಸ್ಫರ್ ಮಾಡು",
+   "project_annotations": {
+    "intent": "other",
+    "amount": null,
+    "identifier": [
+     {
+      "type": "account_number",
+      "digits": "68327241898",
+      "span": "ಆರು ಎಂಟು ಮೂರು ಎರಡು ಏಳು ಎರಡು ನಾಲ್ಕು ಒಂದು ಎಂಟು ಒಂಬತ್ತು ಎಂಟು"
+     },
+     {
+      "type": "account_number",
+      "digits": "82135518715127",
+      "span": "ಎಂಟು ಎರಡು ಒಂದು ಮೂರು ಐದು ಐದು ಒಂದು ಎಂಟು ಏಳು ಒಂದು ಐದು ಒಂದು ಎರಡು ಏಳು"
+     }
+    ],
+    "negation": "positive",
+    "control_type": "none",
+    "completion_signal": "not_applicable",
+    "notes": "Two requests: first check whether this month's salary was credited to the first account, then, if so, transfer 700 to the second account. Primary intent taken as the status check (first in order), so amount is null; the 700 belongs to the conditional transfer."
+   },
+   "review": {
+    "needs_manual_review": true,
+    "reasons": [
+     "multi-intent: status check plus conditional transfer of 700; primary intent and amount assignment need a human decision"
+    ]
+   }
+  },
+  {
+   "id": "ivb_kn_017",
+   "language": "kn",
+   "speaker_id": "S4258840600308552",
+   "reference_transcript": "ನನ್ನ ಉತ್ತರಾಖಂಡ್ ಗ್ರಾಮೀಣ್ ಬ್ಯಾಂಕ್ ಅಕೌಂಟಿಂದ ನನ್ನ ಸೀಟ್ರಸ್ ವ್ಯಾಲೆಟ್ಗೆ ನಲವತ್ತು ಸಾವಿರ ರೂಪಾಯಿ ಹಾಕೋಕ್ಕಾಗತ್ತಾ",
+   "project_annotations": {
+    "intent": "deposit",
+    "amount": 40000,
+    "identifier": null,
+    "negation": "positive",
+    "control_type": "none",
+    "completion_signal": "not_applicable",
+    "notes": "Load 40000 from own bank account into own wallet. Annotated as deposit (money into the speaker's own wallet) rather than transfer."
+   },
+   "review": {
+    "needs_manual_review": false,
+    "reasons": []
+   }
+  },
+  {
+   "id": "ivb_kn_018",
+   "language": "kn",
+   "speaker_id": "S4259410800349078",
+   "reference_transcript": "ಹಳೇ ನಂಬರ್ ಬದಲಿಗೆ ಹೊಸದಾಗಿ ನೋಂದಾಯಿಸಿರೊ ನಂಬರ್ ಒಂಬತ್ತು ಒಂಬತ್ತು ಏಳು ಎರಡು ಏಳು ಏಳು ಎಂಟು ಆರು ಸೊನ್ನೆ ಒಂಬತ್ತು ಆರು ಇದಕ್ಕೆ ಒ ಟಿ ಪಿ ಕಳಿಸು",
+   "project_annotations": {
+    "intent": "other",
+    "amount": null,
+    "identifier": [
+     {
+      "type": "phone_number",
+      "digits": "99727786096",
+      "span": "ಒಂಬತ್ತು ಒಂಬತ್ತು ಏಳು ಎರಡು ಏಳು ಏಳು ಎಂಟು ಆರು ಸೊನ್ನೆ ಒಂಬತ್ತು ಆರು"
+     }
+    ],
+    "negation": "positive",
+    "control_type": "none",
+    "completion_signal": "not_applicable",
+    "notes": "Send the OTP to the newly registered number instead of the old one. 11 digits spoken, including ಸೊನ್ನೆ (zero); recorded exactly as spoken."
+   },
+   "review": {
+    "needs_manual_review": false,
+    "reasons": []
+   }
+  },
+  {
+   "id": "ivb_kn_019",
+   "language": "kn",
+   "speaker_id": "S4258688200360830",
+   "reference_transcript": "ನನ್ನ ಅಮೇಜಾನ್ ಪೆ ಅದ್ಯಾಕೆ ನನ್ನ ಬ್ಯಾಂಕ್ ಬ್ಯಾಲೆನ್ಸ್ ತೋರಸ್ತಿಲ್ಲ",
+   "project_annotations": {
+    "intent": "other",
+    "amount": null,
+    "identifier": null,
+    "negation": "negative",
+    "control_type": "none",
+    "completion_signal": "not_applicable",
+    "notes": "Asks why the app is not showing the bank balance. Negation: 'ತೋರಸ್ತಿಲ್ಲ' (is not showing). A complaint about balance display, not a request for the balance."
+   },
+   "review": {
+    "needs_manual_review": false,
+    "reasons": []
+   }
+  },
+  {
+   "id": "ivb_kn_020",
+   "language": "kn",
+   "speaker_id": "S4258816100308474",
+   "reference_transcript": "ಯು ಪಿ ಐ ಐ ಡಿ ನೈನ್ ಫೋರ್ ಥ್ರೀ ಒನ್ ಟು ಫೋರ್ ತ್ರಿಬಲ್ ನೈನ್ ಥ್ರೀ ನೈನ್ ಎಟ್ ಪೇಟಿಯಮ್ಮನ್ನು ಬ್ಲಾಕ್ ಮಾಡು",
+   "project_annotations": {
+    "intent": "other",
+    "amount": null,
+    "identifier": [
+     {
+      "type": "upi_id",
+      "digits": "9431249993",
+      "span": "ನೈನ್ ಫೋರ್ ಥ್ರೀ ಒನ್ ಟು ಫೋರ್ ತ್ರಿಬಲ್ ನೈನ್ ಥ್ರೀ ನೈನ್ ಎಟ್ ಪೇಟಿಯಮ್ಮನ್ನು"
+     }
+    ],
+    "negation": "positive",
+    "control_type": "none",
+    "completion_signal": "not_applicable",
+    "notes": "Block a UPI ID. Digits are spoken as English numerals in Kannada script; 'ತ್ರಿಬಲ್ ನೈನ್' (triple nine) expands to 999. The span ends with the accusative suffix ಅನ್ನು on the handle, which is grammar, not part of the ID."
+   },
+   "review": {
+    "needs_manual_review": false,
+    "reasons": []
+   }
+  },
+  {
+   "id": "ivb_kn_021",
+   "language": "kn",
+   "speaker_id": "S4257848700343912",
+   "reference_transcript": "ಜಿಯೋ ಮನಿಯಲ್ಲಿ ಈ ತಿಂಗಳು ನನಗೆ ಎಷ್ಟು ರಿವಾರ್ಡ್ಸ್ ಬಂದಿವೆ",
+   "project_annotations": {
+    "intent": "other",
+    "amount": null,
+    "identifier": null,
+    "negation": "positive",
+    "control_type": "none",
+    "completion_signal": "not_applicable",
+    "notes": "Asks how many rewards were received this month in a wallet app."
+   },
+   "review": {
+    "needs_manual_review": false,
+    "reasons": []
+   }
+  },
+  {
+   "id": "ivb_kn_022",
+   "language": "kn",
+   "speaker_id": "S4258594800300080",
+   "reference_transcript": "ನಾನು ಹಾಟ್ಸ್ಟಾರ್ಲಿ ವ್ಯವಹಾರ ಮಾಡಿರೋದಕ್ಕೆ ಏನೇನು ರಿವಾರ್ಡ್ಸ್ ಸಿಕ್ಕಿದೆ ಚೆಕ್ ಮಾಡೋಕ್ಕಾಗತ್ತಾ",
+   "project_annotations": {
+    "intent": "other",
+    "amount": null,
+    "identifier": null,
+    "negation": "positive",
+    "control_type": "none",
+    "completion_signal": "not_applicable",
+    "notes": "Asks to check rewards earned for transactions on a streaming service."
+   },
+   "review": {
+    "needs_manual_review": false,
+    "reasons": []
+   }
+  },
+  {
+   "id": "ivb_kn_023",
+   "language": "kn",
+   "speaker_id": "S4258767300327813",
+   "reference_transcript": "ಮೊಬಿಕ್ವಿಕಲ್ಲಿರೋ ಟ್ರಾನ್ಸಾಕ್ಷನ್ ಹಿಸ್ಟ್ರಿನಾ ಓದೇಳು ನನಗೆ",
+   "project_annotations": {
+    "intent": "other",
+    "amount": null,
+    "identifier": null,
+    "negation": "positive",
+    "control_type": "none",
+    "completion_signal": "not_applicable",
+    "notes": "Read out the transaction history. 'ಓದೇಳು' (read out) asks for account data, not a repeat of the assistant's last turn, so control_type is none."
+   },
+   "review": {
+    "needs_manual_review": false,
+    "reasons": []
+   }
+  },
+  {
+   "id": "ivb_kn_024",
+   "language": "kn",
+   "speaker_id": "S4258233500313657",
+   "reference_transcript": "ಸ್ವಿಗ್ಗಿಗೆ ಪೇಮೆಂಟ್ ಪ್ರೋಸೆಸ್ ಮಾಡೋದು ನಿಲ್ಲಿಸು",
+   "project_annotations": {
+    "intent": "other",
+    "amount": null,
+    "identifier": null,
+    "negation": "positive",
+    "control_type": "cancel",
+    "completion_signal": "not_applicable",
+    "notes": "Stop processing the payment to a merchant. Treated as cancel because it targets the transaction in progress."
+   },
+   "review": {
+    "needs_manual_review": false,
+    "reasons": []
+   }
+  },
+  {
+   "id": "ivb_kn_025",
+   "language": "kn",
+   "speaker_id": "S4259070700318359",
+   "reference_transcript": "ರಸೀತಿ ಸ್ಕ್ರೀನ್ಶಾಟನ್ನು ನನ್ನ ಕಾಂಟ್ಯಾಕ್ಟ್ ಜಿಗ್ನಾ ಭಟ್ಟ ಅವರಿಗೆ ಕಳಿಸು",
+   "project_annotations": {
+    "intent": "other",
+    "amount": null,
+    "identifier": null,
+    "negation": "positive",
+    "control_type": "none",
+    "completion_signal": "not_applicable",
+    "notes": "Send a receipt screenshot to a named contact. Contact name is not an identifier."
+   },
+   "review": {
+    "needs_manual_review": false,
+    "reasons": []
+   }
+  },
+  {
+   "id": "ivb_kn_026",
+   "language": "kn",
+   "speaker_id": "S4258903500382033",
+   "reference_transcript": "ಆರು ಆರು ಆರು ಐದು ಐದು ಒಂಬತ್ತು ಎಂಟು ಆರು ಏಳು ಎರಡು ಸೊನ್ನೆ ಎಟ್ ಪೇಟಿಎಮ್ ಈ ಯು ಪಿ ಐ ಐ ಡಿಗೆ ಒಂದು ಸಾವಿರ ರೂಪಾಯಿಯನ್ನು ಕಳಿಸು",
+   "project_annotations": {
+    "intent": "transfer",
+    "amount": 1000,
+    "identifier": [
+     {
+      "type": "upi_id",
+      "digits": "66655986720",
+      "span": "ಆರು ಆರು ಆರು ಐದು ಐದು ಒಂಬತ್ತು ಎಂಟು ಆರು ಏಳು ಎರಡು ಸೊನ್ನೆ ಎಟ್ ಪೇಟಿಎಮ್"
+     }
+    ],
+    "negation": "positive",
+    "control_type": "none",
+    "completion_signal": "not_applicable",
+    "notes": "Send 1000 to a UPI ID. 11 digits spoken before the handle, including ಸೊನ್ನೆ (zero); recorded exactly as spoken."
+   },
+   "review": {
+    "needs_manual_review": false,
+    "reasons": []
+   }
+  },
+  {
+   "id": "ivb_kn_027",
+   "language": "kn",
+   "speaker_id": "S4259407700384841",
+   "reference_transcript": "ನೆಟ್ಫ್ಲಿಕ್ಸ್ನಿಂದ ಎಪ್ಪತ್ತು ಸಾವಿರ ರೂಪಾಯಿ ರೀಫಂಡ್ ಬಂದಿದೆಯಾ ಇಲ್ವಾ ಚೆಕ್ ಮಾಡು",
+   "project_annotations": {
+    "intent": "other",
+    "amount": 70000,
+    "identifier": null,
+    "negation": "positive",
+    "control_type": "none",
+    "completion_signal": "not_applicable",
+    "notes": "Check whether a 70000 refund has arrived. 'ಇಲ್ವಾ' (or not) is part of the alternative question and does not negate the request."
+   },
+   "review": {
+    "needs_manual_review": false,
+    "reasons": []
+   }
+  },
+  {
+   "id": "ivb_kn_028",
+   "language": "kn",
+   "speaker_id": "S4259374100371478",
+   "reference_transcript": "ಮುಂದಿನ ಎರಡು ತಿಂಗಳು ನನ್ನ ಲ್ಯಾಂಡ್ಲೈನ್ ಮತ್ತು ಎಲೆಕ್ಟ್ರಿಸಿಟಿ ಬಿಲ್ಗಳನ್ನು ಆಟೋಪೇ ಮಾಡ್ಬೋದಾ",
+   "project_annotations": {
+    "intent": "payment",
+    "amount": null,
+    "identifier": null,
+    "negation": "positive",
+    "control_type": "none",
+    "completion_signal": "not_applicable",
+    "notes": "Asks whether landline and electricity bills can be autopaid for the next two months. Capability question about bill payment; 'two months' is a duration, not an amount."
+   },
+   "review": {
+    "needs_manual_review": false,
+    "reasons": []
+   }
+  },
+  {
+   "id": "ivb_kn_029",
+   "language": "kn",
+   "speaker_id": "S4257244700302814",
+   "reference_transcript": "ಏರ್ಟೆಲ್ ಮನೀಲಿ ಲೇಟೆಸ್ಟ್ ರಿವಾರ್ಡನ್ನು ಕ್ಲೈಮ್ ಮಾಡು",
+   "project_annotations": {
+    "intent": "other",
+    "amount": null,
+    "identifier": null,
+    "negation": "positive",
+    "control_type": "none",
+    "completion_signal": "not_applicable",
+    "notes": "Claim the latest reward in a wallet app."
+   },
+   "review": {
+    "needs_manual_review": false,
+    "reasons": []
+   }
+  },
+  {
+   "id": "ivb_kn_030",
+   "language": "kn",
+   "speaker_id": "S4258842800308725",
+   "reference_transcript": "ದ್ವಿಚಕ್ರ ವಾಹನ ವಿಮೆಗೆ ಇಪ್ಪತ್ತು ಸಾವಿರ ರೂಪಾಯಿಯ ವಿಮೆ ಮೊತ್ತವನ್ನು ಆಯ್ಕೆ ಮಾಡು",
+   "project_annotations": {
+    "intent": "other",
+    "amount": 20000,
+    "identifier": null,
+    "negation": "positive",
+    "control_type": "none",
+    "completion_signal": "not_applicable",
+    "notes": "Two-wheeler insurance: select a 20000 insurance amount."
+   },
+   "review": {
+    "needs_manual_review": false,
+    "reasons": []
+   }
+  },
+  {
+   "id": "ivb_kn_031",
+   "language": "kn",
+   "speaker_id": "S4259027500308784",
+   "reference_transcript": "ರಾಮಣ್ಣ ರೋಣ ಅವರಿಗೆ ನನ್ನ ಜಿಯೋ ಮನಿ ಇಂದ ಐದುನೂರು ರೂಪಾಯಿ ಕಳಿಸು",
+   "project_annotations": {
+    "intent": "transfer",
+    "amount": 500,
+    "identifier": null,
+    "negation": "positive",
+    "control_type": "none",
+    "completion_signal": "not_applicable",
+    "notes": "Send 500 to a named person from a wallet."
+   },
+   "review": {
+    "needs_manual_review": false,
+    "reasons": []
+   }
+  },
+  {
+   "id": "ivb_kn_032",
+   "language": "kn",
+   "speaker_id": "S4258907800346217",
+   "reference_transcript": "ಎನ್ ಜಿ ಒಗಳ ಪಟ್ಟಿಲಿ ಯುನಿಸೆಫ್ ಇದೆಯಾ ಇದ್ದರೆ ಅದಕ್ಕೆ ಎರಡು ಸಾವಿರ ರೂಪಾಯಿ ದೇಣಿಗೆ ಕಳಿಸು ಪ್ಲೀಸ್",
+   "project_annotations": {
+    "intent": "transfer",
+    "amount": 2000,
+    "identifier": null,
+    "negation": "positive",
+    "control_type": "none",
+    "completion_signal": "not_applicable",
+    "notes": "Donate 2000 to an organisation, conditional on it appearing in the NGO list. The first clause is a lookup precondition, so the donation is the primary request."
+   },
+   "review": {
+    "needs_manual_review": false,
+    "reasons": []
+   }
+  },
+  {
+   "id": "ivb_kn_033",
+   "language": "kn",
+   "speaker_id": "S4258639900387777",
+   "reference_transcript": "ನನ್ನ ಧನಲಕ್ಷ್ಮಿ ಬ್ಯಾಂಕ್ ಕ್ರೆಡಿಟ್ ಕಾರ್ಡ್ನ ಟೊಕನೈಸ್ಡ್ ಪಾವತಿಗಳಿಗೆ ರಿಜಿಸ್ಟರ್ ಮಾಡಿಸೋಕ್ಕೆ ಕ್ಯೂ ಆರ್ ಕೋಡ್ನ ಸ್ಕ್ಯಾನ್ ಮಾಡು",
+   "project_annotations": {
+    "intent": "other",
+    "amount": null,
+    "identifier": null,
+    "negation": "positive",
+    "control_type": "none",
+    "completion_signal": "not_applicable",
+    "notes": "Scan a QR code to register a credit card for tokenised payments."
+   },
+   "review": {
+    "needs_manual_review": false,
+    "reasons": []
+   }
+  },
+  {
+   "id": "ivb_kn_034",
+   "language": "kn",
+   "speaker_id": "S4258619500387597",
+   "reference_transcript": "ನಾನು ಸೇವ್ ಮಾಡ್ಕೊಂಡಿರೋ ಹಾಸ್ಟೆಲ್ ಅಕೌಂಟಿಗೆ ಹಾಸ್ಟೆಲ್ ಫೀಸ್ ಅರವತ್ತು ಸಾವಿರ ರೂಪಾಯಿ ಟ್ರಾನ್ಸ್ಫರ್ ಮಾಡು ಪ್ಲೀಸ್",
+   "project_annotations": {
+    "intent": "transfer",
+    "amount": 60000,
+    "identifier": null,
+    "negation": "positive",
+    "control_type": "none",
+    "completion_signal": "not_applicable",
+    "notes": "Transfer a 60000 hostel fee to a saved account."
+   },
+   "review": {
+    "needs_manual_review": false,
+    "reasons": []
+   }
+  },
+  {
+   "id": "ivb_kn_035",
+   "language": "kn",
+   "speaker_id": "S4259666500306188",
+   "reference_transcript": "ನನ್ನ ಬರೊಡ ಯು ಪಿ ಬ್ಯಾಂಕ್ ಖಾತೆಯಿಂದ ನಾನು ಗರಿಷ್ಠ ಎಷ್ಟು ದುಡ್ಡು ವಿಡ್ರಾ ಮಾಡ್ಬೌದು",
+   "project_annotations": {
+    "intent": "withdrawal",
+    "amount": null,
+    "identifier": null,
+    "negation": "positive",
+    "control_type": "none",
+    "completion_signal": "not_applicable",
+    "notes": "Asks the maximum withdrawable amount. Capability/limit question; no amount spoken."
+   },
+   "review": {
+    "needs_manual_review": false,
+    "reasons": []
+   }
+  },
+  {
+   "id": "ivb_kn_036",
+   "language": "kn",
+   "speaker_id": "S4258083000315733",
+   "reference_transcript": "ಕ್ಲೀನರ್ ಅಂತಿರೋ ಕಾಂಟ್ಯಾಕ್ಟ್ಗೆ ಏಪ್ರಿಲ್ ತಿಂಗಳ ಪೇಮೆಂಟ್ ಅಂತ ಆರು ಸಾವಿರ ರೂಪಾಯಿನ್ನು ಟ್ರಾನ್ಸ್ಫರ್ ಮಾಡು",
+   "project_annotations": {
+    "intent": "transfer",
+    "amount": 6000,
+    "identifier": null,
+    "negation": "positive",
+    "control_type": "none",
+    "completion_signal": "not_applicable",
+    "notes": "Transfer 6000 to a saved contact as that month's payment."
+   },
+   "review": {
+    "needs_manual_review": false,
+    "reasons": []
+   }
+  },
+  {
+   "id": "ivb_kn_037",
+   "language": "kn",
+   "speaker_id": "S4257728500395586",
+   "reference_transcript": "ನನ್ನ ಯೂನಿಯನ್ ಬ್ಯಾಂಕ್ ಆಫ್ ಇಂಡಿಯ ಅಕೌಂಟ್ ಬ್ಯಾಲೆನ್ಸ್ ಚೆಕ್ ಮಾಡಿ ನಂಗೆ ಮೂವತ್ತು ಸಾವಿರ ರೂಪಾಯಿ ಬಂದಿದೆಯ ಅಂತ ಕನ್ಫರ್ಮ್ ಮಾಡು",
+   "project_annotations": {
+    "intent": "balance",
+    "amount": 30000,
+    "identifier": null,
+    "negation": "positive",
+    "control_type": "none",
+    "completion_signal": "not_applicable",
+    "notes": "Check the account balance and confirm whether 30000 was received."
+   },
+   "review": {
+    "needs_manual_review": false,
+    "reasons": []
+   }
+  },
+  {
+   "id": "ivb_kn_038",
+   "language": "kn",
+   "speaker_id": "S4258506900312023",
+   "reference_transcript": "ನಾನು ನನ್ನ ಆರೋಗ್ಯ ವಿಮೆ ಪಾಲಿಸಿಯನ್ನು ಮಿಡ್ಟರ್ಮಲ್ಲಿ ಕ್ಯಾನ್ಸಲ್ ಮಾಡಿದರೆ ನನಗೆ ರಿಫಂಡ್ ಸಿಗುತ್ತ",
+   "project_annotations": {
+    "intent": "other",
+    "amount": null,
+    "identifier": null,
+    "negation": "positive",
+    "control_type": "none",
+    "completion_signal": "not_applicable",
+    "notes": "Asks whether cancelling a health insurance policy mid-term gives a refund. 'ಕ್ಯಾನ್ಸಲ್' refers to an insurance policy, not to the dialogue, so control_type is none."
+   },
+   "review": {
+    "needs_manual_review": false,
+    "reasons": []
+   }
+  },
+  {
+   "id": "ivb_kn_039",
+   "language": "kn",
+   "speaker_id": "S4257565300333249",
+   "reference_transcript": "ಆರು ಐದು ಏಳು ಎಂಟು ನಾಲ್ಕು ಮೂರು ಒಂದು ಮೂರು ಐದು ಐದು ಎಂಟು ಅಟ್ ಎಚ್ ಡಿ ಎಫ್ ಸಿ ಬ್ಯಾಂಕ್ ಈ ಯು ಪಿ ಐ ಐ ಡಿಯಿಂದ ನನಗೆ ಏಳು ಸಾವಿರ ರೂಪಾಯಿ ಬಂದಿದೆಯಾ ಅಂತ ಚೆಕ್ ಮಾಡು",
+   "project_annotations": {
+    "intent": "other",
+    "amount": 7000,
+    "identifier": [
+     {
+      "type": "upi_id",
+      "digits": "65784313558",
+      "span": "ಆರು ಐದು ಏಳು ಎಂಟು ನಾಲ್ಕು ಮೂರು ಒಂದು ಮೂರು ಐದು ಐದು ಎಂಟು ಅಟ್ ಎಚ್ ಡಿ ಎಫ್ ಸಿ ಬ್ಯಾಂಕ್"
+     }
+    ],
+    "negation": "positive",
+    "control_type": "none",
+    "completion_signal": "not_applicable",
+    "notes": "Check whether 7000 was received from a UPI ID. 11 digits spoken before the handle."
+   },
+   "review": {
+    "needs_manual_review": false,
+    "reasons": []
+   }
+  },
+  {
+   "id": "ivb_kn_040",
+   "language": "kn",
+   "speaker_id": "S4258090900394194",
+   "reference_transcript": "ಸ್ಟಕ್ ಟ್ರಾನ್ಸಾಕ್ಷನ್ನಲ್ಲಿ ಸಿಕ್ಕಾಕೊಂಡಿದ್ದ ತೊಂಬತ್ತು ಸಾವಿರ ರೂಪಾಯಿ ವಾಪಸ್ ಬಂತಾ",
+   "project_annotations": {
+    "intent": "other",
+    "amount": 90000,
+    "identifier": null,
+    "negation": "positive",
+    "control_type": "none",
+    "completion_signal": "not_applicable",
+    "notes": "Asks whether 90000 held in a stuck transaction was returned."
+   },
+   "review": {
+    "needs_manual_review": false,
+    "reasons": []
+   }
+  },
+  {
+   "id": "ivb_kn_041",
+   "language": "kn",
+   "speaker_id": "S4259131200361627",
+   "reference_transcript": "ನಾನು ನನ್ನ ಗೂಗುಲ್ ಪೇ ಮೂಲಕ ಮ್ಯೂಚ್ವಲ್ ಫಂಡ್ಸ್ನಲ್ಲಿ ಹೂಡಿಕೆ ಮಾಡಬಹುದಾ",
+   "project_annotations": {
+    "intent": "other",
+    "amount": null,
+    "identifier": null,
+    "negation": "positive",
+    "control_type": "none",
+    "completion_signal": "not_applicable",
+    "notes": "Asks whether mutual funds can be invested in through a payment app."
+   },
+   "review": {
+    "needs_manual_review": false,
+    "reasons": []
+   }
+  },
+  {
+   "id": "ivb_kn_042",
+   "language": "kn",
+   "speaker_id": "S4258983200305266",
+   "reference_transcript": "ನನ್ನ ಕೇರಳ ಗ್ರಾಮೀಣ್ ಬ್ಯಾಂಕ್ ಖಾತೇಲಿ ಮೂರು ಸಾವಿರ ರೂಪಾಯಿ ಇರುತ್ತಾ",
+   "project_annotations": {
+    "intent": "balance",
+    "amount": 3000,
+    "identifier": null,
+    "negation": "positive",
+    "control_type": "none",
+    "completion_signal": "not_applicable",
+    "notes": "Asks whether the account holds 3000."
+   },
+   "review": {
+    "needs_manual_review": false,
+    "reasons": []
+   }
+  },
+  {
+   "id": "ivb_kn_043",
+   "language": "kn",
+   "speaker_id": "S4258784500303784",
+   "reference_transcript": "ಚೋಳಮಂಡಲಂ ಫೈನಾನ್ಸ್ನಂತಹ ವಿಶ್ವಾಸಾರ್ಹ ಏಜೆನ್ಸಿಗಳಲ್ಲಿರೋ ಒಳ್ಳೆಯ ಮ್ಯೂಚ್ವಲ್ ಫಂಡ್ ಸ್ಕೀಮ್ಗಳನ್ನು ಪತ್ತೆ ಮಾಡು",
+   "project_annotations": {
+    "intent": "other",
+    "amount": null,
+    "identifier": null,
+    "negation": "positive",
+    "control_type": "none",
+    "completion_signal": "not_applicable",
+    "notes": "Find mutual fund schemes at named finance agencies."
+   },
+   "review": {
+    "needs_manual_review": false,
+    "reasons": []
+   }
+  },
+  {
+   "id": "ivb_kn_044",
+   "language": "kn",
+   "speaker_id": "S4258184300330057",
+   "reference_transcript": "ನನ್ನ ಕಾಂಟಾಕ್ಟ್ನಲ್ಲಿರೋ ರಾಮಚಂದ್ರ ಕಲ್ಲಾವರ್ಕರ್ ಅವರಿಗೆ ನಾನು ಕೊಡೋದು ಬಾಕಿಯಿರೋ ಪೇಮೆಂಟ್ ಬಗ್ಗೆ ಒಂದು ರಿಮೈಂಡರ್ ಇಡು",
+   "project_annotations": {
+    "intent": "other",
+    "amount": null,
+    "identifier": null,
+    "negation": "positive",
+    "control_type": "none",
+    "completion_signal": "not_applicable",
+    "notes": "Set a reminder about a pending payment owed to a contact. No amount spoken."
+   },
+   "review": {
+    "needs_manual_review": false,
+    "reasons": []
+   }
+  },
+  {
+   "id": "ivb_kn_045",
+   "language": "kn",
+   "speaker_id": "S4259927600350792",
+   "reference_transcript": "ಟ್ಯಾಪ್ ಆ್ಯಂಡ್ ಪೇ ಮೆಥಡಲ್ಲಿ ನನ್ನ ಡಿಫಾಲ್ಟ್ ಕಾರ್ಡನ್ನು ಸೆಂಟ್ರಲ್ ಬ್ಯಾಂಕ್ ಆಫ್ ಇಂಡಿಯಾ ರೂಪೇ ಕಾರ್ಡ್ಯಿಂದ ಇಲಾಕಾಯೀ ದೇಹಾತಿ ಬ್ಯಾಂಕ್ ವೀಸಾಗೆ ಬದಲಾಯಿಸು",
+   "project_annotations": {
+    "intent": "other",
+    "amount": null,
+    "identifier": null,
+    "negation": "positive",
+    "control_type": "none",
+    "completion_signal": "not_applicable",
+    "notes": "Change the default tap-and-pay card from one bank card to another. No card number spoken."
+   },
+   "review": {
+    "needs_manual_review": false,
+    "reasons": []
+   }
+  },
+  {
+   "id": "ivb_kn_046",
+   "language": "kn",
+   "speaker_id": "S4259387400379893",
+   "reference_transcript": "ಇತ್ತೀಚೆಗೆ ಆಕ್ಸಿಸ್ ಬ್ಯಾಂಕ್ ಲೈಮ್ನಲ್ಲಿ ನನಗೆ ಲಲಿತ ವಸ್ತ್ರದವರಿಂದ ಒಂಬತ್ತು ಸಾವಿರ ರೂಪಾಯಿ ಬಂದಿದೆಯಾ",
+   "project_annotations": {
+    "intent": "other",
+    "amount": 9000,
+    "identifier": null,
+    "negation": "positive",
+    "control_type": "none",
+    "completion_signal": "not_applicable",
+    "notes": "Asks whether 9000 was recently received from a named merchant."
+   },
+   "review": {
+    "needs_manual_review": false,
+    "reasons": []
+   }
+  },
+  {
+   "id": "ivb_kn_047",
+   "language": "kn",
+   "speaker_id": "S4257783100366209",
+   "reference_transcript": "ನನ್ನ ನೈನಿತಾಲ್ ಬ್ಯಾಂಕ್ ಖಾತೆಯಲ್ಲಿ ಐದು ಸಾವಿರ ರೂಪಾಯಿ ಇರುತ್ತಾ",
+   "project_annotations": {
+    "intent": "balance",
+    "amount": 5000,
+    "identifier": null,
+    "negation": "positive",
+    "control_type": "none",
+    "completion_signal": "not_applicable",
+    "notes": "Asks whether the account holds 5000."
+   },
+   "review": {
+    "needs_manual_review": false,
+    "reasons": []
+   }
+  },
+  {
+   "id": "ivb_kn_048",
+   "language": "kn",
+   "speaker_id": "S4259442900385234",
+   "reference_transcript": "ಮುಂದಿನ ಆರು ತಿಂಗಳು ನನ್ನ ಮೊಬೈಲ್ ಮತ್ತು ಲ್ಯಾಂಡ್ ಲೈನ್ ಬಿಲ್ಗಳನ್ನು ಆಟೋ ಪೇ ಮಾಡ್ಬೋದಾ",
+   "project_annotations": {
+    "intent": "payment",
+    "amount": null,
+    "identifier": null,
+    "negation": "positive",
+    "control_type": "none",
+    "completion_signal": "not_applicable",
+    "notes": "Asks whether mobile and landline bills can be autopaid for the next six months. Capability question; 'six months' is a duration, not an amount."
+   },
+   "review": {
+    "needs_manual_review": false,
+    "reasons": []
+   }
+  },
+  {
+   "id": "ivb_kn_049",
+   "language": "kn",
+   "speaker_id": "S4258796300390975",
+   "reference_transcript": "ಕಳೆದ ವರ್ಷ ಮುನ್ನೂರು ರೂಪಾಯಿಯ ರೀಫಂಡ್ ಪ್ರೊಸೆಸ್ ಆಗಿದೆಯಾ ಅಂತ ಹಾಟ್ಸ್ಟಾರ್ ಟ್ರಾನ್ಸಾಕ್ಷನ್ನಲ್ಲಿ ಚೆಕ್ ಮಾಡಕ್ಕಾಗತ್ತಾ",
+   "project_annotations": {
+    "intent": "other",
+    "amount": 300,
+    "identifier": null,
+    "negation": "positive",
+    "control_type": "none",
+    "completion_signal": "not_applicable",
+    "notes": "Check whether last year's 300 refund was processed."
+   },
+   "review": {
+    "needs_manual_review": false,
+    "reasons": []
+   }
+  },
+  {
+   "id": "ivb_kn_050",
+   "language": "kn",
+   "speaker_id": "S4258547300391871",
+   "reference_transcript": "ಟ್ಯಾಪ್ ಆ್ಯಂಡ್ ಪೇ ಮೆಥಡ್ಲಿ ನನ್ನ ಡಿಫಾಲ್ಟ್ ಕಾರ್ಡನ್ನು ಪುದುವೈ ಭಾರತೀಯ ಗ್ರಾಮ ಬ್ಯಾಂಕ್ ಡೆಬಿಟ್ ಕಾರ್ಡ್ ಇಂದ ಕರ್ನಾಟಕ ಬ್ಯಾಂಕ್ ಕ್ರೆಡಿಟ್ ಕಾರ್ಡ್ಗೆ ಬದಲಾಯಿಸು",
+   "project_annotations": {
+    "intent": "other",
+    "amount": null,
+    "identifier": null,
+    "negation": "positive",
+    "control_type": "none",
+    "completion_signal": "not_applicable",
+    "notes": "Change the default tap-and-pay card from one bank card to another. No card number spoken."
+   },
+   "review": {
+    "needs_manual_review": false,
+    "reasons": []
+   }
+  },
+  {
+   "id": "ivb_kn_051",
+   "language": "kn",
+   "speaker_id": "S4259277700360242",
+   "reference_transcript": "ನನ್ನ ಛತ್ತೀಸ್ಗಢ್ ರಾಜ್ಯ ಗ್ರಾಮೀಣ್ ಅಕೌಂಟ್ ಎರಡು ಮೂರು ಎಂಟು ಏಳು ಐದು ಎಂಟು ಒಂಬತ್ತು ಎಂಟು ಎರಡು ಆರು ನಾಲ್ಕು ಏಳು ಮೂರು ಇದರಿಂದ ನನ್ನ ಏರ್ಟೆಲ್ ಮನಿ ವ್ಯಾಲೆಟ್ಗೆ ನಾಲ್ಕು ಸಾವಿರ ರೂಪಾಯಿಯನ್ನ ಟ್ರಾನ್ಸ್ಫ಼ರ್ ಮಾಡು",
+   "project_annotations": {
+    "intent": "deposit",
+    "amount": 4000,
+    "identifier": [
+     {
+      "type": "account_number",
+      "digits": "2387589826473",
+      "span": "ಎರಡು ಮೂರು ಎಂಟು ಏಳು ಐದು ಎಂಟು ಒಂಬತ್ತು ಎಂಟು ಎರಡು ಆರು ನಾಲ್ಕು ಏಳು ಮೂರು"
+     }
+    ],
+    "negation": "positive",
+    "control_type": "none",
+    "completion_signal": "not_applicable",
+    "notes": "Move 4000 from own bank account into own wallet. Annotated as deposit (money into the speaker's own wallet) although the spoken verb is 'transfer'. 13 digits spoken one by one."
+   },
+   "review": {
+    "needs_manual_review": false,
+    "reasons": []
+   }
+  },
+  {
+   "id": "ivb_kn_052",
+   "language": "kn",
+   "speaker_id": "S4257990300389046",
+   "reference_transcript": "ಕಳೆದ ವಾರ ಏಳು ಸಾವಿರ ರೂಪಾಯಿಯ ರೀಫಂಡ್ ಪ್ರೋಸೆಸ್ ಆಗಿದೆಯಾ ಅಂತ ಝೊಮ್ಯಾಟೊ ಟ್ರಾನ್ಸಾಕ್ಷನ್ಲಿ ಚೆಕ್ ಮಾಡೋಕ್ಕಾಗುತ್ತಾ",
+   "project_annotations": {
+    "intent": "other",
+    "amount": 7000,
+    "identifier": null,
+    "negation": "positive",
+    "control_type": "none",
+    "completion_signal": "not_applicable",
+    "notes": "Check whether last week's 7000 refund was processed."
+   },
+   "review": {
+    "needs_manual_review": false,
+    "reasons": []
+   }
+  },
+  {
+   "id": "ivb_kn_053",
+   "language": "kn",
+   "speaker_id": "S4259466100371192",
+   "reference_transcript": "ನನ್ನ ಡಿಫಾಲ್ಟ್ ಓಲಾ ಮನಿ ಖಾತೆಯಿಂದ ಐದು ಸಾವಿರ ರೂಪಾಯಿಯನ್ನ ನನ್ನ ಇನ್ನೊಂದು ಲಿಂಕ್ಡ್ ಖಾತೆಗೆ ಟ್ರಾನ್ಸ್ಫರ್ ಮಾಡು",
+   "project_annotations": {
+    "intent": "transfer",
+    "amount": 5000,
+    "identifier": null,
+    "negation": "positive",
+    "control_type": "none",
+    "completion_signal": "not_applicable",
+    "notes": "Move 5000 from a default wallet account to another linked account of the speaker; annotated as transfer to the speaker's own other account."
+   },
+   "review": {
+    "needs_manual_review": false,
+    "reasons": []
+   }
+  },
+  {
+   "id": "ivb_kn_054",
+   "language": "kn",
+   "speaker_id": "S4259417700385255",
+   "reference_transcript": "ನನ್ನ ಇಡೀ ಕುಟುಂಬಕ್ಕೆ ವಿಮೆ ಮಾಡಿಸೋ ಅವಕಾಶ ಇರೋ ಯಾವುದಾದರೂ ಮುತ್ತೂಟ್ ಫೈನಾನ್ಸ್ ಅಥವಾ ಸಪ್ತಗಿರಿ ಗ್ರಾಮೀಣ ಬ್ಯಾಂಕ್ ಆರೋಗ್ಯ ವಿಮೆ ಪಾಲ್ಸಿ ಇದೆಯಾ",
+   "project_annotations": {
+    "intent": "other",
+    "amount": null,
+    "identifier": null,
+    "negation": "positive",
+    "control_type": "none",
+    "completion_signal": "not_applicable",
+    "notes": "Asks whether a family health insurance policy exists at named providers. Insurance query."
+   },
+   "review": {
+    "needs_manual_review": false,
+    "reasons": []
+   }
+  },
+  {
+   "id": "ivb_kn_055",
+   "language": "kn",
+   "speaker_id": "S4259014100318080",
+   "reference_transcript": "ಪೇ ಝ್ಯಾಪ್ ಆ್ಯಪ್ನಲ್ಲಿ ನನ್ನ ಡಿಫಾಲ್ಟ್ ಬ್ಯಾಂಕ್ ಅಕೌಂಟ್ನ ಬದಲಾಯಿಸೋಕ್ಕಾಗುತ್ತಾ",
+   "project_annotations": {
+    "intent": "other",
+    "amount": null,
+    "identifier": null,
+    "negation": "positive",
+    "control_type": "none",
+    "completion_signal": "not_applicable",
+    "notes": "Asks whether the default bank account can be changed in a payment app."
+   },
+   "review": {
+    "needs_manual_review": false,
+    "reasons": []
+   }
+  },
+  {
+   "id": "ivb_kn_056",
+   "language": "kn",
+   "speaker_id": "S4259802400330887",
+   "reference_transcript": "ನಾನು ಪವರ್ ಫೈನಾನ್ಸ್ ಕಾರ್ಪೊರೇಷನಲ್ಲಿರೋ ನನ್ನ ಶಿಕ್ಷಣ ಸಾಲದ ಮರುಪಾವತಿಯನ್ನು ಪೇ ಟಿ ಎಮ್ ಮೂಲಕ ಮಾಡಬಹುದಾ",
+   "project_annotations": {
+    "intent": "other",
+    "amount": null,
+    "identifier": null,
+    "negation": "positive",
+    "control_type": "none",
+    "completion_signal": "not_applicable",
+    "notes": "Asks whether an education loan repayment can be made through a payment app. Loan query, which the schema assigns to other."
+   },
+   "review": {
+    "needs_manual_review": false,
+    "reasons": []
+   }
+  },
+  {
+   "id": "ivb_kn_057",
+   "language": "kn",
+   "speaker_id": "S4259665000314339",
+   "reference_transcript": "ಜೀನಲ್ಲಿ ನಂಗೆ ಸಿಕ್ಕಿರೋ ರಿವಾಡ್ ಯಾವಾಗ ಎಕ್ಸ್ಪೈರ್ ಆಗುತ್ತೆ",
+   "project_annotations": {
+    "intent": "other",
+    "amount": null,
+    "identifier": null,
+    "negation": "positive",
+    "control_type": "none",
+    "completion_signal": "not_applicable",
+    "notes": "Asks when a reward expires."
+   },
+   "review": {
+    "needs_manual_review": false,
+    "reasons": []
+   }
+  },
+  {
+   "id": "ivb_kn_058",
+   "language": "kn",
+   "speaker_id": "S4257451900339963",
+   "reference_transcript": "ನೈಕಾನ ನನ್ನ ಅಕೌಂಟಿಗೆ ಲಿಂಕ್ ಮಾಡೋಕೆ ಓ ಟಿ ಪಿನಾ ಪುನಃ ಕಳಿಸು",
+   "project_annotations": {
+    "intent": "other",
+    "amount": null,
+    "identifier": null,
+    "negation": "positive",
+    "control_type": "none",
+    "completion_signal": "not_applicable",
+    "notes": "Resend the OTP to link a merchant to the account. 'ಪುನಃ ಕಳಿಸು' (send again) asks to resend an OTP, a banking operation, not a repeat of the assistant's last turn, so control_type is none."
+   },
+   "review": {
+    "needs_manual_review": false,
+    "reasons": []
+   }
+  },
+  {
+   "id": "ivb_kn_059",
+   "language": "kn",
+   "speaker_id": "S4257961600300291",
+   "reference_transcript": "ನನಗೆ ಒಂದು ಮೂರು ಎರಡು ಸಾವಿರದ ಇಪ್ಪತ್ತರಿಂದ ಇಪ್ಪತ್ತೇಳು ಒಂದು ಎರಡು ಸಾವಿರದ ಇಪ್ಪತ್ತರವರೆಗಿನ ನನ್ನ ಟ್ರಾನ್ಸಾಕ್ಷನ್ ಹಿಸ್ಟರಿ ತೋರಿಸು",
+   "project_annotations": {
+    "intent": "other",
+    "amount": null,
+    "identifier": null,
+    "negation": "positive",
+    "control_type": "none",
+    "completion_signal": "not_applicable",
+    "notes": "Show transaction history for a spoken date range (1-3-2020 to 27-1-2020 as spoken; the end date precedes the start date). Dates are neither amounts nor identifiers, and the schema has no date field."
+   },
+   "review": {
+    "needs_manual_review": false,
+    "reasons": []
+   }
+  },
+  {
+   "id": "ivb_kn_060",
+   "language": "kn",
+   "speaker_id": "S4257047100346698",
+   "reference_transcript": "ನನ್ನ ಸಿಟ್ರಸ್ ವ್ಯಾಲೆಟ್ಗೆ ಆರುನೂರು ರೂಪಾಯಿ ಟ್ರಾನ್ಸ್ಫರ್ ಮಾಡು ಪ್ಲೀಸ್",
+   "project_annotations": {
+    "intent": "deposit",
+    "amount": 600,
+    "identifier": null,
+    "negation": "positive",
+    "control_type": "none",
+    "completion_signal": "not_applicable",
+    "notes": "Load 600 into own wallet. Annotated as deposit although the spoken verb is 'transfer'."
+   },
+   "review": {
+    "needs_manual_review": false,
+    "reasons": []
+   }
+  },
+  {
+   "id": "ivb_kn_061",
+   "language": "kn",
+   "speaker_id": "S4259825000366755",
+   "reference_transcript": "ಈ ಕ್ಯೂ ಆರ್ ಕೋಡ್ ಸ್ಕ್ಯಾನ್ ಮಾಡಿ ಆರು ಸಾವಿರ ರೂಪಾಯನ್ನ ಪೇ ಮಾಡ್ತೀಯ",
+   "project_annotations": {
+    "intent": "payment",
+    "amount": 6000,
+    "identifier": null,
+    "negation": "positive",
+    "control_type": "none",
+    "completion_signal": "not_applicable",
+    "notes": "Scan a QR code and pay 6000."
+   },
+   "review": {
+    "needs_manual_review": false,
+    "reasons": []
+   }
+  },
+  {
+   "id": "ivb_kn_062",
+   "language": "kn",
+   "speaker_id": "S4257368800337688",
+   "reference_transcript": "ಹಳೆಯ ನಂಬರ್ ಬದಲಿಗೆ ಹೊಸದಾಗಿ ನೋಂದಾಯಿಸಿರೋ ನಂಬರ್ ಏಳು ಆರು ಆರು ಎಂಟು ಒಂದು ಎರಡು ಮೂರು ಎಂಟು ಸೊನ್ನೆ ಮೂರು ಒಂಬತ್ತು ಇದಕ್ಕೆ ಒ ಟಿ ಪಿ ಕಳಿಸು",
+   "project_annotations": {
+    "intent": "other",
+    "amount": null,
+    "identifier": [
+     {
+      "type": "phone_number",
+      "digits": "76681238039",
+      "span": "ಏಳು ಆರು ಆರು ಎಂಟು ಒಂದು ಎರಡು ಮೂರು ಎಂಟು ಸೊನ್ನೆ ಮೂರು ಒಂಬತ್ತು"
+     }
+    ],
+    "negation": "positive",
+    "control_type": "none",
+    "completion_signal": "not_applicable",
+    "notes": "Send the OTP to the newly registered number instead of the old one. 11 digits spoken, including ಸೊನ್ನೆ (zero)."
+   },
+   "review": {
+    "needs_manual_review": false,
+    "reasons": []
+   }
+  },
+  {
+   "id": "ivb_kn_063",
+   "language": "kn",
+   "speaker_id": "S4259239200360746",
+   "reference_transcript": "ಯು ಪಿ ಐ ಐ ಡಿ ಎಂಟು ಏಳು ಸೊನ್ನೆ ಎಂಟು ಆರು ನಾಲ್ಕು ಏಳು ಸೊನ್ನೆ ಒಂದು ಒಂದು ಏಳು ಅಟ್ ಯು ಪಿ ಐನ ಬ್ಲಾಕ್ ಮಾಡು",
+   "project_annotations": {
+    "intent": "other",
+    "amount": null,
+    "identifier": [
+     {
+      "type": "upi_id",
+      "digits": "87086470117",
+      "span": "ಎಂಟು ಏಳು ಸೊನ್ನೆ ಎಂಟು ಆರು ನಾಲ್ಕು ಏಳು ಸೊನ್ನೆ ಒಂದು ಒಂದು ಏಳು ಅಟ್ ಯು ಪಿ ಐನ"
+     }
+    ],
+    "negation": "positive",
+    "control_type": "none",
+    "completion_signal": "not_applicable",
+    "notes": "Block a UPI ID. 11 digits before the handle; the span ends with the accusative suffix ನ, which is grammar, not part of the ID."
+   },
+   "review": {
+    "needs_manual_review": false,
+    "reasons": []
+   }
+  },
+  {
+   "id": "ivb_kn_064",
+   "language": "kn",
+   "speaker_id": "S4259370200305266",
+   "reference_transcript": "ನನಗೆ ಆಯ್ಕೆ ಮಾಡೋಕ್ಕೆ ಟಾಟಾ ಕ್ಯಾಪಿಟಲ್ ಫೈನಾನ್ಷಿಯಲ್ ಸರ್ವೀಸಸ್ ಮತ್ತು ಶ್ರೀರಾಮ್ ಫೈನಾನ್ಸ್ ಕಂಪನಿ ಒದಗಿಸೊ ಆರೋಗ್ಯ ವಿಮಾ ಯೋಜನೆಗಳ ರೆಕಮಂಡೇಷನ್ಸ್ ಕೊಡು",
+   "project_annotations": {
+    "intent": "other",
+    "amount": null,
+    "identifier": null,
+    "negation": "positive",
+    "control_type": "none",
+    "completion_signal": "not_applicable",
+    "notes": "Asks for health insurance plan recommendations from named finance companies."
+   },
+   "review": {
+    "needs_manual_review": false,
+    "reasons": []
+   }
+  },
+  {
+   "id": "ivb_kn_065",
+   "language": "kn",
+   "speaker_id": "S4259968200351791",
+   "reference_transcript": "ನಾನು ಸ್ನಾಪ್ಡೀಲಲ್ಲಿ ವ್ಯವಹಾರ ಮಾಡಿರೋದಕ್ಕೆ ಏನೇನು ರಿವಾರ್ಡ್ಸ್ ಸಿಕ್ಕಿದೆ ಚೆಕ್ ಮಾಡೋಕ್ಕಾಗತ್ತಾ",
+   "project_annotations": {
+    "intent": "other",
+    "amount": null,
+    "identifier": null,
+    "negation": "positive",
+    "control_type": "none",
+    "completion_signal": "not_applicable",
+    "notes": "Asks to check rewards earned for transactions on a shopping site."
+   },
+   "review": {
+    "needs_manual_review": false,
+    "reasons": []
+   }
+  },
+  {
+   "id": "ivb_kn_066",
+   "language": "kn",
+   "speaker_id": "S4259304700358244",
+   "reference_transcript": "ಆಯ್ಕೆ ಮಾಡಿರೋ ಕಾಂಟ್ಯಾಕ್ಟ್ಗಳಿಗೆ ನಾಳೆ ಬೆಳಿಗ್ಗೆ ಒಂಬತ್ತು ಗಂಟೆಗೆ ಸಿಟ್ರಸ್ ಮೂಲಕ ಎಂಟು ಸಾವಿರ ರೂಪಾಯನ್ನು ಟ್ರಾನ್ಸ್ವರ್ ಮಾಡು",
+   "project_annotations": {
+    "intent": "transfer",
+    "amount": 8000,
+    "identifier": null,
+    "negation": "positive",
+    "control_type": "none",
+    "completion_signal": "not_applicable",
+    "notes": "Transfer 8000 to selected contacts at a scheduled time. 'ಒಂಬತ್ತು ಗಂಟೆ' (nine o'clock) is a time, not an amount."
+   },
+   "review": {
+    "needs_manual_review": false,
+    "reasons": []
+   }
+  },
+  {
+   "id": "ivb_kn_067",
+   "language": "kn",
+   "speaker_id": "S4257124900309122",
+   "reference_transcript": "ಪೇಯೂ ಮನೀಲ್ಲಿ ವಾಟರ್ ಬಿಲ್ ಪೇಮೆಂಟ್ಸ್ದು ನೋಟಿಫಿಕೇಷನ್ಸ್ ಆನ್ ಮಾಡು",
+   "project_annotations": {
+    "intent": "other",
+    "amount": null,
+    "identifier": null,
+    "negation": "positive",
+    "control_type": "none",
+    "completion_signal": "not_applicable",
+    "notes": "Turn on notifications for water bill payments in a payment app."
+   },
+   "review": {
+    "needs_manual_review": false,
+    "reasons": []
+   }
+  },
+  {
+   "id": "ivb_kn_068",
+   "language": "kn",
+   "speaker_id": "S4259570900333384",
+   "reference_transcript": "ಯೋನೋ ಎಸ್ ಬಿ ಐ ಮೂಲಕ ಪ್ರತಿ ತಿಂಗಳು ತೊಂಬತ್ತು ಸಾವಿರ ರೂಪಾಯಿಯ ಎಸ್ ಐ ಪಿ ಪೇಮೆಂಟನ್ನು ಅಥೆಂಟಿಕ್ ಮಾಡು ಪ್ಲೀಸ್",
+   "project_annotations": {
+    "intent": "payment",
+    "amount": 90000,
+    "identifier": null,
+    "negation": "positive",
+    "control_type": "none",
+    "completion_signal": "not_applicable",
+    "notes": "Authenticate a monthly SIP payment of 90000 through a bank app; authorising the payment is treated as payment."
+   },
+   "review": {
+    "needs_manual_review": false,
+    "reasons": []
+   }
+  },
+  {
+   "id": "ivb_kn_069",
+   "language": "kn",
+   "speaker_id": "S4258798700391812",
+   "reference_transcript": "ನಾನು ಶಿಕ್ಷಣ ಸಾಲಕ್ಕೆ ಅಪ್ಲೈ ಮಾಡಬೇಕು",
+   "project_annotations": {
+    "intent": "other",
+    "amount": null,
+    "identifier": null,
+    "negation": "positive",
+    "control_type": "none",
+    "completion_signal": "not_applicable",
+    "notes": "Apply for an education loan. Loan request, which the schema assigns to other."
+   },
+   "review": {
+    "needs_manual_review": false,
+    "reasons": []
+   }
+  },
+  {
+   "id": "ivb_kn_070",
+   "language": "kn",
+   "speaker_id": "S4256632200330366",
+   "reference_transcript": "ನಾನು ಆಸ್ಸಾಂ ಗ್ರಾಮೀಣ್ ವಿಕಾಸ್ ಬ್ಯಾಂಕ್ನಲ್ಲಿರೋ ನನ್ನ ಚಿನ್ನದ ಮೇಲಿನ ಸಾಲದ ಮರುಪಾವತಿಯನ್ನು ಗೂಗಲ್ ಪೇ ಮೂಲಕ ಮಾಡ್ಬೌದಾ",
+   "project_annotations": {
+    "intent": "other",
+    "amount": null,
+    "identifier": null,
+    "negation": "positive",
+    "control_type": "none",
+    "completion_signal": "not_applicable",
+    "notes": "Asks whether a gold loan repayment can be made through a payment app. Loan query, which the schema assigns to other."
+   },
+   "review": {
+    "needs_manual_review": false,
+    "reasons": []
+   }
+  },
+  {
+   "id": "ivb_kn_071",
+   "language": "kn",
+   "speaker_id": "S4257534600329803",
+   "reference_transcript": "ನನ್ನ ಬ್ಯಾಂಕ್ ಅಕೌಂಟ್ ಒಂಬತ್ತು ಐದು ಮೂರು ಐದು ಏಳು ಎರಡು ಏಳು ಒಂದು ಐದು ಎಂಟು ಒಂದು ಇದನ್ನು ಡಿಜಿಟಲ್ ಪೇಮೆಂಟ್ ಆ್ಯಪ್ ಜಿಯೋ ಮನಿಗೆ ಲಿಂಕ್ ಮಾಡೋಕ್ಕಾಗುತ್ತ ಅಂತ ವೆರಿಫೈ ಮಾಡು ಪ್ಲೀಸ್",
+   "project_annotations": {
+    "intent": "other",
+    "amount": null,
+    "identifier": [
+     {
+      "type": "account_number",
+      "digits": "95357271581",
+      "span": "ಒಂಬತ್ತು ಐದು ಮೂರು ಐದು ಏಳು ಎರಡು ಏಳು ಒಂದು ಐದು ಎಂಟು ಒಂದು"
+     }
+    ],
+    "negation": "positive",
+    "control_type": "none",
+    "completion_signal": "not_applicable",
+    "notes": "Verify whether the account can be linked to a digital payment app. 11 digits spoken one by one."
+   },
+   "review": {
+    "needs_manual_review": false,
+    "reasons": []
+   }
+  },
+  {
+   "id": "ivb_kn_072",
+   "language": "kn",
+   "speaker_id": "S4259673400363343",
+   "reference_transcript": "ನನ್ನ ಬ್ಯಾಂಕ್ ಅಕೌಂಟ್ ಎಪ್ಪತ್ತ್ಮೂರು ಅರವತ್ತೈದು ಐವತ್ತ್ನಾಲ್ಕು ಎಪ್ಪತ್ತ ಒಂದು ಐವತ್ತೇಳು ಆರು ಇದನ್ನು ಡಿಜಿಟಲ್ ಪೇಮೆಂಟ್ ಆ್ಯಪ್ ಆ್ಯಕ್ಸಿಸ್ ಬ್ಯಾಂಕ್ ಲೈಮ್ ಗೆ ಲಿಂಕ್ ಮಾಡೋಕ್ಕಾಗುತ್ತ ಅಂತ ವೈ ವೆರಿಫೈ ಮಾಡು ಪ್ಲೀಸ್",
+   "project_annotations": {
+    "intent": "other",
+    "amount": null,
+    "identifier": [
+     {
+      "type": "account_number",
+      "digits": null,
+      "span": "ಎಪ್ಪತ್ತ್ಮೂರು ಅರವತ್ತೈದು ಐವತ್ತ್ನಾಲ್ಕು ಎಪ್ಪತ್ತ ಒಂದು ಐವತ್ತೇಳು ಆರು"
+     }
+    ],
+    "negation": "positive",
+    "control_type": "none",
+    "completion_signal": "not_applicable",
+    "notes": "Verify whether the account can be linked to a digital payment app. Digits are spoken as grouped numbers (73, 65, 54, ..., 57, 6), but 'ಎಪ್ಪತ್ತ ಒಂದು' is ambiguous between 71 and 70 followed by 1, giving 11 or 12 digits, so digits is null."
+   },
+   "review": {
+    "needs_manual_review": true,
+    "reasons": [
+     "ambiguous grouped number 'ಎಪ್ಪತ್ತ ಒಂದು' (71 vs 70 then 1) changes the account number length"
+    ]
+   }
+  },
+  {
+   "id": "ivb_kn_073",
+   "language": "kn",
+   "speaker_id": "S4259951600351816",
+   "reference_transcript": "ಆಕ್ಸಿಜನ್ ಕ್ಯೂ ಆರ್ ಕೋಡ್ ಸ್ಕ್ಯಾನರ್ ಓಪನ್ ಮಾಡಿ ನನ್ನ ಗ್ಯಾಲರೀಲಿರೋ ಮೊದಲನೇ ಫೋಟೋನ ಸ್ಕ್ಯಾನ್ ಮಾಡೋಕ್ಕೆ ಅಪ್ಲೋಡ್ ಮಾಡು",
+   "project_annotations": {
+    "intent": "other",
+    "amount": null,
+    "identifier": null,
+    "negation": "positive",
+    "control_type": "none",
+    "completion_signal": "not_applicable",
+    "notes": "Open a QR scanner and upload a gallery photo to scan."
+   },
+   "review": {
+    "needs_manual_review": false,
+    "reasons": []
+   }
+  },
+  {
+   "id": "ivb_kn_074",
+   "language": "kn",
+   "speaker_id": "S4258733000390790",
+   "reference_transcript": "ಐ ಆರ್ ಸಿ ಟಿ ಸಿನಲ್ಲಿ ನಂಗೆ ಸಿಕ್ಕಿರೋ ರಿವಾರ್ಡ್ ಯಾವಾಗ ಎಕ್ಸ್ಪಾಯರ್ ಆಗುತ್ತೆ",
+   "project_annotations": {
+    "intent": "other",
+    "amount": null,
+    "identifier": null,
+    "negation": "positive",
+    "control_type": "none",
+    "completion_signal": "not_applicable",
+    "notes": "Asks when a reward expires."
+   },
+   "review": {
+    "needs_manual_review": false,
+    "reasons": []
+   }
+  },
+  {
+   "id": "ivb_kn_075",
+   "language": "kn",
+   "speaker_id": "S4256690500332472",
+   "reference_transcript": "ನನ್ ಸಿ ಎಸ್ ಬಿ ಬ್ಯಾಂಕ್ ಖಾತೆಯಲ್ಲಿ ಒಂಬತ್ತು ಸಾವಿರ ರೂಪಾಯಿ ಇರುತ್ತಾ",
+   "project_annotations": {
+    "intent": "balance",
+    "amount": 9000,
+    "identifier": null,
+    "negation": "positive",
+    "control_type": "none",
+    "completion_signal": "not_applicable",
+    "notes": "Asks whether the account holds 9000."
+   },
+   "review": {
+    "needs_manual_review": false,
+    "reasons": []
+   }
+  },
+  {
+   "id": "ivb_kn_076",
+   "language": "kn",
+   "speaker_id": "S4259607400394333",
+   "reference_transcript": "ನನ್ನ ರಿಜಿಸ್ಟರ್ಡ್ ಕಾಂಟ್ಯಾಕ್ಟ್ ನಂಬರ್ ಏಳು ಎಂಟು ಏಳು ಎಂಟು ಐದು ಎಂಟು ಆರು ಒಂದು ಐದು ಮೂರು ಒಂದು ಇದರಿಂದ ಒಂದು ಹೆಚ್ ಪಿ ಗ್ಯಾಸ್ ಸಿಲಿಂಡರ್ ಬುಕ್ ಮಾಡು",
+   "project_annotations": {
+    "intent": "other",
+    "amount": null,
+    "identifier": [
+     {
+      "type": "phone_number",
+      "digits": "78785861531",
+      "span": "ಏಳು ಎಂಟು ಏಳು ಎಂಟು ಐದು ಎಂಟು ಆರು ಒಂದು ಐದು ಮೂರು ಒಂದು"
+     }
+    ],
+    "negation": "positive",
+    "control_type": "none",
+    "completion_signal": "not_applicable",
+    "notes": "Book a gas cylinder from the registered contact number. 11 digits spoken where an Indian mobile number has 10; recorded exactly as spoken."
+   },
+   "review": {
+    "needs_manual_review": false,
+    "reasons": []
+   }
+  },
+  {
+   "id": "ivb_kn_077",
+   "language": "kn",
+   "speaker_id": "S4258179200330126",
+   "reference_transcript": "ನನ್ನ ಅರುಣಾಚಲ ಪ್ರದೇಶ್ ರೂರಲ್ ಬ್ಯಾಂಕ್ ಅಕೌಂಟ್ನಿಂದ ನನ್ನ ಐ ಸಿ ಐ ಸಿ ಐ ಪ್ಯಾಕೆಟ್ಸ್ ವ್ಯಾಲೆಟ್ಗೆ ಅರವತ್ತು ಸಾವಿರ ರೂಪಾಯಿ ಹಾಕೋಕ್ಕಾಗುತ್ತಾ",
+   "project_annotations": {
+    "intent": "deposit",
+    "amount": 60000,
+    "identifier": null,
+    "negation": "positive",
+    "control_type": "none",
+    "completion_signal": "not_applicable",
+    "notes": "Asks whether 60000 can be loaded from own bank account into own wallet. Capability question; annotated as deposit."
+   },
+   "review": {
+    "needs_manual_review": false,
+    "reasons": []
+   }
+  },
+  {
+   "id": "ivb_kn_078",
+   "language": "kn",
+   "speaker_id": "S4259345900362690",
+   "reference_transcript": "ನನ್ನ ಪೇ ಟಿ ಎಮ್ ಕ್ಯೂ ಆರ್ ಕೋಡ್ನ ವಾಟ್ಸಾಪಲ್ಲಿ ಲಲಿತಾ ವಸ್ತ್ರದ ಅವರಿಗೆ ಕಳಿಸು",
+   "project_annotations": {
+    "intent": "other",
+    "amount": null,
+    "identifier": null,
+    "negation": "positive",
+    "control_type": "none",
+    "completion_signal": "not_applicable",
+    "notes": "Send own QR code to a named contact over a messaging app."
+   },
+   "review": {
+    "needs_manual_review": false,
+    "reasons": []
+   }
+  },
+  {
+   "id": "ivb_kn_079",
+   "language": "kn",
+   "speaker_id": "S4259576900333347",
+   "reference_transcript": "ನನ್ನ ಓಲಾ ಮನಿ ವ್ಯಾಲೆಟ್ಗೆ ಮೂರು ಸಾವಿರ ರೂಪಾಯಿ ಟ್ರಾನ್ಸ್ಫರ್ ಮಾಡು ಪ್ಲೀಸ್",
+   "project_annotations": {
+    "intent": "deposit",
+    "amount": 3000,
+    "identifier": null,
+    "negation": "positive",
+    "control_type": "none",
+    "completion_signal": "not_applicable",
+    "notes": "Load 3000 into own wallet. Annotated as deposit although the spoken verb is 'transfer'."
+   },
+   "review": {
+    "needs_manual_review": false,
+    "reasons": []
+   }
+  },
+  {
+   "id": "ivb_kn_080",
+   "language": "kn",
+   "speaker_id": "S4256629800332416",
+   "reference_transcript": "ನನ್ನ ಪಂಜಾಬ್ ನ್ಯಾಷನಲ್ ಬ್ಯಾಂಕ್ ರೂಪೇ ಕಾರ್ಡ್ನ ಟೋಕನೈಸ್ಡ್ ಪಾವತಿಗಳಿಗೆ ರಿಜಿಸ್ಟರ್ ಮಾಡ್ಸೋಕ್ಕೆ ಕ್ಯೂ ಆರ್ ಕೋಡ್ನ ಸ್ಕ್ಯಾನ್ ಮಾಡು",
+   "project_annotations": {
+    "intent": "other",
+    "amount": null,
+    "identifier": null,
+    "negation": "positive",
+    "control_type": "none",
+    "completion_signal": "not_applicable",
+    "notes": "Scan a QR code to register a card for tokenised payments."
+   },
+   "review": {
+    "needs_manual_review": false,
+    "reasons": []
+   }
+  },
+  {
+   "id": "ivb_kn_081",
+   "language": "kn",
+   "speaker_id": "S4257294800302815",
+   "reference_transcript": "ಜಿಯೋ ಮನಿ ಬಗ್ಗೆ ದೂರು ಕೊಡೋಕ್ಕೆ ದಯವಿಟ್ಟು ಕಸ್ಟಮರ್ ಕೇರನ್ನು ಸಂಪರ್ಕಿಸು",
+   "project_annotations": {
+    "intent": "other",
+    "amount": null,
+    "identifier": null,
+    "negation": "positive",
+    "control_type": "none",
+    "completion_signal": "not_applicable",
+    "notes": "Contact customer care to file a complaint about a wallet app."
+   },
+   "review": {
+    "needs_manual_review": false,
+    "reasons": []
+   }
+  },
+  {
+   "id": "ivb_kn_082",
+   "language": "kn",
+   "speaker_id": "S4258797800391716",
+   "reference_transcript": "ನಾನು ಜಮ್ಮು ಆ್ಯಂಡ್ ಕಾಶ್ಮೀರ್ ಬ್ಯಾಂಕ್ನಲ್ಲಿರೋ ನನ್ನ ಆಸ್ತಿ ಮೇಲಿನ ಸಾಲದ ಮರುಪಾವತಿಯನ್ನು ಅಮೇಝಾನ್ ಪೇ ಮೂಲಕ ಮಾಡಬಹುದಾ",
+   "project_annotations": {
+    "intent": "other",
+    "amount": null,
+    "identifier": null,
+    "negation": "positive",
+    "control_type": "none",
+    "completion_signal": "not_applicable",
+    "notes": "Asks whether a loan-against-property repayment can be made through a payment app. Loan query, which the schema assigns to other."
+   },
+   "review": {
+    "needs_manual_review": false,
+    "reasons": []
+   }
+  },
+  {
+   "id": "ivb_kn_083",
+   "language": "kn",
+   "speaker_id": "S4256614200336372",
+   "reference_transcript": "ನನ್ನ ಡಿಫಾಲ್ಟ್ ಏರ್ಟೆಲ್ ಮನಿ ಖಾತೆಯಿಂದ ಮೂರು ಸಾವಿರ ರೂಪಾಯನ್ನ ನನ್ನ ಇನ್ನೊಂದು ಲಿಂಕ್ಡ್ ಖಾತೆಗೆ ಟ್ರಾನ್ಸ್ಫರ್ ಮಾಡು",
+   "project_annotations": {
+    "intent": "transfer",
+    "amount": 3000,
+    "identifier": null,
+    "negation": "positive",
+    "control_type": "none",
+    "completion_signal": "not_applicable",
+    "notes": "Move 3000 from a default wallet account to another linked account of the speaker."
+   },
+   "review": {
+    "needs_manual_review": false,
+    "reasons": []
+   }
+  },
+  {
+   "id": "ivb_kn_084",
+   "language": "kn",
+   "speaker_id": "S4257723800395912",
+   "reference_transcript": "ಕಳೆದ ಎರಡು ವಾರಗಳಲ್ಲಿ ಏರ್ಟೆಲ್ ಮನಿ ಆ್ಯಪ್ನಲ್ಲಿ ಮಾಡಿರೋ ಆನ್ಲೈನ್ ಟ್ರಾನ್ಸಾಕ್ಷನ್ನಿಂದ ನನಗೆ ಯಾವುದಾದ್ರೂ ಕ್ಯಾಷ್ಬ್ಯಾಕ್ ಬಂದಿದೆಯಾ",
+   "project_annotations": {
+    "intent": "other",
+    "amount": null,
+    "identifier": null,
+    "negation": "positive",
+    "control_type": "none",
+    "completion_signal": "not_applicable",
+    "notes": "Asks whether any cashback was received from recent transactions. No amount spoken."
+   },
+   "review": {
+    "needs_manual_review": false,
+    "reasons": []
+   }
+  },
+  {
+   "id": "ivb_kn_085",
+   "language": "kn",
+   "speaker_id": "S4257744300395908",
+   "reference_transcript": "ನನ್ನ ಡೀಫಾಲ್ಟ್ ಪೇಮನಿ ಖಾತೆಯಿಂದ ಒಂಬತ್ತು ಸಾವಿರ ರೂಪಾಯಿಯನ್ನ ನನ್ನ ಇನ್ನೊಂದು ಲಿಂಕ್ಡ್ ಖಾತೆಗೆ ಟ್ರಾನ್ಸ್ಫರ್ ಮಾಡು",
+   "project_annotations": {
+    "intent": "transfer",
+    "amount": 9000,
+    "identifier": null,
+    "negation": "positive",
+    "control_type": "none",
+    "completion_signal": "not_applicable",
+    "notes": "Move 9000 from a default wallet account to another linked account of the speaker."
+   },
+   "review": {
+    "needs_manual_review": false,
+    "reasons": []
+   }
+  },
+  {
+   "id": "ivb_kn_086",
+   "language": "kn",
+   "speaker_id": "S4257220000302218",
+   "reference_transcript": "ನನ್ನ ಅಮೇಜಾನ್ ಪೇ ವ್ಯಾಲೆಟನ್ನ ಆಕ್ಟಿವೇಟ್ ಮಾಡೋಕ್ಕೆ ನನ್ನ ಆಧಾರ್ ಕಾರ್ಡ್ ವಿವರಗಳನ್ನು ಭರ್ತಿ ಮಾಡು",
+   "project_annotations": {
+    "intent": "other",
+    "amount": null,
+    "identifier": null,
+    "negation": "positive",
+    "control_type": "none",
+    "completion_signal": "not_applicable",
+    "notes": "Fill in Aadhaar details to activate a wallet. Aadhaar is named but no number is spoken, so identifier is null."
+   },
+   "review": {
+    "needs_manual_review": false,
+    "reasons": []
+   }
+  },
+  {
+   "id": "ivb_kn_087",
+   "language": "kn",
+   "speaker_id": "S4259489100370371",
+   "reference_transcript": "ನನಗೆ ಹನ್ನೆರಡು ಎರಡು ಎರ್ಡು ಸಾವ್ರದ ಹತ್ತೊಂಬತ್ತರಿಂದ ಇಪ್ಪತ್ತಾರು ಹತ್ತು ಎರ್ಡು ಸಾವ್ರದ ಇಪ್ಪತ್ತರವರೆಗಿನ ನನ್ನ ಟ್ರಾನ್ಸಾಕ್ಸನ್ ಹಿಸ್ಟರಿ ತೋರಿಸು",
+   "project_annotations": {
+    "intent": "other",
+    "amount": null,
+    "identifier": null,
+    "negation": "positive",
+    "control_type": "none",
+    "completion_signal": "not_applicable",
+    "notes": "Show transaction history for a spoken date range (12-2-2019 to 26-10-2020). Dates are neither amounts nor identifiers."
+   },
+   "review": {
+    "needs_manual_review": false,
+    "reasons": []
+   }
+  },
+  {
+   "id": "ivb_kn_088",
+   "language": "kn",
+   "speaker_id": "S4257908900300114",
+   "reference_transcript": "ನನಗೆ ಸುಕನ್ಯಾ ಸಮೃದ್ಧಿ ಯೋಜನಾ ಉಳಿತಾಯ ಯೋಜನೆಗೆ ಫಂಡ್ ಸೈಜ್ ಮತ್ತೆ ಕನಿಷ್ಟ ಬಂಡವಾಳ ಎಷ್ಟು ಬೇಕಾಗುತ್ತೆ ಅನ್ನೋದರ ಬಗ್ಗೆ ತಿಳಿಸು",
+   "project_annotations": {
+    "intent": "other",
+    "amount": null,
+    "identifier": null,
+    "negation": "positive",
+    "control_type": "none",
+    "completion_signal": "not_applicable",
+    "notes": "Asks about fund size and minimum investment for a government savings scheme. No amount spoken."
+   },
+   "review": {
+    "needs_manual_review": false,
+    "reasons": []
+   }
+  },
+  {
+   "id": "ivb_kn_089",
+   "language": "kn",
+   "speaker_id": "S4258620800387040",
+   "reference_transcript": "ಎಸ್ ಐ ಪಿ ಸೇವಿಂಗ್ಸ್ಗೆ ಅಟೋಮೆಟಿಕ್ ಡಿಡಕ್ಷನ್ ಕ್ಯಾನ್ಸಲ್ ಮಾಡು ಪ್ಲೀಸ್",
+   "project_annotations": {
+    "intent": "other",
+    "amount": null,
+    "identifier": null,
+    "negation": "positive",
+    "control_type": "none",
+    "completion_signal": "not_applicable",
+    "notes": "Cancel the automatic deduction for SIP savings. 'ಕ್ಯಾನ್ಸಲ್' targets a standing instruction, a banking operation, not the dialogue, so control_type is none."
+   },
+   "review": {
+    "needs_manual_review": false,
+    "reasons": []
+   }
+  },
+  {
+   "id": "ivb_kn_090",
+   "language": "kn",
+   "speaker_id": "S4259125100310371",
+   "reference_transcript": "ಪೇ ಟಿ ಯಮ್ಲಿ ಸ್ಟಾಕ್ ಆಗಿರೋ ನನಗಿನ್ನೂ ವಾಪಸ್ಸು ಬರ್ಬೇಕಿರೋ ಅಮೌಂಟ್ ಎಷ್ಟಿದೆ",
+   "project_annotations": {
+    "intent": "other",
+    "amount": null,
+    "identifier": null,
+    "negation": "positive",
+    "control_type": "none",
+    "completion_signal": "not_applicable",
+    "notes": "Asks how much of a stuck amount is still to be returned. The amount is questioned, not stated."
+   },
+   "review": {
+    "needs_manual_review": false,
+    "reasons": []
+   }
+  },
+  {
+   "id": "ivb_kn_091",
+   "language": "kn",
+   "speaker_id": "S4259072500392547",
+   "reference_transcript": "ನನ್ನ ವರ್ಚುವಲ್ ಪೇಮೆಂಟ್ ಅಡ್ರೆಸ್ಸನ್ನ ಎಂಟು ಏಳು ಮೂರು ನಾಲ್ಕು ಮೂರು ಎರಡು ನಾಲ್ಕು ಆರು ಐದು ಮೂರು ಏಳು ಅಟ್ ಎಸ್ ಬಿ ಐ ಇಂದ ಒಂಬತ್ತು ಎರಡು ಒಂಬತ್ತು ಎಂಟು ಒಂದು ಎರಡು ಐದು ಮೂರು ಮೂರು ಮೂರು ಸೊನ್ನೆ ಅಟ್ ಪೇಟಿಯಮ್ಗೆ ಚೇಂಜ್ ಮಾಡು",
+   "project_annotations": {
+    "intent": "other",
+    "amount": null,
+    "identifier": [
+     {
+      "type": "upi_id",
+      "digits": "87343246537",
+      "span": "ಎಂಟು ಏಳು ಮೂರು ನಾಲ್ಕು ಮೂರು ಎರಡು ನಾಲ್ಕು ಆರು ಐದು ಮೂರು ಏಳು ಅಟ್ ಎಸ್ ಬಿ ಐ"
+     },
+     {
+      "type": "upi_id",
+      "digits": "92981253330",
+      "span": "ಒಂಬತ್ತು ಎರಡು ಒಂಬತ್ತು ಎಂಟು ಒಂದು ಎರಡು ಐದು ಮೂರು ಮೂರು ಮೂರು ಸೊನ್ನೆ ಅಟ್ ಪೇಟಿಯಮ್ಗೆ"
+     }
+    ],
+    "negation": "positive",
+    "control_type": "none",
+    "completion_signal": "not_applicable",
+    "notes": "Change the virtual payment address from the first UPI ID to the second. 11 digits each; the second span ends with the dative suffix ಗೆ, which is grammar, not part of the ID."
+   },
+   "review": {
+    "needs_manual_review": false,
+    "reasons": []
+   }
+  },
+  {
+   "id": "ivb_kn_092",
+   "language": "kn",
+   "speaker_id": "S4259370500362126",
+   "reference_transcript": "ನನ್ನ ವರ್ಚುವಲ್ ಪೇಮೆಂಟ್ ಅಡ್ರೆಸ್ನ ಎಂಟು ಒಂಬತ್ತು ಏಳು ನಾಲ್ಕು ಏಳು ಎರಡು ಎಂಟು ಸೊನ್ನೆ ಐದು ಏಳು ಆರು ಅಟ್ ಯು ಪಿ ಐ ಇಂದ ಆರು ಮೂರು ಏಳು ಎಂಟು ಎರಡು ಏಳು ನಾಲ್ಕು ನಾಲ್ಕು ಒಂಬತ್ತು ಎರಡು ಏಳು ಅಟ್ ಯು ಪಿ ಐಗೆ ಚೇಂಜ್ ಮಾಡು",
+   "project_annotations": {
+    "intent": "other",
+    "amount": null,
+    "identifier": [
+     {
+      "type": "upi_id",
+      "digits": "89747280576",
+      "span": "ಎಂಟು ಒಂಬತ್ತು ಏಳು ನಾಲ್ಕು ಏಳು ಎರಡು ಎಂಟು ಸೊನ್ನೆ ಐದು ಏಳು ಆರು ಅಟ್ ಯು ಪಿ ಐ"
+     },
+     {
+      "type": "upi_id",
+      "digits": "63782744927",
+      "span": "ಆರು ಮೂರು ಏಳು ಎಂಟು ಎರಡು ಏಳು ನಾಲ್ಕು ನಾಲ್ಕು ಒಂಬತ್ತು ಎರಡು ಏಳು ಅಟ್ ಯು ಪಿ ಐಗೆ"
+     }
+    ],
+    "negation": "positive",
+    "control_type": "none",
+    "completion_signal": "not_applicable",
+    "notes": "Change the virtual payment address from the first UPI ID to the second. 11 digits each."
+   },
+   "review": {
+    "needs_manual_review": false,
+    "reasons": []
+   }
+  },
+  {
+   "id": "ivb_kn_093",
+   "language": "kn",
+   "speaker_id": "S4256640200334848",
+   "reference_transcript": "ನನ್ನ ಎಂ ಸ್ವೈಪ್ನ ಖಾತೆಲಿ ಹತ್ತು ಸಾವಿರ ರೂಪಾಯಿಗಿಂತ ಜಾಸ್ತಿ ಹಣ ಇದೆಯಾ",
+   "project_annotations": {
+    "intent": "balance",
+    "amount": 10000,
+    "identifier": null,
+    "negation": "positive",
+    "control_type": "none",
+    "completion_signal": "not_applicable",
+    "notes": "Asks whether the account holds more than 10000; the amount is a threshold in the balance question."
+   },
+   "review": {
+    "needs_manual_review": false,
+    "reasons": []
+   }
+  },
+  {
+   "id": "ivb_kn_094",
+   "language": "kn",
+   "speaker_id": "S4258553800300263",
+   "reference_transcript": "ನನ್ನ ನನ್ನ ಮಧ್ಯಪ್ರದೇಶ್ ಗ್ರಾಮೀಣ್ ಬ್ಯಾಂಕ್ ಅಕೌಂಟ್ನಲ್ಲಿ ಹತ್ತು ಸಾವಿರ ರೂಪಾಯಿ ಟ್ರಾನ್ಸಾಕ್ಷನ್ ಮಾಡೋಷ್ಟು ದುಡ್ಡಿದೆಯಾ",
+   "project_annotations": {
+    "intent": "balance",
+    "amount": 10000,
+    "identifier": null,
+    "negation": "positive",
+    "control_type": "none",
+    "completion_signal": "not_applicable",
+    "notes": "Asks whether the account holds enough for a 10000 transaction; the amount is the intended transaction size."
+   },
+   "review": {
+    "needs_manual_review": false,
+    "reasons": []
+   }
+  },
+  {
+   "id": "ivb_kn_095",
+   "language": "kn",
+   "speaker_id": "S4258983400347112",
+   "reference_transcript": "ಆಪಲ್ ಹೋಲ್ಡಿಂಗ್ಸ್ ನನ್ನ ಅಕೌಂಟಿಂದ ಬ್ಲಾಕ್ ಮಾಡು",
+   "project_annotations": {
+    "intent": "other",
+    "amount": null,
+    "identifier": null,
+    "negation": "positive",
+    "control_type": "none",
+    "completion_signal": "not_applicable",
+    "notes": "Block a named merchant from the account."
+   },
+   "review": {
+    "needs_manual_review": false,
+    "reasons": []
+   }
+  },
+  {
+   "id": "ivb_kn_096",
+   "language": "kn",
+   "speaker_id": "S4259139300361312",
+   "reference_transcript": "ನಾನು ಉತ್ತರಾಖಂಡ್ ಗ್ರಾಮೀಣ್ ಬ್ಯಾಂಕ್ ಅಕೌಂಟಲ್ಲಿ ಐದು ಸೊನ್ನೆ ಸೊನ್ನೆ ರೂಪಾಯಿ ಟ್ರಾನ್ಸಾಕ್ಷನ್ ಮಾಡೋಷ್ಟು ದುಡ್ಡಿದೆಯಾ",
+   "project_annotations": {
+    "intent": "balance",
+    "amount": 500,
+    "identifier": null,
+    "negation": "positive",
+    "control_type": "none",
+    "completion_signal": "not_applicable",
+    "notes": "Asks whether the account holds enough for a transaction of 500, spoken digit by digit as 'ಐದು ಸೊನ್ನೆ ಸೊನ್ನೆ' (five zero zero)."
+   },
+   "review": {
+    "needs_manual_review": false,
+    "reasons": []
+   }
+  },
+  {
+   "id": "ivb_kn_097",
+   "language": "kn",
+   "speaker_id": "S4258481600317433",
+   "reference_transcript": "ನಾನು ನೈನಿತಾಲ್ ಬ್ಯಾಂಕ್ನಲ್ಲಿರೋ ನನ್ನ ಭದ್ರತಾ ಸಾಲದ ಮರುಪಾವತಿಯನ್ನು ಪೇ ಜ್ಯಾಪ್ ಮೂಲಕ ಮಾಡಬಹುದಾ",
+   "project_annotations": {
+    "intent": "other",
+    "amount": null,
+    "identifier": null,
+    "negation": "positive",
+    "control_type": "none",
+    "completion_signal": "not_applicable",
+    "notes": "Asks whether a secured loan repayment can be made through a payment app. Loan query, which the schema assigns to other."
+   },
+   "review": {
+    "needs_manual_review": false,
+    "reasons": []
+   }
+  },
+  {
+   "id": "ivb_kn_098",
+   "language": "kn",
+   "speaker_id": "S4257942000375572",
+   "reference_transcript": "ಏಳು ಏಳು ಮೂರು ಎರಡು ಮೂರು ಏಳು ಒಂಬತ್ತು ಆರು ಸೊನ್ನೆ ಎರಡು ಒಂಬತ್ತು ಎಟ್ ದ ರೇಟ್ ಓ ಕೆ ಸಿ ಐ ಸಿ ಈ ಯು ಪಿ ಐ ಐ ಡಿಗೆ ಮೂರು ಸಾವಿರ ರೂಪಾಯಿಯನ್ನು ಕಳಿಸು",
+   "project_annotations": {
+    "intent": "transfer",
+    "amount": 3000,
+    "identifier": [
+     {
+      "type": "upi_id",
+      "digits": "77323796029",
+      "span": "ಏಳು ಏಳು ಮೂರು ಎರಡು ಮೂರು ಏಳು ಒಂಬತ್ತು ಆರು ಸೊನ್ನೆ ಎರಡು ಒಂಬತ್ತು ಎಟ್ ದ ರೇಟ್ ಓ ಕೆ ಸಿ ಐ ಸಿ"
+     }
+    ],
+    "negation": "positive",
+    "control_type": "none",
+    "completion_signal": "not_applicable",
+    "notes": "Send 3000 to a UPI ID. 11 digits before the handle; 'ಎಟ್ ದ ರೇಟ್' (at the rate) is the spoken form of @."
+   },
+   "review": {
+    "needs_manual_review": false,
+    "reasons": []
+   }
+  },
+  {
+   "id": "ivb_kn_099",
+   "language": "kn",
+   "speaker_id": "S4259446000322608",
+   "reference_transcript": "ಹದಿನೆಂಟು ಹನ್ನೊಂದು ಎರಡು ಸಾವಿರದ ಹದಿನೆಂಟನೇ ತಾರೀಖು ಮೊಬೈಲ್ ಪೇಮೆಂಟ್ ಮಾಡೋಕ್ಕೆ ರಿಮೈಂಡರ್ ಹಾಕು",
+   "project_annotations": {
+    "intent": "other",
+    "amount": null,
+    "identifier": null,
+    "negation": "positive",
+    "control_type": "none",
+    "completion_signal": "not_applicable",
+    "notes": "Set a reminder to make a mobile payment on a spoken date (18-11-2018). The date is not an amount."
+   },
+   "review": {
+    "needs_manual_review": false,
+    "reasons": []
+   }
+  },
+  {
+   "id": "ivb_kn_100",
+   "language": "kn",
+   "speaker_id": "S4259375000371779",
+   "reference_transcript": "ಕಳೆದ ವರ್ಷ ನಾನು ಆ್ಯಕ್ಸಿಜೆನ್ನಿಂದ ಪೇ ಮಾಡಿರೋ ರೆಸ್ಟೊರೆಂಟ್ಗಳ ಪಟ್ಟಿ ತೋರಿಸು",
+   "project_annotations": {
+    "intent": "other",
+    "amount": null,
+    "identifier": null,
+    "negation": "positive",
+    "control_type": "none",
+    "completion_signal": "not_applicable",
+    "notes": "Show the list of restaurants paid through a wallet last year."
+   },
+   "review": {
+    "needs_manual_review": false,
+    "reasons": []
+   }
+  },
+  {
+   "id": "ivb_hi_001",
+   "language": "hi",
+   "speaker_id": "S4257878500338647",
+   "reference_transcript": "क्या एन जी ओ की सूची में उड़ान इंडिया फाउंडेशन उपलब्ध है यदि हाँ तो कृपया रूपये पाँच हजार इसको दान करें",
+   "project_annotations": {
+    "intent": "transfer",
+    "amount": 5000,
+    "identifier": null,
+    "negation": "positive",
+    "control_type": "none",
+    "completion_signal": "not_applicable",
+    "notes": "Donate 5000 to an organisation, conditional on it appearing in the NGO list. The first clause is a lookup precondition, so the donation is the primary request."
+   },
+   "review": {
+    "needs_manual_review": false,
+    "reasons": []
+   }
+  },
+  {
+   "id": "ivb_hi_002",
+   "language": "hi",
+   "speaker_id": "S4259134500381813",
+   "reference_transcript": "क्या आप दो सौ रुपये मेरे सी फाइव नाइन ऐट फोर ऐट फोर सेवन ऐट टू सेवन सिक्स वन फाइव सेवन सिक्स को पंजाब ग्रामीण बैंक द्विसप्ताहिक में जीयो मनी के ज़रिए ट्रांसफ़र कर सकते है और बैलैंस इससे कम होने पर मुझे सचेत कर सकते है",
+   "project_annotations": {
+    "intent": "transfer",
+    "amount": 200,
+    "identifier": [
+     {
+      "type": "account_number",
+      "digits": "598484782761576",
+      "span": "सी फाइव नाइन ऐट फोर ऐट फोर सेवन ऐट टू सेवन सिक्स वन फाइव सेवन सिक्स"
+     }
+    ],
+    "negation": "positive",
+    "control_type": "none",
+    "completion_signal": "not_applicable",
+    "notes": "Fortnightly transfer of 200 to own bank account via a wallet, with an alert if the balance falls below that. Digits are spoken as English numerals in Devanagari and are preceded by the letter 'सी' (C), which is kept in the span but not in digits."
+   },
+   "review": {
+    "needs_manual_review": false,
+    "reasons": []
+   }
+  },
+  {
+   "id": "ivb_hi_003",
+   "language": "hi",
+   "speaker_id": "S4256676700324997",
+   "reference_transcript": "लाइमरोड को मेरे खाते से लिंक करने के लिए ओ टी पी फिर से भेजें",
+   "project_annotations": {
+    "intent": "other",
+    "amount": null,
+    "identifier": null,
+    "negation": "positive",
+    "control_type": "none",
+    "completion_signal": "not_applicable",
+    "notes": "Resend the OTP to link a merchant to the account. 'फिर से भेजें' (send again) asks to resend an OTP, not to repeat the assistant's last turn, so control_type is none."
+   },
+   "review": {
+    "needs_manual_review": false,
+    "reasons": []
+   }
+  },
+  {
+   "id": "ivb_hi_004",
+   "language": "hi",
+   "speaker_id": "S4258730400385116",
+   "reference_transcript": "क्या आप तीस हज़ार रुपये मेरे पाँच आठ चार नौ एक पाँच छः आठ आठ एक सात आठ को पेटीएम पेमेंट बैंक प्रतिवर्ष में पेयू मनी के ज़रिए ट्रांसफ़र कर सकते हैं और बैलेंस इससे कम होने पर मुझे सचेत कर सकते हैं",
+   "project_annotations": {
+    "intent": "transfer",
+    "amount": 30000,
+    "identifier": [
+     {
+      "type": "account_number",
+      "digits": "584915688178",
+      "span": "पाँच आठ चार नौ एक पाँच छः आठ आठ एक सात आठ"
+     }
+    ],
+    "negation": "positive",
+    "control_type": "none",
+    "completion_signal": "not_applicable",
+    "notes": "Yearly transfer of 30000 to own bank account via a wallet, with an alert if the balance falls below that. 12 digits spoken one by one."
+   },
+   "review": {
+    "needs_manual_review": false,
+    "reasons": []
+   }
+  },
+  {
+   "id": "ivb_hi_005",
+   "language": "hi",
+   "speaker_id": "S4257802400352492",
+   "reference_transcript": "क्या आप छः सौ रुपये मेरे नौ नौ नौ आठ सात छः एक नौ दो तीन एक सात पाँच एक को झारखण्ड राज्य ग्रामीण बैंक द्वि साप्ताहिक में गूगल पे के ज़रिए ट्रांसफ़र कर सकते हैं और बैलेंस इससे कम होने पर मुझे सचेत कर सक",
+   "project_annotations": {
+    "intent": "transfer",
+    "amount": 600,
+    "identifier": [
+     {
+      "type": "account_number",
+      "digits": "99987619231751",
+      "span": "नौ नौ नौ आठ सात छः एक नौ दो तीन एक सात पाँच एक"
+     }
+    ],
+    "negation": "positive",
+    "control_type": "none",
+    "completion_signal": "not_applicable",
+    "notes": "Fortnightly transfer of 600 to own bank account via a wallet, with an alert if the balance falls below that. 14 digits spoken one by one. The reference ends mid-word ('सक'), so the recording appears clipped; the annotated fields are unaffected."
+   },
+   "review": {
+    "needs_manual_review": false,
+    "reasons": []
+   }
+  },
+  {
+   "id": "ivb_hi_006",
+   "language": "hi",
+   "speaker_id": "S4258190800356984",
+   "reference_transcript": "फास्टैग बिल भुगतान के लिए योनो एस बी आई में सूचनाएँ चालू करें",
+   "project_annotations": {
+    "intent": "other",
+    "amount": null,
+    "identifier": null,
+    "negation": "positive",
+    "control_type": "none",
+    "completion_signal": "not_applicable",
+    "notes": "Turn on notifications for FASTag bill payments in a bank app."
+   },
+   "review": {
+    "needs_manual_review": false,
+    "reasons": []
+   }
+  },
+  {
+   "id": "ivb_hi_007",
+   "language": "hi",
+   "speaker_id": "S4259259500386760",
+   "reference_transcript": "बजाज फाइनेंस के माध्यम से शेयरों में निवेश करने के लिए ब्रोकरेज दर क्या है",
+   "project_annotations": {
+    "intent": "other",
+    "amount": null,
+    "identifier": null,
+    "negation": "positive",
+    "control_type": "none",
+    "completion_signal": "not_applicable",
+    "notes": "Asks the brokerage rate for investing in shares through a finance company."
+   },
+   "review": {
+    "needs_manual_review": false,
+    "reasons": []
+   }
+  },
+  {
+   "id": "ivb_hi_008",
+   "language": "hi",
+   "speaker_id": "S4257820300349694",
+   "reference_transcript": "क्या सात पाँच शून्य दो चार शून्य पाँच छः नौ नौ तीन पेपैल पर है",
+   "project_annotations": {
+    "intent": "other",
+    "amount": null,
+    "identifier": [
+     {
+      "type": "other",
+      "digits": "75024056993",
+      "span": "सात पाँच शून्य दो चार शून्य पाँच छः नौ नौ तीन"
+     }
+    ],
+    "negation": "positive",
+    "control_type": "none",
+    "completion_signal": "not_applicable",
+    "notes": "Asks whether this 11-digit number is registered on a payment service. The reference does not say what kind of identifier it is, so type is other; possibly a phone number."
+   },
+   "review": {
+    "needs_manual_review": false,
+    "reasons": []
+   }
+  },
+  {
+   "id": "ivb_hi_009",
+   "language": "hi",
+   "speaker_id": "S4259206400388468",
+   "reference_transcript": "क्या आप स्वचालित रूप से रोशनी टी डोरिया को सात सौ रुपये त्रैमासिक भेजना बंद कर सकते हैं और तीन सौ रुपये एयरटेल मनी पर भेज सकते हैं",
+   "project_annotations": {
+    "intent": "transfer",
+    "amount": 300,
+    "identifier": null,
+    "negation": "positive",
+    "control_type": "none",
+    "completion_signal": "not_applicable",
+    "notes": "Asks to stop an automatic quarterly transfer of 700 to a person and send 300 instead; amount is the requested new value, 700 is the stopped standing instruction."
+   },
+   "review": {
+    "needs_manual_review": false,
+    "reasons": []
+   }
+  },
+  {
+   "id": "ivb_hi_010",
+   "language": "hi",
+   "speaker_id": "S4259331500354804",
+   "reference_transcript": "क्या आप स्वचालित रूप से लीला धवन को दो सौ रुपये त्रैमासिक भेजना बंद कर सकते हैं और आठ सौ रुपये गूगल पे पर भेज सकते हैं",
+   "project_annotations": {
+    "intent": "transfer",
+    "amount": 800,
+    "identifier": null,
+    "negation": "positive",
+    "control_type": "none",
+    "completion_signal": "not_applicable",
+    "notes": "Asks to stop an automatic quarterly transfer of 200 to a person and send 800 instead; amount is the requested new value, 200 is the stopped standing instruction."
+   },
+   "review": {
+    "needs_manual_review": false,
+    "reasons": []
+   }
+  },
+  {
+   "id": "ivb_hi_011",
+   "language": "hi",
+   "speaker_id": "S4258024900363297",
+   "reference_transcript": "मुझे मेरा मध्यप्रदेश ग्रामीण बैंक खाता शेष और लेन देन इतिहास दिखाएँ",
+   "project_annotations": {
+    "intent": "balance",
+    "amount": null,
+    "identifier": null,
+    "negation": "positive",
+    "control_type": "none",
+    "completion_signal": "not_applicable",
+    "notes": "Show account balance and transaction history; balance is taken as primary since it is first in order."
+   },
+   "review": {
+    "needs_manual_review": false,
+    "reasons": []
+   }
+  },
+  {
+   "id": "ivb_hi_012",
+   "language": "hi",
+   "speaker_id": "S4258978900300333",
+   "reference_transcript": "अमेजन पे का उपयोग करके चुनिंदा संपर्कों को सात हजार रुपये कल सुबह नौ बजे ट्रांसफर करें",
+   "project_annotations": {
+    "intent": "transfer",
+    "amount": 7000,
+    "identifier": null,
+    "negation": "positive",
+    "control_type": "none",
+    "completion_signal": "not_applicable",
+    "notes": "Transfer 7000 to selected contacts at a scheduled time. 'नौ बजे' (nine o'clock) is a time, not an amount."
+   },
+   "review": {
+    "needs_manual_review": false,
+    "reasons": []
+   }
+  },
+  {
+   "id": "ivb_hi_013",
+   "language": "hi",
+   "speaker_id": "S4259545600315625",
+   "reference_transcript": "क्या मैं गूगल फोन पे गूगल पे के माध्यम से बजाज फाइनेंस पर अपने गोल्ड लोन का भुगतान कर सकता हूँ",
+   "project_annotations": {
+    "intent": "other",
+    "amount": null,
+    "identifier": null,
+    "negation": "positive",
+    "control_type": "none",
+    "completion_signal": "not_applicable",
+    "notes": "Asks whether a gold loan payment can be made through a payment app. Loan query, which the schema assigns to other."
+   },
+   "review": {
+    "needs_manual_review": false,
+    "reasons": []
+   }
+  },
+  {
+   "id": "ivb_hi_014",
+   "language": "hi",
+   "speaker_id": "S4259618000339754",
+   "reference_transcript": "कृपया सत्यापित करें कि क्या मेरा बैंक खाता चार दो आठ पाँच एक छः नौ दो नौ पाँच पाँच पाँच दो छः तीन डिडिटल भुगतान ऐप गूगल पे से जोड़ा जा सकता है",
+   "project_annotations": {
+    "intent": "other",
+    "amount": null,
+    "identifier": [
+     {
+      "type": "account_number",
+      "digits": "428516929555263",
+      "span": "चार दो आठ पाँच एक छः नौ दो नौ पाँच पाँच पाँच दो छः तीन"
+     }
+    ],
+    "negation": "positive",
+    "control_type": "none",
+    "completion_signal": "not_applicable",
+    "notes": "Verify whether the account can be linked to a digital payment app. 15 digits spoken one by one."
+   },
+   "review": {
+    "needs_manual_review": false,
+    "reasons": []
+   }
+  },
+  {
+   "id": "ivb_hi_015",
+   "language": "hi",
+   "speaker_id": "S4259529700390036",
+   "reference_transcript": "मेरे जियो मनी से मेघराज मावर को पाँच सौ रुपये का भुगतान करें",
+   "project_annotations": {
+    "intent": "transfer",
+    "amount": 500,
+    "identifier": null,
+    "negation": "positive",
+    "control_type": "none",
+    "completion_signal": "not_applicable",
+    "notes": "Pay 500 to a named person from a wallet. The recipient is a person, so the schema assigns transfer even though the verb is 'भुगतान करें' (pay)."
+   },
+   "review": {
+    "needs_manual_review": false,
+    "reasons": []
+   }
+  },
+  {
+   "id": "ivb_hi_016",
+   "language": "hi",
+   "speaker_id": "S4257095300383130",
+   "reference_transcript": "मेरे केरला ग्रामीण बैंक खाते में कितना बैलेंस है",
+   "project_annotations": {
+    "intent": "balance",
+    "amount": null,
+    "identifier": null,
+    "negation": "positive",
+    "control_type": "none",
+    "completion_signal": "not_applicable",
+    "notes": null
+   },
+   "review": {
+    "needs_manual_review": false,
+    "reasons": []
+   }
+  },
+  {
+   "id": "ivb_hi_017",
+   "language": "hi",
+   "speaker_id": "S4258580500322039",
+   "reference_transcript": "मुझे औक्सीजन में लेन देन इतिहास पढ़कर सुनाएँ",
+   "project_annotations": {
+    "intent": "other",
+    "amount": null,
+    "identifier": null,
+    "negation": "positive",
+    "control_type": "none",
+    "completion_signal": "not_applicable",
+    "notes": "Read out the transaction history. Asks for account data, not a repeat of the assistant's last turn, so control_type is none."
+   },
+   "review": {
+    "needs_manual_review": false,
+    "reasons": []
+   }
+  },
+  {
+   "id": "ivb_hi_018",
+   "language": "hi",
+   "speaker_id": "S4256622900323649",
+   "reference_transcript": "पिछले चौबीस घंटे के लिए मेरा लेनदेन इतिहास खोलें और संपर्क आर्यमान कुमावत को म्यूट करें",
+   "project_annotations": {
+    "intent": "other",
+    "amount": null,
+    "identifier": null,
+    "negation": "positive",
+    "control_type": "none",
+    "completion_signal": "not_applicable",
+    "notes": "Two requests: open the last 24 hours of transaction history, then mute a contact. History is taken as primary since it is first in order; neither carries an amount or identifier."
+   },
+   "review": {
+    "needs_manual_review": false,
+    "reasons": []
+   }
+  },
+  {
+   "id": "ivb_hi_019",
+   "language": "hi",
+   "speaker_id": "S4257060600307163",
+   "reference_transcript": "क्या आप इस क्यू आर कोड को स्कैन कर सकते हैं और मेरे आर बी एल बैंक खाते को प्रमाणित कर सकते हैं",
+   "project_annotations": {
+    "intent": "other",
+    "amount": null,
+    "identifier": null,
+    "negation": "positive",
+    "control_type": "none",
+    "completion_signal": "not_applicable",
+    "notes": "Scan a QR code to authenticate a bank account."
+   },
+   "review": {
+    "needs_manual_review": false,
+    "reasons": []
+   }
+  },
+  {
+   "id": "ivb_hi_020",
+   "language": "hi",
+   "speaker_id": "S4258706200370996",
+   "reference_transcript": "नायका से मेरा पुरस्कार कब समाप्त होगा",
+   "project_annotations": {
+    "intent": "other",
+    "amount": null,
+    "identifier": null,
+    "negation": "positive",
+    "control_type": "none",
+    "completion_signal": "not_applicable",
+    "notes": "Asks when a reward expires."
+   },
+   "review": {
+    "needs_manual_review": false,
+    "reasons": []
+   }
+  },
+  {
+   "id": "ivb_hi_021",
+   "language": "hi",
+   "speaker_id": "S4259302200311509",
+   "reference_transcript": "क्या मैं गूगल पे के माध्यम से टाटा कैपिटल फाइनेंशियल सर्विसेज़ पर अपने पर्सनल लोन का भुगतान कर सकता हूँ",
+   "project_annotations": {
+    "intent": "other",
+    "amount": null,
+    "identifier": null,
+    "negation": "positive",
+    "control_type": "none",
+    "completion_signal": "not_applicable",
+    "notes": "Asks whether a personal loan payment can be made through a payment app. Loan query, which the schema assigns to other."
+   },
+   "review": {
+    "needs_manual_review": false,
+    "reasons": []
+   }
+  },
+  {
+   "id": "ivb_hi_022",
+   "language": "hi",
+   "speaker_id": "S4259635100339047",
+   "reference_transcript": "मेरे असम ग्रामीण विकास बैंक खाते दो चार छः एक आठ आठ छः एक पाँच आठ सात में मेरे एयरटेल मनी वॉलेट में दो सौ रुपये ट्रांसफ़र करें",
+   "project_annotations": {
+    "intent": "deposit",
+    "amount": 200,
+    "identifier": [
+     {
+      "type": "account_number",
+      "digits": "24618861587",
+      "span": "दो चार छः एक आठ आठ छः एक पाँच आठ सात"
+     }
+    ],
+    "negation": "positive",
+    "control_type": "none",
+    "completion_signal": "not_applicable",
+    "notes": "Move 200 from own bank account into own wallet. Annotated as deposit although the spoken verb is 'transfer'. 11 digits spoken one by one."
+   },
+   "review": {
+    "needs_manual_review": false,
+    "reasons": []
+   }
+  },
+  {
+   "id": "ivb_hi_023",
+   "language": "hi",
+   "speaker_id": "S4259024000387346",
+   "reference_transcript": "मुझे एयरटेल मनी में अपने पुराने लेन देन कहाँ दिखाई दे सकते हैं",
+   "project_annotations": {
+    "intent": "other",
+    "amount": null,
+    "identifier": null,
+    "negation": "positive",
+    "control_type": "none",
+    "completion_signal": "not_applicable",
+    "notes": "Asks where old transactions can be seen in a wallet app."
+   },
+   "review": {
+    "needs_manual_review": false,
+    "reasons": []
+   }
+  },
+  {
+   "id": "ivb_hi_024",
+   "language": "hi",
+   "speaker_id": "S4259555300331254",
+   "reference_transcript": "क्या आप ऐसे रिवॉर्ड चेक कर सकते हैं जिन्हें मैंने फर्स्टक्राय पर लेन देन कर के मनाए कमाए हैं",
+   "project_annotations": {
+    "intent": "other",
+    "amount": null,
+    "identifier": null,
+    "negation": "positive",
+    "control_type": "none",
+    "completion_signal": "not_applicable",
+    "notes": "Asks to check rewards earned for transactions on a shopping site. The reference contains a spoken repair ('मनाए कमाए')."
+   },
+   "review": {
+    "needs_manual_review": false,
+    "reasons": []
+   }
+  },
+  {
+   "id": "ivb_hi_025",
+   "language": "hi",
+   "speaker_id": "S4256690000321557",
+   "reference_transcript": "कृपया आई सी आई सी आई पॉकेट्स से नौ हज़ार रुपये का मासिक सिप भुगतान प्रमाणित करें",
+   "project_annotations": {
+    "intent": "payment",
+    "amount": 9000,
+    "identifier": null,
+    "negation": "positive",
+    "control_type": "none",
+    "completion_signal": "not_applicable",
+    "notes": "Authenticate a monthly SIP payment of 9000; authorising the payment is treated as payment."
+   },
+   "review": {
+    "needs_manual_review": false,
+    "reasons": []
+   }
+  },
+  {
+   "id": "ivb_hi_026",
+   "language": "hi",
+   "speaker_id": "S4259452600310792",
+   "reference_transcript": "लीला धवन को तीन हज़ार रुपये की राशि ट्रांसफर करने और पूरे साल के लिए हर महीने इसका एक चौथाई हिस्सा स्वतः चुकाऍं",
+   "project_annotations": {
+    "intent": "transfer",
+    "amount": 3000,
+    "identifier": null,
+    "negation": "positive",
+    "control_type": "none",
+    "completion_signal": "not_applicable",
+    "notes": "Transfer 3000 to a named person and auto-pay a quarter of it monthly for a year. 'एक चौथाई' (one quarter) is a fraction of the stated amount, not a separate amount."
+   },
+   "review": {
+    "needs_manual_review": false,
+    "reasons": []
+   }
+  },
+  {
+   "id": "ivb_hi_027",
+   "language": "hi",
+   "speaker_id": "S4258036800318829",
+   "reference_transcript": "क्या आप मेरे कैपिटल स्माल फाइनेंस बैंक क्रेडिट कार्ड को हॉटस्टार पर भुगतान तरीकों की सूची पर जोड़ सकते हो",
+   "project_annotations": {
+    "intent": "other",
+    "amount": null,
+    "identifier": null,
+    "negation": "positive",
+    "control_type": "none",
+    "completion_signal": "not_applicable",
+    "notes": "Add a credit card to the payment methods on a streaming service. No card number spoken."
+   },
+   "review": {
+    "needs_manual_review": false,
+    "reasons": []
+   }
+  },
+  {
+   "id": "ivb_hi_028",
+   "language": "hi",
+   "speaker_id": "S4259161000318976",
+   "reference_transcript": "एकनाथ माथुर को तीस हजार रुपये की राशि ट्रांसफ़र करें और पूरे साल के लिए हर महीने इसका एक चौथाई हिस्सा स्वतः चुकाएं",
+   "project_annotations": {
+    "intent": "transfer",
+    "amount": 30000,
+    "identifier": null,
+    "negation": "positive",
+    "control_type": "none",
+    "completion_signal": "not_applicable",
+    "notes": "Transfer 30000 to a named person and auto-pay a quarter of it monthly for a year."
+   },
+   "review": {
+    "needs_manual_review": false,
+    "reasons": []
+   }
+  },
+  {
+   "id": "ivb_hi_029",
+   "language": "hi",
+   "speaker_id": "S4257566200335435",
+   "reference_transcript": "क्या आप स्वचालित रूप से अक्षत करनोट को नौ हज़ार रुपये द्वि साप्ताहिक भेजना बंद कर सकते हैं और तीस हज़ार रुपये फ़्रीचार्ज पर भेज सकते हैं",
+   "project_annotations": {
+    "intent": "transfer",
+    "amount": 30000,
+    "identifier": null,
+    "negation": "positive",
+    "control_type": "none",
+    "completion_signal": "not_applicable",
+    "notes": "Asks to stop an automatic fortnightly transfer of 9000 to a person and send 30000 instead; amount is the requested new value, 9000 is the stopped standing instruction."
+   },
+   "review": {
+    "needs_manual_review": false,
+    "reasons": []
+   }
+  },
+  {
+   "id": "ivb_hi_030",
+   "language": "hi",
+   "speaker_id": "S4259207600345604",
+   "reference_transcript": "क्या मैं गूगल पे के माध्यम से टाटा कैपिटल फाइनेंशियल सर्विसेज़ पर अपने कंज़्यूमर ड्यूरेबल लोन का भुगतान कर सकता हूँ",
+   "project_annotations": {
+    "intent": "other",
+    "amount": null,
+    "identifier": null,
+    "negation": "positive",
+    "control_type": "none",
+    "completion_signal": "not_applicable",
+    "notes": "Asks whether a consumer durable loan payment can be made through a payment app. Loan query, which the schema assigns to other."
+   },
+   "review": {
+    "needs_manual_review": false,
+    "reasons": []
+   }
+  },
+  {
+   "id": "ivb_hi_031",
+   "language": "hi",
+   "speaker_id": "S4259537900355132",
+   "reference_transcript": "मेरे वर्चुअल भुगतान पते को छः नौ साथ सात जीरो एक चार आठ छः जीरो एक एट द रेट यू पी आई से छः सात एक तीन नौ पाँच दो तीन तीन छः पाँच एट द रेट यू पी आई में बदलें",
+   "project_annotations": {
+    "intent": "other",
+    "amount": null,
+    "identifier": [
+     {
+      "type": "upi_id",
+      "digits": "69770148601",
+      "span": "छः नौ साथ सात जीरो एक चार आठ छः जीरो एक एट द रेट यू पी आई"
+     },
+     {
+      "type": "upi_id",
+      "digits": "67139523365",
+      "span": "छः सात एक तीन नौ पाँच दो तीन तीन छः पाँच एट द रेट यू पी आई"
+     }
+    ],
+    "negation": "positive",
+    "control_type": "none",
+    "completion_signal": "not_applicable",
+    "notes": "Change the virtual payment address from the first UPI ID to the second. 11 digits each. In the first span 'साथ' is read as सात (seven), a spelling variant inside a digit sequence."
+   },
+   "review": {
+    "needs_manual_review": false,
+    "reasons": []
+   }
+  },
+  {
+   "id": "ivb_hi_032",
+   "language": "hi",
+   "speaker_id": "S4259074000357236",
+   "reference_transcript": "रिद्धि दीवान को नौ हज़ार रुपये की राशि ट्रांसफर करें और पूरे साल के लिए हर महीने इसका एक चौथाई हिस्सा स्वतः चुकाए",
+   "project_annotations": {
+    "intent": "transfer",
+    "amount": 9000,
+    "identifier": null,
+    "negation": "positive",
+    "control_type": "none",
+    "completion_signal": "not_applicable",
+    "notes": "Transfer 9000 to a named person and auto-pay a quarter of it monthly for a year."
+   },
+   "review": {
+    "needs_manual_review": false,
+    "reasons": []
+   }
+  },
+  {
+   "id": "ivb_hi_033",
+   "language": "hi",
+   "speaker_id": "S4259919500339532",
+   "reference_transcript": "कोरोना वायरस बीमा के लिए बीमित राशि सौ रुपये चुनें",
+   "project_annotations": {
+    "intent": "other",
+    "amount": 100,
+    "identifier": null,
+    "negation": "positive",
+    "control_type": "none",
+    "completion_signal": "not_applicable",
+    "notes": "Coronavirus insurance: select an insured amount of 100."
+   },
+   "review": {
+    "needs_manual_review": false,
+    "reasons": []
+   }
+  },
+  {
+   "id": "ivb_hi_034",
+   "language": "hi",
+   "speaker_id": "S4258202700323188",
+   "reference_transcript": "क्या हॉटस्टार से मेरे पिछले रिवॉर्ड की समय सीमा समाप्त हो गई है",
+   "project_annotations": {
+    "intent": "other",
+    "amount": null,
+    "identifier": null,
+    "negation": "positive",
+    "control_type": "none",
+    "completion_signal": "not_applicable",
+    "notes": "Asks whether a previous reward has expired."
+   },
+   "review": {
+    "needs_manual_review": false,
+    "reasons": []
+   }
+  },
+  {
+   "id": "ivb_hi_035",
+   "language": "hi",
+   "speaker_id": "S4259943300364341",
+   "reference_transcript": "मेरे छः हजार रुपये से यू पी आई आई डी नौ सात तीन तीन तीन चार पाँच तीन पाँच तीन ज़ीरो एट द रेट एस बी आई का लेनदेन क्यों विफल हुआ",
+   "project_annotations": {
+    "intent": "other",
+    "amount": 6000,
+    "identifier": [
+     {
+      "type": "upi_id",
+      "digits": "97333453530",
+      "span": "नौ सात तीन तीन तीन चार पाँच तीन पाँच तीन ज़ीरो एट द रेट एस बी आई"
+     }
+    ],
+    "negation": "positive",
+    "control_type": "none",
+    "completion_signal": "not_applicable",
+    "notes": "Asks why a 6000 transaction to a UPI ID failed. 'विफल' (failed) is lexical, not a negation word, so negation is positive."
+   },
+   "review": {
+    "needs_manual_review": false,
+    "reasons": []
+   }
+  },
+  {
+   "id": "ivb_hi_036",
+   "language": "hi",
+   "speaker_id": "S4259093700357865",
+   "reference_transcript": "टोकनयुक्त भुगतानो के लिए मेरा कैनरा बैंक रुपे कार्ड कार्ड पंजीकृत करने के लिए क्यू आर कोड को एस्कैन करें",
+   "project_annotations": {
+    "intent": "other",
+    "amount": null,
+    "identifier": null,
+    "negation": "positive",
+    "control_type": "none",
+    "completion_signal": "not_applicable",
+    "notes": "Scan a QR code to register a card for tokenised payments. The reference repeats 'कार्ड'."
+   },
+   "review": {
+    "needs_manual_review": false,
+    "reasons": []
+   }
+  },
+  {
+   "id": "ivb_hi_037",
+   "language": "hi",
+   "speaker_id": "S4257284700374409",
+   "reference_transcript": "मेरे पचास हज़ार रुपये से यू पी आई आई डी आठ एक तीन दो शून्य चार नौ पाँच छः तीन दो एट दा रेट ओ के सी आई सी आई का लेन देन क्यों विफल हुआ",
+   "project_annotations": {
+    "intent": "other",
+    "amount": 50000,
+    "identifier": [
+     {
+      "type": "upi_id",
+      "digits": "81320495632",
+      "span": "आठ एक तीन दो शून्य चार नौ पाँच छः तीन दो एट दा रेट ओ के सी आई सी आई"
+     }
+    ],
+    "negation": "positive",
+    "control_type": "none",
+    "completion_signal": "not_applicable",
+    "notes": "Asks why a 50000 transaction to a UPI ID failed. 'विफल' (failed) is lexical, not a negation word."
+   },
+   "review": {
+    "needs_manual_review": false,
+    "reasons": []
+   }
+  },
+  {
+   "id": "ivb_hi_038",
+   "language": "hi",
+   "speaker_id": "S4259743500319475",
+   "reference_transcript": "मुझे इक्कीस बारह दो हज़ार उन्नीस से इक्कीस एक दो हज़ार उन्नीस तक का मेरा लेन देन इतिहास दिखाएँ",
+   "project_annotations": {
+    "intent": "other",
+    "amount": null,
+    "identifier": null,
+    "negation": "positive",
+    "control_type": "none",
+    "completion_signal": "not_applicable",
+    "notes": "Show transaction history for a spoken date range (21-12-2019 to 21-1-2019; the end date precedes the start date). Dates are neither amounts nor identifiers."
+   },
+   "review": {
+    "needs_manual_review": false,
+    "reasons": []
+   }
+  },
+  {
+   "id": "ivb_hi_039",
+   "language": "hi",
+   "speaker_id": "S4258165300369904",
+   "reference_transcript": "कृपया मुझे चौबीस घंटे केवल टी वी विल की लेन देन रसीद दिखाएँ",
+   "project_annotations": {
+    "intent": "other",
+    "amount": null,
+    "identifier": null,
+    "negation": "positive",
+    "control_type": "none",
+    "completion_signal": "not_applicable",
+    "notes": "Show the transaction receipt for a TV bill over the last 24 hours."
+   },
+   "review": {
+    "needs_manual_review": false,
+    "reasons": []
+   }
+  },
+  {
+   "id": "ivb_hi_040",
+   "language": "hi",
+   "speaker_id": "S4256607300320842",
+   "reference_transcript": "मैं अपने जम्मू एंड कश्मीर ग्रामीण बैंक खाते से अधिकतम कितनी राशि निकाल सकता हूँ",
+   "project_annotations": {
+    "intent": "withdrawal",
+    "amount": null,
+    "identifier": null,
+    "negation": "positive",
+    "control_type": "none",
+    "completion_signal": "not_applicable",
+    "notes": "Asks the maximum withdrawable amount. Capability/limit question; no amount spoken."
+   },
+   "review": {
+    "needs_manual_review": false,
+    "reasons": []
+   }
+  },
+  {
+   "id": "ivb_hi_041",
+   "language": "hi",
+   "speaker_id": "S4259278000388808",
+   "reference_transcript": "मेरे बंधन बैंक खाते में कितना बैलेंस है",
+   "project_annotations": {
+    "intent": "balance",
+    "amount": null,
+    "identifier": null,
+    "negation": "positive",
+    "control_type": "none",
+    "completion_signal": "not_applicable",
+    "notes": null
+   },
+   "review": {
+    "needs_manual_review": false,
+    "reasons": []
+   }
+  },
+  {
+   "id": "ivb_hi_042",
+   "language": "hi",
+   "speaker_id": "S4257947400391966",
+   "reference_transcript": "क्या मेरे ऑक्सीजन खाते में पर्याप्त धनराशि है",
+   "project_annotations": {
+    "intent": "balance",
+    "amount": null,
+    "identifier": null,
+    "negation": "positive",
+    "control_type": "none",
+    "completion_signal": "not_applicable",
+    "notes": "Asks whether the wallet account holds sufficient funds. No amount spoken."
+   },
+   "review": {
+    "needs_manual_review": false,
+    "reasons": []
+   }
+  },
+  {
+   "id": "ivb_hi_043",
+   "language": "hi",
+   "speaker_id": "S4257592300373204",
+   "reference_transcript": "क्या आप मेरे सेंट्रल बैंक ऑफ़ इंडिया रुपये कार्ड को यो योनो एस बी आई से निकाल सकते हो",
+   "project_annotations": {
+    "intent": "other",
+    "amount": null,
+    "identifier": null,
+    "negation": "positive",
+    "control_type": "none",
+    "completion_signal": "not_applicable",
+    "notes": "Remove a card from a bank app. No card number spoken."
+   },
+   "review": {
+    "needs_manual_review": false,
+    "reasons": []
+   }
+  },
+  {
+   "id": "ivb_hi_044",
+   "language": "hi",
+   "speaker_id": "S4259955600374303",
+   "reference_transcript": "पिछले चार महीनों की मेरी मोबाइल बिल रीडिंग दिखाइए",
+   "project_annotations": {
+    "intent": "other",
+    "amount": null,
+    "identifier": null,
+    "negation": "positive",
+    "control_type": "none",
+    "completion_signal": "not_applicable",
+    "notes": "Show mobile bill readings for the last four months."
+   },
+   "review": {
+    "needs_manual_review": false,
+    "reasons": []
+   }
+  },
+  {
+   "id": "ivb_hi_045",
+   "language": "hi",
+   "speaker_id": "S4257792900372190",
+   "reference_transcript": "क्या आप टू हंड्रेड रुपये मेरे फ़ोर वन नाइन थ्री टू डबल सिक्स डबल सेवन फ़ाइव वन फ़ोर को उत्तराखंड ग्रामीण बैंक साप्ताहिक में पेपैल के ज़रिए ट्रांसफ़र कर सकते हैं और बैलेंस इससे कम होने पर मुझे सचेत कर सकते हैं",
+   "project_annotations": {
+    "intent": "transfer",
+    "amount": 200,
+    "identifier": [
+     {
+      "type": "account_number",
+      "digits": "419326677514",
+      "span": "फ़ोर वन नाइन थ्री टू डबल सिक्स डबल सेवन फ़ाइव वन फ़ोर"
+     }
+    ],
+    "negation": "positive",
+    "control_type": "none",
+    "completion_signal": "not_applicable",
+    "notes": "Weekly transfer of 200 to own bank account via a payment service, with an alert if the balance falls below that. Digits are spoken as English numerals; 'डबल सिक्स' expands to 66 and 'डबल सेवन' to 77, giving 12 digits."
+   },
+   "review": {
+    "needs_manual_review": false,
+    "reasons": []
+   }
+  },
+  {
+   "id": "ivb_hi_046",
+   "language": "hi",
+   "speaker_id": "S4259235000396470",
+   "reference_transcript": "ज़ी से मेरा पुरस्कार कब समाप्त होगा",
+   "project_annotations": {
+    "intent": "other",
+    "amount": null,
+    "identifier": null,
+    "negation": "positive",
+    "control_type": "none",
+    "completion_signal": "not_applicable",
+    "notes": "Asks when a reward expires."
+   },
+   "review": {
+    "needs_manual_review": false,
+    "reasons": []
+   }
+  },
+  {
+   "id": "ivb_hi_047",
+   "language": "hi",
+   "speaker_id": "S4257685400307612",
+   "reference_transcript": "मैं अपने आर बी एल बैंक से जम्मू एंड कश्मीर बैंक खाते में अधिकतम कितना ट्रांसफर कर सकता हूँ",
+   "project_annotations": {
+    "intent": "transfer",
+    "amount": null,
+    "identifier": null,
+    "negation": "positive",
+    "control_type": "none",
+    "completion_signal": "not_applicable",
+    "notes": "Asks the maximum transferable amount between two of the speaker's bank accounts. Capability/limit question; no amount spoken."
+   },
+   "review": {
+    "needs_manual_review": false,
+    "reasons": []
+   }
+  },
+  {
+   "id": "ivb_hi_048",
+   "language": "hi",
+   "speaker_id": "S4257013200300552",
+   "reference_transcript": "पुराने के बजाय नए पंजीकृत नंबर आठ आठ एक एक तीन चार एक दो छः आठ एक पर ओ टी पी भेजें",
+   "project_annotations": {
+    "intent": "other",
+    "amount": null,
+    "identifier": [
+     {
+      "type": "phone_number",
+      "digits": "88113412681",
+      "span": "आठ आठ एक एक तीन चार एक दो छः आठ एक"
+     }
+    ],
+    "negation": "positive",
+    "control_type": "none",
+    "completion_signal": "not_applicable",
+    "notes": "Send the OTP to the newly registered number instead of the old one. 11 digits spoken where an Indian mobile number has 10; recorded exactly as spoken."
+   },
+   "review": {
+    "needs_manual_review": false,
+    "reasons": []
+   }
+  },
+  {
+   "id": "ivb_hi_049",
+   "language": "hi",
+   "speaker_id": "S4258709600306674",
+   "reference_transcript": "मुझे नौ हज़ार रुपये पर रिफंड चाहिए जिसे दो बार डेबिट किया गया था",
+   "project_annotations": {
+    "intent": "other",
+    "amount": 9000,
+    "identifier": null,
+    "negation": "positive",
+    "control_type": "none",
+    "completion_signal": "not_applicable",
+    "notes": "Refund request for 9000 debited twice."
+   },
+   "review": {
+    "needs_manual_review": false,
+    "reasons": []
+   }
+  },
+  {
+   "id": "ivb_hi_050",
+   "language": "hi",
+   "speaker_id": "S4257058200300870",
+   "reference_transcript": "क्या आप सत्यापित कर सकते हैं कि अस्सी हज़ार रुपये अभी मेरे योनो एस बी आई द्वारा प्राप्त किया गया था",
+   "project_annotations": {
+    "intent": "other",
+    "amount": 80000,
+    "identifier": null,
+    "negation": "positive",
+    "control_type": "none",
+    "completion_signal": "not_applicable",
+    "notes": "Asks to verify that 80000 was just received."
+   },
+   "review": {
+    "needs_manual_review": false,
+    "reasons": []
+   }
+  },
+  {
+   "id": "ivb_hi_051",
+   "language": "hi",
+   "speaker_id": "S4259975100393517",
+   "reference_transcript": "मेरी गीजर इस्टालेशन कास्ट कितनी थी",
+   "project_annotations": {
+    "intent": "other",
+    "amount": null,
+    "identifier": null,
+    "negation": "positive",
+    "control_type": "none",
+    "completion_signal": "not_applicable",
+    "notes": "Asks what a past installation cost was. The amount is questioned, not stated."
+   },
+   "review": {
+    "needs_manual_review": false,
+    "reasons": []
+   }
+  },
+  {
+   "id": "ivb_hi_052",
+   "language": "hi",
+   "speaker_id": "S4256873200337982",
+   "reference_transcript": "क्या आप इस क्यूँ आर कोड को स्कैन कर सकते हैं और मेरे बंधन बैंक खाते को प्रमाणित कर सकते हैं",
+   "project_annotations": {
+    "intent": "other",
+    "amount": null,
+    "identifier": null,
+    "negation": "positive",
+    "control_type": "none",
+    "completion_signal": "not_applicable",
+    "notes": "Scan a QR code to authenticate a bank account."
+   },
+   "review": {
+    "needs_manual_review": false,
+    "reasons": []
+   }
+  },
+  {
+   "id": "ivb_hi_053",
+   "language": "hi",
+   "speaker_id": "S4259052600359992",
+   "reference_transcript": "क्या मैं अपने पेज़ैप के माध्यम से म्युचुअल फंड में निवेश कर सकता हूँ",
+   "project_annotations": {
+    "intent": "other",
+    "amount": null,
+    "identifier": null,
+    "negation": "positive",
+    "control_type": "none",
+    "completion_signal": "not_applicable",
+    "notes": "Asks whether mutual funds can be invested in through a payment app."
+   },
+   "review": {
+    "needs_manual_review": false,
+    "reasons": []
+   }
+  },
+  {
+   "id": "ivb_hi_054",
+   "language": "hi",
+   "speaker_id": "S4257296000376849",
+   "reference_transcript": "मेरे वर्चुअल भुगतान पते को सात छः सात नौ नौ चार दौ तीन छः छः नौ ऐट द रेट यू पी आई से नौ दौ ज़ीरो सात छः ज़ीरो दौ दौ आठ आठ पाँच ऐट द रेट पेटिएम में बदलें",
+   "project_annotations": {
+    "intent": "other",
+    "amount": null,
+    "identifier": [
+     {
+      "type": "upi_id",
+      "digits": "76799423669",
+      "span": "सात छः सात नौ नौ चार दौ तीन छः छः नौ ऐट द रेट यू पी आई"
+     },
+     {
+      "type": "upi_id",
+      "digits": "92076022885",
+      "span": "नौ दौ ज़ीरो सात छः ज़ीरो दौ दौ आठ आठ पाँच ऐट द रेट पेटिएम"
+     }
+    ],
+    "negation": "positive",
+    "control_type": "none",
+    "completion_signal": "not_applicable",
+    "notes": "Change the virtual payment address from the first UPI ID to the second. 11 digits each; 'दौ' is a spelling variant of दो (two)."
+   },
+   "review": {
+    "needs_manual_review": false,
+    "reasons": []
+   }
+  },
+  {
+   "id": "ivb_hi_055",
+   "language": "hi",
+   "speaker_id": "S4259027400309283",
+   "reference_transcript": "क्या आप मेरे एम स्वाइप वॉलेट में आठ सौ रुपये मेरे पेटीएम पेमेंट्स बैंक खाते से जोड़ सकते हो",
+   "project_annotations": {
+    "intent": "deposit",
+    "amount": 800,
+    "identifier": null,
+    "negation": "positive",
+    "control_type": "none",
+    "completion_signal": "not_applicable",
+    "notes": "Add 800 from own bank account into own wallet. Annotated as deposit."
+   },
+   "review": {
+    "needs_manual_review": false,
+    "reasons": []
+   }
+  },
+  {
+   "id": "ivb_hi_056",
+   "language": "hi",
+   "speaker_id": "S4259433400364582",
+   "reference_transcript": "क्या मेरे यूनियन बैंक ऑफ़ इंडिया खाते में छः हज़ार रुपये का लेन देन करने के लिए पर्याप्त पैसे हैं",
+   "project_annotations": {
+    "intent": "balance",
+    "amount": 6000,
+    "identifier": null,
+    "negation": "positive",
+    "control_type": "none",
+    "completion_signal": "not_applicable",
+    "notes": "Asks whether the account holds enough for a 6000 transaction; the amount is the intended transaction size."
+   },
+   "review": {
+    "needs_manual_review": false,
+    "reasons": []
+   }
+  },
+  {
+   "id": "ivb_hi_057",
+   "language": "hi",
+   "speaker_id": "S4258404500360406",
+   "reference_transcript": "अपने फ़ोन पे का उपयोग करके मैं कौन से बिलों का भुगतान कर सकता हूँ",
+   "project_annotations": {
+    "intent": "payment",
+    "amount": null,
+    "identifier": null,
+    "negation": "positive",
+    "control_type": "none",
+    "completion_signal": "not_applicable",
+    "notes": "Asks which bills can be paid using a payment app. Capability question about bill payment."
+   },
+   "review": {
+    "needs_manual_review": false,
+    "reasons": []
+   }
+  },
+  {
+   "id": "ivb_hi_058",
+   "language": "hi",
+   "speaker_id": "S4259063900331131",
+   "reference_transcript": "एयरटेल मनी का उपयोग करके चुनिंदा संपर्कों को सात सौ रुपये कल सुबह नौ बजे ट्रांसफ़र करें",
+   "project_annotations": {
+    "intent": "transfer",
+    "amount": 700,
+    "identifier": null,
+    "negation": "positive",
+    "control_type": "none",
+    "completion_signal": "not_applicable",
+    "notes": "Transfer 700 to selected contacts at a scheduled time. 'नौ बजे' (nine o'clock) is a time, not an amount."
+   },
+   "review": {
+    "needs_manual_review": false,
+    "reasons": []
+   }
+  },
+  {
+   "id": "ivb_hi_059",
+   "language": "hi",
+   "speaker_id": "S4257947800367633",
+   "reference_transcript": "आठ सौ रुपये एक्सिस बैंक लाइम पर अंतिम स्क्रैन किए गए क्यू आर कोड पर भुगतान करें टिप कहते हुए एक टिप्पणी जोड़ें",
+   "project_annotations": {
+    "intent": "payment",
+    "amount": 800,
+    "identifier": null,
+    "negation": "positive",
+    "control_type": "none",
+    "completion_signal": "not_applicable",
+    "notes": "Pay 800 on the last scanned QR code and add a comment reading 'tip'."
+   },
+   "review": {
+    "needs_manual_review": false,
+    "reasons": []
+   }
+  },
+  {
+   "id": "ivb_hi_060",
+   "language": "hi",
+   "speaker_id": "S4257381600378159",
+   "reference_transcript": "मुझे बताएँ कि महाराष्ट्र ग्रामीण में कई बैंक खातों को कैसे लिंक करें और मेरे अपने खातों के बीच पैसे कैसे ट्रांसफ़र करें",
+   "project_annotations": {
+    "intent": "other",
+    "amount": null,
+    "identifier": null,
+    "negation": "positive",
+    "control_type": "none",
+    "completion_signal": "not_applicable",
+    "notes": "How-to question: linking multiple bank accounts and moving money between the speaker's own accounts. Informational request, not a transfer instruction."
+   },
+   "review": {
+    "needs_manual_review": false,
+    "reasons": []
+   }
+  },
+  {
+   "id": "ivb_hi_061",
+   "language": "hi",
+   "speaker_id": "S4259356200311096",
+   "reference_transcript": "क्या मैं एयरटेल मनी के माध्यम से टाटा कैपिटल फाइनेंशियल सर्विसेस पर अपने कार लोन का भुगतान कर सकता हूँ",
+   "project_annotations": {
+    "intent": "other",
+    "amount": null,
+    "identifier": null,
+    "negation": "positive",
+    "control_type": "none",
+    "completion_signal": "not_applicable",
+    "notes": "Asks whether a car loan payment can be made through a wallet app. Loan query, which the schema assigns to other."
+   },
+   "review": {
+    "needs_manual_review": false,
+    "reasons": []
+   }
+  },
+  {
+   "id": "ivb_hi_062",
+   "language": "hi",
+   "speaker_id": "S4259690200325325",
+   "reference_transcript": "क्या मेरे आर बी एल बैंक खाते में नौ हज़ार रुपये का लेनदेन करने के लिए पर्याप्त पैसा है",
+   "project_annotations": {
+    "intent": "balance",
+    "amount": 9000,
+    "identifier": null,
+    "negation": "positive",
+    "control_type": "none",
+    "completion_signal": "not_applicable",
+    "notes": "Asks whether the account holds enough for a 9000 transaction; the amount is the intended transaction size."
+   },
+   "review": {
+    "needs_manual_review": false,
+    "reasons": []
+   }
+  },
+  {
+   "id": "ivb_hi_063",
+   "language": "hi",
+   "speaker_id": "S4258402100350922",
+   "reference_transcript": "मेरा साइट्रस क्यू आर कोड अक्षत करनॉट से वॉट्सअप पर सेयर करें",
+   "project_annotations": {
+    "intent": "other",
+    "amount": null,
+    "identifier": null,
+    "negation": "positive",
+    "control_type": "none",
+    "completion_signal": "not_applicable",
+    "notes": "Share own QR code with a named contact over a messaging app."
+   },
+   "review": {
+    "needs_manual_review": false,
+    "reasons": []
+   }
+  },
+  {
+   "id": "ivb_hi_064",
+   "language": "hi",
+   "speaker_id": "S4258843700399881",
+   "reference_transcript": "कृपया गूगल पे का इस्तेमाल करके मेरे फोन का मौजूदा प्लान से रिचार्ज करें और वही राशि मकान मालिक को ट्रांसफ़र करें",
+   "project_annotations": {
+    "intent": "payment",
+    "amount": null,
+    "identifier": null,
+    "negation": "positive",
+    "control_type": "none",
+    "completion_signal": "not_applicable",
+    "notes": "Two requests: recharge the phone on its current plan, then transfer the same amount to the landlord. Recharge is taken as primary since it is first in order. No amount is spoken; 'वही राशि' (the same amount) refers back to the unstated plan price, so amount is null."
+   },
+   "review": {
+    "needs_manual_review": false,
+    "reasons": []
+   }
+  },
+  {
+   "id": "ivb_hi_065",
+   "language": "hi",
+   "speaker_id": "S4259922000364800",
+   "reference_transcript": "मेरे सौ रुपये से यू पी आई आई डी सतहत्तर सोलह तैन्तालीस उनसठ बावन फ़ोर एट द रेट एच डी एफ़ सी बैंक का लेनदेन क्यों विफ़ल हुआ",
+   "project_annotations": {
+    "intent": "other",
+    "amount": 100,
+    "identifier": [
+     {
+      "type": "upi_id",
+      "digits": "77164359524",
+      "span": "सतहत्तर सोलह तैन्तालीस उनसठ बावन फ़ोर एट द रेट एच डी एफ़ सी बैंक"
+     }
+    ],
+    "negation": "positive",
+    "control_type": "none",
+    "completion_signal": "not_applicable",
+    "notes": "Asks why a 100 transaction to a UPI ID failed. Digits are spoken as grouped two-digit numbers (77, 16, 43, 59, 52) plus a final 4, giving 11 digits."
+   },
+   "review": {
+    "needs_manual_review": false,
+    "reasons": []
+   }
+  },
+  {
+   "id": "ivb_hi_066",
+   "language": "hi",
+   "speaker_id": "S4259234800359831",
+   "reference_transcript": "मुझे पुड्डुवाई भारतीय आर ग्राम बैंक में छः हजार रुपए से तिहत्तर अड़तीस छप्पन बहत्तर तिरानवे बारह चौदह के अटके लेनदेन में राशि वापस कब मिलेगी",
+   "project_annotations": {
+    "intent": "other",
+    "amount": 6000,
+    "identifier": [
+     {
+      "type": "other",
+      "digits": "73385672931214",
+      "span": "तिहत्तर अड़तीस छप्पन बहत्तर तिरानवे बारह चौदह"
+     }
+    ],
+    "negation": "positive",
+    "control_type": "none",
+    "completion_signal": "not_applicable",
+    "notes": "Asks when money from a stuck 6000 transaction will be returned. Digits are spoken as grouped two-digit numbers (73, 38, 56, 72, 93, 12, 14), giving 14 digits. The reference does not say what kind of identifier this is, so type is other."
+   },
+   "review": {
+    "needs_manual_review": false,
+    "reasons": []
+   }
+  },
+  {
+   "id": "ivb_hi_067",
+   "language": "hi",
+   "speaker_id": "S4257755000394803",
+   "reference_transcript": "मेरा पेजैप क्यू आर कोड अक्षत कर कारनोट से वॉट्सएप पर शेयर करें",
+   "project_annotations": {
+    "intent": "other",
+    "amount": null,
+    "identifier": null,
+    "negation": "positive",
+    "control_type": "none",
+    "completion_signal": "not_applicable",
+    "notes": "Share own QR code with a named contact over a messaging app. The reference contains a spoken repair in the contact name."
+   },
+   "review": {
+    "needs_manual_review": false,
+    "reasons": []
+   }
+  },
+  {
+   "id": "ivb_hi_068",
+   "language": "hi",
+   "speaker_id": "S4256644800325294",
+   "reference_transcript": "योनो एस बी आई में एक व्यापारिक सौदे के बाद मैं अपने भुगतान को अपडेट होता हुआ कब देख सकता हूँ",
+   "project_annotations": {
+    "intent": "other",
+    "amount": null,
+    "identifier": null,
+    "negation": "positive",
+    "control_type": "none",
+    "completion_signal": "not_applicable",
+    "notes": "Asks when a payment will show as updated after a business deal."
+   },
+   "review": {
+    "needs_manual_review": false,
+    "reasons": []
+   }
+  },
+  {
+   "id": "ivb_hi_069",
+   "language": "hi",
+   "speaker_id": "S4259215400345765",
+   "reference_transcript": "कृपया आप दो सौ रुपये राशि एकम फाउंडेशन को गुमनाम रूप से ट्रांसफ़र कर सकते हैं",
+   "project_annotations": {
+    "intent": "transfer",
+    "amount": 200,
+    "identifier": null,
+    "negation": "positive",
+    "control_type": "none",
+    "completion_signal": "not_applicable",
+    "notes": "Anonymous donation of 200 to an organisation; treated as transfer to a recipient."
+   },
+   "review": {
+    "needs_manual_review": false,
+    "reasons": []
+   }
+  },
+  {
+   "id": "ivb_hi_070",
+   "language": "hi",
+   "speaker_id": "S4259761400362418",
+   "reference_transcript": "एजेंसियों महिंद्रा एंड महिंद्रा फाइनेंशियल सर्विसेज़ और पावर फाइनेंस कॉर्पोरेसन द्वारा प्रदान की जाने वाली स्वस्थ्य बीमा योजनाओं को चुनने के लिए मुझे सुझाव दें",
+   "project_annotations": {
+    "intent": "other",
+    "amount": null,
+    "identifier": null,
+    "negation": "positive",
+    "control_type": "none",
+    "completion_signal": "not_applicable",
+    "notes": "Asks for health insurance plan suggestions from named finance companies."
+   },
+   "review": {
+    "needs_manual_review": false,
+    "reasons": []
+   }
+  },
+  {
+   "id": "ivb_hi_071",
+   "language": "hi",
+   "speaker_id": "S4256707600337773",
+   "reference_transcript": "क्या आप स्वचालित रूप से भक्ति हटवाल को छः हज़ार रुपये साप्ताहिक भेजना वंद कर सकते हैं और चार हज़ार रुपये ओला मनी पर भेज सकते हैं",
+   "project_annotations": {
+    "intent": "transfer",
+    "amount": 4000,
+    "identifier": null,
+    "negation": "positive",
+    "control_type": "none",
+    "completion_signal": "not_applicable",
+    "notes": "Asks to stop an automatic weekly transfer of 6000 to a person and send 4000 instead; amount is the requested new value, 6000 is the stopped standing instruction. 'वंद' is a spelling variant of बंद (stop)."
+   },
+   "review": {
+    "needs_manual_review": false,
+    "reasons": []
+   }
+  },
+  {
+   "id": "ivb_hi_072",
+   "language": "hi",
+   "speaker_id": "S4259000900331054",
+   "reference_transcript": "मेरे फ़्रीचार्ज ऐप वॉलेट से लीला धवन में पाँच हज़ार रुपये ट्रांसफ़र करें",
+   "project_annotations": {
+    "intent": "transfer",
+    "amount": 5000,
+    "identifier": null,
+    "negation": "positive",
+    "control_type": "none",
+    "completion_signal": "not_applicable",
+    "notes": "Transfer 5000 from own wallet to a named person."
+   },
+   "review": {
+    "needs_manual_review": false,
+    "reasons": []
+   }
+  },
+  {
+   "id": "ivb_hi_073",
+   "language": "hi",
+   "speaker_id": "S4258830100381344",
+   "reference_transcript": "पिछले सात महीने में मेरे द्वारा किए गए सभी दान मुझे दिखाएँ",
+   "project_annotations": {
+    "intent": "other",
+    "amount": null,
+    "identifier": null,
+    "negation": "positive",
+    "control_type": "none",
+    "completion_signal": "not_applicable",
+    "notes": "Show all donations made in the last seven months."
+   },
+   "review": {
+    "needs_manual_review": false,
+    "reasons": []
+   }
+  },
+  {
+   "id": "ivb_hi_074",
+   "language": "hi",
+   "speaker_id": "S4259064800346268",
+   "reference_transcript": "क्या आठ सात नो तीन एक चार शून्य पाँच सात चार पाँच एक्सिस बैंक लाइम पर है",
+   "project_annotations": {
+    "intent": "other",
+    "amount": null,
+    "identifier": [
+     {
+      "type": "other",
+      "digits": "87931405745",
+      "span": "आठ सात नो तीन एक चार शून्य पाँच सात चार पाँच"
+     }
+    ],
+    "negation": "positive",
+    "control_type": "none",
+    "completion_signal": "not_applicable",
+    "notes": "Asks whether this 11-digit number is registered on a payment service. 'नो' is read as नौ (nine), a spelling variant inside a digit sequence. The reference does not say what kind of identifier it is, so type is other."
+   },
+   "review": {
+    "needs_manual_review": false,
+    "reasons": []
+   }
+  },
+  {
+   "id": "ivb_hi_075",
+   "language": "hi",
+   "speaker_id": "S4259010700319043",
+   "reference_transcript": "जब मैं ऑनलाइन सॉपिंग ऐप्स पर आठ सौ रुपये तक पहुँच जाऊँ तो कृपया मुझे सचेत करें",
+   "project_annotations": {
+    "intent": "other",
+    "amount": 800,
+    "identifier": null,
+    "negation": "positive",
+    "control_type": "none",
+    "completion_signal": "not_applicable",
+    "notes": "Asks for an alert when spending on shopping apps reaches 800; the amount is a threshold."
+   },
+   "review": {
+    "needs_manual_review": false,
+    "reasons": []
+   }
+  },
+  {
+   "id": "ivb_hi_076",
+   "language": "hi",
+   "speaker_id": "S4258858600387188",
+   "reference_transcript": "कृपया छह हज़ार रुपये का भुगतान करें दक्षिण ग्रामीण बिहार ग्रामीण बैंक खाते छः चार सात आठ दो एक सात चार नौ नौ सात पाँच एक आठ से मुरली जसावत को करें",
+   "project_annotations": {
+    "intent": "transfer",
+    "amount": 6000,
+    "identifier": [
+     {
+      "type": "account_number",
+      "digits": "64782174997518",
+      "span": "छः चार सात आठ दो एक सात चार नौ नौ सात पाँच एक आठ"
+     }
+    ],
+    "negation": "positive",
+    "control_type": "none",
+    "completion_signal": "not_applicable",
+    "notes": "Pay 6000 from a named bank account to a named person. The recipient is a person, so the schema assigns transfer. 14 digits spoken one by one."
+   },
+   "review": {
+    "needs_manual_review": false,
+    "reasons": []
+   }
+  },
+  {
+   "id": "ivb_hi_077",
+   "language": "hi",
+   "speaker_id": "S4259907000375870",
+   "reference_transcript": "मेरे तेलंगाना ग्रामीण बैंक खाते में कितना पैसा बाकी है",
+   "project_annotations": {
+    "intent": "balance",
+    "amount": null,
+    "identifier": null,
+    "negation": "positive",
+    "control_type": "none",
+    "completion_signal": "not_applicable",
+    "notes": null
+   },
+   "review": {
+    "needs_manual_review": false,
+    "reasons": []
+   }
+  },
+  {
+   "id": "ivb_hi_078",
+   "language": "hi",
+   "speaker_id": "S4259893500350977",
+   "reference_transcript": "नवंबर और अप्रैल के मेरे क्रेडिट कार्ड बिल के लिए स्वतः भुगतान अक्षम करें",
+   "project_annotations": {
+    "intent": "other",
+    "amount": null,
+    "identifier": null,
+    "negation": "positive",
+    "control_type": "none",
+    "completion_signal": "not_applicable",
+    "notes": "Disable auto-payment of a credit card bill for two named months. Targets a standing instruction, a banking operation, not the dialogue, so control_type is none."
+   },
+   "review": {
+    "needs_manual_review": false,
+    "reasons": []
+   }
+  },
+  {
+   "id": "ivb_hi_079",
+   "language": "hi",
+   "speaker_id": "S4259512500363904",
+   "reference_transcript": "दो सौ रुपये मदर हेल्प ऐज़ को दान करें",
+   "project_annotations": {
+    "intent": "transfer",
+    "amount": 200,
+    "identifier": null,
+    "negation": "positive",
+    "control_type": "none",
+    "completion_signal": "not_applicable",
+    "notes": "Donate 200 to an organisation; treated as transfer to a recipient."
+   },
+   "review": {
+    "needs_manual_review": false,
+    "reasons": []
+   }
+  },
+  {
+   "id": "ivb_hi_080",
+   "language": "hi",
+   "speaker_id": "S4259784700349104",
+   "reference_transcript": "पिछले सात महीनों की मेरी बिजली बिल रीडिंग दिखाएँ",
+   "project_annotations": {
+    "intent": "other",
+    "amount": null,
+    "identifier": null,
+    "negation": "positive",
+    "control_type": "none",
+    "completion_signal": "not_applicable",
+    "notes": "Show electricity bill readings for the last seven months."
+   },
+   "review": {
+    "needs_manual_review": false,
+    "reasons": []
+   }
+  },
+  {
+   "id": "ivb_hi_081",
+   "language": "hi",
+   "speaker_id": "S4257245600388420",
+   "reference_transcript": "क्या मेरे बैंक ऑफ़ इंडिया खाते में चार हज़ार रुपये का लेन देन करने के लिए पर्याप्त पैसा है",
+   "project_annotations": {
+    "intent": "balance",
+    "amount": 4000,
+    "identifier": null,
+    "negation": "positive",
+    "control_type": "none",
+    "completion_signal": "not_applicable",
+    "notes": "Asks whether the account holds enough for a 4000 transaction; the amount is the intended transaction size."
+   },
+   "review": {
+    "needs_manual_review": false,
+    "reasons": []
+   }
+  },
+  {
+   "id": "ivb_hi_082",
+   "language": "hi",
+   "speaker_id": "S4259933200364743",
+   "reference_transcript": "क्या एन जी ओ की सूचि में ह्यूमन वेलफेयर चैरिटेबल ट्रस्ट उपलब्ध है यदि हाँ तो कृपया नौ हज़ार रुपये इसको दान करें",
+   "project_annotations": {
+    "intent": "transfer",
+    "amount": 9000,
+    "identifier": null,
+    "negation": "positive",
+    "control_type": "none",
+    "completion_signal": "not_applicable",
+    "notes": "Donate 9000 to an organisation, conditional on it appearing in the NGO list. The first clause is a lookup precondition."
+   },
+   "review": {
+    "needs_manual_review": false,
+    "reasons": []
+   }
+  },
+  {
+   "id": "ivb_hi_083",
+   "language": "hi",
+   "speaker_id": "S4257163900384554",
+   "reference_transcript": "कार बीमा के लिए बीमित राशि सौ रुपये चुनें",
+   "project_annotations": {
+    "intent": "other",
+    "amount": 100,
+    "identifier": null,
+    "negation": "positive",
+    "control_type": "none",
+    "completion_signal": "not_applicable",
+    "notes": "Car insurance: select an insured amount of 100."
+   },
+   "review": {
+    "needs_manual_review": false,
+    "reasons": []
+   }
+  },
+  {
+   "id": "ivb_hi_084",
+   "language": "hi",
+   "speaker_id": "S4259331100309623",
+   "reference_transcript": "मेरे डिफ़ॉल्ट कार्ड के छूने और भुगतान करने के तरीके को कैनरा बैंक रुपे कार्ड से दक्षिण बिहार ग्रामीण बैंक क्रेडिट कार्ड बदल दो",
+   "project_annotations": {
+    "intent": "other",
+    "amount": null,
+    "identifier": null,
+    "negation": "positive",
+    "control_type": "none",
+    "completion_signal": "not_applicable",
+    "notes": "Change the default tap-and-pay card from one bank card to another. No card number spoken."
+   },
+   "review": {
+    "needs_manual_review": false,
+    "reasons": []
+   }
+  },
+  {
+   "id": "ivb_hi_085",
+   "language": "hi",
+   "speaker_id": "S4259234300389121",
+   "reference_transcript": "कृपया सत्यापित करें कि क्या मेरा बैंक खाता आठ तीन सात तीन सात एक तीन पाँच पाँच नौ नौ आठ दो आठ आठ डिज़िटल भुगतान ऐप पेज़ैप से जोड़ा जा सकता है",
+   "project_annotations": {
+    "intent": "other",
+    "amount": null,
+    "identifier": [
+     {
+      "type": "account_number",
+      "digits": "837371355998288",
+      "span": "आठ तीन सात तीन सात एक तीन पाँच पाँच नौ नौ आठ दो आठ आठ"
+     }
+    ],
+    "negation": "positive",
+    "control_type": "none",
+    "completion_signal": "not_applicable",
+    "notes": "Verify whether the account can be linked to a digital payment app. 15 digits spoken one by one."
+   },
+   "review": {
+    "needs_manual_review": false,
+    "reasons": []
+   }
+  },
+  {
+   "id": "ivb_hi_086",
+   "language": "hi",
+   "speaker_id": "S4258938400366275",
+   "reference_transcript": "मेरा अमेज़न पे क्यू आर कोड स्कैनर ठीक से काम नहीं कर रहा है मुझे क्या करना चाहिए",
+   "project_annotations": {
+    "intent": "other",
+    "amount": null,
+    "identifier": null,
+    "negation": "negative",
+    "control_type": "none",
+    "completion_signal": "not_applicable",
+    "notes": "Reports that the QR code scanner is not working and asks what to do. Negation: 'नहीं' in 'काम नहीं कर रहा है' (is not working)."
+   },
+   "review": {
+    "needs_manual_review": false,
+    "reasons": []
+   }
+  },
+  {
+   "id": "ivb_hi_087",
+   "language": "hi",
+   "speaker_id": "S4256638500327010",
+   "reference_transcript": "जीवन बीमा बीमा के लिए बीमित राशि पाँच हजार रुपये चुनें",
+   "project_annotations": {
+    "intent": "other",
+    "amount": 5000,
+    "identifier": null,
+    "negation": "positive",
+    "control_type": "none",
+    "completion_signal": "not_applicable",
+    "notes": "Life insurance: select an insured amount of 5000. The reference repeats 'बीमा'."
+   },
+   "review": {
+    "needs_manual_review": false,
+    "reasons": []
+   }
+  },
+  {
+   "id": "ivb_hi_088",
+   "language": "hi",
+   "speaker_id": "S4259502400390447",
+   "reference_transcript": "क्या एनजीओ की सूची में युनिसेफ़ उपलब्ध है यदि हाँ तो कृपया आठ सौ रुपये इसको दान करें",
+   "project_annotations": {
+    "intent": "transfer",
+    "amount": 800,
+    "identifier": null,
+    "negation": "positive",
+    "control_type": "none",
+    "completion_signal": "not_applicable",
+    "notes": "Donate 800 to an organisation, conditional on it appearing in the NGO list."
+   },
+   "review": {
+    "needs_manual_review": false,
+    "reasons": []
+   }
+  },
+  {
+   "id": "ivb_hi_089",
+   "language": "hi",
+   "speaker_id": "S4258062900300355",
+   "reference_transcript": "मेरे आर्यव्रत बैंक खाते की शेष राशि की जाँच करें और पुष्टि करें कि मुझे छ सौ रुपये की राशि प्राप्त हुई है",
+   "project_annotations": {
+    "intent": "balance",
+    "amount": 600,
+    "identifier": null,
+    "negation": "positive",
+    "control_type": "none",
+    "completion_signal": "not_applicable",
+    "notes": "Check the account balance and confirm that 600 was received."
+   },
+   "review": {
+    "needs_manual_review": false,
+    "reasons": []
+   }
+  },
+  {
+   "id": "ivb_hi_090",
+   "language": "hi",
+   "speaker_id": "S4258262800387709",
+   "reference_transcript": "मेरा ओला मनी क्यूआर कोड मुरली जसावत से वॉट्सएप पर शेयर करें",
+   "project_annotations": {
+    "intent": "other",
+    "amount": null,
+    "identifier": null,
+    "negation": "positive",
+    "control_type": "none",
+    "completion_signal": "not_applicable",
+    "notes": "Share own QR code with a named contact over a messaging app."
+   },
+   "review": {
+    "needs_manual_review": false,
+    "reasons": []
+   }
+  },
+  {
+   "id": "ivb_hi_091",
+   "language": "hi",
+   "speaker_id": "S4257339500362550",
+   "reference_transcript": "क्या आप तीस हज़ार रुपए राशि ह्यूमन वेलफेयर चैरिटेबल ट्रस्ट को गुमनाम रूप से ट्रांसफ़र कर सकते हैं",
+   "project_annotations": {
+    "intent": "transfer",
+    "amount": 30000,
+    "identifier": null,
+    "negation": "positive",
+    "control_type": "none",
+    "completion_signal": "not_applicable",
+    "notes": "Anonymous donation of 30000 to an organisation."
+   },
+   "review": {
+    "needs_manual_review": false,
+    "reasons": []
+   }
+  },
+  {
+   "id": "ivb_hi_092",
+   "language": "hi",
+   "speaker_id": "S4257734500388634",
+   "reference_transcript": "क्या आप स्वचालित रूप से फूलन देशमुख को साठ हज़ार रुपये द्वि साप्ताहिक भेजना बंद कर सकते हैं और सौ रुपये पेजैप पर भेज सकते हैं",
+   "project_annotations": {
+    "intent": "transfer",
+    "amount": 100,
+    "identifier": null,
+    "negation": "positive",
+    "control_type": "none",
+    "completion_signal": "not_applicable",
+    "notes": "Asks to stop an automatic fortnightly transfer of 60000 to a person and send 100 instead; amount is the requested new value, 60000 is the stopped standing instruction."
+   },
+   "review": {
+    "needs_manual_review": false,
+    "reasons": []
+   }
+  },
+  {
+   "id": "ivb_hi_093",
+   "language": "hi",
+   "speaker_id": "S4259927200383185",
+   "reference_transcript": "मेरे पी एन बी खाते में कितने बचे हैं",
+   "project_annotations": {
+    "intent": "balance",
+    "amount": null,
+    "identifier": null,
+    "negation": "positive",
+    "control_type": "none",
+    "completion_signal": "not_applicable",
+    "notes": null
+   },
+   "review": {
+    "needs_manual_review": false,
+    "reasons": []
+   }
+  },
+  {
+   "id": "ivb_hi_094",
+   "language": "hi",
+   "speaker_id": "S4259410600330024",
+   "reference_transcript": "मेरे पेयू मनी से पायस्विनी दीक्षित को पाँच सौ रुपये का भुगतान करें",
+   "project_annotations": {
+    "intent": "transfer",
+    "amount": 500,
+    "identifier": null,
+    "negation": "positive",
+    "control_type": "none",
+    "completion_signal": "not_applicable",
+    "notes": "Pay 500 to a named person from a wallet. The recipient is a person, so the schema assigns transfer even though the verb is 'भुगतान करें' (pay)."
+   },
+   "review": {
+    "needs_manual_review": false,
+    "reasons": []
+   }
+  },
+  {
+   "id": "ivb_hi_095",
+   "language": "hi",
+   "speaker_id": "S4259390600311126",
+   "reference_transcript": "क्या आप मेरे एन एस डी एल पेमेंट्स बैंक मास्टर कार्ड को गूगल पे से निकाल सकते हो",
+   "project_annotations": {
+    "intent": "other",
+    "amount": null,
+    "identifier": null,
+    "negation": "positive",
+    "control_type": "none",
+    "completion_signal": "not_applicable",
+    "notes": "Remove a card from a payment app. No card number spoken."
+   },
+   "review": {
+    "needs_manual_review": false,
+    "reasons": []
+   }
+  },
+  {
+   "id": "ivb_hi_096",
+   "language": "hi",
+   "speaker_id": "S4259188700343561",
+   "reference_transcript": "पिछले चार महीनों की मेरी ब्रॉडबैंड बिल की रीडिंग दिखाएँ",
+   "project_annotations": {
+    "intent": "other",
+    "amount": null,
+    "identifier": null,
+    "negation": "positive",
+    "control_type": "none",
+    "completion_signal": "not_applicable",
+    "notes": "Show broadband bill readings for the last four months."
+   },
+   "review": {
+    "needs_manual_review": false,
+    "reasons": []
+   }
+  },
+  {
+   "id": "ivb_hi_097",
+   "language": "hi",
+   "speaker_id": "S4259881700373724",
+   "reference_transcript": "मैं अपने आई सी आई सी आई पॉकेट्स में बैंक खाते को जोड़ने में असमर्थ हूँ",
+   "project_annotations": {
+    "intent": "other",
+    "amount": null,
+    "identifier": null,
+    "negation": "negative",
+    "control_type": "none",
+    "completion_signal": "not_completed",
+    "notes": "States inability to link a bank account in a wallet app. Negation rests on 'असमर्थ' (unable), a lexical negative with the privative prefix अ-, not a negation particle such as नहीं; completion_signal is not_completed because the linking has not been accomplished. Both judgements are borderline."
+   },
+   "review": {
+    "needs_manual_review": true,
+    "reasons": [
+     "negation marked from the lexical negative 'असमर्थ' rather than a negation particle; completion_signal reads a capability statement as not_completed"
+    ]
+   }
+  },
+  {
+   "id": "ivb_hi_098",
+   "language": "hi",
+   "speaker_id": "S4259598000331315",
+   "reference_transcript": "पिछले सप्ताह में जियो मनी द्वारा भुगतान किए गए रेस्टोरेंट की सूची दिखाएँ",
+   "project_annotations": {
+    "intent": "other",
+    "amount": null,
+    "identifier": null,
+    "negation": "positive",
+    "control_type": "none",
+    "completion_signal": "not_applicable",
+    "notes": "Show the list of restaurants paid through a wallet last week."
+   },
+   "review": {
+    "needs_manual_review": false,
+    "reasons": []
+   }
+  },
+  {
+   "id": "ivb_hi_099",
+   "language": "hi",
+   "speaker_id": "S4258583300388301",
+   "reference_transcript": "कृप्या यह रिवॉर्ड रोशनी ढिंढोरिया संपर्क को भेजे",
+   "project_annotations": {
+    "intent": "other",
+    "amount": null,
+    "identifier": null,
+    "negation": "positive",
+    "control_type": "none",
+    "completion_signal": "not_applicable",
+    "notes": "Send a reward to a named contact."
+   },
+   "review": {
+    "needs_manual_review": false,
+    "reasons": []
+   }
+  },
+  {
+   "id": "ivb_hi_100",
+   "language": "hi",
+   "speaker_id": "S4259751400349304",
+   "reference_transcript": "क्या मेरे जम्मू एंड कश्मीर ग्रामीण बैंक खाते में आठ सौ रुपये का लेनदेन करने के लिए पर्याप्त पैसा है",
+   "project_annotations": {
+    "intent": "balance",
+    "amount": 800,
+    "identifier": null,
+    "negation": "positive",
+    "control_type": "none",
+    "completion_signal": "not_applicable",
+    "notes": "Asks whether the account holds enough for an 800 transaction; the amount is the intended transaction size."
+   },
+   "review": {
+    "needs_manual_review": false,
+    "reasons": []
+   }
+  }
+ ]
+}

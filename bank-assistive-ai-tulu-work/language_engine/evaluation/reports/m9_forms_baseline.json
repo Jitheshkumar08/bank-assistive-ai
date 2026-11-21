@@ -1,0 +1,1280 @@
+{
+ "meta": {
+  "name": "m9_forms_baseline",
+  "items": 40,
+  "forms": 103
+ },
+ "summary": {
+  "kind": {
+   "clipped": {
+    "n": 6,
+    "ok": 2,
+    "critical": 2,
+    "miss": 0,
+    "unscored": 2
+   },
+   "currency-symbol": {
+    "n": 1,
+    "ok": 1,
+    "critical": 0,
+    "miss": 0,
+    "unscored": 0
+   },
+   "digit-and-scale": {
+    "n": 4,
+    "ok": 4,
+    "critical": 0,
+    "miss": 0,
+    "unscored": 0
+   },
+   "digit-by-digit-account": {
+    "n": 1,
+    "ok": 1,
+    "critical": 0,
+    "miss": 0,
+    "unscored": 0
+   },
+   "digits": {
+    "n": 7,
+    "ok": 7,
+    "critical": 0,
+    "miss": 0,
+    "unscored": 0
+   },
+   "filler": {
+    "n": 8,
+    "ok": 4,
+    "critical": 0,
+    "miss": 2,
+    "unscored": 2
+   },
+   "latin": {
+    "n": 16,
+    "ok": 13,
+    "critical": 0,
+    "miss": 1,
+    "unscored": 2
+   },
+   "lowercase": {
+    "n": 1,
+    "ok": 1,
+    "critical": 0,
+    "miss": 0,
+    "unscored": 0
+   },
+   "misheard": {
+    "n": 1,
+    "ok": 1,
+    "critical": 0,
+    "miss": 0,
+    "unscored": 0
+   },
+   "native-digits": {
+    "n": 2,
+    "ok": 2,
+    "critical": 0,
+    "miss": 0,
+    "unscored": 0
+   },
+   "number-words": {
+    "n": 1,
+    "ok": 0,
+    "critical": 0,
+    "miss": 1,
+    "unscored": 0
+   },
+   "punctuated": {
+    "n": 3,
+    "ok": 3,
+    "critical": 0,
+    "miss": 0,
+    "unscored": 0
+   },
+   "reference": {
+    "n": 40,
+    "ok": 29,
+    "critical": 4,
+    "miss": 2,
+    "unscored": 5
+   },
+   "repetition": {
+    "n": 1,
+    "ok": 1,
+    "critical": 0,
+    "miss": 0,
+    "unscored": 0
+   },
+   "romanised": {
+    "n": 2,
+    "ok": 2,
+    "critical": 0,
+    "miss": 0,
+    "unscored": 0
+   },
+   "spelling-variant": {
+    "n": 7,
+    "ok": 7,
+    "critical": 0,
+    "miss": 0,
+    "unscored": 0
+   },
+   "split-word": {
+    "n": 1,
+    "ok": 1,
+    "critical": 0,
+    "miss": 0,
+    "unscored": 0
+   },
+   "unpunctuated": {
+    "n": 1,
+    "ok": 0,
+    "critical": 0,
+    "miss": 0,
+    "unscored": 1
+   }
+  },
+  "language group": {
+   "en": {
+    "n": 18,
+    "ok": 15,
+    "critical": 0,
+    "miss": 1,
+    "unscored": 2
+   },
+   "hi": {
+    "n": 20,
+    "ok": 14,
+    "critical": 2,
+    "miss": 1,
+    "unscored": 3
+   },
+   "hi-en": {
+    "n": 22,
+    "ok": 19,
+    "critical": 0,
+    "miss": 1,
+    "unscored": 2
+   },
+   "kn": {
+    "n": 20,
+    "ok": 13,
+    "critical": 3,
+    "miss": 1,
+    "unscored": 3
+   },
+   "kn-en": {
+    "n": 23,
+    "ok": 18,
+    "critical": 1,
+    "miss": 2,
+    "unscored": 2
+   }
+  },
+  "category": {
+   "ambiguous_request": {
+    "n": 10,
+    "ok": 4,
+    "critical": 6,
+    "miss": 0,
+    "unscored": 0
+   },
+   "amount": {
+    "n": 22,
+    "ok": 21,
+    "critical": 0,
+    "miss": 1,
+    "unscored": 0
+   },
+   "control": {
+    "n": 12,
+    "ok": 9,
+    "critical": 0,
+    "miss": 3,
+    "unscored": 0
+   },
+   "knowledge_question": {
+    "n": 12,
+    "ok": 0,
+    "critical": 0,
+    "miss": 0,
+    "unscored": 12
+   },
+   "refusal": {
+    "n": 3,
+    "ok": 3,
+    "critical": 0,
+    "miss": 0,
+    "unscored": 0
+   },
+   "service_request": {
+    "n": 44,
+    "ok": 42,
+    "critical": 0,
+    "miss": 2,
+    "unscored": 0
+   }
+  },
+  "agreement_with_reference_form": {
+   "same": 57,
+   "changed": 4,
+   "changes": [
+    {
+     "item": "ctl-kn-901",
+     "kind": "filler",
+     "reference": "correct",
+     "form": "missed_command"
+    },
+    {
+     "item": "ctl-hi-901",
+     "kind": "filler",
+     "reference": "correct",
+     "form": "missed_command"
+    },
+    {
+     "item": "amt-en-901",
+     "kind": "number-words",
+     "reference": "correct",
+     "form": "missed_amount"
+    },
+    {
+     "item": "ctl-hi-en-901",
+     "kind": "latin",
+     "reference": "missed_command",
+     "form": "correct"
+    }
+   ]
+  }
+ },
+ "rows": [
+  {
+   "item": "svc-kn-901",
+   "lang": "kn",
+   "category": "service_request",
+   "kind": "reference",
+   "text": "ನನಗೆ ಐದು ಸಾವಿರ ರೂಪಾಯಿ ಜಮಾ ಮಾಡಬೇಕು",
+   "relabelled": false,
+   "outcome": "correct",
+   "severity": "ok"
+  },
+  {
+   "item": "svc-kn-901",
+   "lang": "kn",
+   "category": "service_request",
+   "kind": "digits",
+   "text": "ನನಗೆ 5000 ರೂಪಾಯಿ ಜಮಾ ಮಾಡಬೇಕು",
+   "relabelled": false,
+   "outcome": "correct",
+   "severity": "ok"
+  },
+  {
+   "item": "svc-kn-901",
+   "lang": "kn",
+   "category": "service_request",
+   "kind": "filler",
+   "text": "ಅಂದ್ರೆ ನನಗೆ ಐದು ಸಾವಿರ ರೂಪಾಯಿ ಜಮಾ ಮಾಡಬೇಕು",
+   "relabelled": false,
+   "outcome": "correct",
+   "severity": "ok"
+  },
+  {
+   "item": "svc-kn-901",
+   "lang": "kn",
+   "category": "ambiguous_request",
+   "kind": "clipped",
+   "text": "ನನಗೆ ಐದು ಸಾವಿರ ರೂಪಾಯಿ",
+   "relabelled": true,
+   "outcome": "guessed_service",
+   "severity": "critical"
+  },
+  {
+   "item": "svc-kn-902",
+   "lang": "kn",
+   "category": "service_request",
+   "kind": "reference",
+   "text": "ಖಾತೆಯಿಂದ ಹಣ ತೆಗೆಯಬೇಕು",
+   "relabelled": false,
+   "outcome": "correct",
+   "severity": "ok"
+  },
+  {
+   "item": "svc-kn-902",
+   "lang": "kn",
+   "category": "service_request",
+   "kind": "filler",
+   "text": "ಹಾಂ ಖಾತೆಯಿಂದ ಹಣ ತೆಗೆಯಬೇಕು",
+   "relabelled": false,
+   "outcome": "correct",
+   "severity": "ok"
+  },
+  {
+   "item": "svc-kn-902",
+   "lang": "kn",
+   "category": "service_request",
+   "kind": "repetition",
+   "text": "ಖಾತೆಯಿಂದ ಖಾತೆಯಿಂದ ಹಣ ತೆಗೆಯಬೇಕು",
+   "relabelled": false,
+   "outcome": "correct",
+   "severity": "ok"
+  },
+  {
+   "item": "kq-kn-901",
+   "lang": "kn",
+   "category": "knowledge_question",
+   "kind": "reference",
+   "text": "ಸಾಲ ಪಡೆಯಲು ಯಾವ ದಾಖಲೆಗಳು ಬೇಕು",
+   "relabelled": false,
+   "outcome": "llm_gated",
+   "severity": "unscored"
+  },
+  {
+   "item": "kq-kn-901",
+   "lang": "kn",
+   "category": "knowledge_question",
+   "kind": "clipped",
+   "text": "ಸಾಲ ಪಡೆಯಲು ಯಾವ",
+   "relabelled": false,
+   "outcome": "llm_gated",
+   "severity": "unscored"
+  },
+  {
+   "item": "kq-kn-901",
+   "lang": "kn",
+   "category": "knowledge_question",
+   "kind": "filler",
+   "text": "ಅದು ಸಾಲ ಪಡೆಯಲು ಯಾವ ದಾಖಲೆಗಳು ಬೇಕು",
+   "relabelled": false,
+   "outcome": "llm_gated",
+   "severity": "unscored"
+  },
+  {
+   "item": "ctl-kn-901",
+   "lang": "kn",
+   "category": "control",
+   "kind": "reference",
+   "text": "ಮತ್ತೆ ಹೇಳಿ",
+   "relabelled": false,
+   "outcome": "correct",
+   "severity": "ok"
+  },
+  {
+   "item": "ctl-kn-901",
+   "lang": "kn",
+   "category": "control",
+   "kind": "filler",
+   "text": "ಹಾಂ ಮತ್ತೆ ಹೇಳಿ",
+   "relabelled": false,
+   "outcome": "missed_command",
+   "severity": "miss"
+  },
+  {
+   "item": "ctl-kn-901",
+   "lang": "kn",
+   "category": "control",
+   "kind": "punctuated",
+   "text": "ಮತ್ತೆ ಹೇಳಿ।",
+   "relabelled": false,
+   "outcome": "correct",
+   "severity": "ok"
+  },
+  {
+   "item": "amb-kn-901",
+   "lang": "kn",
+   "category": "ambiguous_request",
+   "kind": "reference",
+   "text": "ಸ್ವಲ್ಪ ಹಣದ ವಿಷಯ ಮಾತಾಡಬೇಕು",
+   "relabelled": false,
+   "outcome": "guessed_service",
+   "severity": "critical"
+  },
+  {
+   "item": "amt-kn-901",
+   "lang": "kn",
+   "category": "amount",
+   "kind": "reference",
+   "text": "ಐದು ಸಾವಿರ ರೂಪಾಯಿ",
+   "relabelled": false,
+   "outcome": "correct",
+   "severity": "ok"
+  },
+  {
+   "item": "amt-kn-901",
+   "lang": "kn",
+   "category": "amount",
+   "kind": "digits",
+   "text": "5000 ರೂಪಾಯಿ",
+   "relabelled": false,
+   "outcome": "correct",
+   "severity": "ok"
+  },
+  {
+   "item": "amt-kn-901",
+   "lang": "kn",
+   "category": "amount",
+   "kind": "native-digits",
+   "text": "೫೦೦೦ ರೂಪಾಯಿ",
+   "relabelled": false,
+   "outcome": "correct",
+   "severity": "ok"
+  },
+  {
+   "item": "amt-kn-901",
+   "lang": "kn",
+   "category": "amount",
+   "kind": "digit-and-scale",
+   "text": "5 ಸಾವಿರ ರೂಪಾಯಿ",
+   "relabelled": false,
+   "outcome": "correct",
+   "severity": "ok"
+  },
+  {
+   "item": "amb-kn-902",
+   "lang": "kn",
+   "category": "ambiguous_request",
+   "kind": "reference",
+   "text": "ಹಣ",
+   "relabelled": false,
+   "outcome": "guessed_service",
+   "severity": "critical"
+  },
+  {
+   "item": "amb-kn-903",
+   "lang": "kn",
+   "category": "ambiguous_request",
+   "kind": "reference",
+   "text": "ಆ ಅದು ಬ್ಯಾಂಕ್",
+   "relabelled": false,
+   "outcome": "correct",
+   "severity": "ok"
+  },
+  {
+   "item": "svc-hi-901",
+   "lang": "hi",
+   "category": "service_request",
+   "kind": "reference",
+   "text": "मुझे तीन हज़ार रुपये निकालने हैं",
+   "relabelled": false,
+   "outcome": "correct",
+   "severity": "ok"
+  },
+  {
+   "item": "svc-hi-901",
+   "lang": "hi",
+   "category": "service_request",
+   "kind": "digits",
+   "text": "मुझे 3000 रुपये निकालने हैं",
+   "relabelled": false,
+   "outcome": "correct",
+   "severity": "ok"
+  },
+  {
+   "item": "svc-hi-901",
+   "lang": "hi",
+   "category": "service_request",
+   "kind": "filler",
+   "text": "हाँ मुझे तीन हज़ार रुपये निकालने हैं",
+   "relabelled": false,
+   "outcome": "correct",
+   "severity": "ok"
+  },
+  {
+   "item": "svc-hi-901",
+   "lang": "hi",
+   "category": "service_request",
+   "kind": "spelling-variant",
+   "text": "मुझे तीन हजार रूपये निकालने है",
+   "relabelled": false,
+   "outcome": "correct",
+   "severity": "ok"
+  },
+  {
+   "item": "svc-hi-901",
+   "lang": "hi",
+   "category": "ambiguous_request",
+   "kind": "clipped",
+   "text": "मुझे तीन हज़ार रुपये",
+   "relabelled": true,
+   "outcome": "guessed_service",
+   "severity": "critical"
+  },
+  {
+   "item": "amt-hi-901",
+   "lang": "hi",
+   "category": "amount",
+   "kind": "reference",
+   "text": "तीन हज़ार रुपये",
+   "relabelled": false,
+   "outcome": "correct",
+   "severity": "ok"
+  },
+  {
+   "item": "amt-hi-901",
+   "lang": "hi",
+   "category": "amount",
+   "kind": "digits",
+   "text": "3000 रुपये",
+   "relabelled": false,
+   "outcome": "correct",
+   "severity": "ok"
+  },
+  {
+   "item": "amt-hi-901",
+   "lang": "hi",
+   "category": "amount",
+   "kind": "native-digits",
+   "text": "३००० रुपये",
+   "relabelled": false,
+   "outcome": "correct",
+   "severity": "ok"
+  },
+  {
+   "item": "amt-hi-901",
+   "lang": "hi",
+   "category": "amount",
+   "kind": "digit-and-scale",
+   "text": "3 हज़ार रुपये",
+   "relabelled": false,
+   "outcome": "correct",
+   "severity": "ok"
+  },
+  {
+   "item": "kq-hi-901",
+   "lang": "hi",
+   "category": "knowledge_question",
+   "kind": "reference",
+   "text": "बचत खाते में ब्याज कैसे मिलता है",
+   "relabelled": false,
+   "outcome": "llm_gated",
+   "severity": "unscored"
+  },
+  {
+   "item": "kq-hi-901",
+   "lang": "hi",
+   "category": "knowledge_question",
+   "kind": "filler",
+   "text": "जी बचत खाते में ब्याज कैसे मिलता है",
+   "relabelled": false,
+   "outcome": "llm_gated",
+   "severity": "unscored"
+  },
+  {
+   "item": "kq-hi-901",
+   "lang": "hi",
+   "category": "knowledge_question",
+   "kind": "clipped",
+   "text": "बचत खाते में ब्याज कैसे",
+   "relabelled": false,
+   "outcome": "llm_gated",
+   "severity": "unscored"
+  },
+  {
+   "item": "ctl-hi-901",
+   "lang": "hi",
+   "category": "control",
+   "kind": "reference",
+   "text": "दोबारा बताइए",
+   "relabelled": false,
+   "outcome": "correct",
+   "severity": "ok"
+  },
+  {
+   "item": "ctl-hi-901",
+   "lang": "hi",
+   "category": "control",
+   "kind": "filler",
+   "text": "जी दोबारा बताइए",
+   "relabelled": false,
+   "outcome": "missed_command",
+   "severity": "miss"
+  },
+  {
+   "item": "ctl-hi-901",
+   "lang": "hi",
+   "category": "control",
+   "kind": "punctuated",
+   "text": "दोबारा बताइए।",
+   "relabelled": false,
+   "outcome": "correct",
+   "severity": "ok"
+  },
+  {
+   "item": "ref-hi-901",
+   "lang": "hi",
+   "category": "refusal",
+   "kind": "reference",
+   "text": "मुझे पैसे नहीं निकालने",
+   "relabelled": false,
+   "outcome": "correct",
+   "severity": "ok"
+  },
+  {
+   "item": "ref-hi-901",
+   "lang": "hi",
+   "category": "refusal",
+   "kind": "spelling-variant",
+   "text": "मुझे पैसे नही निकालने",
+   "relabelled": false,
+   "outcome": "correct",
+   "severity": "ok"
+  },
+  {
+   "item": "ref-hi-901",
+   "lang": "hi",
+   "category": "refusal",
+   "kind": "clipped",
+   "text": "मुझे पैसे नहीं",
+   "relabelled": false,
+   "outcome": "correct",
+   "severity": "ok"
+  },
+  {
+   "item": "amb-hi-901",
+   "lang": "hi",
+   "category": "ambiguous_request",
+   "kind": "reference",
+   "text": "मुझे वो पैसे",
+   "relabelled": false,
+   "outcome": "guessed_service",
+   "severity": "critical"
+  },
+  {
+   "item": "amt-hi-902",
+   "lang": "hi",
+   "category": "amount",
+   "kind": "reference",
+   "text": "खाता नंबर चार पांच दो एक में दो हज़ार जमा",
+   "relabelled": false,
+   "outcome": "correct",
+   "severity": "ok"
+  },
+  {
+   "item": "svc-en-901",
+   "lang": "en",
+   "category": "service_request",
+   "kind": "reference",
+   "text": "I want to deposit two thousand rupees",
+   "relabelled": false,
+   "outcome": "correct",
+   "severity": "ok"
+  },
+  {
+   "item": "svc-en-901",
+   "lang": "en",
+   "category": "service_request",
+   "kind": "digits",
+   "text": "I want to deposit 2,000 rupees.",
+   "relabelled": false,
+   "outcome": "correct",
+   "severity": "ok"
+  },
+  {
+   "item": "svc-en-901",
+   "lang": "en",
+   "category": "service_request",
+   "kind": "currency-symbol",
+   "text": "I want to deposit Rs. 2000",
+   "relabelled": false,
+   "outcome": "correct",
+   "severity": "ok"
+  },
+  {
+   "item": "svc-en-901",
+   "lang": "en",
+   "category": "service_request",
+   "kind": "clipped",
+   "text": "I want to deposit",
+   "relabelled": false,
+   "outcome": "correct",
+   "severity": "ok"
+  },
+  {
+   "item": "svc-en-901",
+   "lang": "en",
+   "category": "service_request",
+   "kind": "filler",
+   "text": "um I want to uh deposit two thousand rupees",
+   "relabelled": false,
+   "outcome": "correct",
+   "severity": "ok"
+  },
+  {
+   "item": "svc-en-902",
+   "lang": "en",
+   "category": "service_request",
+   "kind": "reference",
+   "text": "I need to withdraw cash",
+   "relabelled": false,
+   "outcome": "correct",
+   "severity": "ok"
+  },
+  {
+   "item": "svc-en-902",
+   "lang": "en",
+   "category": "service_request",
+   "kind": "split-word",
+   "text": "I need to with draw cash",
+   "relabelled": false,
+   "outcome": "correct",
+   "severity": "ok"
+  },
+  {
+   "item": "svc-en-902",
+   "lang": "en",
+   "category": "service_request",
+   "kind": "spelling-variant",
+   "text": "I need to withdrawl cash",
+   "relabelled": false,
+   "outcome": "correct",
+   "severity": "ok"
+  },
+  {
+   "item": "svc-en-902",
+   "lang": "en",
+   "category": "service_request",
+   "kind": "lowercase",
+   "text": "i need to withdraw cash",
+   "relabelled": false,
+   "outcome": "correct",
+   "severity": "ok"
+  },
+  {
+   "item": "kq-en-901",
+   "lang": "en",
+   "category": "knowledge_question",
+   "kind": "reference",
+   "text": "What documents do I need for a loan?",
+   "relabelled": false,
+   "outcome": "llm_gated",
+   "severity": "unscored"
+  },
+  {
+   "item": "kq-en-901",
+   "lang": "en",
+   "category": "knowledge_question",
+   "kind": "unpunctuated",
+   "text": "what documents do i need for a loan",
+   "relabelled": false,
+   "outcome": "llm_gated",
+   "severity": "unscored"
+  },
+  {
+   "item": "amb-en-901",
+   "lang": "en",
+   "category": "ambiguous_request",
+   "kind": "reference",
+   "text": "I need a new cheque book",
+   "relabelled": false,
+   "outcome": "correct",
+   "severity": "ok"
+  },
+  {
+   "item": "amb-en-901",
+   "lang": "en",
+   "category": "ambiguous_request",
+   "kind": "misheard",
+   "text": "I need a new Chuck Book",
+   "relabelled": false,
+   "outcome": "correct",
+   "severity": "ok"
+  },
+  {
+   "item": "ctl-en-901",
+   "lang": "en",
+   "category": "control",
+   "kind": "reference",
+   "text": "please repeat that",
+   "relabelled": false,
+   "outcome": "correct",
+   "severity": "ok"
+  },
+  {
+   "item": "ctl-en-901",
+   "lang": "en",
+   "category": "control",
+   "kind": "punctuated",
+   "text": "Please repeat that.",
+   "relabelled": false,
+   "outcome": "correct",
+   "severity": "ok"
+  },
+  {
+   "item": "amt-en-901",
+   "lang": "en",
+   "category": "amount",
+   "kind": "reference",
+   "text": "deposit 3000 into account number 778899",
+   "relabelled": false,
+   "outcome": "correct",
+   "severity": "ok"
+  },
+  {
+   "item": "amt-en-901",
+   "lang": "en",
+   "category": "amount",
+   "kind": "number-words",
+   "text": "deposit three thousand into account number 778899",
+   "relabelled": false,
+   "outcome": "missed_amount",
+   "severity": "miss"
+  },
+  {
+   "item": "svc-en-903",
+   "lang": "en",
+   "category": "service_request",
+   "kind": "reference",
+   "text": "deposit",
+   "relabelled": false,
+   "outcome": "correct",
+   "severity": "ok"
+  },
+  {
+   "item": "svc-kn-en-901",
+   "lang": "kn-en",
+   "category": "service_request",
+   "kind": "reference",
+   "text": "ನನಗೆ ಹೋಮ್ ಲೋನ್ ಬೇಕು",
+   "relabelled": false,
+   "outcome": "correct",
+   "severity": "ok"
+  },
+  {
+   "item": "svc-kn-en-901",
+   "lang": "kn-en",
+   "category": "service_request",
+   "kind": "latin",
+   "text": "ನನಗೆ home loan ಬೇಕು",
+   "relabelled": false,
+   "outcome": "correct",
+   "severity": "ok"
+  },
+  {
+   "item": "svc-kn-en-901",
+   "lang": "kn-en",
+   "category": "service_request",
+   "kind": "romanised",
+   "text": "nanage home loan beku",
+   "relabelled": false,
+   "outcome": "correct",
+   "severity": "ok"
+  },
+  {
+   "item": "svc-kn-en-902",
+   "lang": "kn-en",
+   "category": "service_request",
+   "kind": "reference",
+   "text": "ನನ್ನ ಅಕೌಂಟ್‌ಗೆ ಕ್ಯಾಶ್ ಡೆಪಾಸಿಟ್ ಮಾಡಬೇಕು",
+   "relabelled": false,
+   "outcome": "correct",
+   "severity": "ok"
+  },
+  {
+   "item": "svc-kn-en-902",
+   "lang": "kn-en",
+   "category": "service_request",
+   "kind": "latin",
+   "text": "ನನ್ನ account ಗೆ cash deposit ಮಾಡಬೇಕು",
+   "relabelled": false,
+   "outcome": "correct",
+   "severity": "ok"
+  },
+  {
+   "item": "svc-kn-en-902",
+   "lang": "kn-en",
+   "category": "service_request",
+   "kind": "spelling-variant",
+   "text": "ನನ್ನ ಅಕೌಂಟಿಗೆ ಕ್ಯಾಶ್ ಡಿಪಾಸಿಟ್ ಮಾಡಬೇಕು",
+   "relabelled": false,
+   "outcome": "correct",
+   "severity": "ok"
+  },
+  {
+   "item": "svc-kn-en-903",
+   "lang": "kn-en",
+   "category": "service_request",
+   "kind": "reference",
+   "text": "ನನ್ನ ಅಕೌಂಟ್ ಬ್ಯಾಲೆನ್ಸ್ ಚೆಕ್ ಮಾಡಬೇಕು",
+   "relabelled": false,
+   "outcome": "correct",
+   "severity": "ok"
+  },
+  {
+   "item": "svc-kn-en-903",
+   "lang": "kn-en",
+   "category": "service_request",
+   "kind": "latin",
+   "text": "ನನ್ನ account balance check ಮಾಡಬೇಕು",
+   "relabelled": false,
+   "outcome": "correct",
+   "severity": "ok"
+  },
+  {
+   "item": "svc-kn-en-903",
+   "lang": "kn-en",
+   "category": "service_request",
+   "kind": "spelling-variant",
+   "text": "ನನ್ನ ಅಕೌಂಟ್ ಬ್ಯಾಲನ್ಸ್ ಚೆಕ್ ಮಾಡಬೇಕು",
+   "relabelled": false,
+   "outcome": "correct",
+   "severity": "ok"
+  },
+  {
+   "item": "svc-kn-en-904",
+   "lang": "kn-en",
+   "category": "service_request",
+   "kind": "reference",
+   "text": "ಎಟಿಎಂ ಕೆಲಸ ಮಾಡ್ತಿಲ್ಲ ಕ್ಯಾಶ್ ವಿತ್‌ಡ್ರಾ ಮಾಡಬೇಕು",
+   "relabelled": false,
+   "outcome": "abstained",
+   "severity": "miss"
+  },
+  {
+   "item": "svc-kn-en-904",
+   "lang": "kn-en",
+   "category": "service_request",
+   "kind": "latin",
+   "text": "ATM ಕೆಲಸ ಮಾಡ್ತಿಲ್ಲ cash withdraw ಮಾಡಬೇಕು",
+   "relabelled": false,
+   "outcome": "abstained",
+   "severity": "miss"
+  },
+  {
+   "item": "kq-kn-en-901",
+   "lang": "kn-en",
+   "category": "knowledge_question",
+   "kind": "reference",
+   "text": "ಪಾಸ್‌ಬುಕ್ ಅಪ್ಡೇಟ್ ಹೇಗೆ ಮಾಡುವುದು",
+   "relabelled": false,
+   "outcome": "llm_gated",
+   "severity": "unscored"
+  },
+  {
+   "item": "kq-kn-en-901",
+   "lang": "kn-en",
+   "category": "knowledge_question",
+   "kind": "latin",
+   "text": "passbook update ಹೇಗೆ ಮಾಡುವುದು",
+   "relabelled": false,
+   "outcome": "llm_gated",
+   "severity": "unscored"
+  },
+  {
+   "item": "amt-kn-en-901",
+   "lang": "kn-en",
+   "category": "amount",
+   "kind": "reference",
+   "text": "ಹತ್ತು ಸಾವಿರ ರೂಪಾಯಿ ಡೆಪಾಸಿಟ್",
+   "relabelled": false,
+   "outcome": "correct",
+   "severity": "ok"
+  },
+  {
+   "item": "amt-kn-en-901",
+   "lang": "kn-en",
+   "category": "amount",
+   "kind": "latin",
+   "text": "ಹತ್ತು ಸಾವಿರ rupees deposit",
+   "relabelled": false,
+   "outcome": "correct",
+   "severity": "ok"
+  },
+  {
+   "item": "amt-kn-en-901",
+   "lang": "kn-en",
+   "category": "amount",
+   "kind": "digits",
+   "text": "10000 ರೂಪಾಯಿ ಡೆಪಾಸಿಟ್",
+   "relabelled": false,
+   "outcome": "correct",
+   "severity": "ok"
+  },
+  {
+   "item": "amt-kn-en-901",
+   "lang": "kn-en",
+   "category": "amount",
+   "kind": "digit-and-scale",
+   "text": "10 ಸಾವಿರ ರೂಪಾಯಿ ಡೆಪಾಸಿಟ್",
+   "relabelled": false,
+   "outcome": "correct",
+   "severity": "ok"
+  },
+  {
+   "item": "amt-kn-en-902",
+   "lang": "kn-en",
+   "category": "amount",
+   "kind": "reference",
+   "text": "ಅಕೌಂಟ್ ನಂಬರ್ 45213 ಗೆ ಎರಡು ಸಾವಿರ ಜಮಾ",
+   "relabelled": false,
+   "outcome": "correct",
+   "severity": "ok"
+  },
+  {
+   "item": "amt-kn-en-902",
+   "lang": "kn-en",
+   "category": "amount",
+   "kind": "digit-by-digit-account",
+   "text": "ಅಕೌಂಟ್ ನಂಬರ್ ನಾಲ್ಕು ಐದು ಎರಡು ಒಂದು ಮೂರು ಗೆ ಎರಡು ಸಾವಿರ ಜಮಾ",
+   "relabelled": false,
+   "outcome": "correct",
+   "severity": "ok"
+  },
+  {
+   "item": "amt-kn-en-902",
+   "lang": "kn-en",
+   "category": "amount",
+   "kind": "latin",
+   "text": "account number 45213 ಗೆ ಎರಡು ಸಾವಿರ ಜಮಾ",
+   "relabelled": false,
+   "outcome": "correct",
+   "severity": "ok"
+  },
+  {
+   "item": "ctl-kn-en-901",
+   "lang": "kn-en",
+   "category": "control",
+   "kind": "reference",
+   "text": "ರಿಪೀಟ್ ಮಾಡಿ",
+   "relabelled": false,
+   "outcome": "correct",
+   "severity": "ok"
+  },
+  {
+   "item": "ctl-kn-en-901",
+   "lang": "kn-en",
+   "category": "control",
+   "kind": "latin",
+   "text": "repeat ಮಾಡಿ",
+   "relabelled": false,
+   "outcome": "correct",
+   "severity": "ok"
+  },
+  {
+   "item": "amb-kn-en-901",
+   "lang": "kn-en",
+   "category": "ambiguous_request",
+   "kind": "reference",
+   "text": "ಅಕೌಂಟ್ ವಿಷಯ ಒಂದಿದೆ",
+   "relabelled": false,
+   "outcome": "guessed_service",
+   "severity": "critical"
+  },
+  {
+   "item": "svc-hi-en-901",
+   "lang": "hi-en",
+   "category": "service_request",
+   "kind": "reference",
+   "text": "मुझे पर्सनल लोन चाहिए",
+   "relabelled": false,
+   "outcome": "correct",
+   "severity": "ok"
+  },
+  {
+   "item": "svc-hi-en-901",
+   "lang": "hi-en",
+   "category": "service_request",
+   "kind": "latin",
+   "text": "मुझे personal loan चाहिए",
+   "relabelled": false,
+   "outcome": "correct",
+   "severity": "ok"
+  },
+  {
+   "item": "svc-hi-en-901",
+   "lang": "hi-en",
+   "category": "service_request",
+   "kind": "romanised",
+   "text": "mujhe personal loan chahiye",
+   "relabelled": false,
+   "outcome": "correct",
+   "severity": "ok"
+  },
+  {
+   "item": "svc-hi-en-902",
+   "lang": "hi-en",
+   "category": "service_request",
+   "kind": "reference",
+   "text": "मेरे अकाउंट में कैश डिपॉजिट करना है",
+   "relabelled": false,
+   "outcome": "correct",
+   "severity": "ok"
+  },
+  {
+   "item": "svc-hi-en-902",
+   "lang": "hi-en",
+   "category": "service_request",
+   "kind": "latin",
+   "text": "मेरे account में cash deposit करना है",
+   "relabelled": false,
+   "outcome": "correct",
+   "severity": "ok"
+  },
+  {
+   "item": "svc-hi-en-902",
+   "lang": "hi-en",
+   "category": "service_request",
+   "kind": "spelling-variant",
+   "text": "मेरे एकाउंट में कैश डिपोजिट करना है",
+   "relabelled": false,
+   "outcome": "correct",
+   "severity": "ok"
+  },
+  {
+   "item": "svc-hi-en-903",
+   "lang": "hi-en",
+   "category": "service_request",
+   "kind": "reference",
+   "text": "मेरा अकाउंट बैलेंस चेक करना है",
+   "relabelled": false,
+   "outcome": "correct",
+   "severity": "ok"
+  },
+  {
+   "item": "svc-hi-en-903",
+   "lang": "hi-en",
+   "category": "service_request",
+   "kind": "latin",
+   "text": "मेरा account balance check करना है",
+   "relabelled": false,
+   "outcome": "correct",
+   "severity": "ok"
+  },
+  {
+   "item": "svc-hi-en-903",
+   "lang": "hi-en",
+   "category": "service_request",
+   "kind": "spelling-variant",
+   "text": "मेरा एकाउंट बेलेंस चेक करना है",
+   "relabelled": false,
+   "outcome": "correct",
+   "severity": "ok"
+  },
+  {
+   "item": "svc-hi-en-904",
+   "lang": "hi-en",
+   "category": "service_request",
+   "kind": "reference",
+   "text": "एटीएम खराब है इसलिए कैश विड्रॉल करना है",
+   "relabelled": false,
+   "outcome": "correct",
+   "severity": "ok"
+  },
+  {
+   "item": "svc-hi-en-904",
+   "lang": "hi-en",
+   "category": "service_request",
+   "kind": "latin",
+   "text": "ATM खराब है इसलिए cash withdrawal करना है",
+   "relabelled": false,
+   "outcome": "correct",
+   "severity": "ok"
+  },
+  {
+   "item": "kq-hi-en-901",
+   "lang": "hi-en",
+   "category": "knowledge_question",
+   "kind": "reference",
+   "text": "लोन के लिए कौन कौन से डॉक्यूमेंट लगते हैं",
+   "relabelled": false,
+   "outcome": "llm_gated",
+   "severity": "unscored"
+  },
+  {
+   "item": "kq-hi-en-901",
+   "lang": "hi-en",
+   "category": "knowledge_question",
+   "kind": "latin",
+   "text": "loan के लिए कौन कौन से documents लगते हैं",
+   "relabelled": false,
+   "outcome": "llm_gated",
+   "severity": "unscored"
+  },
+  {
+   "item": "amt-hi-en-901",
+   "lang": "hi-en",
+   "category": "amount",
+   "kind": "reference",
+   "text": "पच्चीस हज़ार रुपये डिपॉजिट करने हैं",
+   "relabelled": false,
+   "outcome": "correct",
+   "severity": "ok"
+  },
+  {
+   "item": "amt-hi-en-901",
+   "lang": "hi-en",
+   "category": "amount",
+   "kind": "digits",
+   "text": "25000 रुपये डिपॉजिट करने हैं",
+   "relabelled": false,
+   "outcome": "correct",
+   "severity": "ok"
+  },
+  {
+   "item": "amt-hi-en-901",
+   "lang": "hi-en",
+   "category": "amount",
+   "kind": "latin",
+   "text": "पच्चीस हज़ार rupees deposit करने हैं",
+   "relabelled": false,
+   "outcome": "correct",
+   "severity": "ok"
+  },
+  {
+   "item": "amt-hi-en-901",
+   "lang": "hi-en",
+   "category": "amount",
+   "kind": "digit-and-scale",
+   "text": "25 हज़ार रुपये डिपॉजिट करने हैं",
+   "relabelled": false,
+   "outcome": "correct",
+   "severity": "ok"
+  },
+  {
+   "item": "ctl-hi-en-901",
+   "lang": "hi-en",
+   "category": "control",
+   "kind": "reference",
+   "text": "रिपीट कीजिए",
+   "relabelled": false,
+   "outcome": "missed_command",
+   "severity": "miss"
+  },
+  {
+   "item": "ctl-hi-en-901",
+   "lang": "hi-en",
+   "category": "control",
+   "kind": "latin",
+   "text": "repeat कीजिए",
+   "relabelled": false,
+   "outcome": "correct",
+   "severity": "ok"
+  },
+  {
+   "item": "svc-hi-en-905",
+   "lang": "hi-en",
+   "category": "service_request",
+   "kind": "reference",
+   "text": "लोन",
+   "relabelled": false,
+   "outcome": "correct",
+   "severity": "ok"
+  },
+  {
+   "item": "svc-hi-en-905",
+   "lang": "hi-en",
+   "category": "service_request",
+   "kind": "latin",
+   "text": "loan",
+   "relabelled": false,
+   "outcome": "correct",
+   "severity": "ok"
+  },
+  {
+   "item": "amb-hi-en-901",
+   "lang": "hi-en",
+   "category": "ambiguous_request",
+   "kind": "reference",
+   "text": "बैंक में कुछ काम है",
+   "relabelled": false,
+   "outcome": "correct",
+   "severity": "ok"
+  }
+ ]
+}

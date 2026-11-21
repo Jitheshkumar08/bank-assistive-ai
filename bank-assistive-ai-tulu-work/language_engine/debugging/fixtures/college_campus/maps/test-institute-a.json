@@ -1,0 +1,30 @@
+{
+  "institution_id": "test-institute-a",
+  "note": "SYNTHETIC TEST FIXTURE. A fictional campus; no step describes a real place.",
+  "places": [
+    {"id": "admissions-desk", "names": {"en": "Admissions desk", "kn": "ಪ್ರವೇಶ ಕೌಂಟರ್"}, "aliases": ["admission desk", "admission counter"]},
+    {"id": "library", "names": {"en": "Library", "kn": "ಗ್ರಂಥಾಲಯ"}, "aliases": ["central library", "ಲೈಬ್ರರಿ"]},
+    {"id": "accounts-office", "names": {"en": "Accounts office", "kn": "ಲೆಕ್ಕಪತ್ರ ಕಚೇರಿ"}, "aliases": ["fee counter", "accounts section"]},
+    {"id": "seminar-hall", "names": {"en": "Seminar hall", "kn": "ಸೆಮಿನಾರ್ ಹಾಲ್"}, "aliases": []},
+    {"id": "exam-hall", "names": {"en": "Examination hall"}, "aliases": ["exam hall"]},
+    {"id": "canteen", "names": {"en": "Canteen", "kn": "ಕ್ಯಾಂಟೀನ್"}, "aliases": ["cafeteria"]}
+  ],
+  "routes": [
+    {"from": "admissions-desk", "to": "library", "steps": [
+      {"en": "Synthetic step A1: leave the fixture desk through door one.", "kn": "ಕೃತಕ ಹಂತ A1: ಪರೀಕ್ಷಾ ಕೌಂಟರ್‌ನಿಂದ ಬಾಗಿಲು ಒಂದರ ಮೂಲಕ ಹೊರಬನ್ನಿ."},
+      {"en": "Synthetic step A2: follow corridor one to its end.", "kn": "ಕೃತಕ ಹಂತ A2: ಕಾರಿಡಾರ್ ಒಂದರ ಕೊನೆಯವರೆಗೆ ಹೋಗಿ."},
+      {"en": "Synthetic step A3: the fixture library is the door marked L.", "kn": "ಕೃತಕ ಹಂತ A3: L ಎಂದು ಗುರುತಿಸಿದ ಬಾಗಿಲೇ ಪರೀಕ್ಷಾ ಗ್ರಂಥಾಲಯ."}
+    ]},
+    {"from": "admissions-desk", "to": "accounts-office", "steps": [
+      {"en": "Synthetic step B1: turn to fixture window two."},
+      {"en": "Synthetic step B2: the fixture accounts office is behind window two."}
+    ]},
+    {"from": "admissions-desk", "to": "exam-hall", "steps": [
+      {"en": "Synthetic step C1: take fixture staircase three to floor three.", "kn": "ಕೃತಕ ಹಂತ C1: ಪರೀಕ್ಷಾ ಮೆಟ್ಟಿಲು ಮೂರರಿಂದ ಮೂರನೇ ಮಹಡಿಗೆ ಹೋಗಿ."}
+    ]},
+    {"from": "library", "to": "canteen", "steps": [
+      {"en": "Synthetic step D1: exit the fixture library through door L."},
+      {"en": "Synthetic step D2: the fixture canteen is across courtyard four."}
+    ]}
+  ]
+}

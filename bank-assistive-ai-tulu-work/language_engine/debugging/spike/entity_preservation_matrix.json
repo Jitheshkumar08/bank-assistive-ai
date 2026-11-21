@@ -1,0 +1,164 @@
+{
+  "_comment": [
+    "PART 4 SPIKE ARTEFACT -- PROPOSED test matrix for banking entity",
+    "preservation across a translation boundary. THIS IS A DESIGN, NOT",
+    "AN IMPLEMENTATION. No entity_guard.py exists and none is written",
+    "here. Nothing in app/ reads this file.",
+    "",
+    "Two assertion kinds, and the distinction is the whole point:",
+    "",
+    "  string_invariant   -- the exact characters must survive the round",
+    "                        trip. Asserted on the text itself.",
+    "  semantic_invariant -- the PARSED value must survive. Asserted on",
+    "                        the structured result (entities, intent,",
+    "                        polarity), never on wording.",
+    "",
+    "Asserting a semantic invariant as a string is the classic way this",
+    "kind of suite becomes useless: 'five thousand rupees' and '5000",
+    "rupees' are both correct, and a string check fails the good one.",
+    "",
+    "Two test boundaries, and rows declare which they need:",
+    "",
+    "  mt_round_trip  -- regional text -> English -> regional text.",
+    "                    Testable TODAY with typed input. No audio.",
+    "  full_pipeline  -- audio -> ASR -> MT -> understand() -> entities.",
+    "                    BLOCKED: repository contains no speech audio in",
+    "                    any language (verified by spike_whisper_languages)."
+  ],
+
+  "severity_scale": {
+    "1": "a wrong value moves money or misidentifies an account. Must never ship unasserted.",
+    "2": "a wrong value derails the conversation but is recoverable by the customer repeating themselves.",
+    "3": "cosmetic or tone; worth knowing, not worth blocking a release."
+  },
+
+  "categories": [
+    {
+      "id": "account_numbers",
+      "severity": 1,
+      "assertion_kind": "string_invariant",
+      "rule": "MUST BE BYTE-IDENTICAL end to end. Never translated, never re-grouped, never converted to Devanagari/Kannada numerals, never expanded into words, never truncated.",
+      "may_change": "nothing",
+      "schema_field": "entities.account_number (string, dialogue_understanding.py:96-98)",
+      "why": "The value is echoed back as a receipt ('I've noted that', manager.py:2561) and the customer stops repeating it. A silently altered digit is never caught.",
+      "cases": [
+        {"language": "en", "input": "My account number is 1234567890", "must_survive_exactly": ["1234567890"]},
+        {"language": "kn", "input": "ನನ್ನ ಖಾತೆ ಸಂಖ್ಯೆ 1234567890", "must_survive_exactly": ["1234567890"]},
+        {"language": "hi", "input": "मेरा खाता नंबर 1234567890 है", "must_survive_exactly": ["1234567890"]},
+        {"language": "hi", "input": "मेरा खाता नंबर १२३४५६७८९० है", "must_survive_exactly": ["1234567890"], "note": "Devanagari digits in, ASCII digits out. Tests numeral folding, not passthrough."},
+        {"language": "kn", "input": "1234 5678 90", "must_survive_exactly": ["1234567890"], "note": "Spaced grouping must normalise to one run, not lose a digit."}
+      ]
+    },
+
+    {
+      "id": "amounts",
+      "severity": 1,
+      "assertion_kind": "semantic_invariant",
+      "rule": "The NUMERIC VALUE must be preserved exactly. The surrounding words may be translated freely.",
+      "may_change": "the word for rupees, word order, digits vs words",
+      "schema_field": "entities.amount (number, dialogue_understanding.py:90-92)",
+      "why": "Indian grouping (2,00,000) and the lakh/crore scale are the highest-value 10x error class in this product. '2 lakh' read as 2 is as wrong as read as 2000000.",
+      "cases": [
+        {"language": "en", "input": "5000 rupees", "expected_amount": 5000},
+        {"language": "en", "input": "20,000 rupees", "expected_amount": 20000},
+        {"language": "en", "input": "2 lakh rupees", "expected_amount": 200000},
+        {"language": "en", "input": "2,00,000 rupees", "expected_amount": 200000},
+        {"language": "en", "input": "two hundred thousand rupees", "expected_amount": 200000},
+        {"language": "kn", "input": "ಐದು ಸಾವಿರ ರೂಪಾಯಿ", "expected_amount": 5000},
+        {"language": "kn", "input": "ನನಗೆ ೨ ಲಕ್ಷ ರೂಪಾಯಿ ಬೇಕು", "expected_amount": 200000},
+        {"language": "hi", "input": "पाँच हज़ार रुपये", "expected_amount": 5000},
+        {"language": "hi", "input": "दो लाख रुपये", "expected_amount": 200000},
+        {"language": "hi", "input": "दो करोड़ रुपये", "expected_amount": 20000000, "note": "crore. Included because a scale error here is the largest possible."}
+      ]
+    },
+
+    {
+      "id": "names",
+      "severity": 1,
+      "assertion_kind": "string_invariant",
+      "rule": "MUST BE TRANSLITERATED, NEVER TRANSLATED. A name that is also a common noun must not be turned into that noun.",
+      "may_change": "script (Kannada/Devanagari -> Latin), and only that",
+      "schema_field": "entities.name (string, dialogue_understanding.py:95-96)",
+      "why": "Many Indian given names are ordinary words. Machine translation renders them as the word. 'Kamala' becoming 'lotus' puts the wrong name on a banking form.",
+      "cases": [
+        {"language": "kn", "input": "ನನ್ನ ಹೆಸರು ಮಲ್ಲಿಕಾರ್ಜುನ ಶೆಟ್ಟಿ", "expected_name_like": "Mallikarjun Shetty", "must_not_contain": ["Arjun tree", "lotus"]},
+        {"language": "hi", "input": "मेरा नाम कमला शर्मा है", "expected_name_like": "Kamala Sharma", "must_not_contain": ["lotus"], "note": "kamala is literally 'lotus'. The canonical trap case."},
+        {"language": "hi", "input": "मेरा नाम आशा है", "expected_name_like": "Asha", "must_not_contain": ["hope"], "note": "asha is literally 'hope'."},
+        {"language": "kn", "input": "ನನ್ನ ಹೆಸರು ಮಳೆ", "expected_name_like": "Male", "must_not_contain": ["rain"], "note": "male is literally 'rain'."},
+        {"language": "kn", "input": "ಪ್ರಥ್ವಿರಾಜ್ ಭಟ್", "expected_name_like": "Prathviraj Bhat", "must_not_contain": ["king of earth"]}
+      ]
+    },
+
+    {
+      "id": "negation",
+      "severity": 1,
+      "assertion_kind": "semantic_invariant",
+      "rule": "Polarity MUST be preserved. A refusal must never round-trip into a command.",
+      "may_change": "every word",
+      "schema_field": "routing outcome: classify_command / resolve_control_command / contains_negation (manager.py:284-299)",
+      "why": "contains_negation() reads English ASCII tokens only (manager.py:281). Once the deterministic tier runs on translated text, a dropped negation executes the command the customer refused. This is the single highest-severity row in the matrix.",
+      "cases": [
+        {"language": "en", "input": "I don't want to withdraw money", "expected_polarity": "negative", "must_not_route_to": ["withdraw money workflow start"]},
+        {"language": "kn", "input": "ನನಗೆ ಹಣ ತೆಗೆಯುವುದು ಬೇಡ", "expected_polarity": "negative", "must_not_route_to": ["withdraw money workflow start"]},
+        {"language": "hi", "input": "मुझे पैसे नहीं निकालने हैं", "expected_polarity": "negative", "must_not_route_to": ["withdraw money workflow start"]},
+        {"language": "hi", "input": "रद्द मत करो", "expected_polarity": "negative", "must_not_route_to": ["cancel"], "note": "'do not cancel'. Must never execute cancel."},
+        {"language": "kn", "input": "ರದ್ದು ಮಾಡಬೇಡ", "expected_polarity": "negative", "must_not_route_to": ["cancel"]}
+      ]
+    },
+
+    {
+      "id": "banking_intent",
+      "severity": 2,
+      "assertion_kind": "semantic_invariant",
+      "rule": "The round trip must select the SAME label from app/intent/intents.py.",
+      "may_change": "every word",
+      "schema_field": "IntentDetector.detect_intent()['intent'] (detector.py:19-29)",
+      "why": "IntentDetector is a total function with no abstention (detector.py:24-29). A mistranslated request does not fail loudly -- it starts the wrong banking workflow at low confidence.",
+      "cases": [
+        {"language": "kn", "input": "ನನಗೆ ಹಣ ಹಾಕಬೇಕು", "expected_intent": "deposit money"},
+        {"language": "kn", "input": "ನನಗೆ ಹಣ ತೆಗೆಯಬೇಕು", "expected_intent": "withdraw money"},
+        {"language": "kn", "input": "ನನ್ನ ಬ್ಯಾಲೆನ್ಸ್ ಚೆಕ್ ಮಾಡಬೇಕು", "expected_intent": "check account balance"},
+        {"language": "hi", "input": "मुझे लोन चाहिए", "expected_intent": "apply for loan"},
+        {"language": "hi", "input": "मुझे नया खाता खोलना है", "expected_intent": "open new account"},
+        {"language": "hi", "input": "मुझे पैसे जमा करना है", "expected_intent": "deposit money"}
+      ]
+    },
+
+    {
+      "id": "code_mixed",
+      "severity": 2,
+      "assertion_kind": "semantic_invariant",
+      "rule": "English banking terms embedded in regional speech must reach the English core as those same terms.",
+      "may_change": "the regional scaffolding around the English terms",
+      "schema_field": "canonical English text handed to understand() and IntentDetector",
+      "why": "This is how people actually speak in a branch. Every candidate's weakest case, and the one most likely to be skipped because clean single-language sentences are easier to assemble.",
+      "cases": [
+        {"language": "kn", "input": "nanage account number fill maadbeku", "must_survive_semantically": ["account number", "fill"], "expected_intent_or_step": "account number step"},
+        {"language": "kn", "input": "ನನಗೆ withdrawal slip ಬೇಕು", "must_survive_semantically": ["withdrawal slip"]},
+        {"language": "hi", "input": "mujhe balance check karna hai", "expected_intent": "check account balance"},
+        {"language": "hi", "input": "मुझे cheque book chahiye", "must_survive_semantically": ["cheque book"], "note": "term_normalizer.py only repairs ASCII Whisper mishearings; it is a no-op on mixed script."},
+        {"language": "kn", "input": "loan apply maadoke documents yenu beku", "must_survive_semantically": ["loan", "documents"], "expected_type": "question"}
+      ]
+    }
+  ],
+
+  "what_must_never_be_translated": [
+    "account numbers -- every digit, exactly",
+    "phone numbers -- same rule, entities.phone_number",
+    "personal names -- transliterate only",
+    "the numeric VALUE of an amount (its wording is free)",
+    "workflow step numbers ('step 4' must stay 4)"
+  ],
+
+  "what_may_be_translated_freely": [
+    "instructions and assistant replies",
+    "banking terminology ('withdrawal slip', 'passbook')",
+    "questions, help requests, acknowledgements",
+    "the word for a currency and all sentence scaffolding"
+  ],
+
+  "blocked_on": {
+    "full_pipeline_rows": "No speech audio exists in this repository in any language. phase3_format_check.wav is a 3.0s synthetic tone (peak 0.80, RMS 0.64, float32 16 kHz), not speech, and Whisper returns an empty transcript for it. Every full_pipeline row needs a real recorded corpus first.",
+    "mt_round_trip_rows": "Testable today via typed input, once a translation provider is chosen. No audio required."
+  }
+}

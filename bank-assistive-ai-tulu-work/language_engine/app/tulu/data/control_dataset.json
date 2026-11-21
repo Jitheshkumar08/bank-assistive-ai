@@ -1,0 +1,799 @@
+{
+  "source": {
+    "folder": "control_statement",
+    "document": "Tulu_Conversation_Control_Statements_C01-C04.docx",
+    "document_sha256": "3c74642f0194f081db3725991b72d387f9dbc609256a2df682c0238e7b402c30",
+    "built_by": "app/tulu/data/build_dataset.py",
+    "note": "Faithful copy of the annotator's tables. Romanized Tulu unmodified; English meanings are the document's working glosses."
+  },
+  "workflow": null,
+  "kind": "conversation_control",
+  "control_groups": {
+    "C01": {
+      "heading": "Asking the assistant to repeat or speak slowly",
+      "canonical": "REPEAT_STEP",
+      "engine_command": "repeat",
+      "mapping_confidence": "clear"
+    },
+    "C02": {
+      "heading": "Asking the assistant to wait or pause",
+      "canonical": "PAUSE_WORKFLOW",
+      "engine_command": "pause",
+      "mapping_confidence": "clear"
+    },
+    "C03": {
+      "heading": "Stopping the conversation or declining further help",
+      "canonical": "STOP_REQUEST",
+      "engine_command": "stop",
+      "mapping_confidence": "decided by the team on 2026-11-19: C03 = 'stop'. One stop cancels the open request at once; a second stop right after ends the conversation. The heading also names declining further help -- native-speaker confirmation still pending"
+    },
+    "C04": {
+      "heading": "Asking for clarification or another explanation",
+      "canonical": "CLARIFY_CURRENT_STEP",
+      "engine_command": "help",
+      "mapping_confidence": "clear"
+    },
+    "C05": {
+      "heading": "Asking what comes next",
+      "canonical": "NEXT_STEP",
+      "engine_command": "next",
+      "mapping_confidence": "clear"
+    },
+    "C06": {
+      "heading": "Asking the assistant to continue",
+      "canonical": "RESUME_WORKFLOW",
+      "engine_command": "resume",
+      "mapping_confidence": "clear"
+    }
+  },
+  "step_instructions": {},
+  "utterances": [
+    {
+      "id": "C01a",
+      "group": "C01",
+      "workflow": null,
+      "step": null,
+      "speaker_role": "customer",
+      "tulu_romanized": "Kuda panoli ya",
+      "kannada_script": null,
+      "english_meaning": "Can you say that again?",
+      "verification": "not stated",
+      "control_group_heading": "Asking the assistant to repeat or speak slowly",
+      "canonical_control": "REPEAT_STEP",
+      "audio_listed_in_document": "C01a_CUSTOMER.wav",
+      "audio_file": "c01a_customer.wav.wav",
+      "audio": {
+        "container": "wav",
+        "codec": "pcm_s24le",
+        "sample_rate": 48000,
+        "channels": 1,
+        "duration_s": 7.654,
+        "sha256": "9f943b8b97c1e15c94aba4a04fc8245cc6a0aa8b7e7e6b5aff3060fb8ba492c9",
+        "name_matches_document": false
+      }
+    },
+    {
+      "id": "C01b",
+      "group": "C01",
+      "workflow": null,
+      "step": null,
+      "speaker_role": "customer",
+      "tulu_romanized": "Aven kuda panle",
+      "kannada_script": null,
+      "english_meaning": "Please say that once again.",
+      "verification": "not stated",
+      "control_group_heading": "Asking the assistant to repeat or speak slowly",
+      "canonical_control": "REPEAT_STEP",
+      "audio_listed_in_document": "C01b_CUSTOMER.wav",
+      "audio_file": "c01b_customer.wav.wav",
+      "audio": {
+        "container": "wav",
+        "codec": "pcm_s24le",
+        "sample_rate": 48000,
+        "channels": 1,
+        "duration_s": 7.673,
+        "sha256": "359bb97b5d8a9ad07a9b3c704ea2ab54ace62d35787aa55cbb939b1e14a23e29",
+        "name_matches_document": false
+      }
+    },
+    {
+      "id": "C01c",
+      "group": "C01",
+      "workflow": null,
+      "step": null,
+      "speaker_role": "customer",
+      "tulu_romanized": "Yenk er panni kendhiji sari",
+      "kannada_script": null,
+      "english_meaning": "I couldn't hear you properly.",
+      "verification": "not stated",
+      "control_group_heading": "Asking the assistant to repeat or speak slowly",
+      "canonical_control": "REPEAT_STEP",
+      "audio_listed_in_document": "C01c_CUSTOMER.wav",
+      "audio_file": "c01c_customer.wav.wav",
+      "audio": {
+        "container": "wav",
+        "codec": "pcm_s24le",
+        "sample_rate": 48000,
+        "channels": 1,
+        "duration_s": 8.434,
+        "sha256": "8f0ace0efee7e3ec6fe31f9da8f7054a905ee50c1b6da64f50507bf1c217462c",
+        "name_matches_document": false
+      }
+    },
+    {
+      "id": "C01d",
+      "group": "C01",
+      "workflow": null,
+      "step": null,
+      "speaker_role": "customer",
+      "tulu_romanized": "Churu mella panle",
+      "kannada_script": null,
+      "english_meaning": "Please speak a little slowly.",
+      "verification": "not stated",
+      "control_group_heading": "Asking the assistant to repeat or speak slowly",
+      "canonical_control": "REPEAT_STEP",
+      "audio_listed_in_document": "C01d_CUSTOMER.wav",
+      "audio_file": "c01d_customer.wav.wav",
+      "audio": {
+        "container": "wav",
+        "codec": "pcm_s24le",
+        "sample_rate": 48000,
+        "channels": 1,
+        "duration_s": 7.854,
+        "sha256": "e70b28066c11091fe8dfd0aa2ba7e17b931521674b68eb2fede98f03f216f820",
+        "name_matches_document": false
+      }
+    },
+    {
+      "id": "C01",
+      "group": "C01",
+      "workflow": null,
+      "step": null,
+      "speaker_role": "assistant",
+      "tulu_romanized": "Sari yaan kuda mella panpe.",
+      "kannada_script": null,
+      "english_meaning": "Okay, I'll repeat it slowly.",
+      "verification": "not stated",
+      "control_group_heading": "Asking the assistant to repeat or speak slowly",
+      "canonical_control": "REPEAT_STEP",
+      "audio_listed_in_document": "C01_ASSISTANT.wav",
+      "audio_file": "c01_assistant.wav.wav",
+      "audio": {
+        "container": "wav",
+        "codec": "pcm_s24le",
+        "sample_rate": 48000,
+        "channels": 1,
+        "duration_s": 7.694,
+        "sha256": "d1ffec5a272b140dd4ea7c341e08c6abe00b134995b9cbbcb14005a54c9cff4a",
+        "name_matches_document": false
+      }
+    },
+    {
+      "id": "C02a",
+      "group": "C02",
+      "workflow": null,
+      "step": null,
+      "speaker_role": "customer",
+      "tulu_romanized": "Churu wait malpule",
+      "kannada_script": null,
+      "english_meaning": "Please wait a little.",
+      "verification": "not stated",
+      "control_group_heading": "Asking the assistant to wait or pause",
+      "canonical_control": "PAUSE_WORKFLOW",
+      "audio_listed_in_document": "C02a_CUSTOMER.wav",
+      "audio_file": "c02a_customer.wav.wav",
+      "audio": {
+        "container": "wav",
+        "codec": "pcm_s24le",
+        "sample_rate": 48000,
+        "channels": 1,
+        "duration_s": 8.473,
+        "sha256": "7a9e50c415333e097752668566b4654568d8ab16470f6e5492754dda9b6a2e94",
+        "name_matches_document": false
+      }
+    },
+    {
+      "id": "C02b",
+      "group": "C02",
+      "workflow": null,
+      "step": null,
+      "speaker_role": "customer",
+      "tulu_romanized": "Churu porth unthule",
+      "kannada_script": null,
+      "english_meaning": "Wait for some time.",
+      "verification": "not stated",
+      "control_group_heading": "Asking the assistant to wait or pause",
+      "canonical_control": "PAUSE_WORKFLOW",
+      "audio_listed_in_document": "C02b_CUSTOMER.wav",
+      "audio_file": "c02b_customer.wav.wav",
+      "audio": {
+        "container": "wav",
+        "codec": "pcm_s24le",
+        "sample_rate": 48000,
+        "channels": 1,
+        "duration_s": 7.614,
+        "sha256": "7be86445f47bf71e298a523c9ffa5fa49c437b0518c49b4081a215aa2a6dd294",
+        "name_matches_document": false
+      }
+    },
+    {
+      "id": "C02c",
+      "group": "C02",
+      "workflow": null,
+      "step": null,
+      "speaker_role": "customer",
+      "tulu_romanized": "Yenk churu check malpere undu ..er churu porth wait malpule",
+      "kannada_script": null,
+      "english_meaning": "I need to check something; please wait a little.",
+      "verification": "not stated",
+      "control_group_heading": "Asking the assistant to wait or pause",
+      "canonical_control": "PAUSE_WORKFLOW",
+      "audio_listed_in_document": "C02c_CUSTOMER.wav",
+      "audio_file": "C02c_customer.wav.wav",
+      "audio": {
+        "container": "wav",
+        "codec": "pcm_s24le",
+        "sample_rate": 48000,
+        "channels": 1,
+        "duration_s": 10.493,
+        "sha256": "ab5665868c2544ad92da7a8de567018f5d28de6f9216e3ba1e4030c4174d2ea5",
+        "name_matches_document": false
+      }
+    },
+    {
+      "id": "C02d",
+      "group": "C02",
+      "workflow": null,
+      "step": null,
+      "speaker_role": "customer",
+      "tulu_romanized": "Yaan panpina muta continue malporchi",
+      "kannada_script": null,
+      "english_meaning": "Please don't continue until I finish what I'm doing/saying.",
+      "verification": "not stated",
+      "control_group_heading": "Asking the assistant to wait or pause",
+      "canonical_control": "PAUSE_WORKFLOW",
+      "audio_listed_in_document": "C02d_CUSTOMER.wav",
+      "audio_file": "c02d_customer.wav.wav",
+      "audio": {
+        "container": "wav",
+        "codec": "pcm_s24le",
+        "sample_rate": 48000,
+        "channels": 1,
+        "duration_s": 8.854,
+        "sha256": "754feb443e53532b4a5df5815a19da38574babf13d52ed0f57505323839bfb1a",
+        "name_matches_document": false
+      }
+    },
+    {
+      "id": "C02e",
+      "group": "C02",
+      "workflow": null,
+      "step": null,
+      "speaker_role": "customer",
+      "tulu_romanized": "Yaan panpina muta unthule",
+      "kannada_script": null,
+      "english_meaning": "Please wait until I finish.",
+      "verification": "not stated",
+      "control_group_heading": "Asking the assistant to wait or pause",
+      "canonical_control": "PAUSE_WORKFLOW",
+      "audio_listed_in_document": "C02e_CUSTOMER.wav",
+      "audio_file": "C02e_Customer.wav.wav",
+      "audio": {
+        "container": "wav",
+        "codec": "pcm_s24le",
+        "sample_rate": 48000,
+        "channels": 1,
+        "duration_s": 7.713,
+        "sha256": "6adc172e71c775702b4d2c89ec00e5e531d93a2f3366fe253ce22c2ac5522f96",
+        "name_matches_document": false
+      }
+    },
+    {
+      "id": "C02",
+      "group": "C02",
+      "workflow": null,
+      "step": null,
+      "speaker_role": "assistant",
+      "tulu_romanized": "Okay ... Er aramse malpule ... yaan er panpina muta unthuve ..",
+      "kannada_script": null,
+      "english_meaning": "Okay, take your time. I'll wait until you finish.",
+      "verification": "not stated",
+      "control_group_heading": "Asking the assistant to wait or pause",
+      "canonical_control": "PAUSE_WORKFLOW",
+      "audio_listed_in_document": "C02_ASSISTANT.wav",
+      "audio_file": "c02_assistant.wav.wav",
+      "audio": {
+        "container": "wav",
+        "codec": "pcm_s24le",
+        "sample_rate": 48000,
+        "channels": 1,
+        "duration_s": 12.194,
+        "sha256": "cebee9b26e41dec3db6352d5f5d4687c827b02f7e5132e3848fa0569bf66be3e",
+        "name_matches_document": false
+      }
+    },
+    {
+      "id": "C03a",
+      "group": "C03",
+      "workflow": null,
+      "step": null,
+      "speaker_role": "customer",
+      "tulu_romanized": "Eth aav .",
+      "kannada_script": null,
+      "english_meaning": "That's enough.",
+      "verification": "not stated",
+      "control_group_heading": "Stopping the conversation or declining further help",
+      "canonical_control": "STOP_REQUEST",
+      "audio_listed_in_document": "C03a_CUSTOMER.wav",
+      "audio_file": "c03a_customer.wav.wav",
+      "audio": {
+        "container": "wav",
+        "codec": "pcm_s24le",
+        "sample_rate": 48000,
+        "channels": 1,
+        "duration_s": 8.354,
+        "sha256": "04f11522dfead9e1164d62c709507d607d45fd863f665ed670ce2f8e20e8e339",
+        "name_matches_document": false
+      }
+    },
+    {
+      "id": "C03b",
+      "group": "C03",
+      "workflow": null,
+      "step": null,
+      "speaker_role": "customer",
+      "tulu_romanized": "Nana explain malpodu pandh ejji",
+      "kannada_script": null,
+      "english_meaning": "I don't need any further explanation.",
+      "verification": "not stated",
+      "control_group_heading": "Stopping the conversation or declining further help",
+      "canonical_control": "STOP_REQUEST",
+      "audio_listed_in_document": "C03b_CUSTOMER.wav",
+      "audio_file": "c03b_customer.wav.wav",
+      "audio": {
+        "container": "wav",
+        "codec": "pcm_s24le",
+        "sample_rate": 48000,
+        "channels": 1,
+        "duration_s": 9.313,
+        "sha256": "11c516a519402011c77ef1f1f4a327a5f47ddf4668177c2a018d3e9a89c58779",
+        "name_matches_document": false
+      }
+    },
+    {
+      "id": "C03c",
+      "group": "C03",
+      "workflow": null,
+      "step": null,
+      "speaker_role": "customer",
+      "tulu_romanized": "Yenk nana dada help borchi or thank u eth yaav information",
+      "kannada_script": null,
+      "english_meaning": "I don't need any more help, thank you. That's all the information I need.",
+      "verification": "not stated",
+      "control_group_heading": "Stopping the conversation or declining further help",
+      "canonical_control": "STOP_REQUEST",
+      "audio_listed_in_document": "C03c_CUSTOMER.wav",
+      "audio_file": "c03c_customer.wav.wav",
+      "audio": {
+        "container": "wav",
+        "codec": "pcm_s24le",
+        "sample_rate": 48000,
+        "channels": 1,
+        "duration_s": 11.454,
+        "sha256": "98ca2d481fc4f2a50e4676893112181a6f84f0645647ce61cbeaac026c7af029",
+        "name_matches_document": false
+      }
+    },
+    {
+      "id": "C03",
+      "group": "C03",
+      "workflow": null,
+      "step": null,
+      "speaker_role": "assistant",
+      "tulu_romanized": "Okay ... nana oik andala help bodanda yenk panle ... thank you.",
+      "kannada_script": null,
+      "english_meaning": "Okay, let me know if you need any other help. Thank you.",
+      "verification": "not stated",
+      "control_group_heading": "Stopping the conversation or declining further help",
+      "canonical_control": "STOP_REQUEST",
+      "audio_listed_in_document": "C03_ASSISTANT.wav",
+      "audio_file": "c03_assistant.wav.wav",
+      "audio": {
+        "container": "wav",
+        "codec": "pcm_s24le",
+        "sample_rate": 48000,
+        "channels": 1,
+        "duration_s": 11.473,
+        "sha256": "21ce4f5665b94d01647a934795184e4eff0654c149458dcb0512a832d2b81c29",
+        "name_matches_document": false
+      }
+    },
+    {
+      "id": "C04a",
+      "group": "C04",
+      "workflow": null,
+      "step": null,
+      "speaker_role": "customer",
+      "tulu_romanized": "Yenk artha ayiji",
+      "kannada_script": null,
+      "english_meaning": "I didn't understand.",
+      "verification": "not stated",
+      "control_group_heading": "Asking for clarification or another explanation",
+      "canonical_control": "CLARIFY_CURRENT_STEP",
+      "audio_listed_in_document": "C04a_CUSTOMER.wav",
+      "audio_file": "c04a_customer.wav.wav",
+      "audio": {
+        "container": "wav",
+        "codec": "pcm_s24le",
+        "sample_rate": 48000,
+        "channels": 1,
+        "duration_s": 8.614,
+        "sha256": "67b11ce0b5d2eb128420e1f0337fc222ab05b4d2bfec75d50a7a73599107f064",
+        "name_matches_document": false
+      }
+    },
+    {
+      "id": "C04b",
+      "group": "C04",
+      "workflow": null,
+      "step": null,
+      "speaker_role": "customer",
+      "tulu_romanized": "Kuda explain malpoli ya ..",
+      "kannada_script": null,
+      "english_meaning": "Can you explain it again?",
+      "verification": "not stated",
+      "control_group_heading": "Asking for clarification or another explanation",
+      "canonical_control": "CLARIFY_CURRENT_STEP",
+      "audio_listed_in_document": "C04b_CUSTOMER.wav",
+      "audio_file": "c04b_customer.wav.wav",
+      "audio": {
+        "container": "wav",
+        "codec": "pcm_s24le",
+        "sample_rate": 48000,
+        "channels": 1,
+        "duration_s": 9.114,
+        "sha256": "3fab385df9e5eb7fe4011fd532f04167fd9672eaddc533894e164387e3f2f35b",
+        "name_matches_document": false
+      }
+    },
+    {
+      "id": "C04c",
+      "group": "C04",
+      "workflow": null,
+      "step": null,
+      "speaker_role": "customer",
+      "tulu_romanized": "Ancha panda dada",
+      "kannada_script": null,
+      "english_meaning": "What does that mean?",
+      "verification": "not stated",
+      "control_group_heading": "Asking for clarification or another explanation",
+      "canonical_control": "CLARIFY_CURRENT_STEP",
+      "audio_listed_in_document": "C04c_CUSTOMER.wav",
+      "audio_file": "c04c_customer.wav.wav",
+      "audio": {
+        "container": "wav",
+        "codec": "pcm_s24le",
+        "sample_rate": 48000,
+        "channels": 1,
+        "duration_s": 8.674,
+        "sha256": "dee6409566dc597f3c912b637b91db1a00908798f63e626e68f636f6707a3865",
+        "name_matches_document": false
+      }
+    },
+    {
+      "id": "C04",
+      "group": "C04",
+      "workflow": null,
+      "step": null,
+      "speaker_role": "assistant",
+      "tulu_romanized": "Thondre ejji yaan ereg kuda panpe..",
+      "kannada_script": null,
+      "english_meaning": "No problem, I'll explain it again to you.",
+      "verification": "not stated",
+      "control_group_heading": "Asking for clarification or another explanation",
+      "canonical_control": "CLARIFY_CURRENT_STEP",
+      "audio_listed_in_document": "C04_ASSISTANT.wav",
+      "audio_file": "c04_assistant.wav.wav",
+      "audio": {
+        "container": "wav",
+        "codec": "pcm_s24le",
+        "sample_rate": 48000,
+        "channels": 1,
+        "duration_s": 9.653,
+        "sha256": "864d2d2b2cdc13c749b7873c1bc49f55b8799abd81d83d5e5f83e0ddbb21e8fa",
+        "name_matches_document": false
+      }
+    },
+    {
+      "id": "C05a",
+      "group": "C05",
+      "workflow": null,
+      "step": null,
+      "speaker_role": "customer",
+      "tulu_romanized": "Next dada",
+      "kannada_script": null,
+      "english_meaning": "What next?",
+      "verification": "not stated",
+      "control_group_heading": "Asking what comes next",
+      "canonical_control": "NEXT_STEP",
+      "audio_listed_in_document": "C05a_CUSTOMER.wav",
+      "audio_file": "C05a_CUSTOMER.wav",
+      "audio": {
+        "container": "wav",
+        "codec": "pcm_s16le",
+        "sample_rate": 48000,
+        "channels": 2,
+        "duration_s": 2.58,
+        "sha256": "56ed33044876270b0887331fa7da0db193d66a49a713f8787897c881c7e6b4ca",
+        "name_matches_document": true
+      }
+    },
+    {
+      "id": "C05b",
+      "group": "C05",
+      "workflow": null,
+      "step": null,
+      "speaker_role": "customer",
+      "tulu_romanized": "Undu ayii bokka dada",
+      "kannada_script": null,
+      "english_meaning": "What comes after this?",
+      "verification": "not stated",
+      "control_group_heading": "Asking what comes next",
+      "canonical_control": "NEXT_STEP",
+      "audio_listed_in_document": "C05b_CUSTOMER.wav",
+      "audio_file": "C05b_CUSTOMER.wav",
+      "audio": {
+        "container": "wav",
+        "codec": "pcm_s16le",
+        "sample_rate": 48000,
+        "channels": 2,
+        "duration_s": 4.18,
+        "sha256": "989f1d1aaeca4120cafdca94c22714c762f8d62b52e8e62189ff93d7f9f0571b",
+        "name_matches_document": true
+      }
+    },
+    {
+      "id": "C05c",
+      "group": "C05",
+      "workflow": null,
+      "step": null,
+      "speaker_role": "customer",
+      "tulu_romanized": "Next panle",
+      "kannada_script": null,
+      "english_meaning": "Please tell me what's next.",
+      "verification": "not stated",
+      "control_group_heading": "Asking what comes next",
+      "canonical_control": "NEXT_STEP",
+      "audio_listed_in_document": "C05c_CUSTOMER.wav",
+      "audio_file": "C05c_CUSTOMER.wav",
+      "audio": {
+        "container": "wav",
+        "codec": "pcm_s16le",
+        "sample_rate": 48000,
+        "channels": 2,
+        "duration_s": 3.66,
+        "sha256": "0f2bbbe4520d0529f52c06983eba4b451d140d4cf1768f5e7ed0b9c179539251",
+        "name_matches_document": true
+      }
+    },
+    {
+      "id": "C05d",
+      "group": "C05",
+      "workflow": null,
+      "step": null,
+      "speaker_role": "customer",
+      "tulu_romanized": "Next dada malpodu panle",
+      "kannada_script": null,
+      "english_meaning": "Tell me what I should do next.",
+      "verification": "not stated",
+      "control_group_heading": "Asking what comes next",
+      "canonical_control": "NEXT_STEP",
+      "audio_listed_in_document": "C05d_CUSTOMER.wav",
+      "audio_file": "C05d_CUSTOMER.wav",
+      "audio": {
+        "container": "wav",
+        "codec": "pcm_s16le",
+        "sample_rate": 48000,
+        "channels": 2,
+        "duration_s": 4.35,
+        "sha256": "bf5f42da7afb2690dccee00c671e6025b63fe2cfed1492723f967ddfd69ac65d",
+        "name_matches_document": true
+      }
+    },
+    {
+      "id": "C05",
+      "group": "C05",
+      "workflow": null,
+      "step": null,
+      "speaker_role": "assistant",
+      "tulu_romanized": "Avu next dada malpodu annd panpe.",
+      "kannada_script": null,
+      "english_meaning": "I will say what to do next.",
+      "verification": "not stated",
+      "control_group_heading": "Asking what comes next",
+      "canonical_control": "NEXT_STEP",
+      "audio_listed_in_document": "C05_ASSISTANT.wav",
+      "audio_file": "C05_ASSISTANT.wav",
+      "audio": {
+        "container": "wav",
+        "codec": "pcm_s16le",
+        "sample_rate": 48000,
+        "channels": 2,
+        "duration_s": 5.35,
+        "sha256": "3102ca51e85812d9a03b5016a8d7b140378f04fd95ea771954db7f478dfbd970",
+        "name_matches_document": true
+      }
+    },
+    {
+      "id": "C06a",
+      "group": "C06",
+      "workflow": null,
+      "step": null,
+      "speaker_role": "customer",
+      "tulu_romanized": "Continue malpule",
+      "kannada_script": null,
+      "english_meaning": "Please continue what you were saying.",
+      "verification": "not stated",
+      "control_group_heading": "Asking the assistant to continue",
+      "canonical_control": "RESUME_WORKFLOW",
+      "audio_listed_in_document": "C06a_CUSTOMER.wav",
+      "audio_file": "C06a_CUSTOMER.wav",
+      "audio": {
+        "container": "wav",
+        "codec": "pcm_s16le",
+        "sample_rate": 48000,
+        "channels": 2,
+        "duration_s": 4.18,
+        "sha256": "f4946590068c4eba7ecdc4a1483a2140c02c20be87356bcfd4ad281bc548a2bf",
+        "name_matches_document": true
+      }
+    },
+    {
+      "id": "C06b",
+      "group": "C06",
+      "workflow": null,
+      "step": null,
+      "speaker_role": "customer",
+      "tulu_romanized": "Olpa unthayar alpa d continue malpule",
+      "kannada_script": null,
+      "english_meaning": "Please continue from where you stopped.",
+      "verification": "not stated",
+      "control_group_heading": "Asking the assistant to continue",
+      "canonical_control": "RESUME_WORKFLOW",
+      "audio_listed_in_document": "C06b_CUSTOMER.wav",
+      "audio_file": "C06b_CUSTOMER.wav",
+      "audio": {
+        "container": "wav",
+        "codec": "pcm_s16le",
+        "sample_rate": 48000,
+        "channels": 2,
+        "duration_s": 5.71,
+        "sha256": "61b7e3c1e5608e7375da36b854cf41479dda8df9b0b0f7ce954571a5524e51b7",
+        "name_matches_document": true
+      }
+    },
+    {
+      "id": "C06",
+      "group": "C06",
+      "workflow": null,
+      "step": null,
+      "speaker_role": "assistant",
+      "tulu_romanized": "Avu erna request n continue malpuve.",
+      "kannada_script": null,
+      "english_meaning": "Okay, I'll continue your request.",
+      "verification": "not stated",
+      "control_group_heading": "Asking the assistant to continue",
+      "canonical_control": "RESUME_WORKFLOW",
+      "audio_listed_in_document": "C06_ASSISTANT.wav",
+      "audio_file": "C06_ASSISTANT.wav",
+      "audio": {
+        "container": "wav",
+        "codec": "pcm_s16le",
+        "sample_rate": 48000,
+        "channels": 2,
+        "duration_s": 5.81,
+        "sha256": "7e408cb3491cd3f18a8af37dcf48abeeac65ca7bc61f2a6cfa3af8705be109cd",
+        "name_matches_document": true
+      }
+    },
+    {
+      "id": "C04t1",
+      "group": "C04",
+      "workflow": null,
+      "step": null,
+      "speaker_role": "customer",
+      "tulu_romanized": "yank gothuji",
+      "kannada_script": null,
+      "english_meaning": "I don't know.",
+      "verification": "not stated",
+      "control_group_heading": "Asking for clarification or another explanation",
+      "canonical_control": "CLARIFY_CURRENT_STEP",
+      "audio_listed_in_document": null,
+      "audio_file": null,
+      "text_only": true,
+      "source": "supplied by the team in chat, 2026-11-19 (not in the control document)",
+      "group_reason": "Assigned to C04 (asking for clarification) by the development assistant: a customer who does not know what to do at a step needs it explained. Pending team/native confirmation."
+    }
+  ],
+  "document_notes": [
+    "Record every customer variation as a separate audio file (for example, C01a_CUSTOMER.wav).",
+    "Record only one common assistant audio file for each group (C01_ASSISTANT.wav through C06_ASSISTANT.wav).",
+    "Do not create separate assistant recordings for each variation within the same group.",
+    "The English meanings are working glosses; retain the supplied Tulu wording for recording."
+  ],
+  "discrepancies": [
+    {
+      "id": "NATIVE_SPEAKER_VERIFICATION_NOT_STATED",
+      "status": "awaiting_team_confirmation",
+      "description": "The document does not state native-speaker verification and calls its English meanings 'working glosses'.",
+      "effect": "Every row is marked verification 'not stated'; glosses stored exactly as supplied."
+    },
+    {
+      "id": "FILENAMES_DIFFER_FROM_DOCUMENT",
+      "status": "documented",
+      "description": "Delivered names are lower/mixed case with a doubled '.wav.wav'. Affected: C01a, C01b, C01c, C01d, C01, C02a, C02b, C02c, C02d, C02e, C02, C03a, C03b, C03c, C03, C04a, C04b, C04c, C04.",
+      "effect": "Matched case-insensitively; files left as delivered."
+    },
+    {
+      "id": "C03_HEADING_TWO_ACTIONS",
+      "status": "awaiting_native_speaker_confirmation",
+      "description": "C03 is headed 'Stopping the conversation or declining further help' -- two different actions. The assistant reply ('let me know if you need any other help') implies the session continues.",
+      "effect": "Team decision 2026-11-19: C03 = stop. One stop cancels the open request immediately and offers to end the conversation; a second stop right after ends it."
+    },
+    {
+      "id": "C03_ASSISTANT_OIK",
+      "status": "awaiting_native_speaker_confirmation",
+      "description": "C03 assistant 'Okay ... nana oik andala help bodanda yenk panle ... thank you.' -- 'oik' is unclear (possible typo).",
+      "effect": "Kept verbatim."
+    },
+    {
+      "id": "C03C_OR_THANK_U",
+      "status": "awaiting_native_speaker_confirmation",
+      "description": "C03c contains 'or' and the texting form 'thank u'; the gloss adds a second sentence.",
+      "effect": "Kept verbatim."
+    },
+    {
+      "id": "C02D_CONTAINS_CONTINUE",
+      "status": "documented",
+      "description": "C02d 'Yaan panpina muta continue malporchi' (don't continue) contains the English word 'continue', which on its own is the engine's RESUME command.",
+      "effect": "Matched as a whole phrase to PAUSE; tests assert it never resumes."
+    },
+    {
+      "id": "SLOW_SPEECH_NOT_SUPPORTED",
+      "status": "documented",
+      "description": "C01d asks for slower speech and the C01 reply promises it; the TTS has no slow mode.",
+      "effect": "Mapped to repeat; speech rate is unchanged (known gap)."
+    },
+    {
+      "id": "C06_VS_C02D",
+      "status": "documented",
+      "description": "C06a 'Continue malpule' (please continue) and C02d 'Yaan panpina muta continue malporchi' (don't continue until I finish) share the word 'continue' but have OPPOSITE meanings.",
+      "effect": "Each matched as a whole phrase; tests assert C02d pauses and C06 resumes."
+    },
+    {
+      "id": "ADDED_GROUPS_SECOND_SPEAKER",
+      "status": "documented",
+      "description": "C05 and C06 (added 2026-11-19) are 16-bit stereo, median F0 106-132 Hz -- consistent with the deposit speaker, not the C01-C04 speaker (195-250 Hz). Not verified with a speaker model.",
+      "effect": "Control now has two speakers."
+    },
+    {
+      "id": "DOCUMENT_OPEN_IN_WORD",
+      "status": "documented",
+      "description": "A Word lock file (~$lu_Conversation_Control_Statements_C01-C04.docx) was present when the document was read on 2026-11-19, so it may still be being edited. The file name still says C01-C04 although it now holds C01-C06.",
+      "effect": "The saved version was used; rebuild if the document changes again."
+    },
+    {
+      "id": "TEXT_ONLY_SUPPLEMENT",
+      "status": "awaiting_team_confirmation",
+      "description": "C04t1 'yank gothuji' ('I don't know.') was supplied by the team in chat on 2026-11-19, not in the control document, and has NO recording. Spelling kept exactly as supplied. Placed in C04 (clarification) by the development assistant.",
+      "effect": "Typed matching only; excluded from ASR evaluation and from every recording check."
+    },
+    {
+      "id": "NO_KANNADA_SCRIPT",
+      "status": "documented",
+      "description": "No Kannada-script forms are supplied.",
+      "effect": "kannada_script is null; speech uses machine transliteration pending review."
+    }
+  ],
+  "voice_use_consent": "not documented -- recordings must not be used for voice cloning"
+}

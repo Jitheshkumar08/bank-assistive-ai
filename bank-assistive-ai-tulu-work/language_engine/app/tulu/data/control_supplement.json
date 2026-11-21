@@ -1,0 +1,14 @@
+{
+  "purpose": "Text-only control phrases supplied by the team OUTSIDE the control document (no recording). build_dataset.py appends them to control_dataset.json, marked text_only. They are used for typed matching only; never for ASR evaluation and never as a recording.",
+  "rows": [
+    {
+      "id": "C04t1",
+      "group": "C04",
+      "speaker_role": "customer",
+      "tulu_romanized": "yank gothuji",
+      "english_meaning": "I don't know.",
+      "source": "supplied by the team in chat, 2026-11-19 (not in the control document)",
+      "group_reason": "Assigned to C04 (asking for clarification) by the development assistant: a customer who does not know what to do at a step needs it explained. Pending team/native confirmation."
+    }
+  ]
+}

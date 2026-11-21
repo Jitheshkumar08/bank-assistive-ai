@@ -1,0 +1,410 @@
+{
+  "source": {
+    "folder": "deposit conversation",
+    "document": "Tulu_Cash_Deposit_Dataset_Workflow_Aligned_Final.docx",
+    "document_sha256": "c5c93b486e3547059fe5f28a08bdb1fad0dc7f38bd127ab9d1ec71efe57a2059",
+    "built_by": "app/tulu/data/build_dataset.py",
+    "note": "Faithful copy of the annotator's tables. Romanized Tulu is authoritative and unmodified."
+  },
+  "workflow": "deposit",
+  "step_instructions": {
+    "1": {
+      "text": "Please take a deposit slip.",
+      "field": null
+    },
+    "2": {
+      "text": "Fill in your account number.",
+      "field": "account_number"
+    },
+    "3": {
+      "text": "Enter the amount to deposit.",
+      "field": "amount"
+    },
+    "4": {
+      "text": "Submit the slip along with the cash.",
+      "field": null
+    }
+  },
+  "utterances": [
+    {
+      "id": "D01a",
+      "group": "D01",
+      "workflow": "deposit",
+      "step": 1,
+      "speaker_role": "customer",
+      "tulu_romanized": "Yank duddu padare undu?",
+      "english_meaning": "I have money to deposit / I want to deposit money.",
+      "audio_listed_in_document": "D01a_CUSTOMER.wav",
+      "audio_file": "D01a_CUSTOMER.wav.m4a",
+      "audio": {
+        "container": "mov,mp4,m4a,3gp,3g2,mj2",
+        "codec": "aac",
+        "sample_rate": 48000,
+        "channels": 2,
+        "duration_s": 3.904,
+        "sha256": "d273aed15c3a3ccd68b16c847fd8454a32200c6fed53539c61e7ba07e3a27a24",
+        "name_matches_document": false
+      }
+    },
+    {
+      "id": "D01b",
+      "group": "D01",
+      "workflow": "deposit",
+      "step": 1,
+      "speaker_role": "customer",
+      "tulu_romanized": "Yank duddu deposit malpodu?",
+      "english_meaning": "I want to deposit money.",
+      "audio_listed_in_document": "D01b_CUSTOMER.wav",
+      "audio_file": "D01b_CUSTOMER.wav.m4a",
+      "audio": {
+        "container": "mov,mp4,m4a,3gp,3g2,mj2",
+        "codec": "aac",
+        "sample_rate": 48000,
+        "channels": 2,
+        "duration_s": 3.371,
+        "sha256": "f5d86e7593085f1d3a2a3a637dbc05fda2ee6a494454dd304d7b633c36a0c82f",
+        "name_matches_document": false
+      }
+    },
+    {
+      "id": "D01c",
+      "group": "D01",
+      "workflow": "deposit",
+      "step": 1,
+      "speaker_role": "customer",
+      "tulu_romanized": "Yank duddu padodu?",
+      "english_meaning": "I want to deposit money.",
+      "audio_listed_in_document": "D01c_CUSTOMER.wav",
+      "audio_file": "D01c_CUSTOMER.wav.m4a",
+      "audio": {
+        "container": "mov,mp4,m4a,3gp,3g2,mj2",
+        "codec": "aac",
+        "sample_rate": 48000,
+        "channels": 2,
+        "duration_s": 2.88,
+        "sha256": "b480f89f2f4cb587c96e23fdb9fff9206e3985232e40f4e37254a61748594f1b",
+        "name_matches_document": false
+      }
+    },
+    {
+      "id": "D01",
+      "group": "D01",
+      "workflow": "deposit",
+      "step": 1,
+      "speaker_role": "assistant",
+      "tulu_romanized": "Okay, first er cash deposit dh slip dethonle.",
+      "english_meaning": "Please take a deposit slip.",
+      "audio_listed_in_document": "D01_ASSISTANT.wav",
+      "audio_file": "D01_ASSISTANT.wav",
+      "audio": {
+        "container": "wav",
+        "codec": "pcm_s16le",
+        "sample_rate": 48000,
+        "channels": 2,
+        "duration_s": 6.37,
+        "sha256": "9dc6dc50e963e08891c06250d2154096ef633506b86b9660ea035eb35a33819a",
+        "name_matches_document": true
+      }
+    },
+    {
+      "id": "D02a",
+      "group": "D02",
+      "workflow": "deposit",
+      "step": 2,
+      "speaker_role": "customer",
+      "tulu_romanized": "Slip dethond aand?",
+      "english_meaning": "I have received/taken the slip.",
+      "audio_listed_in_document": "D02a_CUSTOMER.wav",
+      "audio_file": "D02a_CUSTOMER.wav",
+      "audio": {
+        "container": "wav",
+        "codec": "pcm_s16le",
+        "sample_rate": 48000,
+        "channels": 2,
+        "duration_s": 3.46,
+        "sha256": "de5ae2d64580e4dd2560c6a3d92eea0fe99a3ac937d7dadbc1a0690705e46f72",
+        "name_matches_document": true
+      }
+    },
+    {
+      "id": "D02b",
+      "group": "D02",
+      "workflow": "deposit",
+      "step": 2,
+      "speaker_role": "customer",
+      "tulu_romanized": "Dethe nana dada malpodu?",
+      "english_meaning": "What should I do now?",
+      "audio_listed_in_document": "D02b_CUSTOMER.wav",
+      "audio_file": "D02b_CUSTOMER.wav",
+      "audio": {
+        "container": "wav",
+        "codec": "pcm_s16le",
+        "sample_rate": 48000,
+        "channels": 2,
+        "duration_s": 4.37,
+        "sha256": "2b38be43bfe26aa573f57c65d247460489ac6efc18a998f323c18ebb2c1466df",
+        "name_matches_document": true
+      }
+    },
+    {
+      "id": "D02c",
+      "group": "D02",
+      "workflow": "deposit",
+      "step": 2,
+      "speaker_role": "customer",
+      "tulu_romanized": "Ethe dada malpodu?",
+      "english_meaning": "What should I do here?",
+      "audio_listed_in_document": "D02c_CUSTOMER.wav",
+      "audio_file": "D02c_CUSTOMER.wav",
+      "audio": {
+        "container": "wav",
+        "codec": "pcm_s16le",
+        "sample_rate": 48000,
+        "channels": 2,
+        "duration_s": 4.13,
+        "sha256": "2a935d6fc8bad7f257828cab16467e1ded436242f977409342df1c16d7bd28f5",
+        "name_matches_document": true
+      }
+    },
+    {
+      "id": "D02d",
+      "group": "D02",
+      "workflow": "deposit",
+      "step": 2,
+      "speaker_role": "customer",
+      "tulu_romanized": "Yaan slip dethoni ye ethe dada poora fill malthonodu?",
+      "english_meaning": "Where should I fill in the details on the slip?",
+      "audio_listed_in_document": "D02d_CUSTOMER.wav",
+      "audio_file": "D02d_CUSTOMER.wav",
+      "audio": {
+        "container": "wav",
+        "codec": "pcm_s16le",
+        "sample_rate": 48000,
+        "channels": 2,
+        "duration_s": 6.93,
+        "sha256": "a6640d997fd680a3e41439635ad2c3753944907080dc03dafdc364442eea0e88",
+        "name_matches_document": true
+      }
+    },
+    {
+      "id": "D02",
+      "group": "D02",
+      "workflow": "deposit",
+      "step": 2,
+      "speaker_role": "assistant",
+      "tulu_romanized": "Ait erna account number barele.",
+      "english_meaning": "Fill in your account number.",
+      "audio_listed_in_document": "D02_ASSISTANT.wav",
+      "audio_file": "D02_ASSISTANT.wav",
+      "audio": {
+        "container": "wav",
+        "codec": "pcm_s16le",
+        "sample_rate": 48000,
+        "channels": 2,
+        "duration_s": 5.1,
+        "sha256": "d12cb05a44dea39c9f3a43cdb99e2a57a0bbe658a891da39e6dd151443d99117",
+        "name_matches_document": true
+      }
+    },
+    {
+      "id": "D03a",
+      "group": "D03",
+      "workflow": "deposit",
+      "step": 3,
+      "speaker_role": "customer",
+      "tulu_romanized": "Account number fill malthaand, nana dada malpodu?",
+      "english_meaning": "I have filled in the account number. What should I do next?",
+      "audio_listed_in_document": "D03a_CUSTOMER.wav",
+      "audio_file": "D03a_CUSTOMER.wav",
+      "audio": {
+        "container": "wav",
+        "codec": "pcm_s16le",
+        "sample_rate": 48000,
+        "channels": 2,
+        "duration_s": 6.46,
+        "sha256": "744e217ad2e113f235bfe499ecd8cdf25ffeba5fb6936fa3c84d74d7979dbcee",
+        "name_matches_document": true
+      }
+    },
+    {
+      "id": "D03b",
+      "group": "D03",
+      "workflow": "deposit",
+      "step": 3,
+      "speaker_role": "customer",
+      "tulu_romanized": "Yan deposit malpuna amount n olpa bareyodu?",
+      "english_meaning": "Where should I write the amount I want to deposit?",
+      "audio_listed_in_document": "D03b_CUSTOMER.wav",
+      "audio_file": "D03b_CUSTOMER.wav",
+      "audio": {
+        "container": "wav",
+        "codec": "pcm_s16le",
+        "sample_rate": 48000,
+        "channels": 2,
+        "duration_s": 7.82,
+        "sha256": "0bb381bcf0572d24e661436e3b7cb4092843209a4e0a3f3badeea4ff228b3e51",
+        "name_matches_document": true
+      }
+    },
+    {
+      "id": "D03",
+      "group": "D03",
+      "workflow": "deposit",
+      "step": 3,
+      "speaker_role": "assistant",
+      "tulu_romanized": "Bokka eth amount deppere undu aven barele.",
+      "english_meaning": "Enter the amount to deposit.",
+      "audio_listed_in_document": "D03_ASSISTANT.wav",
+      "audio_file": "D03_ASSISTANT.wav",
+      "audio": {
+        "container": "wav",
+        "codec": "pcm_s16le",
+        "sample_rate": 48000,
+        "channels": 2,
+        "duration_s": 6.65,
+        "sha256": "ef3371d2eda82d02c9fe090ee422ef3f6fe0bd2edc1af89156792ad547bc2bf9",
+        "name_matches_document": true
+      }
+    },
+    {
+      "id": "D04a",
+      "group": "D04",
+      "workflow": "deposit",
+      "step": 4,
+      "speaker_role": "customer",
+      "tulu_romanized": "Slip pura fill malthaand next dada malpodu?",
+      "english_meaning": "I have filled the entire slip. What should I do next?",
+      "audio_listed_in_document": "D04a_CUSTOMER.wav",
+      "audio_file": "D04a_CUSTOMER.wav",
+      "audio": {
+        "container": "wav",
+        "codec": "pcm_s16le",
+        "sample_rate": 48000,
+        "channels": 2,
+        "duration_s": 7.16,
+        "sha256": "922bb6c04bf9ba01eb9c5b12d604fa33c1e1ee134fba98eb5d4d202171c5c498",
+        "name_matches_document": true
+      }
+    },
+    {
+      "id": "D04b",
+      "group": "D04",
+      "workflow": "deposit",
+      "step": 4,
+      "speaker_role": "customer",
+      "tulu_romanized": "Amount n bareye.",
+      "english_meaning": "I wrote the amount.",
+      "audio_listed_in_document": "D04b_CUSTOMER.wav",
+      "audio_file": "D04b_CUSTOMER.wav",
+      "audio": {
+        "container": "wav",
+        "codec": "pcm_s16le",
+        "sample_rate": 48000,
+        "channels": 2,
+        "duration_s": 4.22,
+        "sha256": "bf6dc2a78aeafdcb3bd784473c8a7d483b966b94e84d49249cbcffe9aa6e0faa",
+        "name_matches_document": true
+      }
+    },
+    {
+      "id": "D04c",
+      "group": "D04",
+      "workflow": "deposit",
+      "step": 4,
+      "speaker_role": "customer",
+      "tulu_romanized": "Yan deposit malpuna amount bareye. Next dada malpodu?",
+      "english_meaning": "I have written the amount I want to deposit. What should I do next?",
+      "audio_listed_in_document": "D04c_CUSTOMER.wav",
+      "audio_file": "D04c_CUSTOMER.wav",
+      "audio": {
+        "container": "wav",
+        "codec": "pcm_s16le",
+        "sample_rate": 48000,
+        "channels": 2,
+        "duration_s": 8.2,
+        "sha256": "184eab7f1c9bd5a3fd8d08fd0de498d18bb8b2c2f309bd9738ec6dc25652812d",
+        "name_matches_document": true
+      }
+    },
+    {
+      "id": "D04",
+      "group": "D04",
+      "workflow": "deposit",
+      "step": 4,
+      "speaker_role": "assistant",
+      "tulu_romanized": "Slip Boka amount n cash counter d korle.",
+      "english_meaning": "Submit the slip along with the cash at the cash counter.",
+      "audio_listed_in_document": "D04_ASSISTANT.wav",
+      "audio_file": "D04_ASSISTANT.wav",
+      "audio": {
+        "container": "wav",
+        "codec": "pcm_s16le",
+        "sample_rate": 48000,
+        "channels": 2,
+        "duration_s": 6.66,
+        "sha256": "7b487f5177f936ab68bb5dd2200fa38db387465c182b7e8bcbc172e275bd4fe1",
+        "name_matches_document": true
+      }
+    }
+  ],
+  "document_notes": [
+    "Workflow order is fixed: D01 take deposit slip → D02 fill account number → D03 enter deposit amount → D04 submit slip with cash.",
+    "The customer sentence “Account number fill malthaand, nana dada malpodu?” indicates the account-number field is completed and maps to D03.",
+    "The customer sentence “Yan deposit malpuna amount bareye?” asks about the amount field and maps to D03.",
+    "The customer sentence “Slip pura fill malthaand next dada malpodu?” indicates the slip is complete and maps to D04.",
+    "The D04 assistant Tulu phrase “Slip Boka amount n korle.” was supplied by the user as the confirmed wording for the final submission instruction.",
+    "Record each customer variation as its own CUSTOMER WAV. Record one ASSISTANT WAV per assistant step.",
+    "Do not add a customer-name or signature instruction to this deposit workflow; neither appears in the supplied deposit.json steps.",
+    "Assistant audio files",
+    "D01_ASSISTANT.wav · D02_ASSISTANT.wav · D03_ASSISTANT.wav · D04_ASSISTANT.wav"
+  ],
+  "discrepancies": [
+    {
+      "id": "D04_ASSISTANT_WORDING",
+      "status": "awaiting_native_speaker_confirmation",
+      "description": "The D04 assistant sentence appears in two different forms.",
+      "versions": [
+        {
+          "source": "dataset table, row D04 / Assistant",
+          "tulu_romanized": "Slip Boka amount n cash counter d korle."
+        },
+        {
+          "source": "Workflow and recording notes (stated as the confirmed wording)",
+          "tulu_romanized": "Slip Boka amount n korle."
+        }
+      ],
+      "effect": "Step 4 has NO verified Tulu rendering until resolved; it is answered in English."
+    },
+    {
+      "id": "SPELLING_BOKKA_BOKA",
+      "status": "awaiting_native_speaker_confirmation",
+      "description": "'Bokka' (D03 assistant) and 'Boka' (D04 assistant) appear to be the same word.",
+      "effect": "Both spellings kept; matching folds doubled consonants, text is not changed."
+    },
+    {
+      "id": "SPELLING_YANK_YAN_YAAN",
+      "status": "awaiting_native_speaker_confirmation",
+      "description": "'Yank' (D01a-c), 'Yan' (D03b, D04c) and 'Yaan' (D02d) are written differently; they may be different words (dative vs nominative) or spelling variants.",
+      "effect": "Kept as written; not merged."
+    },
+    {
+      "id": "D04C_STEP_MAPPING",
+      "status": "awaiting_native_speaker_confirmation",
+      "description": "A note says 'Yan deposit malpuna amount bareye?' maps to D03, but the near-identical D04c 'Yan deposit malpuna amount bareye. Next dada malpodu?' is filed under D04.",
+      "effect": "The table's placement (D04) is used, as the table is the annotated record."
+    },
+    {
+      "id": "AAC_FILES_NAMED_WAV",
+      "status": "documented",
+      "description": "D01a/D01b/D01c are AAC (M4A) audio named '*.wav.m4a'; the document lists them as '.wav'.",
+      "effect": "Files left as delivered; decoded with ffmpeg where needed."
+    },
+    {
+      "id": "D03_DEPPERE_IN_DEPOSIT",
+      "status": "awaiting_native_speaker_confirmation",
+      "description": "The deposit D03 assistant sentence 'Bokka eth amount deppere undu aven barele.' (glossed 'Enter the amount to deposit') is almost identical to withdrawal W03 'Bokka yeth amount deppere undu aven barele.' (glossed 'Enter the amount you want to withdraw'), and 'deppere' is the withdrawal verb in W01a-c, while deposit customer sentences use 'padare'/'padodu'. Found when the withdrawal dataset was added.",
+      "effect": "D03 is kept as annotated (annotations are authoritative); a native speaker should confirm it is correct for DEPOSIT."
+    }
+  ],
+  "voice_use_consent": "not documented -- recordings must not be used for voice cloning"
+}

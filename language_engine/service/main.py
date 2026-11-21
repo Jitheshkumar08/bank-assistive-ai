@@ -9,6 +9,7 @@ which is exactly why it must not be exposed to a browser.
 
 from __future__ import annotations
 
+import dataclasses
 import logging
 import os
 import re
@@ -44,6 +45,7 @@ from service.engine import (
     DomainRuntimeUnavailable,
     EngineRuntime,
     TranscriptionError,
+    TurnResult,
     domain_runtime_status,
     get_domain_runtime,
     get_runtime,
@@ -81,6 +83,13 @@ from app.workflow.loader import WorkflowLoader
 from service.tts import TtsError, UnsupportedLanguageError, synthesize
 from service.tts import request_id as tts_request_id
 from service.registry import SessionRegistry
+from app.tulu import TULU
+from app.tulu.intent.matcher import understand as understand_tulu
+from app.tulu.translation.renderer import control_acknowledgements as tulu_control_acknowledgements
+from app.tulu.translation.renderer import render as tulu_render
+from app.tulu.data.dataset import CONTROL_REPLY_PLAN as TULU_CONTROL_REPLY_PLAN
+from app.conversation.state import WorkflowState
+from service.tulu_routes import router as tulu_router
 
 logger = logging.getLogger("assistant-service")
 
@@ -285,6 +294,10 @@ async def lifespan(_: FastAPI):
 
 app = FastAPI(title="Shared assistant engine", version="1.1.0", lifespan=lifespan)
 
+# Tulu language capability (normalize / understand / translate / speak /
+# recognise). Additive routes under /tulu; no existing route changes.
+app.include_router(tulu_router, dependencies=[Depends(require_known_domain)])
+
 
 def _snapshot(conversation: ConversationManager, runtime: EngineRuntime) -> WorkflowSnapshot:
     """Workflow progress, totalled from the dialogue manager's own definitions."""
@@ -330,7 +343,134 @@ def _run_turn(runtime: EngineRuntime, entry, text: str):
     if getattr(runtime, "accepts_context", False):
         context = {**entry.context, **entry.bound_context}
         return runtime.run_turn(entry.conversation, text, entry.localizer, context=context)
+    if entry.language == TULU and text:
+        # Banking only: the verified Tulu data is banking (deposit, withdraw).
+        # The Tulu text becomes an English pivot for the SAME engine -- no
+        # second intent detector, dialogue manager or workflow (app/tulu/intent).
+        understood = understand_tulu(text)
+        # The exit offer made by the previous turn is valid for THIS turn only.
+        exit_offered, entry.tulu_exit_offered = entry.tulu_exit_offered, False
+        if understood.role == "control" and understood.control == "STOP_REQUEST":
+            return _tulu_stop(runtime, entry, understood, exit_offered)
+        if understood.pivot_en is None:
+            # Rejected (ambiguous, or too uncertain): ask again, in English (no
+            # verified Tulu exists for these sentences), without touching the
+            # workflow or history, and without calling the LLM.
+            reply = TULU_AMBIGUOUS_REPLY if understood.method == "rejected_ambiguous" else TULU_LOW_CONFIDENCE_REPLY
+            return TurnResult(reply=reply, canonical_reply=reply, outcome="clarify")
+        if understood.role == "control":
+            # A Tulu control phrase (repeat / pause / decline help / clarify /
+            # next / continue). Its pivot is the engine's OWN deterministic
+            # control word, so the existing control tier executes it -- no LLM
+            # call, no new logic. The reply is then composed for the situation.
+            result = runtime.run_turn(entry.conversation, understood.pivot_en, entry.localizer)
+            return _compose_tulu_control_reply(runtime, entry.conversation, understood, result)
+        text = understood.pivot_en
     return runtime.run_turn(entry.conversation, text, entry.localizer)
+
+
+#: Asked after a Tulu "stop". English: no verified Tulu sentence exists for it.
+TULU_EXIT_OFFER = "Say stop again to end the conversation."
+
+
+def _tulu_stop(runtime, entry, understood, exit_offered):
+    """
+    Tulu "stop" (C03), team rule 2026-11-19:
+
+      1st stop -> CANCEL the open request at once (no "are you sure?"), then
+                  offer to end the conversation: C03 Tulu reply + TULU_EXIT_OFFER.
+                  With no open request, only the offer is made.
+      2nd stop -> right after the offer: END the conversation (the engine's
+                  own session exit and farewell).
+
+    Any other turn after the offer simply clears it. Cancelling reuses the
+    engine's own cancel: "stop" is sent, and if the engine asks for its usual
+    confirmation, "stop" is sent once more as that confirmation -- so state,
+    history and replies stay exactly the engine's. English and Kannada
+    sessions keep the engine's confirm-first cancel unchanged.
+    """
+    conversation = entry.conversation
+    ack = tulu_control_acknowledgements().get(understood.group)
+
+    if exit_offered:
+        result = runtime.run_turn(conversation, "exit", entry.localizer)
+        return dataclasses.replace(result, intent="EXIT_CONVERSATION")
+
+    def request_open():
+        return conversation.current_workflow is not None and conversation.workflow_state in (
+            WorkflowState.ACTIVE, WorkflowState.SUSPENDED)
+
+    if request_open():
+        result = runtime.run_turn(conversation, "stop", entry.localizer)
+        if request_open():                 # the engine asked "Say cancel to confirm ..."
+            result = runtime.run_turn(conversation, "stop", entry.localizer)
+        if request_open() or result.ended:
+            # Not cancelled (e.g. the engine needs another answer first): its own words, no offer.
+            return dataclasses.replace(result, intent=understood.control)
+
+    reply = f"{ack.tulu_kannada} {TULU_EXIT_OFFER}" if ack else TULU_EXIT_OFFER
+    entry.tulu_exit_offered = True
+    return TurnResult(reply=reply, canonical_reply=reply, intent=understood.control)
+
+
+def _current_instruction(runtime, conversation):
+    """The active (or paused) workflow's current step instruction, or None."""
+    if conversation.current_workflow is None or conversation.workflow_state not in (
+        WorkflowState.ACTIVE, WorkflowState.SUSPENDED
+    ):
+        return None
+    loader = getattr(getattr(runtime, "dialogue", None), "workflow_loader", None)
+    workflow = loader.load_workflow(conversation.current_workflow) if loader else None
+    steps = (workflow or {}).get("steps") or []
+    step = conversation.current_step
+    return steps[step - 1]["instruction"] if step and 1 <= step <= len(steps) else None
+
+
+def _compose_tulu_control_reply(runtime, conversation, understood, result):
+    """
+    A Tulu control reply for the CURRENT situation.
+
+    The group's dataset Tulu reply says what the assistant is doing ("I will
+    say what to do next"); CONTROL_REPLY_PLAN (from each reply's English
+    meaning) says what must follow it. The step comes from the conversation
+    AFTER the engine acted, so "next" while paused at step 2 gives the C05
+    reply plus step 2 (the engine resumes and never skips an unfinished step).
+    The step is rendered in verified Tulu where one exists, else English.
+
+    The engine's own reply is kept unchanged when there was nothing to act on
+    ("There's nothing active right now.") -- a Tulu "I'll repeat it" would
+    contradict it -- and when the conversation has ended.
+    """
+    ack = tulu_control_acknowledgements().get(understood.group)
+    plan = TULU_CONTROL_REPLY_PLAN.get(understood.group)
+    canonical = str(result.canonical_reply or "")
+    # C03 ("stop") never reaches here: _tulu_stop() handles it.
+    # The engine's two "nothing to act on" wordings: "There's nothing ..." and
+    # "There's no active request right now. ..."
+    nothing_to_act_on = canonical.startswith(("There's nothing", "There's no "))
+    if result.ended or ack is None or plan is None or nothing_to_act_on:
+        return result
+
+    instruction = _current_instruction(runtime, conversation)
+    parts = [ack.tulu_kannada]
+    if plan["with_step"] and instruction is None:
+        if understood.control != "REPEAT_STEP":
+            return result            # e.g. "continue" with nothing active: engine's words
+        parts.append(result.reply)   # repeat with no workflow: the engine repeated its last message
+    elif plan["with_step"]:
+        if plan["with_explanation"] and instruction in canonical:
+            explanation = canonical.split(instruction, 1)[0].strip()
+            if explanation:
+                parts.append(explanation)   # English: no verified Tulu exists for explanations
+        parts.append(tulu_render(instruction)[0])
+    return dataclasses.replace(result, reply=" ".join(parts), intent=understood.control)
+
+
+#: Replies to Tulu input the matcher rejected. English: there is no verified
+#: Tulu rendering of either sentence.
+TULU_AMBIGUOUS_REPLY = ("Sorry, I could not tell which service you need. "
+                        "Please say again whether you want to deposit or withdraw money.")
+TULU_LOW_CONFIDENCE_REPLY = "Sorry, I could not understand that clearly. Please say it again, or type it."
 
 
 def _turn_response(result, workflow: WorkflowSnapshot, domain: str, transcript: Optional[str] = None) -> TurnResponse:

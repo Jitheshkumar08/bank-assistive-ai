@@ -20,7 +20,10 @@ from app.dialogue.side_question_context import (
     next_context,
 )
 from app.dialogue.completion_semantics import (
+    REPORT,
+    classify_clause,
     resolve_step_completion,
+    split_clauses,
 )
 from app.dialogue.workflow_conflict import (
     CHOICE_CANCEL,
@@ -677,6 +680,44 @@ def classify_step_reference(normalized):
         )
 
     return None
+
+
+# =========================================================
+# DETERMINISTIC COMPLETION FAST PATH -- vocabularies
+#
+# Closed classes only. A word in either set sends the turn to
+# the LLM path instead (see _confirmed_completion_without_llm).
+# =========================================================
+
+WORKFLOW_COMPLETED_REPLY = "Workflow Completed."
+
+#: English number words: an amount may need extracting (digits and
+#: Kannada/Hindi number words are caught by extract_amount()).
+_NUMBER_WORDS = frozenset({
+    "zero", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten",
+    "eleven", "twelve", "thirteen", "fourteen", "fifteen", "sixteen", "seventeen", "eighteen",
+    "nineteen", "twenty", "thirty", "forty", "fifty", "sixty", "seventy", "eighty", "ninety",
+    "hundred", "thousand", "lakh", "lakhs", "lac", "crore", "crores", "million",
+    "rupee", "rupees", "rs",
+})
+
+#: Control words and clause joiners. Any of these means the message may
+#: say more than "this step is done", so the LLM path decides.
+_FAST_PATH_BLOCKING_WORDS = frozenset({
+    "cancel", "stop", "pause", "wait", "hold", "repeat", "again", "resume",
+    "continue", "next", "help", "exit", "quit", "bye", "back", "previous",
+    "undo", "wrong", "mistake", "and", "but", "or", "then", "also", "however",
+    "not", "never", "no", "didn't", "haven't", "hasn't", "don't", "can't",
+})
+
+
+def _history_pairs(conversation):
+    """(speaker, message) for each history entry; tolerant of absent history."""
+    return [
+        (entry.get("speaker"), entry.get("message") or "")
+        for entry in getattr(conversation, "history", None) or []
+        if isinstance(entry, dict)
+    ]
 
 
 def normalize_command_text(text):
@@ -2376,6 +2417,101 @@ class DialogueManager:
     # MAIN DIALOGUE RESPONSE (LLM-assisted path)
     # =====================================================
 
+    # =====================================================
+    # STEP ADVANCEMENT  (shared by branch 9 and the
+    # deterministic completion path 5C)
+    # =====================================================
+
+    @staticmethod
+    def _advance_current_step(conversation, steps, entities):
+        """
+        Advances the active workflow by EXACTLY one step.
+
+        Returns the next instruction, or WORKFLOW_COMPLETED_REPLY
+        when that was the last step. Behaviour is the body branch 9
+        always had, moved here unchanged so the LLM path and the
+        deterministic path cannot drift apart.
+        """
+
+        # If the workflow is SUSPENDED, completing a step is a
+        # clear engagement signal -- implicitly resume first.
+        if conversation.workflow_state == WorkflowState.SUSPENDED:
+            conversation.resume_workflow()
+
+        # A completion turn (e.g. "I entered 2000.") can carry
+        # an extracted entity even though it isn't classified
+        # as message_type == "information" -- persist it here
+        # too, so amounts given alongside a completion are
+        # never dropped.
+        conversation.add_entities(entities)
+
+        conversation.current_step += 1
+
+        if conversation.current_step > len(steps):
+            conversation.complete_workflow()
+            return WORKFLOW_COMPLETED_REPLY
+
+        return steps[conversation.current_step - 1]["instruction"]
+
+    @staticmethod
+    def _confirmed_completion_without_llm(conversation, user_input, current_instruction):
+        """
+        True ONLY when the step may advance without the LLM.
+
+        Every gate must pass; any doubt returns False, and the turn
+        then takes the existing LLM path (branch 6), unchanged.
+
+          1. resolve_step_completion() CONFIRMS (True) that the
+             message reports the current instruction as done.
+             None (undecided) and False (vetoed) never qualify.
+             Non-English text resolves to None, so Kannada and
+             Hindi turns are untouched.
+          2. Every clause is a REPORT. A completion plus a
+             question ("...where do I submit it?") still goes to
+             the LLM so the question is answered.
+          3. No amount or number: the LLM extracts entities
+             (amount, account number) that the deterministic path
+             cannot, so any digit, Indic number word or English
+             number word defers.
+          4. No control word or clause joiner. The resolver does
+             not split on commas, so "I filled it, cancel" is one
+             REPORT clause; the control priority the LLM path
+             gives cancel/repeat/pause must not be bypassed.
+          5. Not a verbatim repeat of the customer's previous
+             message, so a duplicated submission cannot advance
+             a second step on its own.
+        """
+
+        if not user_input or not current_instruction:
+            return False
+
+        if resolve_step_completion(user_input, current_instruction) is not True:
+            return False
+
+        clauses = split_clauses(user_input)
+        if not clauses or any(classify_clause(clause) != REPORT for clause in clauses):
+            return False
+
+        normalized = normalize_command_text(user_input)
+        words = set(re.findall(r"[a-z']+", normalized.lower()))
+
+        if re.search(r"\d", user_input) or extract_amount(user_input) is not None:
+            return False
+        if words & _NUMBER_WORDS:
+            return False
+        if words & _FAST_PATH_BLOCKING_WORDS:
+            return False
+
+        previous_user = [
+            text for speaker, text in _history_pairs(conversation) if speaker == "User"
+        ]
+        # The current message is already recorded as the last User
+        # entry by the caller; compare with the one before it.
+        if len(previous_user) >= 2 and normalize_command_text(previous_user[-2]) == normalized:
+            return False
+
+        return True
+
     def generate_response(self, conversation, user_input=None):
 
         # =================================================
@@ -2607,6 +2743,28 @@ class DialogueManager:
 
         if exact is not None:
             return exact
+
+        # =================================================
+        # 5C. CONFIRMED COMPLETION, DECIDED BEFORE THE LLM
+        #
+        # When the deterministic resolver CONFIRMS that this
+        # message reports the current step as done, and the
+        # message carries nothing else the LLM would be needed
+        # for, the step advances here without calling the model.
+        # Every other case -- undecided, vetoed, compound, a value
+        # to extract, a control word, a repeat of the last message
+        # -- falls through to branch 6 exactly as before, and the
+        # resolver is consulted again at branch 9 as it always was.
+        # See _confirmed_completion_without_llm() for the gates.
+        # =================================================
+
+        if self._confirmed_completion_without_llm(
+            conversation,
+            user_input,
+            current_instruction
+        ):
+            print("[DETERMINISTIC] step completion confirmed without the LLM")
+            return self._advance_current_step(conversation, steps, {})
 
         # =================================================
         # 6. UNDERSTAND USER MESSAGE
@@ -2930,33 +3088,14 @@ class DialogueManager:
 
         if step_completed:
 
-            # If the workflow is SUSPENDED, completing a step is a
-            # clear engagement signal -- implicitly resume first.
-            if conversation.workflow_state == WorkflowState.SUSPENDED:
-                conversation.resume_workflow()
+            # Resume-if-suspended, entity persistence, the single
+            # increment and workflow completion live in
+            # _advance_current_step(), shared with the deterministic
+            # path (5C) so both advance identically.
+            next_instruction = self._advance_current_step(conversation, steps, entities)
 
-            # A completion turn (e.g. "I entered 2000.") can carry
-            # an extracted entity even though it isn't classified
-            # as message_type == "information" -- persist it here
-            # too, so amounts given alongside a completion are
-            # never dropped.
-            conversation.add_entities(entities)
-
-            conversation.current_step += 1
-
-            # ---------------------------------------------
-            # Workflow finished
-            # ---------------------------------------------
-
-            if conversation.current_step > len(steps):
-
-                conversation.complete_workflow()
-
-                return "Workflow Completed."
-
-            next_instruction = steps[
-                conversation.current_step - 1
-            ]["instruction"]
+            if next_instruction == WORKFLOW_COMPLETED_REPLY:
+                return next_instruction
 
             # ---------------------------------------------
             # Compound message: the customer finished the step

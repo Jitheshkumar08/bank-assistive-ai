@@ -148,12 +148,17 @@ def test_refusals():
             check(f"{label} text is refused whole", False, "no error")
         except UnsupportedScriptError:
             check(f"{label} text is refused whole", True)
-    for language in ("fr", "tcy", "zz"):
+    for language in ("fr", "zz"):
         try:
             plan_speech("hello", language)
             check(f"session language {language!r} is refused", False, "no error")
         except UnsupportedSpeechLanguageError:
             check(f"session language {language!r} is refused", True)
+    # Tulu (tcy) is speakable since the Tulu capability (app/tulu): its
+    # Kannada-script Tulu is read by the Kannada voice, English by English.
+    tulu_plan = plan_speech("ಐಟ್ ಎರ್ನ ಅಕೌಂಟ್ ನಂಬರ್ ಬರೆಲೆ. Submit the slip.", "tcy")
+    check("session language 'tcy': Kannada-script Tulu -> kn voice, English -> en voice",
+          [s.language for s in tulu_plan] == ["kn", "en"], str(tulu_plan))
     check("empty text plans nothing", plan_speech("", "kn") == [])
 
 

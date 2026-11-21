@@ -1,0 +1,1245 @@
+{
+  "summary": {
+    "passed": 110,
+    "failed": 0,
+    "failures": [],
+    "spoken_recognised": "13/21",
+    "llm_calls": 0,
+    "memory_end": {
+      "current_mb": 1196.6,
+      "peak_mb": 1250.6
+    }
+  },
+  "checks": [
+    {
+      "check": "speech C01a 'Kuda panoli ya' (deposit) -> REPEAT_STEP: correct engine action and Tulu acknowledgement",
+      "passed": true,
+      "detail": "reply='ಸರಿ ಯಾನ್ ಕುಡ ಮೆಲ್ಲ ಪಂಪೆ. ಓಕೆ, ಫಸ್ಟ್ ಎರ್ ಕ್ಯಾಶ್ ಡೆಪಾಸಿಟ್\\u200cದ ಸ್ಲಿಪ್ ದೆತೊನ್ಲೆ.' state=active step=1 intent=REPEAT_STEP"
+    },
+    {
+      "check": "  C01a: ASR transcript is a verified control phrase of the same group",
+      "passed": true,
+      "detail": "Kuda panoli ya"
+    },
+    {
+      "check": "  C01a: reply newly synthesized (MP3, not a dataset recording, xcorr 0.094 < 0.5)",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "speech C01b 'Aven kuda panle' (withdraw) -> REPEAT_STEP: correct engine action and Tulu acknowledgement",
+      "passed": true,
+      "detail": "reply='ಸರಿ ಯಾನ್ ಕುಡ ಮೆಲ್ಲ ಪಂಪೆ. ಸರಿ..ಅಲ್ಪ ವಿತ್\\u200cಡ್ರಾಯಲ್ ಸ್ಲಿಪ್ ದೆತೊನ್ಲೆ.' state=active step=1 intent=REPEAT_STEP"
+    },
+    {
+      "check": "  C01b: reply newly synthesized (MP3, not a dataset recording, xcorr 0.076 < 0.5)",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "speech C01c 'Yenk er panni kendhiji sari' (deposit) -> REPEAT_STEP: correct engine action and Tulu acknowledgement",
+      "passed": true,
+      "detail": "reply='ಸರಿ ಯಾನ್ ಕುಡ ಮೆಲ್ಲ ಪಂಪೆ. ಓಕೆ, ಫಸ್ಟ್ ಎರ್ ಕ್ಯಾಶ್ ಡೆಪಾಸಿಟ್\\u200cದ ಸ್ಲಿಪ್ ದೆತೊನ್ಲೆ.' state=active step=1 intent=REPEAT_STEP"
+    },
+    {
+      "check": "  C01c: ASR transcript is a verified control phrase of the same group",
+      "passed": true,
+      "detail": "Yenk er panni kendhiji sari"
+    },
+    {
+      "check": "  C01c: reply newly synthesized (MP3, not a dataset recording, xcorr 0.089 < 0.5)",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "speech C01d 'Churu mella panle' (withdraw) -> REPEAT_STEP: correct engine action and Tulu acknowledgement",
+      "passed": true,
+      "detail": "reply='ಸರಿ ಯಾನ್ ಕುಡ ಮೆಲ್ಲ ಪಂಪೆ. ಸರಿ..ಅಲ್ಪ ವಿತ್\\u200cಡ್ರಾಯಲ್ ಸ್ಲಿಪ್ ದೆತೊನ್ಲೆ.' state=active step=1 intent=REPEAT_STEP"
+    },
+    {
+      "check": "  C01d: ASR transcript is a verified control phrase of the same group",
+      "passed": true,
+      "detail": "Churu mella panle"
+    },
+    {
+      "check": "  C01d: reply newly synthesized (MP3, not a dataset recording, xcorr 0.119 < 0.5)",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "speech C02a 'Churu wait malpule' (deposit) -> PAUSE_WORKFLOW: correct engine action and Tulu acknowledgement",
+      "passed": true,
+      "detail": "reply='ಓಕೆ ... ಎರ್ ಅರಮ್ಸೆ ಮಲ್ಪುಲೆ ... ಯಾನ್ ಎರ್ ಪಂಪಿನ ಮುಟ ಉಂತುವೆ ..' state=suspended step=1 intent=PAUSE_WORKFLOW"
+    },
+    {
+      "check": "  C02a: reply newly synthesized (MP3, not a dataset recording, xcorr 0.131 < 0.5)",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "speech C02b 'Churu porth unthule' (withdraw) -> PAUSE_WORKFLOW: correct engine action and Tulu acknowledgement",
+      "passed": true,
+      "detail": "reply='ಓಕೆ ... ಎರ್ ಅರಮ್ಸೆ ಮಲ್ಪುಲೆ ... ಯಾನ್ ಎರ್ ಪಂಪಿನ ಮುಟ ಉಂತುವೆ ..' state=suspended step=1 intent=PAUSE_WORKFLOW"
+    },
+    {
+      "check": "  C02b: reply newly synthesized (MP3, not a dataset recording, xcorr 0.103 < 0.5)",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "speech C02c 'Yenk churu check malpere undu ..er churu porth wait malpule' (deposit) -> PAUSE_WORKFLOW: correct engine action and Tulu acknowledgement",
+      "passed": true,
+      "detail": "reply='ಓಕೆ ... ಎರ್ ಅರಮ್ಸೆ ಮಲ್ಪುಲೆ ... ಯಾನ್ ಎರ್ ಪಂಪಿನ ಮುಟ ಉಂತುವೆ ..' state=suspended step=1 intent=PAUSE_WORKFLOW"
+    },
+    {
+      "check": "  C02c: reply newly synthesized (MP3, not a dataset recording, xcorr 0.089 < 0.5)",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "speech C02d 'Yaan panpina muta continue malporchi' (withdraw) -> PAUSE_WORKFLOW: correct engine action and Tulu acknowledgement",
+      "passed": true,
+      "detail": "reply='ಓಕೆ ... ಎರ್ ಅರಮ್ಸೆ ಮಲ್ಪುಲೆ ... ಯಾನ್ ಎರ್ ಪಂಪಿನ ಮುಟ ಉಂತುವೆ ..' state=suspended step=1 intent=PAUSE_WORKFLOW"
+    },
+    {
+      "check": "  C02d: ASR transcript is a verified control phrase of the same group",
+      "passed": true,
+      "detail": "Yaan panpina muta continue malporchi"
+    },
+    {
+      "check": "  C02d: reply newly synthesized (MP3, not a dataset recording, xcorr 0.077 < 0.5)",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "speech C02e 'Yaan panpina muta unthule' (deposit) -> PAUSE_WORKFLOW: correct engine action and Tulu acknowledgement",
+      "passed": true,
+      "detail": "reply='ಓಕೆ ... ಎರ್ ಅರಮ್ಸೆ ಮಲ್ಪುಲೆ ... ಯಾನ್ ಎರ್ ಪಂಪಿನ ಮುಟ ಉಂತುವೆ ..' state=suspended step=1 intent=PAUSE_WORKFLOW"
+    },
+    {
+      "check": "  C02e: ASR transcript is a verified control phrase of the same group",
+      "passed": true,
+      "detail": "Yaan panpina muta unthule"
+    },
+    {
+      "check": "  C02e: reply newly synthesized (MP3, not a dataset recording, xcorr 0.089 < 0.5)",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "speech C03a 'Eth aav .' (withdraw) -> STOP_REQUEST: correct engine action and Tulu acknowledgement",
+      "passed": true,
+      "detail": "reply='ಓಕೆ ... ನನ ಒಇಕ್ ಅಂಡಲ ಹೆಲ್ಪ್ ಬೊಡಂಡ ಯೆಂಕ್ ಪನ್ಲೆ ... ಥ್ಯಾಂಕ್ ಯೂ. Say stop again to end the conversation.' state=cancelled step=1 intent=STOP_REQUEST"
+    },
+    {
+      "check": "  C03a: reply newly synthesized (MP3, not a dataset recording, xcorr 0.083 < 0.5)",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "speech C03b 'Nana explain malpodu pandh ejji' (deposit) -> STOP_REQUEST: correct engine action and Tulu acknowledgement",
+      "passed": true,
+      "detail": "reply='ಓಕೆ ... ನನ ಒಇಕ್ ಅಂಡಲ ಹೆಲ್ಪ್ ಬೊಡಂಡ ಯೆಂಕ್ ಪನ್ಲೆ ... ಥ್ಯಾಂಕ್ ಯೂ. Say stop again to end the conversation.' state=cancelled step=1 intent=STOP_REQUEST"
+    },
+    {
+      "check": "  C03b: ASR transcript is a verified control phrase of the same group",
+      "passed": true,
+      "detail": "Nana explain malpodu pandh ejji"
+    },
+    {
+      "check": "  C03b: reply newly synthesized (MP3, not a dataset recording, xcorr 0.064 < 0.5)",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "speech C03c 'Yenk nana dada help borchi or thank u eth yaav information' (withdraw) -> STOP_REQUEST: correct engine action and Tulu acknowledgement",
+      "passed": true,
+      "detail": "reply='ಓಕೆ ... ನನ ಒಇಕ್ ಅಂಡಲ ಹೆಲ್ಪ್ ಬೊಡಂಡ ಯೆಂಕ್ ಪನ್ಲೆ ... ಥ್ಯಾಂಕ್ ಯೂ. Say stop again to end the conversation.' state=cancelled step=1 intent=STOP_REQUEST"
+    },
+    {
+      "check": "  C03c: reply newly synthesized (MP3, not a dataset recording, xcorr 0.064 < 0.5)",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "speech C04a 'Yenk artha ayiji' (deposit) -> CLARIFY_CURRENT_STEP: correct engine action and Tulu acknowledgement",
+      "passed": true,
+      "detail": "reply='ತೊಂಡ್ರೆ ಎಜ್ಜಿ ಯಾನ್ ಎರೆಗ್ ಕುಡ ಪಂಪೆ.. If anything on this step is unclear, the bank staff can also help you. ಓಕೆ, ಫಸ್ಟ್ ಎರ್ ಕ್ಯಾಶ್ ಡೆಪಾಸಿಟ್\\u200cದ ಸ್ಲಿಪ್ ದೆತೊನ್ಲೆ.' state=active step=1 intent=CLARIFY_CURRENT_STEP"
+    },
+    {
+      "check": "  C04a: ASR transcript is a verified control phrase of the same group",
+      "passed": true,
+      "detail": "Yenk artha ayiji"
+    },
+    {
+      "check": "  C04a: reply newly synthesized (MP3, not a dataset recording, xcorr 0.144 < 0.5)",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "speech C04b 'Kuda explain malpoli ya ..' (withdraw) -> CLARIFY_CURRENT_STEP: correct engine action and Tulu acknowledgement",
+      "passed": true,
+      "detail": "reply='ತೊಂಡ್ರೆ ಎಜ್ಜಿ ಯಾನ್ ಎರೆಗ್ ಕುಡ ಪಂಪೆ.. If anything on this step is unclear, the bank staff can also help you. ಸರಿ..ಅಲ್ಪ ವಿತ್\\u200cಡ್ರಾಯಲ್ ಸ್ಲಿಪ್ ದೆತೊನ್ಲೆ.' state=active step=1 intent=CLARIFY_CURRENT_STEP"
+    },
+    {
+      "check": "  C04b: reply newly synthesized (MP3, not a dataset recording, xcorr 0.082 < 0.5)",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "speech C04c 'Ancha panda dada' (deposit) -> CLARIFY_CURRENT_STEP: correct engine action and Tulu acknowledgement",
+      "passed": true,
+      "detail": "reply='ತೊಂಡ್ರೆ ಎಜ್ಜಿ ಯಾನ್ ಎರೆಗ್ ಕುಡ ಪಂಪೆ.. If anything on this step is unclear, the bank staff can also help you. ಓಕೆ, ಫಸ್ಟ್ ಎರ್ ಕ್ಯಾಶ್ ಡೆಪಾಸಿಟ್\\u200cದ ಸ್ಲಿಪ್ ದೆತೊನ್ಲೆ.' state=active step=1 intent=CLARIFY_CURRENT_STEP"
+    },
+    {
+      "check": "  C04c: ASR transcript is a verified control phrase of the same group",
+      "passed": true,
+      "detail": "Ancha panda dada"
+    },
+    {
+      "check": "  C04c: reply newly synthesized (MP3, not a dataset recording, xcorr 0.083 < 0.5)",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "speech C05a 'Next dada' (withdraw) -> NEXT_STEP: correct engine action and Tulu acknowledgement",
+      "passed": true,
+      "detail": "reply='ಅವು ನೆಕ್ಸ್ಟ್ ದಡ ಮಲ್ಪೊಡು ಅಂಡ್ ಪಂಪೆ. ಸರಿ..ಅಲ್ಪ ವಿತ್\\u200cಡ್ರಾಯಲ್ ಸ್ಲಿಪ್ ದೆತೊನ್ಲೆ.' state=active step=1 intent=NEXT_STEP"
+    },
+    {
+      "check": "  C05a: ASR transcript is a verified control phrase of the same group",
+      "passed": true,
+      "detail": "Next dada"
+    },
+    {
+      "check": "  C05a: reply newly synthesized (MP3, not a dataset recording, xcorr 0.092 < 0.5)",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "speech C05b 'Undu ayii bokka dada' (deposit) -> NEXT_STEP: correct engine action and Tulu acknowledgement",
+      "passed": true,
+      "detail": "reply='ಅವು ನೆಕ್ಸ್ಟ್ ದಡ ಮಲ್ಪೊಡು ಅಂಡ್ ಪಂಪೆ. ಓಕೆ, ಫಸ್ಟ್ ಎರ್ ಕ್ಯಾಶ್ ಡೆಪಾಸಿಟ್\\u200cದ ಸ್ಲಿಪ್ ದೆತೊನ್ಲೆ.' state=active step=1 intent=NEXT_STEP"
+    },
+    {
+      "check": "  C05b: ASR transcript is a verified control phrase of the same group",
+      "passed": true,
+      "detail": "Undu ayii bokka dada"
+    },
+    {
+      "check": "  C05b: reply newly synthesized (MP3, not a dataset recording, xcorr 0.071 < 0.5)",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "speech C05c 'Next panle' (withdraw) -> NEXT_STEP: correct engine action and Tulu acknowledgement",
+      "passed": true,
+      "detail": "reply='ಅವು ನೆಕ್ಸ್ಟ್ ದಡ ಮಲ್ಪೊಡು ಅಂಡ್ ಪಂಪೆ. ಸರಿ..ಅಲ್ಪ ವಿತ್\\u200cಡ್ರಾಯಲ್ ಸ್ಲಿಪ್ ದೆತೊನ್ಲೆ.' state=active step=1 intent=NEXT_STEP"
+    },
+    {
+      "check": "  C05c: ASR transcript is a verified control phrase of the same group",
+      "passed": true,
+      "detail": "Next panle"
+    },
+    {
+      "check": "  C05c: reply newly synthesized (MP3, not a dataset recording, xcorr 0.068 < 0.5)",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "speech C05d 'Next dada malpodu panle' (deposit) -> NEXT_STEP: correct engine action and Tulu acknowledgement",
+      "passed": true,
+      "detail": "reply='ಅವು ನೆಕ್ಸ್ಟ್ ದಡ ಮಲ್ಪೊಡು ಅಂಡ್ ಪಂಪೆ. ಓಕೆ, ಫಸ್ಟ್ ಎರ್ ಕ್ಯಾಶ್ ಡೆಪಾಸಿಟ್\\u200cದ ಸ್ಲಿಪ್ ದೆತೊನ್ಲೆ.' state=active step=1 intent=NEXT_STEP"
+    },
+    {
+      "check": "  C05d: ASR transcript is a verified control phrase of the same group",
+      "passed": true,
+      "detail": "Next dada malpodu panle"
+    },
+    {
+      "check": "  C05d: reply newly synthesized (MP3, not a dataset recording, xcorr 0.055 < 0.5)",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "speech C06a 'Continue malpule' (withdraw) -> RESUME_WORKFLOW: correct engine action and Tulu acknowledgement",
+      "passed": true,
+      "detail": "reply='ಅವು ಎರ್ನ ರಿಕ್ವೆಸ್ಟ್\\u200cನ್ ಕಂಟಿನ್ಯೂ ಮಲ್ಪುವೆ. ಸರಿ..ಅಲ್ಪ ವಿತ್\\u200cಡ್ರಾಯಲ್ ಸ್ಲಿಪ್ ದೆತೊನ್ಲೆ.' state=active step=1 intent=RESUME_WORKFLOW"
+    },
+    {
+      "check": "  C06a: reply newly synthesized (MP3, not a dataset recording, xcorr 0.057 < 0.5)",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "speech C06b 'Olpa unthayar alpa d continue malpule' (deposit) -> RESUME_WORKFLOW: correct engine action and Tulu acknowledgement",
+      "passed": true,
+      "detail": "reply='ಅವು ಎರ್ನ ರಿಕ್ವೆಸ್ಟ್\\u200cನ್ ಕಂಟಿನ್ಯೂ ಮಲ್ಪುವೆ. ಓಕೆ, ಫಸ್ಟ್ ಎರ್ ಕ್ಯಾಶ್ ಡೆಪಾಸಿಟ್\\u200cದ ಸ್ಲಿಪ್ ದೆತೊನ್ಲೆ.' state=active step=1 intent=RESUME_WORKFLOW"
+    },
+    {
+      "check": "  C06b: ASR transcript is a verified control phrase of the same group",
+      "passed": true,
+      "detail": "Olpa unthayar alpa d continue malpule"
+    },
+    {
+      "check": "  C06b: reply newly synthesized (MP3, not a dataset recording, xcorr 0.046 < 0.5)",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "typed C01a 'Kuda panoli ya' (deposit) -> REPEAT_STEP: correct engine action and Tulu acknowledgement",
+      "passed": true,
+      "detail": "reply='ಸರಿ ಯಾನ್ ಕುಡ ಮೆಲ್ಲ ಪಂಪೆ. ಓಕೆ, ಫಸ್ಟ್ ಎರ್ ಕ್ಯಾಶ್ ಡೆಪಾಸಿಟ್\\u200cದ ಸ್ಲಿಪ್ ದೆತೊನ್ಲೆ.' state=active step=1 intent=REPEAT_STEP"
+    },
+    {
+      "check": "  C01a: reply newly synthesized (MP3, not a dataset recording, xcorr 0.094 < 0.5)",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "typed C01b 'Aven kuda panle' (withdraw) -> REPEAT_STEP: correct engine action and Tulu acknowledgement",
+      "passed": true,
+      "detail": "reply='ಸರಿ ಯಾನ್ ಕುಡ ಮೆಲ್ಲ ಪಂಪೆ. ಸರಿ..ಅಲ್ಪ ವಿತ್\\u200cಡ್ರಾಯಲ್ ಸ್ಲಿಪ್ ದೆತೊನ್ಲೆ.' state=active step=1 intent=REPEAT_STEP"
+    },
+    {
+      "check": "  C01b: reply newly synthesized (MP3, not a dataset recording, xcorr 0.076 < 0.5)",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "typed C01c 'Yenk er panni kendhiji sari' (deposit) -> REPEAT_STEP: correct engine action and Tulu acknowledgement",
+      "passed": true,
+      "detail": "reply='ಸರಿ ಯಾನ್ ಕುಡ ಮೆಲ್ಲ ಪಂಪೆ. ಓಕೆ, ಫಸ್ಟ್ ಎರ್ ಕ್ಯಾಶ್ ಡೆಪಾಸಿಟ್\\u200cದ ಸ್ಲಿಪ್ ದೆತೊನ್ಲೆ.' state=active step=1 intent=REPEAT_STEP"
+    },
+    {
+      "check": "  C01c: reply newly synthesized (MP3, not a dataset recording, xcorr 0.089 < 0.5)",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "typed C01d 'Churu mella panle' (withdraw) -> REPEAT_STEP: correct engine action and Tulu acknowledgement",
+      "passed": true,
+      "detail": "reply='ಸರಿ ಯಾನ್ ಕುಡ ಮೆಲ್ಲ ಪಂಪೆ. ಸರಿ..ಅಲ್ಪ ವಿತ್\\u200cಡ್ರಾಯಲ್ ಸ್ಲಿಪ್ ದೆತೊನ್ಲೆ.' state=active step=1 intent=REPEAT_STEP"
+    },
+    {
+      "check": "  C01d: reply newly synthesized (MP3, not a dataset recording, xcorr 0.118 < 0.5)",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "typed C02a 'Churu wait malpule' (deposit) -> PAUSE_WORKFLOW: correct engine action and Tulu acknowledgement",
+      "passed": true,
+      "detail": "reply='ಓಕೆ ... ಎರ್ ಅರಮ್ಸೆ ಮಲ್ಪುಲೆ ... ಯಾನ್ ಎರ್ ಪಂಪಿನ ಮುಟ ಉಂತುವೆ ..' state=suspended step=1 intent=PAUSE_WORKFLOW"
+    },
+    {
+      "check": "  C02a: reply newly synthesized (MP3, not a dataset recording, xcorr 0.131 < 0.5)",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "typed C02b 'Churu porth unthule' (withdraw) -> PAUSE_WORKFLOW: correct engine action and Tulu acknowledgement",
+      "passed": true,
+      "detail": "reply='ಓಕೆ ... ಎರ್ ಅರಮ್ಸೆ ಮಲ್ಪುಲೆ ... ಯಾನ್ ಎರ್ ಪಂಪಿನ ಮುಟ ಉಂತುವೆ ..' state=suspended step=1 intent=PAUSE_WORKFLOW"
+    },
+    {
+      "check": "  C02b: reply newly synthesized (MP3, not a dataset recording, xcorr 0.103 < 0.5)",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "typed C02c 'Yenk churu check malpere undu ..er churu porth wait malpule' (deposit) -> PAUSE_WORKFLOW: correct engine action and Tulu acknowledgement",
+      "passed": true,
+      "detail": "reply='ಓಕೆ ... ಎರ್ ಅರಮ್ಸೆ ಮಲ್ಪುಲೆ ... ಯಾನ್ ಎರ್ ಪಂಪಿನ ಮುಟ ಉಂತುವೆ ..' state=suspended step=1 intent=PAUSE_WORKFLOW"
+    },
+    {
+      "check": "  C02c: reply newly synthesized (MP3, not a dataset recording, xcorr 0.090 < 0.5)",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "typed C02d 'Yaan panpina muta continue malporchi' (withdraw) -> PAUSE_WORKFLOW: correct engine action and Tulu acknowledgement",
+      "passed": true,
+      "detail": "reply='ಓಕೆ ... ಎರ್ ಅರಮ್ಸೆ ಮಲ್ಪುಲೆ ... ಯಾನ್ ಎರ್ ಪಂಪಿನ ಮುಟ ಉಂತುವೆ ..' state=suspended step=1 intent=PAUSE_WORKFLOW"
+    },
+    {
+      "check": "  C02d: reply newly synthesized (MP3, not a dataset recording, xcorr 0.077 < 0.5)",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "typed C02e 'Yaan panpina muta unthule' (deposit) -> PAUSE_WORKFLOW: correct engine action and Tulu acknowledgement",
+      "passed": true,
+      "detail": "reply='ಓಕೆ ... ಎರ್ ಅರಮ್ಸೆ ಮಲ್ಪುಲೆ ... ಯಾನ್ ಎರ್ ಪಂಪಿನ ಮುಟ ಉಂತುವೆ ..' state=suspended step=1 intent=PAUSE_WORKFLOW"
+    },
+    {
+      "check": "  C02e: reply newly synthesized (MP3, not a dataset recording, xcorr 0.089 < 0.5)",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "typed C03a 'Eth aav .' (withdraw) -> STOP_REQUEST: correct engine action and Tulu acknowledgement",
+      "passed": true,
+      "detail": "reply='ಓಕೆ ... ನನ ಒಇಕ್ ಅಂಡಲ ಹೆಲ್ಪ್ ಬೊಡಂಡ ಯೆಂಕ್ ಪನ್ಲೆ ... ಥ್ಯಾಂಕ್ ಯೂ. Say stop again to end the conversation.' state=cancelled step=1 intent=STOP_REQUEST"
+    },
+    {
+      "check": "  C03a: reply newly synthesized (MP3, not a dataset recording, xcorr 0.083 < 0.5)",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "typed C03b 'Nana explain malpodu pandh ejji' (deposit) -> STOP_REQUEST: correct engine action and Tulu acknowledgement",
+      "passed": true,
+      "detail": "reply='ಓಕೆ ... ನನ ಒಇಕ್ ಅಂಡಲ ಹೆಲ್ಪ್ ಬೊಡಂಡ ಯೆಂಕ್ ಪನ್ಲೆ ... ಥ್ಯಾಂಕ್ ಯೂ. Say stop again to end the conversation.' state=cancelled step=1 intent=STOP_REQUEST"
+    },
+    {
+      "check": "  C03b: reply newly synthesized (MP3, not a dataset recording, xcorr 0.064 < 0.5)",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "typed C03c 'Yenk nana dada help borchi or thank u eth yaav information' (withdraw) -> STOP_REQUEST: correct engine action and Tulu acknowledgement",
+      "passed": true,
+      "detail": "reply='ಓಕೆ ... ನನ ಒಇಕ್ ಅಂಡಲ ಹೆಲ್ಪ್ ಬೊಡಂಡ ಯೆಂಕ್ ಪನ್ಲೆ ... ಥ್ಯಾಂಕ್ ಯೂ. Say stop again to end the conversation.' state=cancelled step=1 intent=STOP_REQUEST"
+    },
+    {
+      "check": "  C03c: reply newly synthesized (MP3, not a dataset recording, xcorr 0.063 < 0.5)",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "typed C04a 'Yenk artha ayiji' (deposit) -> CLARIFY_CURRENT_STEP: correct engine action and Tulu acknowledgement",
+      "passed": true,
+      "detail": "reply='ತೊಂಡ್ರೆ ಎಜ್ಜಿ ಯಾನ್ ಎರೆಗ್ ಕುಡ ಪಂಪೆ.. If anything on this step is unclear, the bank staff can also help you. ಓಕೆ, ಫಸ್ಟ್ ಎರ್ ಕ್ಯಾಶ್ ಡೆಪಾಸಿಟ್\\u200cದ ಸ್ಲಿಪ್ ದೆತೊನ್ಲೆ.' state=active step=1 intent=CLARIFY_CURRENT_STEP"
+    },
+    {
+      "check": "  C04a: reply newly synthesized (MP3, not a dataset recording, xcorr 0.144 < 0.5)",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "typed C04b 'Kuda explain malpoli ya ..' (withdraw) -> CLARIFY_CURRENT_STEP: correct engine action and Tulu acknowledgement",
+      "passed": true,
+      "detail": "reply='ತೊಂಡ್ರೆ ಎಜ್ಜಿ ಯಾನ್ ಎರೆಗ್ ಕುಡ ಪಂಪೆ.. If anything on this step is unclear, the bank staff can also help you. ಸರಿ..ಅಲ್ಪ ವಿತ್\\u200cಡ್ರಾಯಲ್ ಸ್ಲಿಪ್ ದೆತೊನ್ಲೆ.' state=active step=1 intent=CLARIFY_CURRENT_STEP"
+    },
+    {
+      "check": "  C04b: reply newly synthesized (MP3, not a dataset recording, xcorr 0.082 < 0.5)",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "typed C04c 'Ancha panda dada' (deposit) -> CLARIFY_CURRENT_STEP: correct engine action and Tulu acknowledgement",
+      "passed": true,
+      "detail": "reply='ತೊಂಡ್ರೆ ಎಜ್ಜಿ ಯಾನ್ ಎರೆಗ್ ಕುಡ ಪಂಪೆ.. If anything on this step is unclear, the bank staff can also help you. ಓಕೆ, ಫಸ್ಟ್ ಎರ್ ಕ್ಯಾಶ್ ಡೆಪಾಸಿಟ್\\u200cದ ಸ್ಲಿಪ್ ದೆತೊನ್ಲೆ.' state=active step=1 intent=CLARIFY_CURRENT_STEP"
+    },
+    {
+      "check": "  C04c: reply newly synthesized (MP3, not a dataset recording, xcorr 0.083 < 0.5)",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "typed C05a 'Next dada' (withdraw) -> NEXT_STEP: correct engine action and Tulu acknowledgement",
+      "passed": true,
+      "detail": "reply='ಅವು ನೆಕ್ಸ್ಟ್ ದಡ ಮಲ್ಪೊಡು ಅಂಡ್ ಪಂಪೆ. ಸರಿ..ಅಲ್ಪ ವಿತ್\\u200cಡ್ರಾಯಲ್ ಸ್ಲಿಪ್ ದೆತೊನ್ಲೆ.' state=active step=1 intent=NEXT_STEP"
+    },
+    {
+      "check": "  C05a: reply newly synthesized (MP3, not a dataset recording, xcorr 0.092 < 0.5)",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "typed C05b 'Undu ayii bokka dada' (deposit) -> NEXT_STEP: correct engine action and Tulu acknowledgement",
+      "passed": true,
+      "detail": "reply='ಅವು ನೆಕ್ಸ್ಟ್ ದಡ ಮಲ್ಪೊಡು ಅಂಡ್ ಪಂಪೆ. ಓಕೆ, ಫಸ್ಟ್ ಎರ್ ಕ್ಯಾಶ್ ಡೆಪಾಸಿಟ್\\u200cದ ಸ್ಲಿಪ್ ದೆತೊನ್ಲೆ.' state=active step=1 intent=NEXT_STEP"
+    },
+    {
+      "check": "  C05b: reply newly synthesized (MP3, not a dataset recording, xcorr 0.070 < 0.5)",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "typed C05c 'Next panle' (withdraw) -> NEXT_STEP: correct engine action and Tulu acknowledgement",
+      "passed": true,
+      "detail": "reply='ಅವು ನೆಕ್ಸ್ಟ್ ದಡ ಮಲ್ಪೊಡು ಅಂಡ್ ಪಂಪೆ. ಸರಿ..ಅಲ್ಪ ವಿತ್\\u200cಡ್ರಾಯಲ್ ಸ್ಲಿಪ್ ದೆತೊನ್ಲೆ.' state=active step=1 intent=NEXT_STEP"
+    },
+    {
+      "check": "  C05c: reply newly synthesized (MP3, not a dataset recording, xcorr 0.068 < 0.5)",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "typed C05d 'Next dada malpodu panle' (deposit) -> NEXT_STEP: correct engine action and Tulu acknowledgement",
+      "passed": true,
+      "detail": "reply='ಅವು ನೆಕ್ಸ್ಟ್ ದಡ ಮಲ್ಪೊಡು ಅಂಡ್ ಪಂಪೆ. ಓಕೆ, ಫಸ್ಟ್ ಎರ್ ಕ್ಯಾಶ್ ಡೆಪಾಸಿಟ್\\u200cದ ಸ್ಲಿಪ್ ದೆತೊನ್ಲೆ.' state=active step=1 intent=NEXT_STEP"
+    },
+    {
+      "check": "  C05d: reply newly synthesized (MP3, not a dataset recording, xcorr 0.056 < 0.5)",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "typed C06a 'Continue malpule' (withdraw) -> RESUME_WORKFLOW: correct engine action and Tulu acknowledgement",
+      "passed": true,
+      "detail": "reply='ಅವು ಎರ್ನ ರಿಕ್ವೆಸ್ಟ್\\u200cನ್ ಕಂಟಿನ್ಯೂ ಮಲ್ಪುವೆ. ಸರಿ..ಅಲ್ಪ ವಿತ್\\u200cಡ್ರಾಯಲ್ ಸ್ಲಿಪ್ ದೆತೊನ್ಲೆ.' state=active step=1 intent=RESUME_WORKFLOW"
+    },
+    {
+      "check": "  C06a: reply newly synthesized (MP3, not a dataset recording, xcorr 0.057 < 0.5)",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "typed C06b 'Olpa unthayar alpa d continue malpule' (deposit) -> RESUME_WORKFLOW: correct engine action and Tulu acknowledgement",
+      "passed": true,
+      "detail": "reply='ಅವು ಎರ್ನ ರಿಕ್ವೆಸ್ಟ್\\u200cನ್ ಕಂಟಿನ್ಯೂ ಮಲ್ಪುವೆ. ಓಕೆ, ಫಸ್ಟ್ ಎರ್ ಕ್ಯಾಶ್ ಡೆಪಾಸಿಟ್\\u200cದ ಸ್ಲಿಪ್ ದೆತೊನ್ಲೆ.' state=active step=1 intent=RESUME_WORKFLOW"
+    },
+    {
+      "check": "  C06b: reply newly synthesized (MP3, not a dataset recording, xcorr 0.046 < 0.5)",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "typed C04t1 'yank gothuji' (withdraw) -> CLARIFY_CURRENT_STEP: correct engine action and Tulu acknowledgement",
+      "passed": true,
+      "detail": "reply='ತೊಂಡ್ರೆ ಎಜ್ಜಿ ಯಾನ್ ಎರೆಗ್ ಕುಡ ಪಂಪೆ.. If anything on this step is unclear, the bank staff can also help you. ಸರಿ..ಅಲ್ಪ ವಿತ್\\u200cಡ್ರಾಯಲ್ ಸ್ಲಿಪ್ ದೆತೊನ್ಲೆ.' state=active step=1 intent=CLARIFY_CURRENT_STEP"
+    },
+    {
+      "check": "  C04t1: reply newly synthesized (MP3, not a dataset recording, xcorr 0.000 < 0.5)",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "deposit paused at step 2, 'Next panle' -> C05 reply + step 2 (not step 3), workflow resumed",
+      "passed": true,
+      "detail": "{'reply': 'ಅವು ನೆಕ್ಸ್ಟ್ ದಡ ಮಲ್ಪೊಡು ಅಂಡ್ ಪಂಪೆ. ಐಟ್ ಎರ್ನ ಅಕೌಂಟ್ ನಂಬರ್ ಬರೆಲೆ.', 'transcript': None, 'workflow': {'name': 'deposit money', 'state': 'active', 'step': 2, 'total_steps': 4}, 'ended': False, 'domain': 'banking', 'intent': 'NEXT_STEP', 'outcome': None, 'sources': None, 'steps': None, 'action': None}"
+    },
+    {
+      "check": "withdrawal paused at step 3, C06 continue -> C06 reply + step 3, resumed",
+      "passed": true,
+      "detail": "{'reply': 'ಅವು ಎರ್ನ ರಿಕ್ವೆಸ್ಟ್\\u200cನ್ ಕಂಟಿನ್ಯೂ ಮಲ್ಪುವೆ. ಬೊಕ್ಕ ಯೆತ್ ಅಮೌಂಟ್ ದೆಪ್ಪೆರೆ ಉಂಡು ಅವೆನ್ ಬರೆಲೆ.', 'transcript': None, 'workflow': {'name': 'withdraw money', 'state': 'active', 'step': 3, 'total_steps': 5}, 'ended': False, 'domain': 'banking', 'intent': 'RESUME_WORKFLOW', 'outcome': None, 'sources': None, 'steps': None, 'action': None}"
+    },
+    {
+      "check": "C05 while active at step 3 -> C05 reply + step 3 (next never skips an unfinished step)",
+      "passed": true,
+      "detail": "{'reply': 'ಅವು ನೆಕ್ಸ್ಟ್ ದಡ ಮಲ್ಪೊಡು ಅಂಡ್ ಪಂಪೆ. ಬೊಕ್ಕ ಯೆತ್ ಅಮೌಂಟ್ ದೆಪ್ಪೆರೆ ಉಂಡು ಅವೆನ್ ಬರೆಲೆ.', 'transcript': None, 'workflow': {'name': 'withdraw money', 'state': 'active', 'step': 3, 'total_steps': 5}, 'ended': False, 'domain': 'banking', 'intent': 'NEXT_STEP', 'outcome': None, 'sources': None, 'steps': None, 'action': None}"
+    },
+    {
+      "check": "C01 repeat at step 3 -> C01 reply + step 3",
+      "passed": true,
+      "detail": "{'reply': 'ಸರಿ ಯಾನ್ ಕುಡ ಮೆಲ್ಲ ಪಂಪೆ. ಬೊಕ್ಕ ಯೆತ್ ಅಮೌಂಟ್ ದೆಪ್ಪೆರೆ ಉಂಡು ಅವೆನ್ ಬರೆಲೆ.', 'transcript': None, 'workflow': {'name': 'withdraw money', 'state': 'active', 'step': 3, 'total_steps': 5}, 'ended': False, 'domain': 'banking', 'intent': 'REPEAT_STEP', 'outcome': None, 'sources': None, 'steps': None, 'action': None}"
+    },
+    {
+      "check": "'Next dada' with nothing active -> engine's own message, no contradictory Tulu reply",
+      "passed": true,
+      "detail": "There's no active request right now. What banking service would you like help with?"
+    },
+    {
+      "check": "'Continue malpule' with nothing active -> engine's own message, no contradictory Tulu reply",
+      "passed": true,
+      "detail": "There's no active request right now. What banking service would you like help with?"
+    },
+    {
+      "check": "'Kuda panoli ya' with nothing active -> engine's own message, no contradictory Tulu reply",
+      "passed": true,
+      "detail": "There's no active request right now. What banking service would you like help with?"
+    },
+    {
+      "check": "C02d with no workflow: no workflow started (never read as a service or as resume)",
+      "passed": true,
+      "detail": "{'reply': \"There's nothing active to pause right now.\", 'transcript': None, 'workflow': {'name': None, 'state': 'none', 'step': None, 'total_steps': None}, 'ended': False, 'domain': 'banking', 'intent': None, 'outcome': None, 'sources': None, 'steps': None, 'action': None}"
+    },
+    {
+      "check": "repeat with nothing active: no contradictory acknowledgement",
+      "passed": true,
+      "detail": "There's nothing active to pause right now."
+    },
+    {
+      "check": "near-miss Tulu -> 'please say it again, or type it' (clarify), nothing started",
+      "passed": true,
+      "detail": "{'reply': 'Sorry, I could not understand that clearly. Please say it again, or type it.', 'transcript': None, 'workflow': {'name': None, 'state': 'none', 'step': None, 'total_steps': None}, 'ended': False, 'domain': 'banking', 'intent': None, 'outcome': 'clarify', 'sources': None, 'steps': None, 'action': None}"
+    },
+    {
+      "check": "no LLM call was made by any control or start turn",
+      "passed": true,
+      "detail": "[]"
+    }
+  ],
+  "rows": [
+    {
+      "mode": "speech",
+      "id": "C01a",
+      "control": "REPEAT_STEP",
+      "workflow": "deposit",
+      "input": "speech",
+      "transcript": "Kuda panoli ya",
+      "latency_s": 3.73,
+      "reply": "ಸರಿ ಯಾನ್ ಕುಡ ಮೆಲ್ಲ ಪಂಪೆ. ಓಕೆ, ಫಸ್ಟ್ ಎರ್ ಕ್ಯಾಶ್ ಡೆಪಾಸಿಟ್‌ದ ಸ್ಲಿಪ್ ದೆತೊನ್ಲೆ.",
+      "state": "active",
+      "step": 1,
+      "intent": "REPEAT_STEP",
+      "tts_status": 200,
+      "tts_bytes": 41472,
+      "xcorr_vs_input": 0.094
+    },
+    {
+      "mode": "speech",
+      "id": "C01b",
+      "control": "REPEAT_STEP",
+      "workflow": "withdraw",
+      "input": "typed fallback after ASR refusal",
+      "asr_refusal": "Tulu speech could not be recognised reliably. Please type your request in Tulu (Roman or Kannada script).",
+      "latency_s": 1.7,
+      "reply": "ಸರಿ ಯಾನ್ ಕುಡ ಮೆಲ್ಲ ಪಂಪೆ. ಸರಿ..ಅಲ್ಪ ವಿತ್‌ಡ್ರಾಯಲ್ ಸ್ಲಿಪ್ ದೆತೊನ್ಲೆ.",
+      "state": "active",
+      "step": 1,
+      "intent": "REPEAT_STEP",
+      "tts_status": 200,
+      "tts_bytes": 35856,
+      "xcorr_vs_input": 0.076
+    },
+    {
+      "mode": "speech",
+      "id": "C01c",
+      "control": "REPEAT_STEP",
+      "workflow": "deposit",
+      "input": "speech",
+      "transcript": "Yenk er panni kendhiji sari",
+      "latency_s": 1.9,
+      "reply": "ಸರಿ ಯಾನ್ ಕುಡ ಮೆಲ್ಲ ಪಂಪೆ. ಓಕೆ, ಫಸ್ಟ್ ಎರ್ ಕ್ಯಾಶ್ ಡೆಪಾಸಿಟ್‌ದ ಸ್ಲಿಪ್ ದೆತೊನ್ಲೆ.",
+      "state": "active",
+      "step": 1,
+      "intent": "REPEAT_STEP",
+      "tts_status": 200,
+      "tts_bytes": 41472,
+      "xcorr_vs_input": 0.089
+    },
+    {
+      "mode": "speech",
+      "id": "C01d",
+      "control": "REPEAT_STEP",
+      "workflow": "withdraw",
+      "input": "speech",
+      "transcript": "Churu mella panle",
+      "latency_s": 1.63,
+      "reply": "ಸರಿ ಯಾನ್ ಕುಡ ಮೆಲ್ಲ ಪಂಪೆ. ಸರಿ..ಅಲ್ಪ ವಿತ್‌ಡ್ರಾಯಲ್ ಸ್ಲಿಪ್ ದೆತೊನ್ಲೆ.",
+      "state": "active",
+      "step": 1,
+      "intent": "REPEAT_STEP",
+      "tts_status": 200,
+      "tts_bytes": 35856,
+      "xcorr_vs_input": 0.119
+    },
+    {
+      "mode": "speech",
+      "id": "C02a",
+      "control": "PAUSE_WORKFLOW",
+      "workflow": "deposit",
+      "input": "typed fallback after ASR refusal",
+      "asr_refusal": "Tulu speech could not be recognised reliably. Please type your request in Tulu (Roman or Kannada script).",
+      "latency_s": 1.88,
+      "reply": "ಓಕೆ ... ಎರ್ ಅರಮ್ಸೆ ಮಲ್ಪುಲೆ ... ಯಾನ್ ಎರ್ ಪಂಪಿನ ಮುಟ ಉಂತುವೆ ..",
+      "state": "suspended",
+      "step": 1,
+      "intent": "PAUSE_WORKFLOW",
+      "tts_status": 200,
+      "tts_bytes": 42624,
+      "xcorr_vs_input": 0.131
+    },
+    {
+      "mode": "speech",
+      "id": "C02b",
+      "control": "PAUSE_WORKFLOW",
+      "workflow": "withdraw",
+      "input": "typed fallback after ASR refusal",
+      "asr_refusal": "Tulu speech could not be recognised reliably. Please type your request in Tulu (Roman or Kannada script).",
+      "latency_s": 1.72,
+      "reply": "ಓಕೆ ... ಎರ್ ಅರಮ್ಸೆ ಮಲ್ಪುಲೆ ... ಯಾನ್ ಎರ್ ಪಂಪಿನ ಮುಟ ಉಂತುವೆ ..",
+      "state": "suspended",
+      "step": 1,
+      "intent": "PAUSE_WORKFLOW",
+      "tts_status": 200,
+      "tts_bytes": 42624,
+      "xcorr_vs_input": 0.103
+    },
+    {
+      "mode": "speech",
+      "id": "C02c",
+      "control": "PAUSE_WORKFLOW",
+      "workflow": "deposit",
+      "input": "typed fallback after ASR refusal",
+      "asr_refusal": "Tulu speech could not be recognised reliably. Please type your request in Tulu (Roman or Kannada script).",
+      "latency_s": 2.27,
+      "reply": "ಓಕೆ ... ಎರ್ ಅರಮ್ಸೆ ಮಲ್ಪುಲೆ ... ಯಾನ್ ಎರ್ ಪಂಪಿನ ಮುಟ ಉಂತುವೆ ..",
+      "state": "suspended",
+      "step": 1,
+      "intent": "PAUSE_WORKFLOW",
+      "tts_status": 200,
+      "tts_bytes": 42624,
+      "xcorr_vs_input": 0.089
+    },
+    {
+      "mode": "speech",
+      "id": "C02d",
+      "control": "PAUSE_WORKFLOW",
+      "workflow": "withdraw",
+      "input": "speech",
+      "transcript": "Yaan panpina muta continue malporchi",
+      "latency_s": 1.91,
+      "reply": "ಓಕೆ ... ಎರ್ ಅರಮ್ಸೆ ಮಲ್ಪುಲೆ ... ಯಾನ್ ಎರ್ ಪಂಪಿನ ಮುಟ ಉಂತುವೆ ..",
+      "state": "suspended",
+      "step": 1,
+      "intent": "PAUSE_WORKFLOW",
+      "tts_status": 200,
+      "tts_bytes": 42624,
+      "xcorr_vs_input": 0.077
+    },
+    {
+      "mode": "speech",
+      "id": "C02e",
+      "control": "PAUSE_WORKFLOW",
+      "workflow": "deposit",
+      "input": "speech",
+      "transcript": "Yaan panpina muta unthule",
+      "latency_s": 1.68,
+      "reply": "ಓಕೆ ... ಎರ್ ಅರಮ್ಸೆ ಮಲ್ಪುಲೆ ... ಯಾನ್ ಎರ್ ಪಂಪಿನ ಮುಟ ಉಂತುವೆ ..",
+      "state": "suspended",
+      "step": 1,
+      "intent": "PAUSE_WORKFLOW",
+      "tts_status": 200,
+      "tts_bytes": 42624,
+      "xcorr_vs_input": 0.089
+    },
+    {
+      "mode": "speech",
+      "id": "C03a",
+      "control": "STOP_REQUEST",
+      "workflow": "withdraw",
+      "input": "typed fallback after ASR refusal",
+      "asr_refusal": "Tulu speech could not be recognised reliably. Please type your request in Tulu (Roman or Kannada script).",
+      "latency_s": 1.81,
+      "reply": "ಓಕೆ ... ನನ ಒಇಕ್ ಅಂಡಲ ಹೆಲ್ಪ್ ಬೊಡಂಡ ಯೆಂಕ್ ಪನ್ಲೆ ... ಥ್ಯಾಂಕ್ ಯೂ. Say stop again to end the conversation.",
+      "state": "cancelled",
+      "step": 1,
+      "intent": "STOP_REQUEST",
+      "second_reply": "Thank you for using the banking assistant.",
+      "second_ended": true,
+      "tts_status": 200,
+      "tts_bytes": 64224,
+      "xcorr_vs_input": 0.083
+    },
+    {
+      "mode": "speech",
+      "id": "C03b",
+      "control": "STOP_REQUEST",
+      "workflow": "deposit",
+      "input": "speech",
+      "transcript": "Nana explain malpodu pandh ejji",
+      "latency_s": 2.04,
+      "reply": "ಓಕೆ ... ನನ ಒಇಕ್ ಅಂಡಲ ಹೆಲ್ಪ್ ಬೊಡಂಡ ಯೆಂಕ್ ಪನ್ಲೆ ... ಥ್ಯಾಂಕ್ ಯೂ. Say stop again to end the conversation.",
+      "state": "cancelled",
+      "step": 1,
+      "intent": "STOP_REQUEST",
+      "second_reply": "Thank you for using the banking assistant.",
+      "second_ended": true,
+      "tts_status": 200,
+      "tts_bytes": 64224,
+      "xcorr_vs_input": 0.064
+    },
+    {
+      "mode": "speech",
+      "id": "C03c",
+      "control": "STOP_REQUEST",
+      "workflow": "withdraw",
+      "input": "typed fallback after ASR refusal",
+      "asr_refusal": "Tulu speech could not be recognised reliably. Please type your request in Tulu (Roman or Kannada script).",
+      "latency_s": 2.3,
+      "reply": "ಓಕೆ ... ನನ ಒಇಕ್ ಅಂಡಲ ಹೆಲ್ಪ್ ಬೊಡಂಡ ಯೆಂಕ್ ಪನ್ಲೆ ... ಥ್ಯಾಂಕ್ ಯೂ. Say stop again to end the conversation.",
+      "state": "cancelled",
+      "step": 1,
+      "intent": "STOP_REQUEST",
+      "second_reply": "Thank you for using the banking assistant.",
+      "second_ended": true,
+      "tts_status": 200,
+      "tts_bytes": 64224,
+      "xcorr_vs_input": 0.064
+    },
+    {
+      "mode": "speech",
+      "id": "C04a",
+      "control": "CLARIFY_CURRENT_STEP",
+      "workflow": "deposit",
+      "input": "speech",
+      "transcript": "Yenk artha ayiji",
+      "latency_s": 1.75,
+      "reply": "ತೊಂಡ್ರೆ ಎಜ್ಜಿ ಯಾನ್ ಎರೆಗ್ ಕುಡ ಪಂಪೆ.. If anything on this step is unclear, the bank staff can also help you. ಓಕೆ, ಫಸ್ಟ್ ಎರ್ ಕ್ಯಾಶ್ ಡೆಪಾಸಿಟ್‌ದ ಸ್ಲಿಪ್ ದೆತೊನ್ಲೆ.",
+      "state": "active",
+      "step": 1,
+      "intent": "CLARIFY_CURRENT_STEP",
+      "tts_status": 200,
+      "tts_bytes": 78048,
+      "xcorr_vs_input": 0.144
+    },
+    {
+      "mode": "speech",
+      "id": "C04b",
+      "control": "CLARIFY_CURRENT_STEP",
+      "workflow": "withdraw",
+      "input": "typed fallback after ASR refusal",
+      "asr_refusal": "Tulu speech could not be recognised reliably. Please type your request in Tulu (Roman or Kannada script).",
+      "latency_s": 1.86,
+      "reply": "ತೊಂಡ್ರೆ ಎಜ್ಜಿ ಯಾನ್ ಎರೆಗ್ ಕುಡ ಪಂಪೆ.. If anything on this step is unclear, the bank staff can also help you. ಸರಿ..ಅಲ್ಪ ವಿತ್‌ಡ್ರಾಯಲ್ ಸ್ಲಿಪ್ ದೆತೊನ್ಲೆ.",
+      "state": "active",
+      "step": 1,
+      "intent": "CLARIFY_CURRENT_STEP",
+      "tts_status": 200,
+      "tts_bytes": 72432,
+      "xcorr_vs_input": 0.082
+    },
+    {
+      "mode": "speech",
+      "id": "C04c",
+      "control": "CLARIFY_CURRENT_STEP",
+      "workflow": "deposit",
+      "input": "speech",
+      "transcript": "Ancha panda dada",
+      "latency_s": 1.75,
+      "reply": "ತೊಂಡ್ರೆ ಎಜ್ಜಿ ಯಾನ್ ಎರೆಗ್ ಕುಡ ಪಂಪೆ.. If anything on this step is unclear, the bank staff can also help you. ಓಕೆ, ಫಸ್ಟ್ ಎರ್ ಕ್ಯಾಶ್ ಡೆಪಾಸಿಟ್‌ದ ಸ್ಲಿಪ್ ದೆತೊನ್ಲೆ.",
+      "state": "active",
+      "step": 1,
+      "intent": "CLARIFY_CURRENT_STEP",
+      "tts_status": 200,
+      "tts_bytes": 78048,
+      "xcorr_vs_input": 0.083
+    },
+    {
+      "mode": "speech",
+      "id": "C05a",
+      "control": "NEXT_STEP",
+      "workflow": "withdraw",
+      "input": "speech",
+      "transcript": "Next dada",
+      "latency_s": 0.62,
+      "reply": "ಅವು ನೆಕ್ಸ್ಟ್ ದಡ ಮಲ್ಪೊಡು ಅಂಡ್ ಪಂಪೆ. ಸರಿ..ಅಲ್ಪ ವಿತ್‌ಡ್ರಾಯಲ್ ಸ್ಲಿಪ್ ದೆತೊನ್ಲೆ.",
+      "state": "active",
+      "step": 1,
+      "intent": "NEXT_STEP",
+      "tts_status": 200,
+      "tts_bytes": 38736,
+      "xcorr_vs_input": 0.092
+    },
+    {
+      "mode": "speech",
+      "id": "C05b",
+      "control": "NEXT_STEP",
+      "workflow": "deposit",
+      "input": "speech",
+      "transcript": "Undu ayii bokka dada",
+      "latency_s": 0.93,
+      "reply": "ಅವು ನೆಕ್ಸ್ಟ್ ದಡ ಮಲ್ಪೊಡು ಅಂಡ್ ಪಂಪೆ. ಓಕೆ, ಫಸ್ಟ್ ಎರ್ ಕ್ಯಾಶ್ ಡೆಪಾಸಿಟ್‌ದ ಸ್ಲಿಪ್ ದೆತೊನ್ಲೆ.",
+      "state": "active",
+      "step": 1,
+      "intent": "NEXT_STEP",
+      "tts_status": 200,
+      "tts_bytes": 44352,
+      "xcorr_vs_input": 0.071
+    },
+    {
+      "mode": "speech",
+      "id": "C05c",
+      "control": "NEXT_STEP",
+      "workflow": "withdraw",
+      "input": "speech",
+      "transcript": "Next panle",
+      "latency_s": 0.79,
+      "reply": "ಅವು ನೆಕ್ಸ್ಟ್ ದಡ ಮಲ್ಪೊಡು ಅಂಡ್ ಪಂಪೆ. ಸರಿ..ಅಲ್ಪ ವಿತ್‌ಡ್ರಾಯಲ್ ಸ್ಲಿಪ್ ದೆತೊನ್ಲೆ.",
+      "state": "active",
+      "step": 1,
+      "intent": "NEXT_STEP",
+      "tts_status": 200,
+      "tts_bytes": 38736,
+      "xcorr_vs_input": 0.068
+    },
+    {
+      "mode": "speech",
+      "id": "C05d",
+      "control": "NEXT_STEP",
+      "workflow": "deposit",
+      "input": "speech",
+      "transcript": "Next dada malpodu panle",
+      "latency_s": 1.02,
+      "reply": "ಅವು ನೆಕ್ಸ್ಟ್ ದಡ ಮಲ್ಪೊಡು ಅಂಡ್ ಪಂಪೆ. ಓಕೆ, ಫಸ್ಟ್ ಎರ್ ಕ್ಯಾಶ್ ಡೆಪಾಸಿಟ್‌ದ ಸ್ಲಿಪ್ ದೆತೊನ್ಲೆ.",
+      "state": "active",
+      "step": 1,
+      "intent": "NEXT_STEP",
+      "tts_status": 200,
+      "tts_bytes": 44352,
+      "xcorr_vs_input": 0.055
+    },
+    {
+      "mode": "speech",
+      "id": "C06a",
+      "control": "RESUME_WORKFLOW",
+      "workflow": "withdraw",
+      "input": "typed fallback after ASR refusal",
+      "asr_refusal": "Tulu speech could not be recognised reliably. Please type your request in Tulu (Roman or Kannada script).",
+      "latency_s": 0.96,
+      "reply": "ಅವು ಎರ್ನ ರಿಕ್ವೆಸ್ಟ್‌ನ್ ಕಂಟಿನ್ಯೂ ಮಲ್ಪುವೆ. ಸರಿ..ಅಲ್ಪ ವಿತ್‌ಡ್ರಾಯಲ್ ಸ್ಲಿಪ್ ದೆತೊನ್ಲೆ.",
+      "state": "active",
+      "step": 1,
+      "intent": "RESUME_WORKFLOW",
+      "tts_status": 200,
+      "tts_bytes": 39312,
+      "xcorr_vs_input": 0.057
+    },
+    {
+      "mode": "speech",
+      "id": "C06b",
+      "control": "RESUME_WORKFLOW",
+      "workflow": "deposit",
+      "input": "speech",
+      "transcript": "Olpa unthayar alpa d continue malpule",
+      "latency_s": 1.19,
+      "reply": "ಅವು ಎರ್ನ ರಿಕ್ವೆಸ್ಟ್‌ನ್ ಕಂಟಿನ್ಯೂ ಮಲ್ಪುವೆ. ಓಕೆ, ಫಸ್ಟ್ ಎರ್ ಕ್ಯಾಶ್ ಡೆಪಾಸಿಟ್‌ದ ಸ್ಲಿಪ್ ದೆತೊನ್ಲೆ.",
+      "state": "active",
+      "step": 1,
+      "intent": "RESUME_WORKFLOW",
+      "tts_status": 200,
+      "tts_bytes": 45072,
+      "xcorr_vs_input": 0.046
+    },
+    {
+      "mode": "typed",
+      "id": "C01a",
+      "control": "REPEAT_STEP",
+      "workflow": "deposit",
+      "input": "typed",
+      "latency_s": 0.01,
+      "reply": "ಸರಿ ಯಾನ್ ಕುಡ ಮೆಲ್ಲ ಪಂಪೆ. ಓಕೆ, ಫಸ್ಟ್ ಎರ್ ಕ್ಯಾಶ್ ಡೆಪಾಸಿಟ್‌ದ ಸ್ಲಿಪ್ ದೆತೊನ್ಲೆ.",
+      "state": "active",
+      "step": 1,
+      "intent": "REPEAT_STEP",
+      "tts_status": 200,
+      "tts_bytes": 41472,
+      "xcorr_vs_input": 0.094
+    },
+    {
+      "mode": "typed",
+      "id": "C01b",
+      "control": "REPEAT_STEP",
+      "workflow": "withdraw",
+      "input": "typed",
+      "latency_s": 0.0,
+      "reply": "ಸರಿ ಯಾನ್ ಕುಡ ಮೆಲ್ಲ ಪಂಪೆ. ಸರಿ..ಅಲ್ಪ ವಿತ್‌ಡ್ರಾಯಲ್ ಸ್ಲಿಪ್ ದೆತೊನ್ಲೆ.",
+      "state": "active",
+      "step": 1,
+      "intent": "REPEAT_STEP",
+      "tts_status": 200,
+      "tts_bytes": 35856,
+      "xcorr_vs_input": 0.076
+    },
+    {
+      "mode": "typed",
+      "id": "C01c",
+      "control": "REPEAT_STEP",
+      "workflow": "deposit",
+      "input": "typed",
+      "latency_s": 0.01,
+      "reply": "ಸರಿ ಯಾನ್ ಕುಡ ಮೆಲ್ಲ ಪಂಪೆ. ಓಕೆ, ಫಸ್ಟ್ ಎರ್ ಕ್ಯಾಶ್ ಡೆಪಾಸಿಟ್‌ದ ಸ್ಲಿಪ್ ದೆತೊನ್ಲೆ.",
+      "state": "active",
+      "step": 1,
+      "intent": "REPEAT_STEP",
+      "tts_status": 200,
+      "tts_bytes": 41472,
+      "xcorr_vs_input": 0.089
+    },
+    {
+      "mode": "typed",
+      "id": "C01d",
+      "control": "REPEAT_STEP",
+      "workflow": "withdraw",
+      "input": "typed",
+      "latency_s": 0.01,
+      "reply": "ಸರಿ ಯಾನ್ ಕುಡ ಮೆಲ್ಲ ಪಂಪೆ. ಸರಿ..ಅಲ್ಪ ವಿತ್‌ಡ್ರಾಯಲ್ ಸ್ಲಿಪ್ ದೆತೊನ್ಲೆ.",
+      "state": "active",
+      "step": 1,
+      "intent": "REPEAT_STEP",
+      "tts_status": 200,
+      "tts_bytes": 35856,
+      "xcorr_vs_input": 0.118
+    },
+    {
+      "mode": "typed",
+      "id": "C02a",
+      "control": "PAUSE_WORKFLOW",
+      "workflow": "deposit",
+      "input": "typed",
+      "latency_s": 0.01,
+      "reply": "ಓಕೆ ... ಎರ್ ಅರಮ್ಸೆ ಮಲ್ಪುಲೆ ... ಯಾನ್ ಎರ್ ಪಂಪಿನ ಮುಟ ಉಂತುವೆ ..",
+      "state": "suspended",
+      "step": 1,
+      "intent": "PAUSE_WORKFLOW",
+      "tts_status": 200,
+      "tts_bytes": 42624,
+      "xcorr_vs_input": 0.131
+    },
+    {
+      "mode": "typed",
+      "id": "C02b",
+      "control": "PAUSE_WORKFLOW",
+      "workflow": "withdraw",
+      "input": "typed",
+      "latency_s": 0.0,
+      "reply": "ಓಕೆ ... ಎರ್ ಅರಮ್ಸೆ ಮಲ್ಪುಲೆ ... ಯಾನ್ ಎರ್ ಪಂಪಿನ ಮುಟ ಉಂತುವೆ ..",
+      "state": "suspended",
+      "step": 1,
+      "intent": "PAUSE_WORKFLOW",
+      "tts_status": 200,
+      "tts_bytes": 42624,
+      "xcorr_vs_input": 0.103
+    },
+    {
+      "mode": "typed",
+      "id": "C02c",
+      "control": "PAUSE_WORKFLOW",
+      "workflow": "deposit",
+      "input": "typed",
+      "latency_s": 0.01,
+      "reply": "ಓಕೆ ... ಎರ್ ಅರಮ್ಸೆ ಮಲ್ಪುಲೆ ... ಯಾನ್ ಎರ್ ಪಂಪಿನ ಮುಟ ಉಂತುವೆ ..",
+      "state": "suspended",
+      "step": 1,
+      "intent": "PAUSE_WORKFLOW",
+      "tts_status": 200,
+      "tts_bytes": 42624,
+      "xcorr_vs_input": 0.09
+    },
+    {
+      "mode": "typed",
+      "id": "C02d",
+      "control": "PAUSE_WORKFLOW",
+      "workflow": "withdraw",
+      "input": "typed",
+      "latency_s": 0.01,
+      "reply": "ಓಕೆ ... ಎರ್ ಅರಮ್ಸೆ ಮಲ್ಪುಲೆ ... ಯಾನ್ ಎರ್ ಪಂಪಿನ ಮುಟ ಉಂತುವೆ ..",
+      "state": "suspended",
+      "step": 1,
+      "intent": "PAUSE_WORKFLOW",
+      "tts_status": 200,
+      "tts_bytes": 42624,
+      "xcorr_vs_input": 0.077
+    },
+    {
+      "mode": "typed",
+      "id": "C02e",
+      "control": "PAUSE_WORKFLOW",
+      "workflow": "deposit",
+      "input": "typed",
+      "latency_s": 0.01,
+      "reply": "ಓಕೆ ... ಎರ್ ಅರಮ್ಸೆ ಮಲ್ಪುಲೆ ... ಯಾನ್ ಎರ್ ಪಂಪಿನ ಮುಟ ಉಂತುವೆ ..",
+      "state": "suspended",
+      "step": 1,
+      "intent": "PAUSE_WORKFLOW",
+      "tts_status": 200,
+      "tts_bytes": 42624,
+      "xcorr_vs_input": 0.089
+    },
+    {
+      "mode": "typed",
+      "id": "C03a",
+      "control": "STOP_REQUEST",
+      "workflow": "withdraw",
+      "input": "typed",
+      "latency_s": 0.0,
+      "reply": "ಓಕೆ ... ನನ ಒಇಕ್ ಅಂಡಲ ಹೆಲ್ಪ್ ಬೊಡಂಡ ಯೆಂಕ್ ಪನ್ಲೆ ... ಥ್ಯಾಂಕ್ ಯೂ. Say stop again to end the conversation.",
+      "state": "cancelled",
+      "step": 1,
+      "intent": "STOP_REQUEST",
+      "second_reply": "Thank you for using the banking assistant.",
+      "second_ended": true,
+      "tts_status": 200,
+      "tts_bytes": 64224,
+      "xcorr_vs_input": 0.083
+    },
+    {
+      "mode": "typed",
+      "id": "C03b",
+      "control": "STOP_REQUEST",
+      "workflow": "deposit",
+      "input": "typed",
+      "latency_s": 0.01,
+      "reply": "ಓಕೆ ... ನನ ಒಇಕ್ ಅಂಡಲ ಹೆಲ್ಪ್ ಬೊಡಂಡ ಯೆಂಕ್ ಪನ್ಲೆ ... ಥ್ಯಾಂಕ್ ಯೂ. Say stop again to end the conversation.",
+      "state": "cancelled",
+      "step": 1,
+      "intent": "STOP_REQUEST",
+      "second_reply": "Thank you for using the banking assistant.",
+      "second_ended": true,
+      "tts_status": 200,
+      "tts_bytes": 64224,
+      "xcorr_vs_input": 0.064
+    },
+    {
+      "mode": "typed",
+      "id": "C03c",
+      "control": "STOP_REQUEST",
+      "workflow": "withdraw",
+      "input": "typed",
+      "latency_s": 0.01,
+      "reply": "ಓಕೆ ... ನನ ಒಇಕ್ ಅಂಡಲ ಹೆಲ್ಪ್ ಬೊಡಂಡ ಯೆಂಕ್ ಪನ್ಲೆ ... ಥ್ಯಾಂಕ್ ಯೂ. Say stop again to end the conversation.",
+      "state": "cancelled",
+      "step": 1,
+      "intent": "STOP_REQUEST",
+      "second_reply": "Thank you for using the banking assistant.",
+      "second_ended": true,
+      "tts_status": 200,
+      "tts_bytes": 64224,
+      "xcorr_vs_input": 0.063
+    },
+    {
+      "mode": "typed",
+      "id": "C04a",
+      "control": "CLARIFY_CURRENT_STEP",
+      "workflow": "deposit",
+      "input": "typed",
+      "latency_s": 0.0,
+      "reply": "ತೊಂಡ್ರೆ ಎಜ್ಜಿ ಯಾನ್ ಎರೆಗ್ ಕುಡ ಪಂಪೆ.. If anything on this step is unclear, the bank staff can also help you. ಓಕೆ, ಫಸ್ಟ್ ಎರ್ ಕ್ಯಾಶ್ ಡೆಪಾಸಿಟ್‌ದ ಸ್ಲಿಪ್ ದೆತೊನ್ಲೆ.",
+      "state": "active",
+      "step": 1,
+      "intent": "CLARIFY_CURRENT_STEP",
+      "tts_status": 200,
+      "tts_bytes": 78048,
+      "xcorr_vs_input": 0.144
+    },
+    {
+      "mode": "typed",
+      "id": "C04b",
+      "control": "CLARIFY_CURRENT_STEP",
+      "workflow": "withdraw",
+      "input": "typed",
+      "latency_s": 0.01,
+      "reply": "ತೊಂಡ್ರೆ ಎಜ್ಜಿ ಯಾನ್ ಎರೆಗ್ ಕುಡ ಪಂಪೆ.. If anything on this step is unclear, the bank staff can also help you. ಸರಿ..ಅಲ್ಪ ವಿತ್‌ಡ್ರಾಯಲ್ ಸ್ಲಿಪ್ ದೆತೊನ್ಲೆ.",
+      "state": "active",
+      "step": 1,
+      "intent": "CLARIFY_CURRENT_STEP",
+      "tts_status": 200,
+      "tts_bytes": 72432,
+      "xcorr_vs_input": 0.082
+    },
+    {
+      "mode": "typed",
+      "id": "C04c",
+      "control": "CLARIFY_CURRENT_STEP",
+      "workflow": "deposit",
+      "input": "typed",
+      "latency_s": 0.01,
+      "reply": "ತೊಂಡ್ರೆ ಎಜ್ಜಿ ಯಾನ್ ಎರೆಗ್ ಕುಡ ಪಂಪೆ.. If anything on this step is unclear, the bank staff can also help you. ಓಕೆ, ಫಸ್ಟ್ ಎರ್ ಕ್ಯಾಶ್ ಡೆಪಾಸಿಟ್‌ದ ಸ್ಲಿಪ್ ದೆತೊನ್ಲೆ.",
+      "state": "active",
+      "step": 1,
+      "intent": "CLARIFY_CURRENT_STEP",
+      "tts_status": 200,
+      "tts_bytes": 78048,
+      "xcorr_vs_input": 0.083
+    },
+    {
+      "mode": "typed",
+      "id": "C05a",
+      "control": "NEXT_STEP",
+      "workflow": "withdraw",
+      "input": "typed",
+      "latency_s": 0.0,
+      "reply": "ಅವು ನೆಕ್ಸ್ಟ್ ದಡ ಮಲ್ಪೊಡು ಅಂಡ್ ಪಂಪೆ. ಸರಿ..ಅಲ್ಪ ವಿತ್‌ಡ್ರಾಯಲ್ ಸ್ಲಿಪ್ ದೆತೊನ್ಲೆ.",
+      "state": "active",
+      "step": 1,
+      "intent": "NEXT_STEP",
+      "tts_status": 200,
+      "tts_bytes": 38736,
+      "xcorr_vs_input": 0.092
+    },
+    {
+      "mode": "typed",
+      "id": "C05b",
+      "control": "NEXT_STEP",
+      "workflow": "deposit",
+      "input": "typed",
+      "latency_s": 0.01,
+      "reply": "ಅವು ನೆಕ್ಸ್ಟ್ ದಡ ಮಲ್ಪೊಡು ಅಂಡ್ ಪಂಪೆ. ಓಕೆ, ಫಸ್ಟ್ ಎರ್ ಕ್ಯಾಶ್ ಡೆಪಾಸಿಟ್‌ದ ಸ್ಲಿಪ್ ದೆತೊನ್ಲೆ.",
+      "state": "active",
+      "step": 1,
+      "intent": "NEXT_STEP",
+      "tts_status": 200,
+      "tts_bytes": 44352,
+      "xcorr_vs_input": 0.07
+    },
+    {
+      "mode": "typed",
+      "id": "C05c",
+      "control": "NEXT_STEP",
+      "workflow": "withdraw",
+      "input": "typed",
+      "latency_s": 0.0,
+      "reply": "ಅವು ನೆಕ್ಸ್ಟ್ ದಡ ಮಲ್ಪೊಡು ಅಂಡ್ ಪಂಪೆ. ಸರಿ..ಅಲ್ಪ ವಿತ್‌ಡ್ರಾಯಲ್ ಸ್ಲಿಪ್ ದೆತೊನ್ಲೆ.",
+      "state": "active",
+      "step": 1,
+      "intent": "NEXT_STEP",
+      "tts_status": 200,
+      "tts_bytes": 38736,
+      "xcorr_vs_input": 0.068
+    },
+    {
+      "mode": "typed",
+      "id": "C05d",
+      "control": "NEXT_STEP",
+      "workflow": "deposit",
+      "input": "typed",
+      "latency_s": 0.0,
+      "reply": "ಅವು ನೆಕ್ಸ್ಟ್ ದಡ ಮಲ್ಪೊಡು ಅಂಡ್ ಪಂಪೆ. ಓಕೆ, ಫಸ್ಟ್ ಎರ್ ಕ್ಯಾಶ್ ಡೆಪಾಸಿಟ್‌ದ ಸ್ಲಿಪ್ ದೆತೊನ್ಲೆ.",
+      "state": "active",
+      "step": 1,
+      "intent": "NEXT_STEP",
+      "tts_status": 200,
+      "tts_bytes": 44352,
+      "xcorr_vs_input": 0.056
+    },
+    {
+      "mode": "typed",
+      "id": "C06a",
+      "control": "RESUME_WORKFLOW",
+      "workflow": "withdraw",
+      "input": "typed",
+      "latency_s": 0.01,
+      "reply": "ಅವು ಎರ್ನ ರಿಕ್ವೆಸ್ಟ್‌ನ್ ಕಂಟಿನ್ಯೂ ಮಲ್ಪುವೆ. ಸರಿ..ಅಲ್ಪ ವಿತ್‌ಡ್ರಾಯಲ್ ಸ್ಲಿಪ್ ದೆತೊನ್ಲೆ.",
+      "state": "active",
+      "step": 1,
+      "intent": "RESUME_WORKFLOW",
+      "tts_status": 200,
+      "tts_bytes": 39312,
+      "xcorr_vs_input": 0.057
+    },
+    {
+      "mode": "typed",
+      "id": "C06b",
+      "control": "RESUME_WORKFLOW",
+      "workflow": "deposit",
+      "input": "typed",
+      "latency_s": 0.01,
+      "reply": "ಅವು ಎರ್ನ ರಿಕ್ವೆಸ್ಟ್‌ನ್ ಕಂಟಿನ್ಯೂ ಮಲ್ಪುವೆ. ಓಕೆ, ಫಸ್ಟ್ ಎರ್ ಕ್ಯಾಶ್ ಡೆಪಾಸಿಟ್‌ದ ಸ್ಲಿಪ್ ದೆತೊನ್ಲೆ.",
+      "state": "active",
+      "step": 1,
+      "intent": "RESUME_WORKFLOW",
+      "tts_status": 200,
+      "tts_bytes": 45072,
+      "xcorr_vs_input": 0.046
+    },
+    {
+      "mode": "typed",
+      "id": "C04t1",
+      "control": "CLARIFY_CURRENT_STEP",
+      "workflow": "withdraw",
+      "input": "typed",
+      "latency_s": 0.01,
+      "reply": "ತೊಂಡ್ರೆ ಎಜ್ಜಿ ಯಾನ್ ಎರೆಗ್ ಕುಡ ಪಂಪೆ.. If anything on this step is unclear, the bank staff can also help you. ಸರಿ..ಅಲ್ಪ ವಿತ್‌ಡ್ರಾಯಲ್ ಸ್ಲಿಪ್ ದೆತೊನ್ಲೆ.",
+      "state": "active",
+      "step": 1,
+      "intent": "CLARIFY_CURRENT_STEP",
+      "tts_status": 200,
+      "tts_bytes": 72432,
+      "xcorr_vs_input": null
+    }
+  ]
+}

@@ -1,0 +1,1648 @@
+{
+ "meta": {
+  "name": "m10_before_m7",
+  "fixtures": "m7_fresh.json"
+ },
+ "summary": {
+  "all_settled": {
+   "fixtures": 60,
+   "scored": 6,
+   "llm_gated": 54,
+   "correct": 1,
+   "correct_intent": "0/0",
+   "correct_intent_rate": null,
+   "wrong_service": 0,
+   "false_starts": "5/6",
+   "false_start_rate": 83.3,
+   "false_starts_into_real_workflow": 2,
+   "clarify_correct": "0/0",
+   "decline_correct": "0/0",
+   "decline_no_start": "0/0",
+   "question_correct": "1/6",
+   "gated_no_start_expected": 54,
+   "gated_would_start": 35,
+   "outcomes": {
+    "llm_gated": 54,
+    "false_start": 5,
+    "correct": 1
+   }
+  },
+  "pending_policy": {
+   "fixtures": 0,
+   "scored": 0,
+   "llm_gated": 0,
+   "correct": 0,
+   "correct_intent": "0/0",
+   "correct_intent_rate": null,
+   "wrong_service": 0,
+   "false_starts": "0/0",
+   "false_start_rate": null,
+   "false_starts_into_real_workflow": 0,
+   "clarify_correct": "0/0",
+   "decline_correct": "0/0",
+   "decline_no_start": "0/0",
+   "question_correct": "0/0",
+   "gated_no_start_expected": 0,
+   "gated_would_start": 0,
+   "outcomes": {}
+  },
+  "by_family": {
+   "knowledge_question": {
+    "fixtures": 60,
+    "scored": 6,
+    "llm_gated": 54,
+    "correct": 1,
+    "correct_intent": "0/0",
+    "correct_intent_rate": null,
+    "wrong_service": 0,
+    "false_starts": "5/6",
+    "false_start_rate": 83.3,
+    "false_starts_into_real_workflow": 2,
+    "clarify_correct": "0/0",
+    "decline_correct": "0/0",
+    "decline_no_start": "0/0",
+    "question_correct": "1/6",
+    "gated_no_start_expected": 54,
+    "gated_would_start": 35,
+    "outcomes": {
+     "llm_gated": 54,
+     "false_start": 5,
+     "correct": 1
+    }
+   }
+  },
+  "by_language": {
+   "en": {
+    "fixtures": 9,
+    "scored": 0,
+    "llm_gated": 9,
+    "correct": 0,
+    "correct_intent": "0/0",
+    "correct_intent_rate": null,
+    "wrong_service": 0,
+    "false_starts": "0/0",
+    "false_start_rate": null,
+    "false_starts_into_real_workflow": 0,
+    "clarify_correct": "0/0",
+    "decline_correct": "0/0",
+    "decline_no_start": "0/0",
+    "question_correct": "0/0",
+    "gated_no_start_expected": 9,
+    "gated_would_start": 5,
+    "outcomes": {
+     "llm_gated": 9
+    }
+   },
+   "kn": {
+    "fixtures": 9,
+    "scored": 1,
+    "llm_gated": 8,
+    "correct": 0,
+    "correct_intent": "0/0",
+    "correct_intent_rate": null,
+    "wrong_service": 0,
+    "false_starts": "1/1",
+    "false_start_rate": 100.0,
+    "false_starts_into_real_workflow": 0,
+    "clarify_correct": "0/0",
+    "decline_correct": "0/0",
+    "decline_no_start": "0/0",
+    "question_correct": "0/1",
+    "gated_no_start_expected": 8,
+    "gated_would_start": 4,
+    "outcomes": {
+     "llm_gated": 8,
+     "false_start": 1
+    }
+   },
+   "hi": {
+    "fixtures": 9,
+    "scored": 1,
+    "llm_gated": 8,
+    "correct": 0,
+    "correct_intent": "0/0",
+    "correct_intent_rate": null,
+    "wrong_service": 0,
+    "false_starts": "1/1",
+    "false_start_rate": 100.0,
+    "false_starts_into_real_workflow": 0,
+    "clarify_correct": "0/0",
+    "decline_correct": "0/0",
+    "decline_no_start": "0/0",
+    "question_correct": "0/1",
+    "gated_no_start_expected": 8,
+    "gated_would_start": 5,
+    "outcomes": {
+     "llm_gated": 8,
+     "false_start": 1
+    }
+   },
+   "kn-en": {
+    "fixtures": 8,
+    "scored": 1,
+    "llm_gated": 7,
+    "correct": 0,
+    "correct_intent": "0/0",
+    "correct_intent_rate": null,
+    "wrong_service": 0,
+    "false_starts": "1/1",
+    "false_start_rate": 100.0,
+    "false_starts_into_real_workflow": 0,
+    "clarify_correct": "0/0",
+    "decline_correct": "0/0",
+    "decline_no_start": "0/0",
+    "question_correct": "0/1",
+    "gated_no_start_expected": 7,
+    "gated_would_start": 5,
+    "outcomes": {
+     "llm_gated": 7,
+     "false_start": 1
+    }
+   },
+   "hi-en": {
+    "fixtures": 8,
+    "scored": 1,
+    "llm_gated": 7,
+    "correct": 1,
+    "correct_intent": "0/0",
+    "correct_intent_rate": null,
+    "wrong_service": 0,
+    "false_starts": "0/1",
+    "false_start_rate": 0.0,
+    "false_starts_into_real_workflow": 0,
+    "clarify_correct": "0/0",
+    "decline_correct": "0/0",
+    "decline_no_start": "0/0",
+    "question_correct": "1/1",
+    "gated_no_start_expected": 7,
+    "gated_would_start": 4,
+    "outcomes": {
+     "llm_gated": 7,
+     "correct": 1
+    }
+   },
+   "rom-kn": {
+    "fixtures": 8,
+    "scored": 1,
+    "llm_gated": 7,
+    "correct": 0,
+    "correct_intent": "0/0",
+    "correct_intent_rate": null,
+    "wrong_service": 0,
+    "false_starts": "1/1",
+    "false_start_rate": 100.0,
+    "false_starts_into_real_workflow": 1,
+    "clarify_correct": "0/0",
+    "decline_correct": "0/0",
+    "decline_no_start": "0/0",
+    "question_correct": "0/1",
+    "gated_no_start_expected": 7,
+    "gated_would_start": 5,
+    "outcomes": {
+     "llm_gated": 7,
+     "false_start": 1
+    }
+   },
+   "rom-hi": {
+    "fixtures": 9,
+    "scored": 1,
+    "llm_gated": 8,
+    "correct": 0,
+    "correct_intent": "0/0",
+    "correct_intent_rate": null,
+    "wrong_service": 0,
+    "false_starts": "1/1",
+    "false_start_rate": 100.0,
+    "false_starts_into_real_workflow": 1,
+    "clarify_correct": "0/0",
+    "decline_correct": "0/0",
+    "decline_no_start": "0/0",
+    "question_correct": "0/1",
+    "gated_no_start_expected": 8,
+    "gated_would_start": 7,
+    "outcomes": {
+     "llm_gated": 8,
+     "false_start": 1
+    }
+   }
+  }
+ },
+ "rows": [
+  {
+   "id": "kq-en-710",
+   "lang": "en",
+   "family": "knowledge_question",
+   "policy": "settled",
+   "text": "how do I fill a withdrawal slip",
+   "expect": "question",
+   "decision": "llm_gate",
+   "outcome": "llm_gated",
+   "scored": false,
+   "real_workflow": false,
+   "detail": {
+    "decision": "llm_gate",
+    "if_handed_back": "start:withdraw money",
+    "stage": "llm_gate",
+    "category": "BANKING_INTENT",
+    "margin": 0.274,
+    "evidence": [
+     "withdraw money"
+    ],
+    "intent": "withdraw money",
+    "withheld": null,
+    "negated": false
+   }
+  },
+  {
+   "id": "kq-kn-710",
+   "lang": "kn",
+   "family": "knowledge_question",
+   "policy": "settled",
+   "text": "ಹಣ ತೆಗೆಯುವ ಚೀಟಿಯನ್ನು ಹೇಗೆ ತುಂಬಬೇಕು",
+   "expect": "question",
+   "decision": "llm_gate",
+   "outcome": "llm_gated",
+   "scored": false,
+   "real_workflow": false,
+   "detail": {
+    "decision": "llm_gate",
+    "if_handed_back": "start:withdraw money",
+    "stage": "llm_gate",
+    "category": "BANKING_INTENT",
+    "margin": 0.115,
+    "evidence": [
+     "withdraw money"
+    ],
+    "intent": "withdraw money",
+    "withheld": null,
+    "negated": false
+   }
+  },
+  {
+   "id": "kq-hi-710",
+   "lang": "hi",
+   "family": "knowledge_question",
+   "policy": "settled",
+   "text": "निकासी पर्ची कैसे भरें",
+   "expect": "question",
+   "decision": "llm_gate",
+   "outcome": "llm_gated",
+   "scored": false,
+   "real_workflow": false,
+   "detail": {
+    "decision": "llm_gate",
+    "if_handed_back": "start:withdraw money",
+    "stage": "llm_gate",
+    "category": "BANKING_INTENT",
+    "margin": 0.111,
+    "evidence": [],
+    "intent": "withdraw money",
+    "withheld": null,
+    "negated": false
+   }
+  },
+  {
+   "id": "kq-kn-en-710",
+   "lang": "kn-en",
+   "family": "knowledge_question",
+   "policy": "settled",
+   "text": "withdrawal slip ಹೇಗೆ ತುಂಬುವುದು",
+   "expect": "question",
+   "decision": "llm_gate",
+   "outcome": "llm_gated",
+   "scored": false,
+   "real_workflow": false,
+   "detail": {
+    "decision": "llm_gate",
+    "if_handed_back": "start:withdraw money",
+    "stage": "llm_gate",
+    "category": "BANKING_INTENT",
+    "margin": 0.112,
+    "evidence": [
+     "withdraw money"
+    ],
+    "intent": "withdraw money",
+    "withheld": null,
+    "negated": false
+   }
+  },
+  {
+   "id": "kq-hi-en-710",
+   "lang": "hi-en",
+   "family": "knowledge_question",
+   "policy": "settled",
+   "text": "withdrawal slip कैसे भरते हैं",
+   "expect": "question",
+   "decision": "llm_gate",
+   "outcome": "llm_gated",
+   "scored": false,
+   "real_workflow": false,
+   "detail": {
+    "decision": "llm_gate",
+    "if_handed_back": "start:withdraw money",
+    "stage": "llm_gate",
+    "category": "BANKING_INTENT",
+    "margin": 0.176,
+    "evidence": [
+     "withdraw money"
+    ],
+    "intent": "withdraw money",
+    "withheld": null,
+    "negated": false
+   }
+  },
+  {
+   "id": "kq-rom-hi-710",
+   "lang": "rom-hi",
+   "family": "knowledge_question",
+   "policy": "settled",
+   "text": "withdrawal slip kaise bharte hain",
+   "expect": "question",
+   "decision": "llm_gate",
+   "outcome": "llm_gated",
+   "scored": false,
+   "real_workflow": false,
+   "detail": {
+    "decision": "llm_gate",
+    "if_handed_back": "start:withdraw money",
+    "stage": "llm_gate",
+    "category": "BANKING_INTENT",
+    "margin": 0.156,
+    "evidence": [
+     "withdraw money"
+    ],
+    "intent": "withdraw money",
+    "withheld": null,
+    "negated": false
+   }
+  },
+  {
+   "id": "kq-rom-kn-710",
+   "lang": "rom-kn",
+   "family": "knowledge_question",
+   "policy": "settled",
+   "text": "withdrawal slip hege tumbodu",
+   "expect": "question",
+   "decision": "llm_gate",
+   "outcome": "llm_gated",
+   "scored": false,
+   "real_workflow": false,
+   "detail": {
+    "decision": "llm_gate",
+    "if_handed_back": "start:withdraw money",
+    "stage": "llm_gate",
+    "category": "BANKING_INTENT",
+    "margin": 0.199,
+    "evidence": [
+     "withdraw money"
+    ],
+    "intent": "withdraw money",
+    "withheld": null,
+    "negated": false
+   }
+  },
+  {
+   "id": "kq-en-720",
+   "lang": "en",
+   "family": "knowledge_question",
+   "policy": "settled",
+   "text": "why is my account number important",
+   "expect": "question",
+   "decision": "llm_gate",
+   "outcome": "llm_gated",
+   "scored": false,
+   "real_workflow": false,
+   "detail": {
+    "decision": "llm_gate",
+    "if_handed_back": "answer",
+    "stage": "llm_gate",
+    "category": "KNOWLEDGE_QUESTION",
+    "margin": 0.045,
+    "evidence": [],
+    "intent": "check account balance",
+    "withheld": null,
+    "negated": false
+   }
+  },
+  {
+   "id": "kq-kn-720",
+   "lang": "kn",
+   "family": "knowledge_question",
+   "policy": "settled",
+   "text": "ಖಾತೆ ಸಂಖ್ಯೆ ಏಕೆ ಮುಖ್ಯ",
+   "expect": "question",
+   "decision": "llm_gate",
+   "outcome": "llm_gated",
+   "scored": false,
+   "real_workflow": false,
+   "detail": {
+    "decision": "llm_gate",
+    "if_handed_back": "answer",
+    "stage": "llm_gate",
+    "category": "KNOWLEDGE_QUESTION",
+    "margin": 0.007,
+    "evidence": [],
+    "intent": "check account balance",
+    "withheld": null,
+    "negated": false
+   }
+  },
+  {
+   "id": "kq-hi-720",
+   "lang": "hi",
+   "family": "knowledge_question",
+   "policy": "settled",
+   "text": "खाता संख्या क्यों ज़रूरी है",
+   "expect": "question",
+   "decision": "llm_gate",
+   "outcome": "llm_gated",
+   "scored": false,
+   "real_workflow": false,
+   "detail": {
+    "decision": "llm_gate",
+    "if_handed_back": "answer",
+    "stage": "llm_gate",
+    "category": "KNOWLEDGE_QUESTION",
+    "margin": 0.026,
+    "evidence": [],
+    "intent": "check account balance",
+    "withheld": null,
+    "negated": false
+   }
+  },
+  {
+   "id": "kq-kn-en-720",
+   "lang": "kn-en",
+   "family": "knowledge_question",
+   "policy": "settled",
+   "text": "account number ಯಾಕೆ ಬೇಕು",
+   "expect": "question",
+   "decision": "llm_gate",
+   "outcome": "llm_gated",
+   "scored": false,
+   "real_workflow": false,
+   "detail": {
+    "decision": "llm_gate",
+    "if_handed_back": "start:open new account",
+    "stage": "llm_gate",
+    "category": "BANKING_INTENT",
+    "margin": 0.112,
+    "evidence": [],
+    "intent": "open new account",
+    "withheld": null,
+    "negated": false
+   }
+  },
+  {
+   "id": "kq-hi-en-720",
+   "lang": "hi-en",
+   "family": "knowledge_question",
+   "policy": "settled",
+   "text": "account number क्यों चाहिए",
+   "expect": "question",
+   "decision": "llm_gate",
+   "outcome": "llm_gated",
+   "scored": false,
+   "real_workflow": false,
+   "detail": {
+    "decision": "llm_gate",
+    "if_handed_back": "answer",
+    "stage": "llm_gate",
+    "category": "KNOWLEDGE_QUESTION",
+    "margin": 0.006,
+    "evidence": [],
+    "intent": "deposit money",
+    "withheld": null,
+    "negated": false
+   }
+  },
+  {
+   "id": "kq-rom-hi-720",
+   "lang": "rom-hi",
+   "family": "knowledge_question",
+   "policy": "settled",
+   "text": "account number kyon zaroori hai",
+   "expect": "question",
+   "decision": "llm_gate",
+   "outcome": "llm_gated",
+   "scored": false,
+   "real_workflow": false,
+   "detail": {
+    "decision": "llm_gate",
+    "if_handed_back": "start:deposit money",
+    "stage": "llm_gate",
+    "category": "BANKING_INTENT",
+    "margin": 0.212,
+    "evidence": [],
+    "intent": "deposit money",
+    "withheld": null,
+    "negated": false
+   }
+  },
+  {
+   "id": "kq-rom-kn-720",
+   "lang": "rom-kn",
+   "family": "knowledge_question",
+   "policy": "settled",
+   "text": "account number yaake beku",
+   "expect": "question",
+   "decision": "llm_gate",
+   "outcome": "llm_gated",
+   "scored": false,
+   "real_workflow": false,
+   "detail": {
+    "decision": "llm_gate",
+    "if_handed_back": "start:deposit money",
+    "stage": "llm_gate",
+    "category": "BANKING_INTENT",
+    "margin": 0.157,
+    "evidence": [],
+    "intent": "deposit money",
+    "withheld": null,
+    "negated": false
+   }
+  },
+  {
+   "id": "kq-en-730",
+   "lang": "en",
+   "family": "knowledge_question",
+   "policy": "settled",
+   "text": "how can I send money to another account",
+   "expect": "question",
+   "decision": "llm_gate",
+   "outcome": "llm_gated",
+   "scored": false,
+   "real_workflow": false,
+   "detail": {
+    "decision": "llm_gate",
+    "if_handed_back": "start:deposit money",
+    "stage": "llm_gate",
+    "category": "BANKING_INTENT",
+    "margin": 0.215,
+    "evidence": [],
+    "intent": "deposit money",
+    "withheld": null,
+    "negated": false
+   }
+  },
+  {
+   "id": "kq-kn-730",
+   "lang": "kn",
+   "family": "knowledge_question",
+   "policy": "settled",
+   "text": "ಬೇರೆ ಖಾತೆಗೆ ಹಣ ಹೇಗೆ ಕಳುಹಿಸುವುದು",
+   "expect": "question",
+   "decision": "llm_gate",
+   "outcome": "llm_gated",
+   "scored": false,
+   "real_workflow": false,
+   "detail": {
+    "decision": "llm_gate",
+    "if_handed_back": "start:withdraw money",
+    "stage": "llm_gate",
+    "category": "BANKING_INTENT",
+    "margin": 0.132,
+    "evidence": [],
+    "intent": "withdraw money",
+    "withheld": null,
+    "negated": false
+   }
+  },
+  {
+   "id": "kq-hi-730",
+   "lang": "hi",
+   "family": "knowledge_question",
+   "policy": "settled",
+   "text": "दूसरे खाते में पैसे कैसे भेजें",
+   "expect": "question",
+   "decision": "llm_gate",
+   "outcome": "llm_gated",
+   "scored": false,
+   "real_workflow": false,
+   "detail": {
+    "decision": "llm_gate",
+    "if_handed_back": "start:deposit money",
+    "stage": "llm_gate",
+    "category": "BANKING_INTENT",
+    "margin": 0.193,
+    "evidence": [],
+    "intent": "deposit money",
+    "withheld": null,
+    "negated": false
+   }
+  },
+  {
+   "id": "kq-kn-en-730",
+   "lang": "kn-en",
+   "family": "knowledge_question",
+   "policy": "settled",
+   "text": "ಬೇರೆ account ಗೆ money transfer ಹೇಗೆ ಮಾಡುವುದು",
+   "expect": "question",
+   "decision": "llm_gate",
+   "outcome": "llm_gated",
+   "scored": false,
+   "real_workflow": false,
+   "detail": {
+    "decision": "llm_gate",
+    "if_handed_back": "start:withdraw money",
+    "stage": "llm_gate",
+    "category": "BANKING_INTENT",
+    "margin": 0.09,
+    "evidence": [],
+    "intent": "withdraw money",
+    "withheld": null,
+    "negated": false
+   }
+  },
+  {
+   "id": "kq-hi-en-730",
+   "lang": "hi-en",
+   "family": "knowledge_question",
+   "policy": "settled",
+   "text": "दूसरे account में पैसे transfer कैसे करें",
+   "expect": "question",
+   "decision": "llm_gate",
+   "outcome": "llm_gated",
+   "scored": false,
+   "real_workflow": false,
+   "detail": {
+    "decision": "llm_gate",
+    "if_handed_back": "start:deposit money",
+    "stage": "llm_gate",
+    "category": "BANKING_INTENT",
+    "margin": 0.148,
+    "evidence": [],
+    "intent": "deposit money",
+    "withheld": null,
+    "negated": false
+   }
+  },
+  {
+   "id": "kq-rom-hi-730",
+   "lang": "rom-hi",
+   "family": "knowledge_question",
+   "policy": "settled",
+   "text": "dusre account mein paise kaise bheje",
+   "expect": "question",
+   "decision": "llm_gate",
+   "outcome": "llm_gated",
+   "scored": false,
+   "real_workflow": false,
+   "detail": {
+    "decision": "llm_gate",
+    "if_handed_back": "start:withdraw money",
+    "stage": "llm_gate",
+    "category": "BANKING_INTENT",
+    "margin": 0.186,
+    "evidence": [],
+    "intent": "withdraw money",
+    "withheld": null,
+    "negated": false
+   }
+  },
+  {
+   "id": "kq-rom-kn-730",
+   "lang": "rom-kn",
+   "family": "knowledge_question",
+   "policy": "settled",
+   "text": "bere account ge hana hege kalisodu",
+   "expect": "question",
+   "decision": "llm_gate",
+   "outcome": "llm_gated",
+   "scored": false,
+   "real_workflow": false,
+   "detail": {
+    "decision": "llm_gate",
+    "if_handed_back": "start:deposit money",
+    "stage": "llm_gate",
+    "category": "BANKING_INTENT",
+    "margin": 0.196,
+    "evidence": [],
+    "intent": "deposit money",
+    "withheld": null,
+    "negated": false
+   }
+  },
+  {
+   "id": "kq-en-740",
+   "lang": "en",
+   "family": "knowledge_question",
+   "policy": "settled",
+   "text": "what services does a bank branch offer",
+   "expect": "question",
+   "decision": "llm_gate",
+   "outcome": "llm_gated",
+   "scored": false,
+   "real_workflow": false,
+   "detail": {
+    "decision": "llm_gate",
+    "if_handed_back": "answer",
+    "stage": "llm_gate",
+    "category": "KNOWLEDGE_QUESTION",
+    "margin": -0.0,
+    "evidence": [],
+    "intent": "apply for loan",
+    "withheld": null,
+    "negated": false
+   }
+  },
+  {
+   "id": "kq-kn-740",
+   "lang": "kn",
+   "family": "knowledge_question",
+   "policy": "settled",
+   "text": "ಬ್ಯಾಂಕ್ ಶಾಖೆಯಲ್ಲಿ ಯಾವ ಸೇವೆಗಳು ಸಿಗುತ್ತವೆ",
+   "expect": "question",
+   "decision": "llm_gate",
+   "outcome": "llm_gated",
+   "scored": false,
+   "real_workflow": false,
+   "detail": {
+    "decision": "llm_gate",
+    "if_handed_back": "answer",
+    "stage": "llm_gate",
+    "category": "KNOWLEDGE_QUESTION",
+    "margin": 0.02,
+    "evidence": [],
+    "intent": "check account balance",
+    "withheld": null,
+    "negated": false
+   }
+  },
+  {
+   "id": "kq-hi-740",
+   "lang": "hi",
+   "family": "knowledge_question",
+   "policy": "settled",
+   "text": "बैंक शाखा में कौन सी सेवाएँ मिलती हैं",
+   "expect": "question",
+   "decision": "llm_gate",
+   "outcome": "llm_gated",
+   "scored": false,
+   "real_workflow": false,
+   "detail": {
+    "decision": "llm_gate",
+    "if_handed_back": "answer",
+    "stage": "llm_gate",
+    "category": "KNOWLEDGE_QUESTION",
+    "margin": -0.021,
+    "evidence": [],
+    "intent": "open new account",
+    "withheld": null,
+    "negated": false
+   }
+  },
+  {
+   "id": "kq-kn-en-740",
+   "lang": "kn-en",
+   "family": "knowledge_question",
+   "policy": "settled",
+   "text": "bank branch ನಲ್ಲಿ ಯಾವ services ಇವೆ",
+   "expect": "question",
+   "decision": "llm_gate",
+   "outcome": "llm_gated",
+   "scored": false,
+   "real_workflow": false,
+   "detail": {
+    "decision": "llm_gate",
+    "if_handed_back": "answer",
+    "stage": "llm_gate",
+    "category": "KNOWLEDGE_QUESTION",
+    "margin": 0.042,
+    "evidence": [],
+    "intent": "open new account",
+    "withheld": null,
+    "negated": false
+   }
+  },
+  {
+   "id": "kq-hi-en-740",
+   "lang": "hi-en",
+   "family": "knowledge_question",
+   "policy": "settled",
+   "text": "bank branch में कौन सी services मिलती हैं",
+   "expect": "question",
+   "decision": "llm_gate",
+   "outcome": "llm_gated",
+   "scored": false,
+   "real_workflow": false,
+   "detail": {
+    "decision": "llm_gate",
+    "if_handed_back": "answer",
+    "stage": "llm_gate",
+    "category": "KNOWLEDGE_QUESTION",
+    "margin": -0.039,
+    "evidence": [],
+    "intent": "open new account",
+    "withheld": null,
+    "negated": false
+   }
+  },
+  {
+   "id": "kq-rom-hi-740",
+   "lang": "rom-hi",
+   "family": "knowledge_question",
+   "policy": "settled",
+   "text": "bank mein kaun si sevaayein milti hain",
+   "expect": "question",
+   "decision": "llm_gate",
+   "outcome": "llm_gated",
+   "scored": false,
+   "real_workflow": false,
+   "detail": {
+    "decision": "llm_gate",
+    "if_handed_back": "start:deposit money",
+    "stage": "llm_gate",
+    "category": "BANKING_INTENT",
+    "margin": 0.102,
+    "evidence": [],
+    "intent": "deposit money",
+    "withheld": null,
+    "negated": false
+   }
+  },
+  {
+   "id": "kq-rom-kn-740",
+   "lang": "rom-kn",
+   "family": "knowledge_question",
+   "policy": "settled",
+   "text": "bank alli yaava sevegalu sigutte",
+   "expect": "question",
+   "decision": "llm_gate",
+   "outcome": "llm_gated",
+   "scored": false,
+   "real_workflow": false,
+   "detail": {
+    "decision": "llm_gate",
+    "if_handed_back": "decline",
+    "stage": "llm_gate",
+    "category": "UNSUPPORTED",
+    "margin": -0.077,
+    "evidence": [],
+    "intent": "check account balance",
+    "withheld": null,
+    "negated": false
+   }
+  },
+  {
+   "id": "kq-en-750",
+   "lang": "en",
+   "family": "knowledge_question",
+   "policy": "settled",
+   "text": "who should open a current account",
+   "expect": "question",
+   "decision": "llm_gate",
+   "outcome": "llm_gated",
+   "scored": false,
+   "real_workflow": false,
+   "detail": {
+    "decision": "llm_gate",
+    "if_handed_back": "start:open new account",
+    "stage": "llm_gate",
+    "category": "BANKING_INTENT",
+    "margin": 0.249,
+    "evidence": [
+     "open new account"
+    ],
+    "intent": "open new account",
+    "withheld": null,
+    "negated": false
+   }
+  },
+  {
+   "id": "kq-kn-750",
+   "lang": "kn",
+   "family": "knowledge_question",
+   "policy": "settled",
+   "text": "ಚಾಲ್ತಿ ಖಾತೆ ಯಾರಿಗೆ ಸೂಕ್ತ",
+   "expect": "question",
+   "decision": "start:check account balance",
+   "outcome": "false_start",
+   "scored": true,
+   "real_workflow": false,
+   "detail": {
+    "decision": "start:check account balance",
+    "stage": "detector",
+    "category": "BANKING_INTENT",
+    "margin": 0.062,
+    "evidence": [],
+    "intent": "check account balance",
+    "withheld": null,
+    "negated": false
+   }
+  },
+  {
+   "id": "kq-hi-750",
+   "lang": "hi",
+   "family": "knowledge_question",
+   "policy": "settled",
+   "text": "चालू खाता किसके लिए होता है",
+   "expect": "question",
+   "decision": "start:check account balance",
+   "outcome": "false_start",
+   "scored": true,
+   "real_workflow": false,
+   "detail": {
+    "decision": "start:check account balance",
+    "stage": "detector",
+    "category": "BANKING_INTENT",
+    "margin": 0.13,
+    "evidence": [],
+    "intent": "check account balance",
+    "withheld": null,
+    "negated": false
+   }
+  },
+  {
+   "id": "kq-kn-en-750",
+   "lang": "kn-en",
+   "family": "knowledge_question",
+   "policy": "settled",
+   "text": "current account ಯಾರಿಗೆ ಉಪಯೋಗ",
+   "expect": "question",
+   "decision": "start:open new account",
+   "outcome": "false_start",
+   "scored": true,
+   "real_workflow": false,
+   "detail": {
+    "decision": "start:open new account",
+    "stage": "detector",
+    "category": "BANKING_INTENT",
+    "margin": 0.061,
+    "evidence": [],
+    "intent": "open new account",
+    "withheld": null,
+    "negated": false
+   }
+  },
+  {
+   "id": "kq-hi-en-750",
+   "lang": "hi-en",
+   "family": "knowledge_question",
+   "policy": "settled",
+   "text": "current account किसके लिए है",
+   "expect": "question",
+   "decision": "answer",
+   "outcome": "correct",
+   "scored": true,
+   "real_workflow": false,
+   "detail": {
+    "decision": "answer",
+    "stage": "detector",
+    "category": "KNOWLEDGE_QUESTION",
+    "margin": 0.041,
+    "evidence": [],
+    "intent": "open new account",
+    "withheld": null,
+    "negated": false
+   }
+  },
+  {
+   "id": "kq-rom-hi-750",
+   "lang": "rom-hi",
+   "family": "knowledge_question",
+   "policy": "settled",
+   "text": "current account kiske liye hota hai",
+   "expect": "question",
+   "decision": "start:deposit money",
+   "outcome": "false_start",
+   "scored": true,
+   "real_workflow": true,
+   "detail": {
+    "decision": "start:deposit money",
+    "stage": "detector",
+    "category": "BANKING_INTENT",
+    "margin": 0.184,
+    "evidence": [],
+    "intent": "deposit money",
+    "withheld": null,
+    "negated": false
+   }
+  },
+  {
+   "id": "kq-rom-kn-750",
+   "lang": "rom-kn",
+   "family": "knowledge_question",
+   "policy": "settled",
+   "text": "current account yaarige beku",
+   "expect": "question",
+   "decision": "start:withdraw money",
+   "outcome": "false_start",
+   "scored": true,
+   "real_workflow": true,
+   "detail": {
+    "decision": "start:withdraw money",
+    "stage": "detector",
+    "category": "BANKING_INTENT",
+    "margin": 0.253,
+    "evidence": [],
+    "intent": "withdraw money",
+    "withheld": null,
+    "negated": false
+   }
+  },
+  {
+   "id": "kq-en-760",
+   "lang": "en",
+   "family": "knowledge_question",
+   "policy": "settled",
+   "text": "what does a passbook show",
+   "expect": "question",
+   "decision": "llm_gate",
+   "outcome": "llm_gated",
+   "scored": false,
+   "real_workflow": false,
+   "detail": {
+    "decision": "llm_gate",
+    "if_handed_back": "answer",
+    "stage": "llm_gate",
+    "category": "KNOWLEDGE_QUESTION",
+    "margin": -0.033,
+    "evidence": [],
+    "intent": "check account balance",
+    "withheld": null,
+    "negated": false
+   }
+  },
+  {
+   "id": "kq-kn-760",
+   "lang": "kn",
+   "family": "knowledge_question",
+   "policy": "settled",
+   "text": "ಖಾತೆ ಪುಸ್ತಕದಲ್ಲಿ ಏನು ಇರುತ್ತದೆ",
+   "expect": "question",
+   "decision": "llm_gate",
+   "outcome": "llm_gated",
+   "scored": false,
+   "real_workflow": false,
+   "detail": {
+    "decision": "llm_gate",
+    "if_handed_back": "start:check account balance",
+    "stage": "llm_gate",
+    "category": "BANKING_INTENT",
+    "margin": 0.11,
+    "evidence": [],
+    "intent": "check account balance",
+    "withheld": null,
+    "negated": false
+   }
+  },
+  {
+   "id": "kq-hi-760",
+   "lang": "hi",
+   "family": "knowledge_question",
+   "policy": "settled",
+   "text": "खाता पुस्तिका में क्या दर्ज होता है",
+   "expect": "question",
+   "decision": "llm_gate",
+   "outcome": "llm_gated",
+   "scored": false,
+   "real_workflow": false,
+   "detail": {
+    "decision": "llm_gate",
+    "if_handed_back": "answer",
+    "stage": "llm_gate",
+    "category": "KNOWLEDGE_QUESTION",
+    "margin": -0.004,
+    "evidence": [],
+    "intent": "check account balance",
+    "withheld": null,
+    "negated": false
+   }
+  },
+  {
+   "id": "kq-kn-en-760",
+   "lang": "kn-en",
+   "family": "knowledge_question",
+   "policy": "settled",
+   "text": "passbook ನಲ್ಲಿ ಏನು ಇರುತ್ತದೆ",
+   "expect": "question",
+   "decision": "llm_gate",
+   "outcome": "llm_gated",
+   "scored": false,
+   "real_workflow": false,
+   "detail": {
+    "decision": "llm_gate",
+    "if_handed_back": "answer",
+    "stage": "llm_gate",
+    "category": "KNOWLEDGE_QUESTION",
+    "margin": -0.057,
+    "evidence": [],
+    "intent": "check account balance",
+    "withheld": null,
+    "negated": false
+   }
+  },
+  {
+   "id": "kq-hi-en-760",
+   "lang": "hi-en",
+   "family": "knowledge_question",
+   "policy": "settled",
+   "text": "passbook में क्या होता है",
+   "expect": "question",
+   "decision": "llm_gate",
+   "outcome": "llm_gated",
+   "scored": false,
+   "real_workflow": false,
+   "detail": {
+    "decision": "llm_gate",
+    "if_handed_back": "answer",
+    "stage": "llm_gate",
+    "category": "KNOWLEDGE_QUESTION",
+    "margin": -0.008,
+    "evidence": [],
+    "intent": "check account balance",
+    "withheld": null,
+    "negated": false
+   }
+  },
+  {
+   "id": "kq-rom-hi-760",
+   "lang": "rom-hi",
+   "family": "knowledge_question",
+   "policy": "settled",
+   "text": "passbook mein kya hota hai",
+   "expect": "question",
+   "decision": "llm_gate",
+   "outcome": "llm_gated",
+   "scored": false,
+   "real_workflow": false,
+   "detail": {
+    "decision": "llm_gate",
+    "if_handed_back": "start:deposit money",
+    "stage": "llm_gate",
+    "category": "BANKING_INTENT",
+    "margin": 0.116,
+    "evidence": [],
+    "intent": "deposit money",
+    "withheld": null,
+    "negated": false
+   }
+  },
+  {
+   "id": "kq-rom-kn-760",
+   "lang": "rom-kn",
+   "family": "knowledge_question",
+   "policy": "settled",
+   "text": "passbook nalli enu irutte",
+   "expect": "question",
+   "decision": "llm_gate",
+   "outcome": "llm_gated",
+   "scored": false,
+   "real_workflow": false,
+   "detail": {
+    "decision": "llm_gate",
+    "if_handed_back": "answer",
+    "stage": "llm_gate",
+    "category": "KNOWLEDGE_QUESTION",
+    "margin": -0.012,
+    "evidence": [],
+    "intent": "deposit money",
+    "withheld": null,
+    "negated": false
+   }
+  },
+  {
+   "id": "kq-en-770",
+   "lang": "en",
+   "family": "knowledge_question",
+   "policy": "settled",
+   "text": "which ID proofs are needed for a new account",
+   "expect": "question",
+   "decision": "llm_gate",
+   "outcome": "llm_gated",
+   "scored": false,
+   "real_workflow": false,
+   "detail": {
+    "decision": "llm_gate",
+    "if_handed_back": "start:open new account",
+    "stage": "llm_gate",
+    "category": "BANKING_INTENT",
+    "margin": 0.096,
+    "evidence": [
+     "open new account"
+    ],
+    "intent": "open new account",
+    "withheld": null,
+    "negated": false
+   }
+  },
+  {
+   "id": "kq-kn-770",
+   "lang": "kn",
+   "family": "knowledge_question",
+   "policy": "settled",
+   "text": "ಹೊಸ ಖಾತೆಗೆ ಯಾವ ಗುರುತಿನ ಚೀಟಿಗಳು ಬೇಕು",
+   "expect": "question",
+   "decision": "llm_gate",
+   "outcome": "llm_gated",
+   "scored": false,
+   "real_workflow": false,
+   "detail": {
+    "decision": "llm_gate",
+    "if_handed_back": "start:open new account",
+    "stage": "llm_gate",
+    "category": "BANKING_INTENT",
+    "margin": 0.144,
+    "evidence": [
+     "open new account"
+    ],
+    "intent": "open new account",
+    "withheld": null,
+    "negated": false
+   }
+  },
+  {
+   "id": "kq-hi-770",
+   "lang": "hi",
+   "family": "knowledge_question",
+   "policy": "settled",
+   "text": "नए खाते के लिए कौन से पहचान पत्र चाहिए",
+   "expect": "question",
+   "decision": "llm_gate",
+   "outcome": "llm_gated",
+   "scored": false,
+   "real_workflow": false,
+   "detail": {
+    "decision": "llm_gate",
+    "if_handed_back": "start:open new account",
+    "stage": "llm_gate",
+    "category": "BANKING_INTENT",
+    "margin": 0.22,
+    "evidence": [
+     "open new account"
+    ],
+    "intent": "open new account",
+    "withheld": null,
+    "negated": false
+   }
+  },
+  {
+   "id": "kq-kn-en-770",
+   "lang": "kn-en",
+   "family": "knowledge_question",
+   "policy": "settled",
+   "text": "new account ಗೆ ಯಾವ ID proof ಬೇಕು",
+   "expect": "question",
+   "decision": "llm_gate",
+   "outcome": "llm_gated",
+   "scored": false,
+   "real_workflow": false,
+   "detail": {
+    "decision": "llm_gate",
+    "if_handed_back": "start:open new account",
+    "stage": "llm_gate",
+    "category": "BANKING_INTENT",
+    "margin": 0.069,
+    "evidence": [
+     "open new account"
+    ],
+    "intent": "open new account",
+    "withheld": null,
+    "negated": false
+   }
+  },
+  {
+   "id": "kq-hi-en-770",
+   "lang": "hi-en",
+   "family": "knowledge_question",
+   "policy": "settled",
+   "text": "new account के लिए कौन सा ID proof चाहिए",
+   "expect": "question",
+   "decision": "llm_gate",
+   "outcome": "llm_gated",
+   "scored": false,
+   "real_workflow": false,
+   "detail": {
+    "decision": "llm_gate",
+    "if_handed_back": "start:open new account",
+    "stage": "llm_gate",
+    "category": "BANKING_INTENT",
+    "margin": 0.133,
+    "evidence": [
+     "open new account"
+    ],
+    "intent": "open new account",
+    "withheld": null,
+    "negated": false
+   }
+  },
+  {
+   "id": "kq-rom-hi-770",
+   "lang": "rom-hi",
+   "family": "knowledge_question",
+   "policy": "settled",
+   "text": "naye khate ke liye kaun se documents chahiye",
+   "expect": "question",
+   "decision": "llm_gate",
+   "outcome": "llm_gated",
+   "scored": false,
+   "real_workflow": false,
+   "detail": {
+    "decision": "llm_gate",
+    "if_handed_back": "start:open new account",
+    "stage": "llm_gate",
+    "category": "BANKING_INTENT",
+    "margin": 0.092,
+    "evidence": [
+     "open new account"
+    ],
+    "intent": "open new account",
+    "withheld": null,
+    "negated": false
+   }
+  },
+  {
+   "id": "kq-rom-kn-770",
+   "lang": "rom-kn",
+   "family": "knowledge_question",
+   "policy": "settled",
+   "text": "hosa khate ge yaava documents beku",
+   "expect": "question",
+   "decision": "llm_gate",
+   "outcome": "llm_gated",
+   "scored": false,
+   "real_workflow": false,
+   "detail": {
+    "decision": "llm_gate",
+    "if_handed_back": "start:open new account",
+    "stage": "llm_gate",
+    "category": "BANKING_INTENT",
+    "margin": 0.31,
+    "evidence": [
+     "open new account"
+    ],
+    "intent": "open new account",
+    "withheld": null,
+    "negated": false
+   }
+  },
+  {
+   "id": "kq-en-780",
+   "lang": "en",
+   "family": "knowledge_question",
+   "policy": "settled",
+   "text": "what are the steps to get a loan",
+   "expect": "question",
+   "decision": "llm_gate",
+   "outcome": "llm_gated",
+   "scored": false,
+   "real_workflow": false,
+   "detail": {
+    "decision": "llm_gate",
+    "if_handed_back": "start:apply for loan",
+    "stage": "llm_gate",
+    "category": "BANKING_INTENT",
+    "margin": 0.163,
+    "evidence": [
+     "apply for loan"
+    ],
+    "intent": "apply for loan",
+    "withheld": null,
+    "negated": false
+   }
+  },
+  {
+   "id": "kq-kn-780",
+   "lang": "kn",
+   "family": "knowledge_question",
+   "policy": "settled",
+   "text": "ಸಾಲ ಪಡೆಯುವ ಪ್ರಕ್ರಿಯೆ ಏನು",
+   "expect": "question",
+   "decision": "llm_gate",
+   "outcome": "llm_gated",
+   "scored": false,
+   "real_workflow": false,
+   "detail": {
+    "decision": "llm_gate",
+    "if_handed_back": "answer",
+    "stage": "llm_gate",
+    "category": "KNOWLEDGE_QUESTION",
+    "margin": 0.026,
+    "evidence": [
+     "apply for loan"
+    ],
+    "intent": "apply for loan",
+    "withheld": null,
+    "negated": false
+   }
+  },
+  {
+   "id": "kq-hi-780",
+   "lang": "hi",
+   "family": "knowledge_question",
+   "policy": "settled",
+   "text": "ऋण लेने की प्रक्रिया क्या है",
+   "expect": "question",
+   "decision": "llm_gate",
+   "outcome": "llm_gated",
+   "scored": false,
+   "real_workflow": false,
+   "detail": {
+    "decision": "llm_gate",
+    "if_handed_back": "start:apply for loan",
+    "stage": "llm_gate",
+    "category": "BANKING_INTENT",
+    "margin": 0.103,
+    "evidence": [
+     "apply for loan"
+    ],
+    "intent": "apply for loan",
+    "withheld": null,
+    "negated": false
+   }
+  },
+  {
+   "id": "kq-kn-en-780",
+   "lang": "kn-en",
+   "family": "knowledge_question",
+   "policy": "settled",
+   "text": "loan ತೆಗೆದುಕೊಳ್ಳುವ process ಏನು",
+   "expect": "question",
+   "decision": "llm_gate",
+   "outcome": "llm_gated",
+   "scored": false,
+   "real_workflow": false,
+   "detail": {
+    "decision": "llm_gate",
+    "if_handed_back": "start:apply for loan",
+    "stage": "llm_gate",
+    "category": "BANKING_INTENT",
+    "margin": 0.088,
+    "evidence": [
+     "apply for loan"
+    ],
+    "intent": "apply for loan",
+    "withheld": null,
+    "negated": false
+   }
+  },
+  {
+   "id": "kq-hi-en-780",
+   "lang": "hi-en",
+   "family": "knowledge_question",
+   "policy": "settled",
+   "text": "loan लेने का process क्या है",
+   "expect": "question",
+   "decision": "llm_gate",
+   "outcome": "llm_gated",
+   "scored": false,
+   "real_workflow": false,
+   "detail": {
+    "decision": "llm_gate",
+    "if_handed_back": "start:apply for loan",
+    "stage": "llm_gate",
+    "category": "BANKING_INTENT",
+    "margin": 0.116,
+    "evidence": [
+     "apply for loan"
+    ],
+    "intent": "apply for loan",
+    "withheld": null,
+    "negated": false
+   }
+  },
+  {
+   "id": "kq-rom-hi-780",
+   "lang": "rom-hi",
+   "family": "knowledge_question",
+   "policy": "settled",
+   "text": "loan lene ka tarika kya hai",
+   "expect": "question",
+   "decision": "llm_gate",
+   "outcome": "llm_gated",
+   "scored": false,
+   "real_workflow": false,
+   "detail": {
+    "decision": "llm_gate",
+    "if_handed_back": "start:apply for loan",
+    "stage": "llm_gate",
+    "category": "BANKING_INTENT",
+    "margin": 0.396,
+    "evidence": [
+     "apply for loan"
+    ],
+    "intent": "apply for loan",
+    "withheld": null,
+    "negated": false
+   }
+  },
+  {
+   "id": "kq-rom-kn-780",
+   "lang": "rom-kn",
+   "family": "knowledge_question",
+   "policy": "settled",
+   "text": "loan tegedukolluva vidhana enu",
+   "expect": "question",
+   "decision": "llm_gate",
+   "outcome": "llm_gated",
+   "scored": false,
+   "real_workflow": false,
+   "detail": {
+    "decision": "llm_gate",
+    "if_handed_back": "start:apply for loan",
+    "stage": "llm_gate",
+    "category": "BANKING_INTENT",
+    "margin": 0.095,
+    "evidence": [
+     "apply for loan"
+    ],
+    "intent": "apply for loan",
+    "withheld": null,
+    "negated": false
+   }
+  },
+  {
+   "id": "kq-en-791",
+   "lang": "en",
+   "family": "knowledge_question",
+   "policy": "settled",
+   "text": "what is today's gold rate",
+   "expect": "question",
+   "decision": "llm_gate",
+   "outcome": "llm_gated",
+   "scored": false,
+   "real_workflow": false,
+   "detail": {
+    "decision": "llm_gate",
+    "if_handed_back": "answer",
+    "stage": "llm_gate",
+    "category": "KNOWLEDGE_QUESTION",
+    "margin": 0.012,
+    "evidence": [],
+    "intent": "withdraw money",
+    "withheld": null,
+    "negated": false
+   }
+  },
+  {
+   "id": "kq-kn-792",
+   "lang": "kn",
+   "family": "knowledge_question",
+   "policy": "settled",
+   "text": "ಇಂದಿನ ಚಿನ್ನದ ಬೆಲೆ ಎಷ್ಟು",
+   "expect": "question",
+   "decision": "llm_gate",
+   "outcome": "llm_gated",
+   "scored": false,
+   "real_workflow": false,
+   "detail": {
+    "decision": "llm_gate",
+    "if_handed_back": "answer",
+    "stage": "llm_gate",
+    "category": "KNOWLEDGE_QUESTION",
+    "margin": 0.047,
+    "evidence": [],
+    "intent": "check account balance",
+    "withheld": null,
+    "negated": false
+   }
+  },
+  {
+   "id": "kq-hi-793",
+   "lang": "hi",
+   "family": "knowledge_question",
+   "policy": "settled",
+   "text": "म्यूचुअल फंड में निवेश कैसे करें",
+   "expect": "question",
+   "decision": "llm_gate",
+   "outcome": "llm_gated",
+   "scored": false,
+   "real_workflow": false,
+   "detail": {
+    "decision": "llm_gate",
+    "if_handed_back": "start:deposit money",
+    "stage": "llm_gate",
+    "category": "BANKING_INTENT",
+    "margin": 0.089,
+    "evidence": [],
+    "intent": "deposit money",
+    "withheld": null,
+    "negated": false
+   }
+  },
+  {
+   "id": "kq-rom-hi-794",
+   "lang": "rom-hi",
+   "family": "knowledge_question",
+   "policy": "settled",
+   "text": "share market kaise kaam karta hai",
+   "expect": "question",
+   "decision": "llm_gate",
+   "outcome": "llm_gated",
+   "scored": false,
+   "real_workflow": false,
+   "detail": {
+    "decision": "llm_gate",
+    "if_handed_back": "answer",
+    "stage": "llm_gate",
+    "category": "KNOWLEDGE_QUESTION",
+    "margin": 0.046,
+    "evidence": [],
+    "intent": "check account balance",
+    "withheld": null,
+    "negated": false
+   }
+  }
+ ]
+}

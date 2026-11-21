@@ -66,6 +66,11 @@ class SessionEntry:
     # never disagree with the entry's however the entry was built.
     localizer: Optional[ResponseLocalizer] = None
 
+    #: Tulu only: the previous turn was a Tulu "stop" (C03) and the assistant
+    #: offered to end the conversation ("Say stop again ..."). Valid for the
+    #: very next turn only; any turn clears it (service/main.py).
+    tulu_exit_offered: bool = False
+
     #: The application domain this visit belongs to. Part of the registry
     #: key, so a College visit and a Banking visit can never share state,
     #: even when their backends happen to use the same session id.

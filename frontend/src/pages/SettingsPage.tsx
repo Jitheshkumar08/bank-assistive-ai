@@ -18,7 +18,7 @@ const MIN_NAME = 2;
 const MIN_PASSWORD = 8;
 
 function isLanguage(value: string): value is LanguageCode {
-  return value === 'en' || value === 'kn' || value === 'hi';
+  return value === 'en' || value === 'kn' || value === 'hi' || value === 'tcy';
 }
 
 /**

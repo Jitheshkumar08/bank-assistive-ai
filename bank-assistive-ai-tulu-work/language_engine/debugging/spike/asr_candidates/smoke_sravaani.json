@@ -1,0 +1,15 @@
+{
+ "candidate": "sravaani",
+ "repository": "ARTPARK-IISc/SraVaani-1.0",
+ "started": "2026-09-26T07:31:29",
+ "host": {
+  "cpu": "AMD64 Family 25 Model 80 Stepping 0, AuthenticAMD",
+  "python": "3.13.2",
+  "platform": "Windows-11-10.0.26200-SP0"
+ },
+ "rss_before_mb": 0,
+ "clips": [],
+ "status": "load_or_setup_failed",
+ "error": "OSError: You are trying to access a gated repo.\nMake sure to have access to it at https://huggingface.co/ARTPARK-IISc/SraVaani-1.0.\n403 Client Error. (Request ID: Root=1-6ab7279a-6981ac126a707c186b91b138;8cb7ab93-c59b-4fc1-b742-6c10a5b3fe48)\n\nCannot access gated repo for url https://huggingface.co/ARTPARK-IISc/SraVaani-1.0/resolve/main/config.json.\nAccess to model ARTPARK-IISc/SraVaani-1.0 is restricted and you are not in the authorized list. Visit https://huggingface.co/ARTPARK-IISc/SraVaani-1.0 to ask for access.",
+ "traceback_tail": "b\\site-packages\\transformers\\utils\\hub.py\", line 294, in cached_file\n    file = cached_files(path_or_repo_id=path_or_repo_id, filenames=[filename], **kwargs)\n  File \"C:\\Users\\Prathviraj Bhat\\OneDrive\\Desktop\\bank-ai\\bank-assistive-ai\\language_engine\\venv\\Lib\\site-packages\\transformers\\utils\\hub.py\", line 511, in cached_files\n    raise OSError(\n    ...<2 lines>...\n    ) from e\nOSError: You are trying to access a gated repo.\nMake sure to have access to it at https://huggingface.co/ARTPARK-IISc/SraVaani-1.0.\n403 Client Error. (Request ID: Root=1-6ab7279a-6981ac126a707c186b91b138;8cb7ab93-c59b-4fc1-b742-6c10a5b3fe48)\n\nCannot access gated repo for url https://huggingface.co/ARTPARK-IISc/SraVaani-1.0/resolve/main/config.json.\nAccess to model ARTPARK-IISc/SraVaani-1.0 is restricted and you are not in the authorized list. Visit https://huggingface.co/ARTPARK-IISc/SraVaani-1.0 to ask for access.\n"
+}

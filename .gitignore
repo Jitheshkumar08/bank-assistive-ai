@@ -64,3 +64,10 @@ college-domain/**/coverage/
 *.dump
 *.dump.*
 *.sql.gz
+
+CLAUDE.md
+graphic-out/
+
+
+
+

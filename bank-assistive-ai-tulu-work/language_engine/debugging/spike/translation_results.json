@@ -1,0 +1,963 @@
+{
+  "phase": "3.2B-7",
+  "model": "openai/gpt-oss-20b",
+  "note": "API key never stored in this file.",
+  "latency_seconds": [
+    0.709,
+    2.268,
+    0.713,
+    0.471,
+    0.493,
+    0.525,
+    0.505,
+    0.703,
+    0.494,
+    0.541,
+    0.629,
+    0.508,
+    0.558,
+    0.618,
+    0.583,
+    0.528,
+    0.485,
+    0.466,
+    0.553,
+    0.995,
+    0.472,
+    0.583,
+    0.674,
+    0.545,
+    0.686,
+    0.573,
+    0.529,
+    0.436,
+    0.513,
+    0.448,
+    0.577,
+    0.474,
+    0.502,
+    0.449,
+    2.635,
+    2.57,
+    2.583,
+    2.532,
+    2.878,
+    2.526,
+    2.826,
+    2.554,
+    2.64,
+    2.551,
+    2.575,
+    2.392,
+    2.431,
+    2.542,
+    2.587,
+    2.559,
+    2.984,
+    2.539,
+    2.53,
+    2.539,
+    2.768,
+    2.527
+  ],
+  "results": [
+    {
+      "id": "kn_amount_lakh",
+      "category": "amount",
+      "severity": 1,
+      "direction": "kn -> en",
+      "source": "ನನಗೆ ಎರಡು ಲಕ್ಷ ರೂಪಾಯಿ ಜಮಾ ಮಾಡಬೇಕು",
+      "intermediate": null,
+      "output": "I have to deposit two lakh rupees.",
+      "seconds": 0.709,
+      "checks": {
+        "amount": {
+          "expected": 200000,
+          "got": 200000,
+          "ok": true
+        }
+      },
+      "failed_checks": [],
+      "failure": null
+    },
+    {
+      "id": "kn_amount_crore",
+      "category": "amount",
+      "severity": 1,
+      "direction": "kn -> en",
+      "source": "ಎರಡು ಕೋಟಿ ರೂಪಾಯಿ ಸಾಲ ಬೇಕು",
+      "intermediate": null,
+      "output": "I need a loan of two crore rupees.",
+      "seconds": 2.268,
+      "checks": {
+        "amount": {
+          "expected": 20000000,
+          "got": 20000000,
+          "ok": true
+        }
+      },
+      "failed_checks": [],
+      "failure": null
+    },
+    {
+      "id": "kn_amount_thousand",
+      "category": "amount",
+      "severity": 1,
+      "direction": "kn -> en",
+      "source": "ಇಪ್ಪತ್ತು ಸಾವಿರ ರೂಪಾಯಿ ತೆಗೆಯಬೇಕು",
+      "intermediate": null,
+      "output": "Must withdraw twenty thousand rupees.",
+      "seconds": 0.713,
+      "checks": {
+        "amount": {
+          "expected": 20000,
+          "got": 20000,
+          "ok": true
+        }
+      },
+      "failed_checks": [],
+      "failure": null
+    },
+    {
+      "id": "kn_account_number",
+      "category": "account_number",
+      "severity": 1,
+      "direction": "kn -> en",
+      "source": "ನನ್ನ ಖಾತೆ ಸಂಖ್ಯೆ 1234567890",
+      "intermediate": null,
+      "output": "My account number 1234567890",
+      "seconds": 0.471,
+      "checks": {
+        "exact:1234567890": {
+          "expected": "1234567890",
+          "ok": true
+        }
+      },
+      "failed_checks": [],
+      "failure": null
+    },
+    {
+      "id": "kn_phone_number",
+      "category": "account_number",
+      "severity": 1,
+      "direction": "kn -> en",
+      "source": "ನನ್ನ ಫೋನ್ ನಂಬರ್ 9876543210",
+      "intermediate": null,
+      "output": "My phone number 9876543210",
+      "seconds": 0.493,
+      "checks": {
+        "exact:9876543210": {
+          "expected": "9876543210",
+          "ok": true
+        }
+      },
+      "failed_checks": [],
+      "failure": null
+    },
+    {
+      "id": "kn_name_trap",
+      "category": "name",
+      "severity": 1,
+      "direction": "kn -> en",
+      "source": "ನನ್ನ ಹೆಸರು ಕಮಲಾ",
+      "intermediate": null,
+      "output": "My name is Kamala.",
+      "seconds": 0.525,
+      "checks": {
+        "absent": {
+          "forbidden": [
+            "lotus"
+          ],
+          "present": [],
+          "ok": true
+        },
+        "name": {
+          "expected_any": [
+            "kamala",
+            "kamla"
+          ],
+          "ok": true
+        }
+      },
+      "failed_checks": [],
+      "failure": null
+    },
+    {
+      "id": "kn_negation_cancel",
+      "category": "negation",
+      "severity": 1,
+      "direction": "kn -> en",
+      "source": "ರದ್ದು ಮಾಡಬೇಡಿ",
+      "intermediate": null,
+      "output": "Do not cancel.",
+      "seconds": 0.505,
+      "checks": {
+        "negation": {
+          "expected": true,
+          "got": true,
+          "ok": true
+        }
+      },
+      "failed_checks": [],
+      "failure": null
+    },
+    {
+      "id": "kn_negation_withdraw",
+      "category": "negation",
+      "severity": 1,
+      "direction": "kn -> en",
+      "source": "ನನಗೆ ಹಣ ತೆಗೆಯುವುದು ಬೇಡ",
+      "intermediate": null,
+      "output": "I don't want to withdraw money.",
+      "seconds": 0.703,
+      "checks": {
+        "negation": {
+          "expected": true,
+          "got": true,
+          "ok": true
+        }
+      },
+      "failed_checks": [],
+      "failure": null
+    },
+    {
+      "id": "kn_completion",
+      "category": "workflow",
+      "severity": 2,
+      "direction": "kn -> en",
+      "source": "ನಾನು ಮೊತ್ತವನ್ನು ಬರೆದಿದ್ದೇನೆ",
+      "intermediate": null,
+      "output": "I have written the amount.",
+      "seconds": 0.494,
+      "checks": {
+        "absent": {
+          "forbidden": [
+            "will",
+            "going to"
+          ],
+          "present": [],
+          "ok": true
+        },
+        "semantics": {
+          "expected_any": [
+            "entered",
+            "filled",
+            "written",
+            "completed",
+            "have"
+          ],
+          "hits": [
+            "written",
+            "have"
+          ],
+          "ok": true
+        }
+      },
+      "failed_checks": [],
+      "failure": null
+    },
+    {
+      "id": "kn_control_pause",
+      "category": "control",
+      "severity": 1,
+      "direction": "kn -> en",
+      "source": "ಸ್ವಲ್ಪ ನಿಲ್ಲಿಸಿ",
+      "intermediate": null,
+      "output": "Stop a little.",
+      "seconds": 0.541,
+      "checks": {
+        "semantics": {
+          "expected_any": [
+            "pause",
+            "wait",
+            "stop",
+            "hold"
+          ],
+          "hits": [
+            "stop"
+          ],
+          "ok": true
+        }
+      },
+      "failed_checks": [],
+      "failure": null
+    },
+    {
+      "id": "kn_exit",
+      "category": "control",
+      "severity": 1,
+      "direction": "kn -> en",
+      "source": "ಸಾಕು, ಮುಗಿಸೋಣ",
+      "intermediate": null,
+      "output": "Enough, let's finish.",
+      "seconds": 0.629,
+      "checks": {
+        "semantics": {
+          "expected_any": [
+            "finish",
+            "done",
+            "enough",
+            "end",
+            "stop",
+            "exit",
+            "close"
+          ],
+          "hits": [
+            "finish",
+            "enough"
+          ],
+          "ok": true
+        }
+      },
+      "failed_checks": [],
+      "failure": null
+    },
+    {
+      "id": "kn_code_mixed",
+      "category": "code_mixed",
+      "severity": 2,
+      "direction": "kn -> en",
+      "source": "ನನಗೆ account number fill ಮಾಡಬೇಕು",
+      "intermediate": null,
+      "output": "I need to fill account number",
+      "seconds": 0.508,
+      "checks": {
+        "semantics": {
+          "expected_any": [
+            "account number"
+          ],
+          "hits": [
+            "account number"
+          ],
+          "ok": true
+        }
+      },
+      "failed_checks": [],
+      "failure": null
+    },
+    {
+      "id": "hi_amount_lakh",
+      "category": "amount",
+      "severity": 1,
+      "direction": "hi -> en",
+      "source": "मुझे दो लाख रुपये जमा करने हैं",
+      "intermediate": null,
+      "output": "I have to deposit two lakh rupees.",
+      "seconds": 0.558,
+      "checks": {
+        "amount": {
+          "expected": 200000,
+          "got": 200000,
+          "ok": true
+        }
+      },
+      "failed_checks": [],
+      "failure": null
+    },
+    {
+      "id": "hi_amount_crore",
+      "category": "amount",
+      "severity": 1,
+      "direction": "hi -> en",
+      "source": "दो करोड़ रुपये का लोन चाहिए",
+      "intermediate": null,
+      "output": "I need a loan of two crore rupees.",
+      "seconds": 0.618,
+      "checks": {
+        "amount": {
+          "expected": 20000000,
+          "got": 20000000,
+          "ok": true
+        }
+      },
+      "failed_checks": [],
+      "failure": null
+    },
+    {
+      "id": "hi_amount_thousand",
+      "category": "amount",
+      "severity": 1,
+      "direction": "hi -> en",
+      "source": "बीस हज़ार रुपये निकालने हैं",
+      "intermediate": null,
+      "output": "Need to withdraw twenty thousand rupees.",
+      "seconds": 0.583,
+      "checks": {
+        "amount": {
+          "expected": 20000,
+          "got": 20000,
+          "ok": true
+        }
+      },
+      "failed_checks": [],
+      "failure": null
+    },
+    {
+      "id": "hi_account_number",
+      "category": "account_number",
+      "severity": 1,
+      "direction": "hi -> en",
+      "source": "मेरा खाता नंबर 1234567890 है",
+      "intermediate": null,
+      "output": "My account number is 1234567890.",
+      "seconds": 0.528,
+      "checks": {
+        "exact:1234567890": {
+          "expected": "1234567890",
+          "ok": true
+        }
+      },
+      "failed_checks": [],
+      "failure": null
+    },
+    {
+      "id": "hi_phone_number",
+      "category": "account_number",
+      "severity": 1,
+      "direction": "hi -> en",
+      "source": "मेरा फोन नंबर 9876543210 है",
+      "intermediate": null,
+      "output": "My phone number is 9876543210.",
+      "seconds": 0.485,
+      "checks": {
+        "exact:9876543210": {
+          "expected": "9876543210",
+          "ok": true
+        }
+      },
+      "failed_checks": [],
+      "failure": null
+    },
+    {
+      "id": "hi_name_trap",
+      "category": "name",
+      "severity": 1,
+      "direction": "hi -> en",
+      "source": "मेरा नाम कमला है",
+      "intermediate": null,
+      "output": "My name is Kamala.",
+      "seconds": 0.466,
+      "checks": {
+        "absent": {
+          "forbidden": [
+            "lotus"
+          ],
+          "present": [],
+          "ok": true
+        },
+        "name": {
+          "expected_any": [
+            "kamala",
+            "kamla"
+          ],
+          "ok": true
+        }
+      },
+      "failed_checks": [],
+      "failure": null
+    },
+    {
+      "id": "hi_negation_cancel",
+      "category": "negation",
+      "severity": 1,
+      "direction": "hi -> en",
+      "source": "रद्द मत कीजिए",
+      "intermediate": null,
+      "output": "Do not cancel.",
+      "seconds": 0.553,
+      "checks": {
+        "negation": {
+          "expected": true,
+          "got": true,
+          "ok": true
+        }
+      },
+      "failed_checks": [],
+      "failure": null
+    },
+    {
+      "id": "hi_negation_withdraw",
+      "category": "negation",
+      "severity": 1,
+      "direction": "hi -> en",
+      "source": "मुझे पैसे नहीं निकालने हैं",
+      "intermediate": null,
+      "output": "I do not have money to withdraw",
+      "seconds": 0.995,
+      "checks": {
+        "negation": {
+          "expected": true,
+          "got": true,
+          "ok": true
+        }
+      },
+      "failed_checks": [],
+      "failure": null
+    },
+    {
+      "id": "hi_completion",
+      "category": "workflow",
+      "severity": 2,
+      "direction": "hi -> en",
+      "source": "मैंने राशि भर दी है",
+      "intermediate": null,
+      "output": "I have paid the amount.",
+      "seconds": 0.472,
+      "checks": {
+        "absent": {
+          "forbidden": [
+            "will",
+            "going to"
+          ],
+          "present": [],
+          "ok": true
+        },
+        "semantics": {
+          "expected_any": [
+            "entered",
+            "filled",
+            "written",
+            "completed",
+            "have"
+          ],
+          "hits": [
+            "have"
+          ],
+          "ok": true
+        }
+      },
+      "failed_checks": [],
+      "failure": null
+    },
+    {
+      "id": "hi_control_pause",
+      "category": "control",
+      "severity": 1,
+      "direction": "hi -> en",
+      "source": "थोड़ा रुकिए",
+      "intermediate": null,
+      "output": "Please wait a little.",
+      "seconds": 0.583,
+      "checks": {
+        "semantics": {
+          "expected_any": [
+            "pause",
+            "wait",
+            "stop",
+            "hold"
+          ],
+          "hits": [
+            "wait"
+          ],
+          "ok": true
+        }
+      },
+      "failed_checks": [],
+      "failure": null
+    },
+    {
+      "id": "hi_exit",
+      "category": "control",
+      "severity": 1,
+      "direction": "hi -> en",
+      "source": "बस, ख़त्म कीजिए",
+      "intermediate": null,
+      "output": "Just finish.",
+      "seconds": 0.674,
+      "checks": {
+        "semantics": {
+          "expected_any": [
+            "finish",
+            "done",
+            "enough",
+            "end",
+            "stop",
+            "exit",
+            "close"
+          ],
+          "hits": [
+            "finish"
+          ],
+          "ok": true
+        }
+      },
+      "failed_checks": [],
+      "failure": null
+    },
+    {
+      "id": "hi_code_mixed",
+      "category": "code_mixed",
+      "severity": 2,
+      "direction": "hi -> en",
+      "source": "मुझे account number fill करना है",
+      "intermediate": null,
+      "output": "I have to fill account number",
+      "seconds": 0.545,
+      "checks": {
+        "semantics": {
+          "expected_any": [
+            "account number"
+          ],
+          "hits": [
+            "account number"
+          ],
+          "ok": true
+        }
+      },
+      "failed_checks": [],
+      "failure": null
+    },
+    {
+      "id": "en_amount_lakh",
+      "category": "amount",
+      "severity": 1,
+      "direction": "en -> kn -> en (round trip)",
+      "source": "Deposit 2 lakh rupees",
+      "intermediate": "2 ಲಕ್ಷ ರೂಪಾಯಿಗಳನ್ನು ಠೇವಣಿ ಮಾಡಿ",
+      "output": "Deposit 2 lakh rupees.",
+      "seconds": 1.259,
+      "checks": {
+        "amount": {
+          "expected": 200000,
+          "got": 200000,
+          "ok": true
+        }
+      },
+      "failed_checks": [],
+      "failure": null
+    },
+    {
+      "id": "en_amount_grouped",
+      "category": "amount",
+      "severity": 1,
+      "direction": "en -> kn -> en (round trip)",
+      "source": "Withdraw 2,00,000 rupees",
+      "intermediate": "2,00,000 ರೂಪಾಯಿಗಳನ್ನು ಹಿಂಪಡೆಯಿರಿ",
+      "output": "Withdraw 2,00,000 rupees.",
+      "seconds": 0.965,
+      "checks": {
+        "amount": {
+          "expected": 200000,
+          "got": 200000,
+          "ok": true
+        }
+      },
+      "failed_checks": [],
+      "failure": null
+    },
+    {
+      "id": "en_account_number",
+      "category": "account_number",
+      "severity": 1,
+      "direction": "en -> kn -> en (round trip)",
+      "source": "My account number is 1234567890",
+      "intermediate": "ನನ್ನ ಖಾತೆ ಸಂಖ್ಯೆ 1234567890",
+      "output": "My account number 1234567890",
+      "seconds": 0.961,
+      "checks": {
+        "exact:1234567890": {
+          "expected": "1234567890",
+          "ok": true
+        }
+      },
+      "failed_checks": [],
+      "failure": null
+    },
+    {
+      "id": "en_name_trap",
+      "category": "name",
+      "severity": 1,
+      "direction": "en -> kn -> en (round trip)",
+      "source": "My name is Kamala Shetty",
+      "intermediate": "ನನ್ನ ಹೆಸರು ಕಮಲ ಶೆಟ್ಟಿ",
+      "output": "My name is Kamal Shetty",
+      "seconds": 1.051,
+      "checks": {
+        "absent": {
+          "forbidden": [
+            "lotus"
+          ],
+          "present": [],
+          "ok": true
+        },
+        "name": {
+          "expected_any": [
+            "kamala",
+            "kamla"
+          ],
+          "ok": false
+        }
+      },
+      "failed_checks": [
+        "name"
+      ],
+      "failure": null
+    },
+    {
+      "id": "en_negation_cancel",
+      "category": "negation",
+      "severity": 1,
+      "direction": "en -> kn -> en (round trip)",
+      "source": "Do not cancel",
+      "intermediate": "ರದ್ದು ಮಾಡಬೇಡಿ",
+      "output": "Do not cancel.",
+      "seconds": 0.951,
+      "checks": {
+        "negation": {
+          "expected": true,
+          "got": true,
+          "ok": true
+        }
+      },
+      "failed_checks": [],
+      "failure": null
+    },
+    {
+      "id": "en_negation_withdraw",
+      "category": "negation",
+      "severity": 1,
+      "direction": "en -> kn -> en (round trip)",
+      "source": "I don't want to withdraw money",
+      "intermediate": "ನಾನು ಹಣವನ್ನು ಹಿಂಪಡೆಯಲು ಬಯಸುವುದಿಲ್ಲ",
+      "output": "I do not want to withdraw money.",
+      "seconds": 5.205,
+      "checks": {
+        "negation": {
+          "expected": true,
+          "got": true,
+          "ok": true
+        }
+      },
+      "failed_checks": [],
+      "failure": null
+    },
+    {
+      "id": "en_workflow",
+      "category": "workflow",
+      "severity": 2,
+      "direction": "en -> kn -> en (round trip)",
+      "source": "I entered the amount",
+      "intermediate": "ನಾನು ಮೊತ್ತವನ್ನು ನಮೂದಿಸಿದೆ",
+      "output": "I entered the amount.",
+      "seconds": 5.115,
+      "checks": {
+        "semantics": {
+          "expected_any": [
+            "entered",
+            "filled",
+            "wrote",
+            "written",
+            "put"
+          ],
+          "hits": [
+            "entered"
+          ],
+          "ok": true
+        }
+      },
+      "failed_checks": [],
+      "failure": null
+    },
+    {
+      "id": "en_control_pause",
+      "category": "control",
+      "severity": 1,
+      "direction": "en -> kn -> en (round trip)",
+      "source": "Pause",
+      "intermediate": "ವಿರಾಮ",
+      "output": "Pause",
+      "seconds": 5.404,
+      "checks": {
+        "semantics": {
+          "expected_any": [
+            "pause",
+            "wait",
+            "stop",
+            "hold"
+          ],
+          "hits": [
+            "pause"
+          ],
+          "ok": true
+        }
+      },
+      "failed_checks": [],
+      "failure": null
+    },
+    {
+      "id": "en_amount_lakh",
+      "category": "amount",
+      "severity": 1,
+      "direction": "en -> hi -> en (round trip)",
+      "source": "Deposit 2 lakh rupees",
+      "intermediate": "2 लाख रुपये जमा करें",
+      "output": "Deposit 2 lakh rupees.",
+      "seconds": 5.38,
+      "checks": {
+        "amount": {
+          "expected": 200000,
+          "got": 200000,
+          "ok": true
+        }
+      },
+      "failed_checks": [],
+      "failure": null
+    },
+    {
+      "id": "en_amount_grouped",
+      "category": "amount",
+      "severity": 1,
+      "direction": "en -> hi -> en (round trip)",
+      "source": "Withdraw 2,00,000 rupees",
+      "intermediate": "2,00,000 रुपये निकालें",
+      "output": "Withdraw 2,00,000 rupees.",
+      "seconds": 5.191,
+      "checks": {
+        "amount": {
+          "expected": 200000,
+          "got": 200000,
+          "ok": true
+        }
+      },
+      "failed_checks": [],
+      "failure": null
+    },
+    {
+      "id": "en_account_number",
+      "category": "account_number",
+      "severity": 1,
+      "direction": "en -> hi -> en (round trip)",
+      "source": "My account number is 1234567890",
+      "intermediate": "मेरा खाता नंबर 1234567890 है",
+      "output": "My account number is 1234567890.",
+      "seconds": 4.967,
+      "checks": {
+        "exact:1234567890": {
+          "expected": "1234567890",
+          "ok": true
+        }
+      },
+      "failed_checks": [],
+      "failure": null
+    },
+    {
+      "id": "en_name_trap",
+      "category": "name",
+      "severity": 1,
+      "direction": "en -> hi -> en (round trip)",
+      "source": "My name is Kamala Shetty",
+      "intermediate": "मेरा नाम कमला शेट्टी है",
+      "output": "My name is Kamla Shetty.",
+      "seconds": 4.973,
+      "checks": {
+        "absent": {
+          "forbidden": [
+            "lotus"
+          ],
+          "present": [],
+          "ok": true
+        },
+        "name": {
+          "expected_any": [
+            "kamala",
+            "kamla"
+          ],
+          "ok": true
+        }
+      },
+      "failed_checks": [],
+      "failure": null
+    },
+    {
+      "id": "en_negation_cancel",
+      "category": "negation",
+      "severity": 1,
+      "direction": "en -> hi -> en (round trip)",
+      "source": "Do not cancel",
+      "intermediate": "रद्द न करें",
+      "output": "Do not cancel",
+      "seconds": 5.146,
+      "checks": {
+        "negation": {
+          "expected": true,
+          "got": true,
+          "ok": true
+        }
+      },
+      "failed_checks": [],
+      "failure": null
+    },
+    {
+      "id": "en_negation_withdraw",
+      "category": "negation",
+      "severity": 1,
+      "direction": "en -> hi -> en (round trip)",
+      "source": "I don't want to withdraw money",
+      "intermediate": "मैं पैसा निकालना नहीं चाहता",
+      "output": "I do not want to withdraw money.",
+      "seconds": 5.523,
+      "checks": {
+        "negation": {
+          "expected": true,
+          "got": true,
+          "ok": true
+        }
+      },
+      "failed_checks": [],
+      "failure": null
+    },
+    {
+      "id": "en_workflow",
+      "category": "workflow",
+      "severity": 2,
+      "direction": "en -> hi -> en (round trip)",
+      "source": "I entered the amount",
+      "intermediate": "मैंने राशि दर्ज की",
+      "output": "I entered the amount.",
+      "seconds": 5.069,
+      "checks": {
+        "semantics": {
+          "expected_any": [
+            "entered",
+            "filled",
+            "wrote",
+            "written",
+            "put"
+          ],
+          "hits": [
+            "entered"
+          ],
+          "ok": true
+        }
+      },
+      "failed_checks": [],
+      "failure": null
+    },
+    {
+      "id": "en_control_pause",
+      "category": "control",
+      "severity": 1,
+      "direction": "en -> hi -> en (round trip)",
+      "source": "Pause",
+      "intermediate": "रुको",
+      "output": "Stop.",
+      "seconds": 5.295,
+      "checks": {
+        "semantics": {
+          "expected_any": [
+            "pause",
+            "wait",
+            "stop",
+            "hold"
+          ],
+          "hits": [
+            "stop"
+          ],
+          "ok": true
+        }
+      },
+      "failed_checks": [],
+      "failure": null
+    }
+  ]
+}

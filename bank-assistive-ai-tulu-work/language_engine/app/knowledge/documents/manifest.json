@@ -1,0 +1,35 @@
+{
+  "collection": "banking",
+  "domain": "banking",
+  "note": "Metadata for the articles in this folder. 'status': 'active' articles are indexed; 'draft' articles are not, until someone reviews and activates them. 'version' is NOT written here: the loader derives it from the article's content, so it can never go stale. 'last_reviewed' and 'effective_date' are null because no review has been recorded; fill them in when a reviewer signs an article off. These articles are general banking references written for the project, not any bank's official terms. Phase 3A provenance: 'verification' is 'unverified' for every article because no one has verified them against a source; 'source_reference' is null because they were authored for the project, not copied from a source. None of them states a rate, fee, limit or timing, so none is 'time_sensitive'. An article that does state such a figure must set 'time_sensitive': true, and is then indexed only once 'verification' is 'verified' and 'last_reviewed' is set; give it 'effective_until' when the figure has an end date. 'unlisted': 'skip' means a markdown file not listed below is NOT indexed: adding it here is the review step. See app/knowledge/loader.py.",
+  "unlisted": "skip",
+  "defaults": {
+    "status": "active",
+    "authority": "project-authored general banking reference (not bank-specific)",
+    "language": "en",
+    "source_reference": null,
+    "verification": "unverified",
+    "time_sensitive": false,
+    "effective_date": null,
+    "effective_until": null,
+    "last_reviewed": null,
+    "reviewed_by": null
+  },
+  "documents": {
+    "account_number.md":               {"services": ["deposit money", "withdraw money"], "topics": ["account number", "branch code"]},
+    "account_opening.md":              {"services": ["open new account"], "topics": ["account opening"]},
+    "account_opening_requirements.md": {"services": ["open new account"], "topics": ["kyc", "documents", "initial deposit"]},
+    "bank_transfer.md":                {"services": [], "topics": ["transfer", "neft", "rtgs", "imps", "upi"]},
+    "banking_services.md":             {"services": [], "topics": ["bank services"]},
+    "cheque_book.md":                  {"services": [], "topics": ["cheque", "cheque book"]},
+    "current_account.md":              {"services": ["open new account"], "topics": ["current account"]},
+    "deposit.md":                      {"services": ["deposit money"], "topics": ["deposit"]},
+    "deposit_slip.md":                 {"services": ["deposit money"], "topics": ["deposit slip"]},
+    "loan.md":                         {"services": ["apply for loan"], "topics": ["loan"]},
+    "loan_basics.md":                  {"services": ["apply for loan"], "topics": ["interest", "emi", "tenure", "principal"]},
+    "passbook.md":                     {"services": ["check account balance"], "topics": ["passbook"]},
+    "savings_account.md":              {"services": ["open new account"], "topics": ["savings account"]},
+    "withdrawal.md":                   {"services": ["withdraw money"], "topics": ["withdrawal"]},
+    "withdrawal_slip.md":              {"services": ["withdraw money"], "topics": ["withdrawal slip", "signature"]}
+  }
+}

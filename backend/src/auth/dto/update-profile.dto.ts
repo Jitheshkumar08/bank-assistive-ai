@@ -33,7 +33,7 @@ export class UpdateProfileDto {
   email?: string;
 
   @IsOptional()
-  @IsIn(['en', 'kn', 'hi'], { message: 'Language must be one of: en, kn, hi.' })
+  @IsIn(['en', 'kn', 'hi', 'tcy'], { message: 'Language must be one of: en, kn, hi, tcy.' })
   preferredLanguage?: string;
 
   // Whether the welcome screen may offer remembered payments. The

@@ -1,0 +1,887 @@
+{
+ "version": "m9_asr_forms",
+ "description": "M9 HELD-OUT text fixtures: reference utterances in the forms ASR output takes. TEXT ONLY -- no audio was recorded or synthesised for these. Forms mirror documented recogniser behaviour (IndicConformer writes English words in native script; Whisper and typists write them in Latin) plus fillers, repetition, clipping, spelling variants and number formats. A form may carry its own category and expected label when it loses information the reference had (a clipped request that no longer names a service must not start one). Written before any M9 change; nothing is tuned against it.",
+ "items": [
+  {
+   "id": "svc-kn-901",
+   "lang": "kn",
+   "category": "service_request",
+   "expected": {
+    "intent": "deposit money"
+   },
+   "gloss": "I need to deposit five thousand rupees",
+   "forms": [
+    {
+     "kind": "reference",
+     "text": "ನನಗೆ ಐದು ಸಾವಿರ ರೂಪಾಯಿ ಜಮಾ ಮಾಡಬೇಕು"
+    },
+    {
+     "kind": "digits",
+     "text": "ನನಗೆ 5000 ರೂಪಾಯಿ ಜಮಾ ಮಾಡಬೇಕು"
+    },
+    {
+     "kind": "filler",
+     "text": "ಅಂದ್ರೆ ನನಗೆ ಐದು ಸಾವಿರ ರೂಪಾಯಿ ಜಮಾ ಮಾಡಬೇಕು"
+    },
+    {
+     "kind": "clipped",
+     "text": "ನನಗೆ ಐದು ಸಾವಿರ ರೂಪಾಯಿ",
+     "category": "ambiguous_request",
+     "expected": {
+      "starts_workflow": false
+     }
+    }
+   ]
+  },
+  {
+   "id": "svc-kn-902",
+   "lang": "kn",
+   "category": "service_request",
+   "expected": {
+    "intent": "withdraw money"
+   },
+   "gloss": "I need to take money out of the account",
+   "forms": [
+    {
+     "kind": "reference",
+     "text": "ಖಾತೆಯಿಂದ ಹಣ ತೆಗೆಯಬೇಕು"
+    },
+    {
+     "kind": "filler",
+     "text": "ಹಾಂ ಖಾತೆಯಿಂದ ಹಣ ತೆಗೆಯಬೇಕು"
+    },
+    {
+     "kind": "repetition",
+     "text": "ಖಾತೆಯಿಂದ ಖಾತೆಯಿಂದ ಹಣ ತೆಗೆಯಬೇಕು"
+    }
+   ]
+  },
+  {
+   "id": "kq-kn-901",
+   "lang": "kn",
+   "category": "knowledge_question",
+   "expected": {
+    "route": "knowledge",
+    "sources": [
+     "loan.md",
+     "loan_basics.md"
+    ]
+   },
+   "gloss": "which documents are needed to get a loan",
+   "forms": [
+    {
+     "kind": "reference",
+     "text": "ಸಾಲ ಪಡೆಯಲು ಯಾವ ದಾಖಲೆಗಳು ಬೇಕು"
+    },
+    {
+     "kind": "clipped",
+     "text": "ಸಾಲ ಪಡೆಯಲು ಯಾವ"
+    },
+    {
+     "kind": "filler",
+     "text": "ಅದು ಸಾಲ ಪಡೆಯಲು ಯಾವ ದಾಖಲೆಗಳು ಬೇಕು"
+    }
+   ]
+  },
+  {
+   "id": "ctl-kn-901",
+   "lang": "kn",
+   "category": "control",
+   "expected": {
+    "command": "repeat"
+   },
+   "gloss": "say it again",
+   "forms": [
+    {
+     "kind": "reference",
+     "text": "ಮತ್ತೆ ಹೇಳಿ"
+    },
+    {
+     "kind": "filler",
+     "text": "ಹಾಂ ಮತ್ತೆ ಹೇಳಿ"
+    },
+    {
+     "kind": "punctuated",
+     "text": "ಮತ್ತೆ ಹೇಳಿ।"
+    }
+   ]
+  },
+  {
+   "id": "amb-kn-901",
+   "lang": "kn",
+   "category": "ambiguous_request",
+   "expected": {
+    "starts_workflow": false
+   },
+   "gloss": "I need to talk about a money matter",
+   "forms": [
+    {
+     "kind": "reference",
+     "text": "ಸ್ವಲ್ಪ ಹಣದ ವಿಷಯ ಮಾತಾಡಬೇಕು"
+    }
+   ]
+  },
+  {
+   "id": "amt-kn-901",
+   "lang": "kn",
+   "category": "amount",
+   "expected": {
+    "amount": 5000
+   },
+   "gloss": "five thousand rupees",
+   "forms": [
+    {
+     "kind": "reference",
+     "text": "ಐದು ಸಾವಿರ ರೂಪಾಯಿ"
+    },
+    {
+     "kind": "digits",
+     "text": "5000 ರೂಪಾಯಿ"
+    },
+    {
+     "kind": "native-digits",
+     "text": "೫೦೦೦ ರೂಪಾಯಿ"
+    },
+    {
+     "kind": "digit-and-scale",
+     "text": "5 ಸಾವಿರ ರೂಪಾಯಿ"
+    }
+   ]
+  },
+  {
+   "id": "amb-kn-902",
+   "lang": "kn",
+   "category": "ambiguous_request",
+   "expected": {
+    "starts_workflow": false
+   },
+   "gloss": "money (a single word)",
+   "forms": [
+    {
+     "kind": "reference",
+     "text": "ಹಣ"
+    }
+   ]
+  },
+  {
+   "id": "amb-kn-903",
+   "lang": "kn",
+   "category": "ambiguous_request",
+   "expected": {
+    "starts_workflow": false
+   },
+   "gloss": "uh, that, bank (fragment)",
+   "forms": [
+    {
+     "kind": "reference",
+     "text": "ಆ ಅದು ಬ್ಯಾಂಕ್"
+    }
+   ]
+  },
+  {
+   "id": "svc-hi-901",
+   "lang": "hi",
+   "category": "service_request",
+   "expected": {
+    "intent": "withdraw money"
+   },
+   "gloss": "I need to withdraw three thousand rupees",
+   "forms": [
+    {
+     "kind": "reference",
+     "text": "मुझे तीन हज़ार रुपये निकालने हैं"
+    },
+    {
+     "kind": "digits",
+     "text": "मुझे 3000 रुपये निकालने हैं"
+    },
+    {
+     "kind": "filler",
+     "text": "हाँ मुझे तीन हज़ार रुपये निकालने हैं"
+    },
+    {
+     "kind": "spelling-variant",
+     "text": "मुझे तीन हजार रूपये निकालने है"
+    },
+    {
+     "kind": "clipped",
+     "text": "मुझे तीन हज़ार रुपये",
+     "category": "ambiguous_request",
+     "expected": {
+      "starts_workflow": false
+     }
+    }
+   ]
+  },
+  {
+   "id": "amt-hi-901",
+   "lang": "hi",
+   "category": "amount",
+   "expected": {
+    "amount": 3000
+   },
+   "gloss": "three thousand rupees",
+   "forms": [
+    {
+     "kind": "reference",
+     "text": "तीन हज़ार रुपये"
+    },
+    {
+     "kind": "digits",
+     "text": "3000 रुपये"
+    },
+    {
+     "kind": "native-digits",
+     "text": "३००० रुपये"
+    },
+    {
+     "kind": "digit-and-scale",
+     "text": "3 हज़ार रुपये"
+    }
+   ]
+  },
+  {
+   "id": "kq-hi-901",
+   "lang": "hi",
+   "category": "knowledge_question",
+   "expected": {
+    "route": "knowledge",
+    "sources": [
+     "savings_account.md"
+    ]
+   },
+   "gloss": "how is interest paid on a savings account",
+   "forms": [
+    {
+     "kind": "reference",
+     "text": "बचत खाते में ब्याज कैसे मिलता है"
+    },
+    {
+     "kind": "filler",
+     "text": "जी बचत खाते में ब्याज कैसे मिलता है"
+    },
+    {
+     "kind": "clipped",
+     "text": "बचत खाते में ब्याज कैसे"
+    }
+   ]
+  },
+  {
+   "id": "ctl-hi-901",
+   "lang": "hi",
+   "category": "control",
+   "expected": {
+    "command": "repeat"
+   },
+   "gloss": "please say it again",
+   "forms": [
+    {
+     "kind": "reference",
+     "text": "दोबारा बताइए"
+    },
+    {
+     "kind": "filler",
+     "text": "जी दोबारा बताइए"
+    },
+    {
+     "kind": "punctuated",
+     "text": "दोबारा बताइए।"
+    }
+   ]
+  },
+  {
+   "id": "ref-hi-901",
+   "lang": "hi",
+   "category": "refusal",
+   "expected": {
+    "starts_workflow": false
+   },
+   "gloss": "I do not want to withdraw money",
+   "forms": [
+    {
+     "kind": "reference",
+     "text": "मुझे पैसे नहीं निकालने"
+    },
+    {
+     "kind": "spelling-variant",
+     "text": "मुझे पैसे नही निकालने"
+    },
+    {
+     "kind": "clipped",
+     "text": "मुझे पैसे नहीं"
+    }
+   ],
+   "context": {
+    "active_workflow": "deposit money"
+   }
+  },
+  {
+   "id": "amb-hi-901",
+   "lang": "hi",
+   "category": "ambiguous_request",
+   "expected": {
+    "starts_workflow": false
+   },
+   "gloss": "I, that, money (fragment)",
+   "forms": [
+    {
+     "kind": "reference",
+     "text": "मुझे वो पैसे"
+    }
+   ]
+  },
+  {
+   "id": "amt-hi-902",
+   "lang": "hi",
+   "category": "amount",
+   "expected": {
+    "amount": 2000
+   },
+   "gloss": "deposit two thousand into account number 4521, spoken digit by digit",
+   "forms": [
+    {
+     "kind": "reference",
+     "text": "खाता नंबर चार पांच दो एक में दो हज़ार जमा"
+    }
+   ]
+  },
+  {
+   "id": "svc-en-901",
+   "lang": "en",
+   "category": "service_request",
+   "expected": {
+    "intent": "deposit money"
+   },
+   "gloss": "",
+   "forms": [
+    {
+     "kind": "reference",
+     "text": "I want to deposit two thousand rupees"
+    },
+    {
+     "kind": "digits",
+     "text": "I want to deposit 2,000 rupees."
+    },
+    {
+     "kind": "currency-symbol",
+     "text": "I want to deposit Rs. 2000"
+    },
+    {
+     "kind": "clipped",
+     "text": "I want to deposit"
+    },
+    {
+     "kind": "filler",
+     "text": "um I want to uh deposit two thousand rupees"
+    }
+   ]
+  },
+  {
+   "id": "svc-en-902",
+   "lang": "en",
+   "category": "service_request",
+   "expected": {
+    "intent": "withdraw money"
+   },
+   "gloss": "",
+   "forms": [
+    {
+     "kind": "reference",
+     "text": "I need to withdraw cash"
+    },
+    {
+     "kind": "split-word",
+     "text": "I need to with draw cash"
+    },
+    {
+     "kind": "spelling-variant",
+     "text": "I need to withdrawl cash"
+    },
+    {
+     "kind": "lowercase",
+     "text": "i need to withdraw cash"
+    }
+   ]
+  },
+  {
+   "id": "kq-en-901",
+   "lang": "en",
+   "category": "knowledge_question",
+   "expected": {
+    "route": "knowledge",
+    "sources": [
+     "loan.md",
+     "loan_basics.md"
+    ]
+   },
+   "gloss": "",
+   "forms": [
+    {
+     "kind": "reference",
+     "text": "What documents do I need for a loan?"
+    },
+    {
+     "kind": "unpunctuated",
+     "text": "what documents do i need for a loan"
+    }
+   ]
+  },
+  {
+   "id": "amb-en-901",
+   "lang": "en",
+   "category": "ambiguous_request",
+   "expected": {
+    "starts_workflow": false
+   },
+   "gloss": "a cheque book is not one of the five services",
+   "forms": [
+    {
+     "kind": "reference",
+     "text": "I need a new cheque book"
+    },
+    {
+     "kind": "misheard",
+     "text": "I need a new Chuck Book"
+    }
+   ]
+  },
+  {
+   "id": "ctl-en-901",
+   "lang": "en",
+   "category": "control",
+   "expected": {
+    "command": "repeat"
+   },
+   "gloss": "",
+   "forms": [
+    {
+     "kind": "reference",
+     "text": "please repeat that"
+    },
+    {
+     "kind": "punctuated",
+     "text": "Please repeat that."
+    }
+   ]
+  },
+  {
+   "id": "amt-en-901",
+   "lang": "en",
+   "category": "amount",
+   "expected": {
+    "amount": 3000
+   },
+   "gloss": "",
+   "forms": [
+    {
+     "kind": "reference",
+     "text": "deposit 3000 into account number 778899"
+    },
+    {
+     "kind": "number-words",
+     "text": "deposit three thousand into account number 778899"
+    }
+   ]
+  },
+  {
+   "id": "svc-en-903",
+   "lang": "en",
+   "category": "service_request",
+   "expected": {
+    "intent": "deposit money"
+   },
+   "gloss": "a bare service word names the service",
+   "forms": [
+    {
+     "kind": "reference",
+     "text": "deposit"
+    }
+   ]
+  },
+  {
+   "id": "svc-kn-en-901",
+   "lang": "kn-en",
+   "category": "service_request",
+   "expected": {
+    "intent": "apply for loan"
+   },
+   "gloss": "I need a home loan",
+   "forms": [
+    {
+     "kind": "reference",
+     "text": "ನನಗೆ ಹೋಮ್ ಲೋನ್ ಬೇಕು"
+    },
+    {
+     "kind": "latin",
+     "text": "ನನಗೆ home loan ಬೇಕು"
+    },
+    {
+     "kind": "romanised",
+     "text": "nanage home loan beku"
+    }
+   ]
+  },
+  {
+   "id": "svc-kn-en-902",
+   "lang": "kn-en",
+   "category": "service_request",
+   "expected": {
+    "intent": "deposit money"
+   },
+   "gloss": "I need to deposit cash into my account",
+   "forms": [
+    {
+     "kind": "reference",
+     "text": "ನನ್ನ ಅಕೌಂಟ್‌ಗೆ ಕ್ಯಾಶ್ ಡೆಪಾಸಿಟ್ ಮಾಡಬೇಕು"
+    },
+    {
+     "kind": "latin",
+     "text": "ನನ್ನ account ಗೆ cash deposit ಮಾಡಬೇಕು"
+    },
+    {
+     "kind": "spelling-variant",
+     "text": "ನನ್ನ ಅಕೌಂಟಿಗೆ ಕ್ಯಾಶ್ ಡಿಪಾಸಿಟ್ ಮಾಡಬೇಕು"
+    }
+   ]
+  },
+  {
+   "id": "svc-kn-en-903",
+   "lang": "kn-en",
+   "category": "service_request",
+   "expected": {
+    "intent": "check account balance"
+   },
+   "gloss": "I need to check my account balance",
+   "forms": [
+    {
+     "kind": "reference",
+     "text": "ನನ್ನ ಅಕೌಂಟ್ ಬ್ಯಾಲೆನ್ಸ್ ಚೆಕ್ ಮಾಡಬೇಕು"
+    },
+    {
+     "kind": "latin",
+     "text": "ನನ್ನ account balance check ಮಾಡಬೇಕು"
+    },
+    {
+     "kind": "spelling-variant",
+     "text": "ನನ್ನ ಅಕೌಂಟ್ ಬ್ಯಾಲನ್ಸ್ ಚೆಕ್ ಮಾಡಬೇಕು"
+    }
+   ]
+  },
+  {
+   "id": "svc-kn-en-904",
+   "lang": "kn-en",
+   "category": "service_request",
+   "expected": {
+    "intent": "withdraw money"
+   },
+   "gloss": "the ATM is not working, I need to withdraw cash (a negative verb that is not a refusal)",
+   "forms": [
+    {
+     "kind": "reference",
+     "text": "ಎಟಿಎಂ ಕೆಲಸ ಮಾಡ್ತಿಲ್ಲ ಕ್ಯಾಶ್ ವಿತ್‌ಡ್ರಾ ಮಾಡಬೇಕು"
+    },
+    {
+     "kind": "latin",
+     "text": "ATM ಕೆಲಸ ಮಾಡ್ತಿಲ್ಲ cash withdraw ಮಾಡಬೇಕು"
+    }
+   ]
+  },
+  {
+   "id": "kq-kn-en-901",
+   "lang": "kn-en",
+   "category": "knowledge_question",
+   "expected": {
+    "route": "knowledge",
+    "sources": [
+     "passbook.md"
+    ]
+   },
+   "gloss": "how does one update a passbook",
+   "forms": [
+    {
+     "kind": "reference",
+     "text": "ಪಾಸ್‌ಬುಕ್ ಅಪ್ಡೇಟ್ ಹೇಗೆ ಮಾಡುವುದು"
+    },
+    {
+     "kind": "latin",
+     "text": "passbook update ಹೇಗೆ ಮಾಡುವುದು"
+    }
+   ]
+  },
+  {
+   "id": "amt-kn-en-901",
+   "lang": "kn-en",
+   "category": "amount",
+   "expected": {
+    "amount": 10000
+   },
+   "gloss": "deposit ten thousand rupees",
+   "forms": [
+    {
+     "kind": "reference",
+     "text": "ಹತ್ತು ಸಾವಿರ ರೂಪಾಯಿ ಡೆಪಾಸಿಟ್"
+    },
+    {
+     "kind": "latin",
+     "text": "ಹತ್ತು ಸಾವಿರ rupees deposit"
+    },
+    {
+     "kind": "digits",
+     "text": "10000 ರೂಪಾಯಿ ಡೆಪಾಸಿಟ್"
+    },
+    {
+     "kind": "digit-and-scale",
+     "text": "10 ಸಾವಿರ ರೂಪಾಯಿ ಡೆಪಾಸಿಟ್"
+    }
+   ]
+  },
+  {
+   "id": "amt-kn-en-902",
+   "lang": "kn-en",
+   "category": "amount",
+   "expected": {
+    "amount": 2000
+   },
+   "gloss": "deposit two thousand into account 45213",
+   "forms": [
+    {
+     "kind": "reference",
+     "text": "ಅಕೌಂಟ್ ನಂಬರ್ 45213 ಗೆ ಎರಡು ಸಾವಿರ ಜಮಾ"
+    },
+    {
+     "kind": "digit-by-digit-account",
+     "text": "ಅಕೌಂಟ್ ನಂಬರ್ ನಾಲ್ಕು ಐದು ಎರಡು ಒಂದು ಮೂರು ಗೆ ಎರಡು ಸಾವಿರ ಜಮಾ"
+    },
+    {
+     "kind": "latin",
+     "text": "account number 45213 ಗೆ ಎರಡು ಸಾವಿರ ಜಮಾ"
+    }
+   ]
+  },
+  {
+   "id": "ctl-kn-en-901",
+   "lang": "kn-en",
+   "category": "control",
+   "expected": {
+    "command": "repeat"
+   },
+   "gloss": "repeat it",
+   "forms": [
+    {
+     "kind": "reference",
+     "text": "ರಿಪೀಟ್ ಮಾಡಿ"
+    },
+    {
+     "kind": "latin",
+     "text": "repeat ಮಾಡಿ"
+    }
+   ]
+  },
+  {
+   "id": "amb-kn-en-901",
+   "lang": "kn-en",
+   "category": "ambiguous_request",
+   "expected": {
+    "starts_workflow": false
+   },
+   "gloss": "there is an account matter",
+   "forms": [
+    {
+     "kind": "reference",
+     "text": "ಅಕೌಂಟ್ ವಿಷಯ ಒಂದಿದೆ"
+    }
+   ]
+  },
+  {
+   "id": "svc-hi-en-901",
+   "lang": "hi-en",
+   "category": "service_request",
+   "expected": {
+    "intent": "apply for loan"
+   },
+   "gloss": "I need a personal loan",
+   "forms": [
+    {
+     "kind": "reference",
+     "text": "मुझे पर्सनल लोन चाहिए"
+    },
+    {
+     "kind": "latin",
+     "text": "मुझे personal loan चाहिए"
+    },
+    {
+     "kind": "romanised",
+     "text": "mujhe personal loan chahiye"
+    }
+   ]
+  },
+  {
+   "id": "svc-hi-en-902",
+   "lang": "hi-en",
+   "category": "service_request",
+   "expected": {
+    "intent": "deposit money"
+   },
+   "gloss": "I need to deposit cash into my account",
+   "forms": [
+    {
+     "kind": "reference",
+     "text": "मेरे अकाउंट में कैश डिपॉजिट करना है"
+    },
+    {
+     "kind": "latin",
+     "text": "मेरे account में cash deposit करना है"
+    },
+    {
+     "kind": "spelling-variant",
+     "text": "मेरे एकाउंट में कैश डिपोजिट करना है"
+    }
+   ]
+  },
+  {
+   "id": "svc-hi-en-903",
+   "lang": "hi-en",
+   "category": "service_request",
+   "expected": {
+    "intent": "check account balance"
+   },
+   "gloss": "I need to check my account balance",
+   "forms": [
+    {
+     "kind": "reference",
+     "text": "मेरा अकाउंट बैलेंस चेक करना है"
+    },
+    {
+     "kind": "latin",
+     "text": "मेरा account balance check करना है"
+    },
+    {
+     "kind": "spelling-variant",
+     "text": "मेरा एकाउंट बेलेंस चेक करना है"
+    }
+   ]
+  },
+  {
+   "id": "svc-hi-en-904",
+   "lang": "hi-en",
+   "category": "service_request",
+   "expected": {
+    "intent": "withdraw money"
+   },
+   "gloss": "the ATM is broken, so I need to withdraw cash",
+   "forms": [
+    {
+     "kind": "reference",
+     "text": "एटीएम खराब है इसलिए कैश विड्रॉल करना है"
+    },
+    {
+     "kind": "latin",
+     "text": "ATM खराब है इसलिए cash withdrawal करना है"
+    }
+   ]
+  },
+  {
+   "id": "kq-hi-en-901",
+   "lang": "hi-en",
+   "category": "knowledge_question",
+   "expected": {
+    "route": "knowledge",
+    "sources": [
+     "loan.md",
+     "loan_basics.md"
+    ]
+   },
+   "gloss": "which documents does a loan need",
+   "forms": [
+    {
+     "kind": "reference",
+     "text": "लोन के लिए कौन कौन से डॉक्यूमेंट लगते हैं"
+    },
+    {
+     "kind": "latin",
+     "text": "loan के लिए कौन कौन से documents लगते हैं"
+    }
+   ]
+  },
+  {
+   "id": "amt-hi-en-901",
+   "lang": "hi-en",
+   "category": "amount",
+   "expected": {
+    "amount": 25000
+   },
+   "gloss": "I need to deposit twenty-five thousand rupees",
+   "forms": [
+    {
+     "kind": "reference",
+     "text": "पच्चीस हज़ार रुपये डिपॉजिट करने हैं"
+    },
+    {
+     "kind": "digits",
+     "text": "25000 रुपये डिपॉजिट करने हैं"
+    },
+    {
+     "kind": "latin",
+     "text": "पच्चीस हज़ार rupees deposit करने हैं"
+    },
+    {
+     "kind": "digit-and-scale",
+     "text": "25 हज़ार रुपये डिपॉजिट करने हैं"
+    }
+   ]
+  },
+  {
+   "id": "ctl-hi-en-901",
+   "lang": "hi-en",
+   "category": "control",
+   "expected": {
+    "command": "repeat"
+   },
+   "gloss": "please repeat",
+   "forms": [
+    {
+     "kind": "reference",
+     "text": "रिपीट कीजिए"
+    },
+    {
+     "kind": "latin",
+     "text": "repeat कीजिए"
+    }
+   ]
+  },
+  {
+   "id": "svc-hi-en-905",
+   "lang": "hi-en",
+   "category": "service_request",
+   "expected": {
+    "intent": "apply for loan"
+   },
+   "gloss": "a bare service word names the service",
+   "forms": [
+    {
+     "kind": "reference",
+     "text": "लोन"
+    },
+    {
+     "kind": "latin",
+     "text": "loan"
+    }
+   ]
+  },
+  {
+   "id": "amb-hi-en-901",
+   "lang": "hi-en",
+   "category": "ambiguous_request",
+   "expected": {
+    "starts_workflow": false
+   },
+   "gloss": "I have some work at the bank",
+   "forms": [
+    {
+     "kind": "reference",
+     "text": "बैंक में कुछ काम है"
+    }
+   ]
+  }
+ ]
+}

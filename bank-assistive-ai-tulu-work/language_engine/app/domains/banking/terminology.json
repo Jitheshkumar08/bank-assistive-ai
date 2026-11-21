@@ -1,0 +1,61 @@
+{
+  "note": "Approved spellings for spelling requests ('How do you spell withdrawal?'). Standard English (Indian/British) spellings of the words the knowledge base and workflows use. 'heard_as' lists common misspellings or speech-recognition forms that mean the same word. 'alternate' is another accepted spelling, said after the main one. A word in 'ambiguous' sounds like more than one entry, so the assistant asks which is meant instead of guessing. A word not listed here is NOT answered from this table; it goes to the normal answering path.",
+  "terms": [
+    {"term": "account"},
+    {"term": "account number"},
+    {"term": "address"},
+    {"term": "amount"},
+    {"term": "application"},
+    {"term": "balance"},
+    {"term": "bank"},
+    {"term": "beneficiary", "heard_as": ["benificiary", "beneficery"]},
+    {"term": "branch"},
+    {"term": "cash"},
+    {"term": "cashier"},
+    {"term": "cheque", "heard_as": ["cheq"]},
+    {"term": "cheque book", "heard_as": ["chequebook", "check book", "checkbook"], "alternate": "checkbook"},
+    {"term": "current account"},
+    {"term": "deposit", "heard_as": ["deposite", "diposit"]},
+    {"term": "deposit slip", "heard_as": ["deposite slip"]},
+    {"term": "documents"},
+    {"term": "eligibility", "heard_as": ["eligiblity"]},
+    {"term": "identity"},
+    {"term": "instalment", "heard_as": ["installment", "instalments", "installments"], "alternate": "installment"},
+    {"term": "interest", "heard_as": ["intrest"]},
+    {"term": "loan"},
+    {"term": "nominee"},
+    {"term": "overdraft"},
+    {"term": "passbook", "heard_as": ["pass book"]},
+    {"term": "photograph"},
+    {"term": "principal"},
+    {"term": "receipt", "heard_as": ["reciept"]},
+    {"term": "rupees"},
+    {"term": "savings", "heard_as": ["saving"]},
+    {"term": "savings account", "heard_as": ["saving account"]},
+    {"term": "signature", "heard_as": ["signiture"]},
+    {"term": "statement"},
+    {"term": "tenure"},
+    {"term": "transfer"},
+    {"term": "withdraw"},
+    {"term": "withdrawal", "heard_as": ["withdrawl", "withdrawel", "withdrawal", "withdrawals"]},
+    {"term": "withdrawal slip", "heard_as": ["withdrawl slip"]},
+    {"term": "ATM", "acronym": true},
+    {"term": "EMI", "acronym": true},
+    {"term": "IFSC", "acronym": true},
+    {"term": "IMPS", "acronym": true},
+    {"term": "KYC", "acronym": true},
+    {"term": "NEFT", "acronym": true},
+    {"term": "RTGS", "acronym": true},
+    {"term": "UPI", "acronym": true}
+  ],
+  "ambiguous": {
+    "check": {
+      "options": ["cheque", "check"],
+      "question": "Do you mean cheque, the bank payment document, spelled C-H-E-Q-U-E, or check, meaning to verify, spelled C-H-E-C-K?"
+    },
+    "principle": {
+      "options": ["principal", "principle"],
+      "question": "Do you mean principal, the amount borrowed, spelled P-R-I-N-C-I-P-A-L, or principle, meaning a rule, spelled P-R-I-N-C-I-P-L-E?"
+    }
+  }
+}

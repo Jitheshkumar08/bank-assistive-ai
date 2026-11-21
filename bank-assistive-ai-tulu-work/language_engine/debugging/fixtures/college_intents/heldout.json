@@ -1,0 +1,177 @@
+{
+ "note": "Labelled College utterances. Authored by the development assistant (not a native Kannada speaker), unreviewed. 'expect' is an intent name, or NOT_INTENT for anything that must not be treated as a College information request (out of scope, banking, acknowledgement). dev.json tunes thresholds; heldout.json only checks them.",
+ "cases": [
+  {
+   "text": "I would like to know how admissions work here",
+   "expect": "admission_process"
+  },
+  {
+   "text": "ಇಲ್ಲಿ ಪ್ರವೇಶ ಪ್ರಕ್ರಿಯೆ ಹೇಗೆ ನಡೆಯುತ್ತದೆ",
+   "expect": "admission_process"
+  },
+  {
+   "text": "Do I have to submit my caste certificate?",
+   "expect": "admission_documents"
+  },
+  {
+   "text": "ಜಾತಿ ಪ್ರಮಾಣಪತ್ರ ಬೇಕೇ",
+   "expect": "admission_documents"
+  },
+  {
+   "text": "What percentage do I need in PUC to qualify?",
+   "expect": "admission_eligibility"
+  },
+  {
+   "text": "ಪಿಯುಸಿಯಲ್ಲಿ ಎಷ್ಟು ಅಂಕ ಬೇಕು",
+   "expect": "admission_eligibility"
+  },
+  {
+   "text": "Has my seat been confirmed yet?",
+   "expect": "admission_status"
+  },
+  {
+   "text": "ನನ್ನ ಸೀಟು ಖಚಿತವಾಗಿದೆಯೇ",
+   "expect": "admission_status"
+  },
+  {
+   "text": "What will the total fee be for four years?",
+   "expect": "fee_information"
+  },
+  {
+   "text": "ನಾಲ್ಕು ವರ್ಷಕ್ಕೆ ಒಟ್ಟು ಶುಲ್ಕ ಎಷ್ಟು",
+   "expect": "fee_information"
+  },
+  {
+   "text": "Is there an option to pay the fee in two parts?",
+   "expect": "payment_process"
+  },
+  {
+   "text": "ಶುಲ್ಕವನ್ನು ಎರಡು ಕಂತುಗಳಲ್ಲಿ ಕಟ್ಟಬಹುದೇ",
+   "expect": "payment_process"
+  },
+  {
+   "text": "Is there any scholarship for girls?",
+   "expect": "scholarship_information"
+  },
+  {
+   "text": "ಹುಡುಗಿಯರಿಗೆ ವಿದ್ಯಾರ್ಥಿವೇತನ ಇದೆಯೇ",
+   "expect": "scholarship_information"
+  },
+  {
+   "text": "Do you have an MBA programme?",
+   "expect": "course_information"
+  },
+  {
+   "text": "ಎಂಬಿಎ ಕೋರ್ಸ್ ಇದೆಯೇ",
+   "expect": "course_information"
+  },
+  {
+   "text": "Who heads the electronics department?",
+   "expect": "department_information"
+  },
+  {
+   "text": "ಎಲೆಕ್ಟ್ರಾನಿಕ್ಸ್ ವಿಭಾಗದ ಮುಖ್ಯಸ್ಥರು ಯಾರು",
+   "expect": "department_information"
+  },
+  {
+   "text": "When is the Diwali holiday?",
+   "expect": "academic_calendar"
+  },
+  {
+   "text": "ದೀಪಾವಳಿ ರಜೆ ಯಾವಾಗ",
+   "expect": "academic_calendar"
+  },
+  {
+   "text": "When will internal exams be held?",
+   "expect": "examination_information"
+  },
+  {
+   "text": "ಆಂತರಿಕ ಪರೀಕ್ಷೆಗಳು ಯಾವಾಗ",
+   "expect": "examination_information"
+  },
+  {
+   "text": "Is there a mess in the girls hostel?",
+   "expect": "hostel_information"
+  },
+  {
+   "text": "ಹಾಸ್ಟೆಲ್‌ನಲ್ಲಿ ಊಟದ ವ್ಯವಸ್ಥೆ ಇದೆಯೇ",
+   "expect": "hostel_information"
+  },
+  {
+   "text": "Which bus route covers Mangalore?",
+   "expect": "transport_information"
+  },
+  {
+   "text": "ಮಂಗಳೂರಿಗೆ ಬಸ್ ಮಾರ್ಗ ಇದೆಯೇ",
+   "expect": "transport_information"
+  },
+  {
+   "text": "Is there wifi on campus?",
+   "expect": "student_services"
+  },
+  {
+   "text": "ಕ್ಯಾಂಪಸ್‌ನಲ್ಲಿ ಕ್ಯಾಂಟೀನ್ ಇದೆಯೇ",
+   "expect": "student_services"
+  },
+  {
+   "text": "How can I email the admissions team?",
+   "expect": "contact_information"
+  },
+  {
+   "text": "ಪ್ರವೇಶ ವಿಭಾಗವನ್ನು ಸಂಪರ್ಕಿಸುವುದು ಹೇಗೆ",
+   "expect": "contact_information"
+  },
+  {
+   "text": "Please guide me to the auditorium",
+   "expect": "campus_navigation"
+  },
+  {
+   "text": "ಸಭಾಂಗಣಕ್ಕೆ ಹೇಗೆ ಹೋಗುವುದು",
+   "expect": "campus_navigation"
+  },
+  {
+   "text": "Where can I find the accounts office?",
+   "expect": "office_location"
+  },
+  {
+   "text": "ಲೆಕ್ಕಪತ್ರ ಕಚೇರಿ ಎಲ್ಲಿ ಇದೆ",
+   "expect": "office_location"
+  },
+  {
+   "text": "When was this institution founded?",
+   "expect": "general_college_query"
+  },
+  {
+   "text": "ಈ ಸಂಸ್ಥೆ ಯಾವಾಗ ಸ್ಥಾಪನೆಯಾಯಿತು",
+   "expect": "general_college_query"
+  },
+  {
+   "text": "I need to withdraw cash",
+   "expect": "NOT_INTENT"
+  },
+  {
+   "text": "What is my account balance?",
+   "expect": "NOT_INTENT"
+  },
+  {
+   "text": "ನನ್ನ ಖಾತೆಯ ಬ್ಯಾಲೆನ್ಸ್ ಎಷ್ಟು",
+   "expect": "NOT_INTENT"
+  },
+  {
+   "text": "I want to apply for a personal loan",
+   "expect": "NOT_INTENT"
+  },
+  {
+   "text": "Who is the prime minister?",
+   "expect": "NOT_INTENT"
+  },
+  {
+   "text": "thanks a lot",
+   "expect": "NOT_INTENT"
+  },
+  {
+   "text": "ಸರಿ",
+   "expect": "NOT_INTENT"
+  }
+ ]
+}

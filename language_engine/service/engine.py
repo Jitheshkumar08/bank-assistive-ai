@@ -176,6 +176,17 @@ class EngineRuntime:
             with os.fdopen(handle, "wb") as file:
                 file.write(audio)
 
+            if (language or "").lower() == "tcy":
+                # No ASR model supports Tulu. The Tulu recogniser accepts only
+                # a confident match to a verified Tulu phrase and otherwise
+                # refuses, so the customer is asked to type (app/tulu/asr).
+                from app.tulu.asr.recognizer import REFUSAL, get_recognizer
+
+                recognised = get_recognizer().recognize(path)
+                if not recognised.accepted:
+                    raise TranscriptionError(REFUSAL)
+                return recognised.transcript
+
             result = self.stt.transcribe(path, language=language)
         except TranscriptionError:
             raise

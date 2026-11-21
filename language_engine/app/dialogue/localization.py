@@ -217,6 +217,34 @@ def _render_fixed(text, language):
 
 
 # =========================================================
+# TULU (tcy) -- verified renderings only
+#
+# Tulu is NOT in SUPPORTED_LANGUAGES and has no catalog entries: its
+# renderings come from the native-speaker dataset (app/tulu), so only the
+# sentences a native speaker supplied are rendered. Everything else -- fixed
+# replies without a verified rendering and all LLM text -- stays in English,
+# unchanged and unmarked (no verified Tulu marker exists), exactly as an
+# unsupported language was returned before. A reply with no verified Tulu
+# at all therefore keeps its old status, UNSUPPORTED_LANGUAGE.
+# =========================================================
+
+TULU = "tcy"
+
+
+def _localize_tulu(text):
+    from app.tulu.translation import renderer   # lazy: Tulu data loads on first use
+
+    if isinstance(text, GeneratedText):
+        return text, UNSUPPORTED_LANGUAGE
+    rendered, status = renderer.render(str(text))
+    if status == renderer.TRANSLATED:
+        return rendered, TRANSLATED
+    if status == renderer.PARTIAL:
+        return rendered, FALLBACK
+    return text, UNSUPPORTED_LANGUAGE
+
+
+# =========================================================
 # PUBLIC API
 # =========================================================
 
@@ -228,6 +256,8 @@ def localize_detailed(text, language):
         return text, ENGLISH if language == "en" else TRANSLATED
     if language == "en":
         return text, ENGLISH
+    if language == TULU:
+        return _localize_tulu(text)
     if language not in SUPPORTED_LANGUAGES:
         return text, UNSUPPORTED_LANGUAGE
 

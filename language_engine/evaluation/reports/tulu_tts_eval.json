@@ -1,0 +1,795 @@
+{
+  "disclosure": "Kannada-trained neural voice synthesizing Tulu text written in Kannada script; not a native Tulu TTS model.",
+  "generated_items": 30,
+  "any_sha256_match_with_dataset": false,
+  "max_xcorr_vs_dataset_overall": 0.346,
+  "machine_intelligibility_summary": {
+    "indicconformer-kn": {
+      "mean_tts_cer (all 28 dataset sentences)": 0.348,
+      "mean_native_cer (same 28 sentences)": 0.273,
+      "mean_tts_cer (8 verified assistant responses used in product)": 0.355
+    }
+  },
+  "memory_end": {
+    "current_mb": 320.8,
+    "peak_mb": 376.3
+  },
+  "rows": [
+    {
+      "id": "D01a",
+      "dataset": "deposit",
+      "role": "customer",
+      "text": "Yank duddu padare undu?",
+      "native_audio": "C:\\Users\\Prathviraj Bhat\\OneDrive\\Desktop\\bank-ai\\bank-assistive-ai-tulu-work\\deposit conversation\\D01a_CUSTOMER.wav.m4a",
+      "status": "verified",
+      "spoken_kannada_script": "ಯಂಕ್ ದುಡ್ಡು ಪಡರೆ ಉಂಡು?",
+      "voice_id": "tcy-text/kn-IN-SapnaNeural",
+      "generated_file": "evaluation\\reports\\tulu_tts_audio\\D01a_generated.mp3",
+      "bytes": 14688,
+      "content_type": "audio/mpeg",
+      "duration_s": 2.45,
+      "sha256": "1076ce30b8867ff195723ff7e6a8b1e9c48e7b44c8a580489959a7bf03f62e45",
+      "sha256_matches_any_dataset_recording": false,
+      "max_xcorr_vs_dataset": 0.215,
+      "xcorr_vs_own_native_recording": 0.064,
+      "machine_intelligibility": {
+        "indicconformer-kn": {
+          "tts_hypothesis": "ದುಡ್ಡು ಪಡರೆ ಒಂದು",
+          "tts_cer": 0.278,
+          "native_hypothesis": "ಯಂಕ್ ದುಡ್ಡು ಪಾಡರೆ ಉಂದುು",
+          "native_cer": 0.0
+        }
+      }
+    },
+    {
+      "id": "D01b",
+      "dataset": "deposit",
+      "role": "customer",
+      "text": "Yank duddu deposit malpodu?",
+      "native_audio": "C:\\Users\\Prathviraj Bhat\\OneDrive\\Desktop\\bank-ai\\bank-assistive-ai-tulu-work\\deposit conversation\\D01b_CUSTOMER.wav.m4a",
+      "status": "verified",
+      "spoken_kannada_script": "ಯಂಕ್ ದುಡ್ಡು ಡೆಪಾಸಿಟ್ ಮಲ್ಪೊಡು?",
+      "voice_id": "tcy-text/kn-IN-SapnaNeural",
+      "generated_file": "evaluation\\reports\\tulu_tts_audio\\D01b_generated.mp3",
+      "bytes": 16560,
+      "content_type": "audio/mpeg",
+      "duration_s": 2.76,
+      "sha256": "7e69ea3f3bf9710aebe9d578bdd65ea02a5e2e809c1466d6a96448da78886c94",
+      "sha256_matches_any_dataset_recording": false,
+      "max_xcorr_vs_dataset": 0.213,
+      "xcorr_vs_own_native_recording": 0.103,
+      "machine_intelligibility": {
+        "indicconformer-kn": {
+          "tts_hypothesis": "ದುಡ್ಡು ಡೆಪಾಸಿಟ್ ಮಾಲ್ಪೋಡು",
+          "tts_cer": 0.227,
+          "native_hypothesis": "ಯಕ್ ದುಡ್ಡು ಡೆಪಾಸಿಟ್ ಮಲ್ಪೋಡು",
+          "native_cer": 0.091
+        }
+      }
+    },
+    {
+      "id": "D01c",
+      "dataset": "deposit",
+      "role": "customer",
+      "text": "Yank duddu padodu?",
+      "native_audio": "C:\\Users\\Prathviraj Bhat\\OneDrive\\Desktop\\bank-ai\\bank-assistive-ai-tulu-work\\deposit conversation\\D01c_CUSTOMER.wav.m4a",
+      "status": "verified",
+      "spoken_kannada_script": "ಯಂಕ್ ದುಡ್ಡು ಪಡೊಡು?",
+      "voice_id": "tcy-text/kn-IN-SapnaNeural",
+      "generated_file": "evaluation\\reports\\tulu_tts_audio\\D01c_generated.mp3",
+      "bytes": 13536,
+      "content_type": "audio/mpeg",
+      "duration_s": 2.26,
+      "sha256": "8af6643132b23d06a97d0df9c65be35939c3a3dddb967209e30c25802f74f9b7",
+      "sha256_matches_any_dataset_recording": false,
+      "max_xcorr_vs_dataset": 0.195,
+      "xcorr_vs_own_native_recording": 0.104,
+      "machine_intelligibility": {
+        "indicconformer-kn": {
+          "tts_hypothesis": "ದುಡ್ಡು ಪಡಡು",
+          "tts_cer": 0.357,
+          "native_hypothesis": "ಕ್ ದುಡ್ಡು ಪಾಡಡು",
+          "native_cer": 0.286
+        }
+      }
+    },
+    {
+      "id": "D01",
+      "dataset": "deposit",
+      "role": "assistant",
+      "text": "Okay, first er cash deposit dh slip dethonle.",
+      "native_audio": "C:\\Users\\Prathviraj Bhat\\OneDrive\\Desktop\\bank-ai\\bank-assistive-ai-tulu-work\\deposit conversation\\D01_ASSISTANT.wav",
+      "status": "verified",
+      "spoken_kannada_script": "ಓಕೆ, ಫಸ್ಟ್ ಎರ್ ಕ್ಯಾಶ್ ಡೆಪಾಸಿಟ್‌ದ ಸ್ಲಿಪ್ ದೆತೊನ್ಲೆ.",
+      "voice_id": "tcy-text/kn-IN-SapnaNeural",
+      "generated_file": "evaluation\\reports\\tulu_tts_audio\\D01_generated.mp3",
+      "bytes": 25056,
+      "content_type": "audio/mpeg",
+      "duration_s": 4.18,
+      "sha256": "25c6935eb1a1e3d980ab664de0fb6a671bcf22c4a7c4021684b3fd999dbedd2f",
+      "sha256_matches_any_dataset_recording": false,
+      "max_xcorr_vs_dataset": 0.168,
+      "xcorr_vs_own_native_recording": 0.081,
+      "machine_intelligibility": {
+        "indicconformer-kn": {
+          "tts_hypothesis": "ಫಸ್ಟ್ ಏರ್ ಕ್ಯಾಶ್ ಡೆಪಾಸಿಟ್ ದ ಸ್ಲೀಪ್ ದೆ ತೊಲ್ಲೇ",
+          "tts_cer": 0.333,
+          "native_hypothesis": "ಒಕೆ ಫಸ್ಟ್ ಇರ್ ಕ್ಯಾಶ್ ಡೆಪಾಸಿಟ್ ಮಲ್ಪುನ ಸ್ಲಿಪ್ಗೆ ತೋನ್",
+          "native_cer": 0.545
+        }
+      }
+    },
+    {
+      "id": "D02a",
+      "dataset": "deposit",
+      "role": "customer",
+      "text": "Slip dethond aand?",
+      "native_audio": "C:\\Users\\Prathviraj Bhat\\OneDrive\\Desktop\\bank-ai\\bank-assistive-ai-tulu-work\\deposit conversation\\D02a_CUSTOMER.wav",
+      "status": "verified",
+      "spoken_kannada_script": "ಸ್ಲಿಪ್ ದೆತೊಂಡ್ ಆಂಡ್?",
+      "voice_id": "tcy-text/kn-IN-SapnaNeural",
+      "generated_file": "evaluation\\reports\\tulu_tts_audio\\D02a_generated.mp3",
+      "bytes": 13536,
+      "content_type": "audio/mpeg",
+      "duration_s": 2.26,
+      "sha256": "010d0a1b5bcffd77fc824b8eb92dab913e50f31749f66c87e92e98903923d7db",
+      "sha256_matches_any_dataset_recording": false,
+      "max_xcorr_vs_dataset": 0.346,
+      "xcorr_vs_own_native_recording": 0.142,
+      "machine_intelligibility": {
+        "indicconformer-kn": {
+          "tts_hypothesis": "ತೆಥೋಂಡ್ ಅಂಡ್",
+          "tts_cer": 0.385,
+          "native_hypothesis": "ಸ್ಲಿಪ್ ದ ತೋಂಡಂಡ",
+          "native_cer": 0.154
+        }
+      }
+    },
+    {
+      "id": "D02b",
+      "dataset": "deposit",
+      "role": "customer",
+      "text": "Dethe nana dada malpodu?",
+      "native_audio": "C:\\Users\\Prathviraj Bhat\\OneDrive\\Desktop\\bank-ai\\bank-assistive-ai-tulu-work\\deposit conversation\\D02b_CUSTOMER.wav",
+      "status": "verified",
+      "spoken_kannada_script": "ದೆತೆ ನನ ದಡ ಮಲ್ಪೊಡು?",
+      "voice_id": "tcy-text/kn-IN-SapnaNeural",
+      "generated_file": "evaluation\\reports\\tulu_tts_audio\\D02b_generated.mp3",
+      "bytes": 15840,
+      "content_type": "audio/mpeg",
+      "duration_s": 2.64,
+      "sha256": "d74fdb8d08d6d6f68fd672cdc423263775ed50c3d8347a0e5f7a3215d1f11d8a",
+      "sha256_matches_any_dataset_recording": false,
+      "max_xcorr_vs_dataset": 0.179,
+      "xcorr_vs_own_native_recording": 0.093,
+      "machine_intelligibility": {
+        "indicconformer-kn": {
+          "tts_hypothesis": "ನನ್ನ ತಡ ಮಲ್ಪೋಡು",
+          "tts_cer": 0.263,
+          "native_hypothesis": "ಬೆತ್ತೆ ನನದಾದ ಮಲ್ಪೋಡು",
+          "native_cer": 0.053
+        }
+      }
+    },
+    {
+      "id": "D02c",
+      "dataset": "deposit",
+      "role": "customer",
+      "text": "Ethe dada malpodu?",
+      "native_audio": "C:\\Users\\Prathviraj Bhat\\OneDrive\\Desktop\\bank-ai\\bank-assistive-ai-tulu-work\\deposit conversation\\D02c_CUSTOMER.wav",
+      "status": "verified",
+      "spoken_kannada_script": "ಎತೆ ದಡ ಮಲ್ಪೊಡು?",
+      "voice_id": "tcy-text/kn-IN-SapnaNeural",
+      "generated_file": "evaluation\\reports\\tulu_tts_audio\\D02c_generated.mp3",
+      "bytes": 13968,
+      "content_type": "audio/mpeg",
+      "duration_s": 2.33,
+      "sha256": "3f132b4033b06a5d2e6ff62132bef6ae92617d010fc744b9fbfff129c18294b0",
+      "sha256_matches_any_dataset_recording": false,
+      "max_xcorr_vs_dataset": 0.134,
+      "xcorr_vs_own_native_recording": 0.082,
+      "machine_intelligibility": {
+        "indicconformer-kn": {
+          "tts_hypothesis": "ಡ ಮಲ್ಪಡು",
+          "tts_cer": 0.429,
+          "native_hypothesis": "ಇದೆ ದಾದ ಮಲ್ಕೋಡು",
+          "native_cer": 0.214
+        }
+      }
+    },
+    {
+      "id": "D02d",
+      "dataset": "deposit",
+      "role": "customer",
+      "text": "Yaan slip dethoni ye ethe dada poora fill malthonodu?",
+      "native_audio": "C:\\Users\\Prathviraj Bhat\\OneDrive\\Desktop\\bank-ai\\bank-assistive-ai-tulu-work\\deposit conversation\\D02d_CUSTOMER.wav",
+      "status": "verified",
+      "spoken_kannada_script": "ಯಾನ್ ಸ್ಲಿಪ್ ದೆತೊನಿ ಯೆ ಎತೆ ದಡ ಪೂರ ಫಿಲ್ ಮಲ್ತೊನೊಡು?",
+      "voice_id": "tcy-text/kn-IN-SapnaNeural",
+      "generated_file": "evaluation\\reports\\tulu_tts_audio\\D02d_generated.mp3",
+      "bytes": 24192,
+      "content_type": "audio/mpeg",
+      "duration_s": 4.03,
+      "sha256": "b3e51234dda0535725689c42dc3c8d2e70cbdc41069c32c11c7002c8c706e846",
+      "sha256_matches_any_dataset_recording": false,
+      "max_xcorr_vs_dataset": 0.163,
+      "xcorr_vs_own_native_recording": 0.057,
+      "machine_intelligibility": {
+        "indicconformer-kn": {
+          "tts_hypothesis": "ಸ್ಲಿಪ್ ದತುನ್ೇ ಎಥ ದಡ ಪೂರಫಿಲ್ ಮಲ್ತು ನೋಡು",
+          "tts_cer": 0.263,
+          "native_hypothesis": "ಯನ್ ಸ್ಲಿಪ್ ಗೆಥೋನಿಯೇ ಹಿತೆದಾದಪೂರ ಶಿಲ್ ಮಲ್ಪೋಡು",
+          "native_cer": 0.184
+        }
+      }
+    },
+    {
+      "id": "D02",
+      "dataset": "deposit",
+      "role": "assistant",
+      "text": "Ait erna account number barele.",
+      "native_audio": "C:\\Users\\Prathviraj Bhat\\OneDrive\\Desktop\\bank-ai\\bank-assistive-ai-tulu-work\\deposit conversation\\D02_ASSISTANT.wav",
+      "status": "verified",
+      "spoken_kannada_script": "ಐಟ್ ಎರ್ನ ಅಕೌಂಟ್ ನಂಬರ್ ಬರೆಲೆ.",
+      "voice_id": "tcy-text/kn-IN-SapnaNeural",
+      "generated_file": "evaluation\\reports\\tulu_tts_audio\\D02_generated.mp3",
+      "bytes": 18144,
+      "content_type": "audio/mpeg",
+      "duration_s": 3.02,
+      "sha256": "579e20bd3cf5c083093735d055c85374e2c864a61388eb03ac125ccf7390c94f",
+      "sha256_matches_any_dataset_recording": false,
+      "max_xcorr_vs_dataset": 0.169,
+      "xcorr_vs_own_native_recording": 0.073,
+      "machine_intelligibility": {
+        "indicconformer-kn": {
+          "tts_hypothesis": "ರ್ ನ ಅಕೌಂಟ್ ನಂಬರ್ ಬರಲೆ",
+          "tts_cer": 0.36,
+          "native_hypothesis": "ಹೈಟ್ ಈರ್ನ ಅಕೌಂಟ್ ನಂಬರ್ ಬರಲಿ",
+          "native_cer": 0.28
+        }
+      }
+    },
+    {
+      "id": "D03a",
+      "dataset": "deposit",
+      "role": "customer",
+      "text": "Account number fill malthaand, nana dada malpodu?",
+      "native_audio": "C:\\Users\\Prathviraj Bhat\\OneDrive\\Desktop\\bank-ai\\bank-assistive-ai-tulu-work\\deposit conversation\\D03a_CUSTOMER.wav",
+      "status": "verified",
+      "spoken_kannada_script": "ಅಕೌಂಟ್ ನಂಬರ್ ಫಿಲ್ ಮಲ್ತಾಂಡ್, ನನ ದಡ ಮಲ್ಪೊಡು?",
+      "voice_id": "tcy-text/kn-IN-SapnaNeural",
+      "generated_file": "evaluation\\reports\\tulu_tts_audio\\D03a_generated.mp3",
+      "bytes": 22896,
+      "content_type": "audio/mpeg",
+      "duration_s": 3.82,
+      "sha256": "1edce79b8a319675e761003c02f2f6b1e640ca090bc515ade3eaa7dd78dee669",
+      "sha256_matches_any_dataset_recording": false,
+      "max_xcorr_vs_dataset": 0.171,
+      "xcorr_vs_own_native_recording": 0.074,
+      "machine_intelligibility": {
+        "indicconformer-kn": {
+          "tts_hypothesis": "ನಂಬರ್ ಫಿಲ್ಮಲ್ ತಾಂಡ್ ನನ್ನ ದಡ ಮಲ್ಪುಡು",
+          "tts_cer": 0.27,
+          "native_hypothesis": "ಅಕೌಂಟ್ ನಂಬರ್ ಚಲ್ಮಲ್ ತಾಂಡ ನನದಾದ ಮಲ್ಪುಡು",
+          "native_cer": 0.216
+        }
+      }
+    },
+    {
+      "id": "D03b",
+      "dataset": "deposit",
+      "role": "customer",
+      "text": "Yan deposit malpuna amount n olpa bareyodu?",
+      "native_audio": "C:\\Users\\Prathviraj Bhat\\OneDrive\\Desktop\\bank-ai\\bank-assistive-ai-tulu-work\\deposit conversation\\D03b_CUSTOMER.wav",
+      "status": "verified",
+      "spoken_kannada_script": "ಯನ್ ಡೆಪಾಸಿಟ್ ಮಲ್ಪುನ ಅಮೌಂಟ್‌ನ್ ಒಲ್ಪ ಬರೆಯೊಡು?",
+      "voice_id": "tcy-text/kn-IN-SapnaNeural",
+      "generated_file": "evaluation\\reports\\tulu_tts_audio\\D03b_generated.mp3",
+      "bytes": 21024,
+      "content_type": "audio/mpeg",
+      "duration_s": 3.5,
+      "sha256": "57bd2e374b7adbcf0b759cee440e92349cf86f26a2d3fad58a6cef9ceee85382",
+      "sha256_matches_any_dataset_recording": false,
+      "max_xcorr_vs_dataset": 0.222,
+      "xcorr_vs_own_native_recording": 0.062,
+      "machine_intelligibility": {
+        "indicconformer-kn": {
+          "tts_hypothesis": "ಡೆಪಾಸಿಟ್ ಮಲ್ಪನ ಅಮೌಂಟನ್ನು ವವಲ್ಪ ಬರೆಯೋಡು",
+          "tts_cer": 0.333,
+          "native_hypothesis": "ಯಾನ ಡೆಪಾಸಿಟ್ ಮಲ್ಪನ ಅಮೌಂಟ್ನ್ನು ಸ್ವಲ್ಪ ಬರೆಯುದುು",
+          "native_cer": 0.25
+        }
+      }
+    },
+    {
+      "id": "D03",
+      "dataset": "deposit",
+      "role": "assistant",
+      "text": "Bokka eth amount deppere undu aven barele.",
+      "native_audio": "C:\\Users\\Prathviraj Bhat\\OneDrive\\Desktop\\bank-ai\\bank-assistive-ai-tulu-work\\deposit conversation\\D03_ASSISTANT.wav",
+      "status": "verified",
+      "spoken_kannada_script": "ಬೊಕ್ಕ ಎತ್ ಅಮೌಂಟ್ ದೆಪ್ಪೆರೆ ಉಂಡು ಅವೆನ್ ಬರೆಲೆ.",
+      "voice_id": "tcy-text/kn-IN-SapnaNeural",
+      "generated_file": "evaluation\\reports\\tulu_tts_audio\\D03_generated.mp3",
+      "bytes": 21744,
+      "content_type": "audio/mpeg",
+      "duration_s": 3.62,
+      "sha256": "3ccaa945399a8c590687060f6ad0e00e46960d3ae69d3edc49f00c9595b4fcda",
+      "sha256_matches_any_dataset_recording": false,
+      "max_xcorr_vs_dataset": 0.168,
+      "xcorr_vs_own_native_recording": 0.065,
+      "machine_intelligibility": {
+        "indicconformer-kn": {
+          "tts_hypothesis": "ತ್ ಅಮೌಂಟ್ ದಪ್ಪರೆ ಒಂದು ಅವೆನ್ ಬರಲೆ",
+          "tts_cer": 0.312,
+          "native_hypothesis": "ಬುಕ್ಕ ಏತೆ ಅಮೌಂಟ್ ದಪ್ಪರೆ ಉಂದುು ಅವೇನು ಬರಲಿ",
+          "native_cer": 0.25
+        }
+      }
+    },
+    {
+      "id": "D04a",
+      "dataset": "deposit",
+      "role": "customer",
+      "text": "Slip pura fill malthaand next dada malpodu?",
+      "native_audio": "C:\\Users\\Prathviraj Bhat\\OneDrive\\Desktop\\bank-ai\\bank-assistive-ai-tulu-work\\deposit conversation\\D04a_CUSTOMER.wav",
+      "status": "verified",
+      "spoken_kannada_script": "ಸ್ಲಿಪ್ ಪುರ ಫಿಲ್ ಮಲ್ತಾಂಡ್ ನೆಕ್ಸ್ಟ್ ದಡ ಮಲ್ಪೊಡು?",
+      "voice_id": "tcy-text/kn-IN-SapnaNeural",
+      "generated_file": "evaluation\\reports\\tulu_tts_audio\\D04a_generated.mp3",
+      "bytes": 21888,
+      "content_type": "audio/mpeg",
+      "duration_s": 3.65,
+      "sha256": "0be01118eadf7d45710e2d4ea912ad4dc43ffb0fd3f0facfd8c33598025f0d5d",
+      "sha256_matches_any_dataset_recording": false,
+      "max_xcorr_vs_dataset": 0.12,
+      "xcorr_vs_own_native_recording": 0.065,
+      "machine_intelligibility": {
+        "indicconformer-kn": {
+          "tts_hypothesis": "ಪುರಫಿಲ್ ಮಲ್ತಾಂಡ್ ನೆಕ್ಸ್ಟ್ ದಡ ಮಲ್ಪುಡೋ",
+          "tts_cer": 0.206,
+          "native_hypothesis": "ಸ್ಲಿಪುರಫಿಲ್ ಮಲ್ತಾಂಡ್ ನೆಕ್ಸ್ಟ್ ದಾದಾ ಮಲ್ಕೋಡು",
+          "native_cer": 0.088
+        }
+      }
+    },
+    {
+      "id": "D04b",
+      "dataset": "deposit",
+      "role": "customer",
+      "text": "Amount n bareye.",
+      "native_audio": "C:\\Users\\Prathviraj Bhat\\OneDrive\\Desktop\\bank-ai\\bank-assistive-ai-tulu-work\\deposit conversation\\D04b_CUSTOMER.wav",
+      "status": "verified",
+      "spoken_kannada_script": "ಅಮೌಂಟ್‌ನ್ ಬರೆಯೆ.",
+      "voice_id": "tcy-text/kn-IN-SapnaNeural",
+      "generated_file": "evaluation\\reports\\tulu_tts_audio\\D04b_generated.mp3",
+      "bytes": 13392,
+      "content_type": "audio/mpeg",
+      "duration_s": 2.23,
+      "sha256": "ea2aa8011076e1af6583d83d86cb3ec955422bab022368c765a68c7bb725c67b",
+      "sha256_matches_any_dataset_recording": false,
+      "max_xcorr_vs_dataset": 0.208,
+      "xcorr_vs_own_native_recording": 0.102,
+      "machine_intelligibility": {
+        "indicconformer-kn": {
+          "tts_hypothesis": "ಬರೆ",
+          "tts_cer": 0.692,
+          "native_hypothesis": "ಅಮೌಂಟನು ಬರ",
+          "native_cer": 0.462
+        }
+      }
+    },
+    {
+      "id": "D04c",
+      "dataset": "deposit",
+      "role": "customer",
+      "text": "Yan deposit malpuna amount bareye. Next dada malpodu?",
+      "native_audio": "C:\\Users\\Prathviraj Bhat\\OneDrive\\Desktop\\bank-ai\\bank-assistive-ai-tulu-work\\deposit conversation\\D04c_CUSTOMER.wav",
+      "status": "verified",
+      "spoken_kannada_script": "ಯನ್ ಡೆಪಾಸಿಟ್ ಮಲ್ಪುನ ಅಮೌಂಟ್ ಬರೆಯೆ. ನೆಕ್ಸ್ಟ್ ದಡ ಮಲ್ಪೊಡು?",
+      "voice_id": "tcy-text/kn-IN-SapnaNeural",
+      "generated_file": "evaluation\\reports\\tulu_tts_audio\\D04c_generated.mp3",
+      "bytes": 31536,
+      "content_type": "audio/mpeg",
+      "duration_s": 5.26,
+      "sha256": "4a83f2fd5329cd5c8a0bec2d6a710a5a5e7dcf53504890e114a6195c27e38bf9",
+      "sha256_matches_any_dataset_recording": false,
+      "max_xcorr_vs_dataset": 0.234,
+      "xcorr_vs_own_native_recording": 0.054,
+      "machine_intelligibility": {
+        "indicconformer-kn": {
+          "tts_hypothesis": "ಡೆಪಾಸಿಟ್ ಮಲ್ಪು ನ ಅಮೌಂಟ್ ಬರೆಸ್ ದಡ ಮಲ್ಪುಡು",
+          "tts_cer": 0.267,
+          "native_hypothesis": "ಯನ್ ಡೆಪಾಸಿಟ್ ಮಲ್ಪುನ ಅಮೌಂಟನ ಬರ ನೆಕ್ಸ್ಟದಾದ ಮಲ್ಪುಡು",
+          "native_cer": 0.222
+        }
+      }
+    },
+    {
+      "id": "D04",
+      "dataset": "deposit",
+      "role": "assistant",
+      "text": "Slip Boka amount n cash counter d korle.",
+      "native_audio": "C:\\Users\\Prathviraj Bhat\\OneDrive\\Desktop\\bank-ai\\bank-assistive-ai-tulu-work\\deposit conversation\\D04_ASSISTANT.wav",
+      "status": "disputed -- listening only",
+      "spoken_kannada_script": "ಸ್ಲಿಪ್ ಬೊಕ ಅಮೌಂಟ್‌ನ್ ಕ್ಯಾಶ್ ಕೌಂಟರ್‌ಡ್ ಕೊರ್ಲೆ.",
+      "voice_id": "tcy-text/kn-IN-SapnaNeural",
+      "generated_file": "evaluation\\reports\\tulu_tts_audio\\D04_generated.mp3",
+      "bytes": 21168,
+      "content_type": "audio/mpeg",
+      "duration_s": 3.53,
+      "sha256": "7078e3ed7d5d115c371164ed4b9157f8de3b5787d054409ef1adfea482f5c79f",
+      "sha256_matches_any_dataset_recording": false,
+      "max_xcorr_vs_dataset": 0.158,
+      "xcorr_vs_own_native_recording": 0.072,
+      "machine_intelligibility": {
+        "indicconformer-kn": {
+          "tts_hypothesis": "ಬೋಕ್ ಅಮೌಂಟ್ ಕ್ಯಾಶ್ ಕೌಂಟೆಡ್ ಕೊಲ್ಲೇ",
+          "tts_cer": 0.355,
+          "native_hypothesis": "ಸ್ಲಿಪ್ ಬುಕ್ ಅಮೌಂಟನ ಕ್ಯಾಶ್ ಕೌಂಟರ್ಡ್ ಕೊರಲ",
+          "native_cer": 0.323
+        }
+      }
+    },
+    {
+      "id": "W01a",
+      "dataset": "withdrawal",
+      "role": "customer",
+      "text": "Yenk kaas deppere undu?",
+      "native_audio": "C:\\Users\\Prathviraj Bhat\\OneDrive\\Desktop\\bank-ai\\bank-assistive-ai-tulu-work\\withdraw_conversation\\W01a_Customer.wav.wav",
+      "status": "verified",
+      "spoken_kannada_script": "ಯೆಂಕ್ ಕಾಸ್ ದೆಪ್ಪೆರೆ ಉಂಡು?",
+      "voice_id": "tcy-text/kn-IN-SapnaNeural",
+      "generated_file": "evaluation\\reports\\tulu_tts_audio\\W01a_generated.mp3",
+      "bytes": 15408,
+      "content_type": "audio/mpeg",
+      "duration_s": 2.57,
+      "sha256": "05bb12aae86e4c88e39723e47616adf0b459fc85ddc574637ddf4b9e1f59e6b4",
+      "sha256_matches_any_dataset_recording": false,
+      "max_xcorr_vs_dataset": 0.201,
+      "xcorr_vs_own_native_recording": 0.201,
+      "machine_intelligibility": {
+        "indicconformer-kn": {
+          "tts_hypothesis": "ಕಸ್ ತತ್ತರೆ ಉಂಡು",
+          "tts_cer": 0.471,
+          "native_hypothesis": "ಇಂಕ್ ಕಸ್ ದಿರೆ ಉು",
+          "native_cer": 0.471
+        }
+      }
+    },
+    {
+      "id": "W01b",
+      "dataset": "withdrawal",
+      "role": "customer",
+      "text": "Yenk yenna account d dh kaas/amount deppere undu?",
+      "native_audio": "C:\\Users\\Prathviraj Bhat\\OneDrive\\Desktop\\bank-ai\\bank-assistive-ai-tulu-work\\withdraw_conversation\\W01b_customer.wav.wav",
+      "status": "verified",
+      "spoken_kannada_script": "ಯೆಂಕ್ ಯೆನ್ನ ಅಕೌಂಟ್‌ಡ್‌ದ ಕಾಸ್/ಅಮೌಂಟ್ ದೆಪ್ಪೆರೆ ಉಂಡು?",
+      "voice_id": "tcy-text/kn-IN-SapnaNeural",
+      "generated_file": "evaluation\\reports\\tulu_tts_audio\\W01b_generated.mp3",
+      "bytes": 22464,
+      "content_type": "audio/mpeg",
+      "duration_s": 3.74,
+      "sha256": "ce66a822d1340c4dbc28be6879bbd954e1fe1037dc83469eeb92bcf143a2a766",
+      "sha256_matches_any_dataset_recording": false,
+      "max_xcorr_vs_dataset": 0.309,
+      "xcorr_vs_own_native_recording": 0.309,
+      "machine_intelligibility": {
+        "indicconformer-kn": {
+          "tts_hypothesis": "ಅಕೌಂಟ್ ದ ಕಾಸ್ ಅಮೌಂಟ್ ದ ಪೆರೆ ಒಂಡು",
+          "tts_cer": 0.371,
+          "native_hypothesis": "ಯಂಕ್ನ್ನ ಅಕೌಂಟಡ್ ದ ಕಸ್ ದಪ್ಪರ ಉಂಡು",
+          "native_cer": 0.429
+        }
+      }
+    },
+    {
+      "id": "W01c",
+      "dataset": "withdrawal",
+      "role": "customer",
+      "text": "Yenk bank dh kaas deppere undu?",
+      "native_audio": "C:\\Users\\Prathviraj Bhat\\OneDrive\\Desktop\\bank-ai\\bank-assistive-ai-tulu-work\\withdraw_conversation\\W01c_Customer.wav.wav",
+      "status": "verified",
+      "spoken_kannada_script": "ಯೆಂಕ್ ಬ್ಯಾಂಕ್‌ದ ಕಾಸ್ ದೆಪ್ಪೆರೆ ಉಂಡು?",
+      "voice_id": "tcy-text/kn-IN-SapnaNeural",
+      "generated_file": "evaluation\\reports\\tulu_tts_audio\\W01c_generated.mp3",
+      "bytes": 17568,
+      "content_type": "audio/mpeg",
+      "duration_s": 2.93,
+      "sha256": "5e738a81b52c7385b0463b9abf5180f588970588d74d7158dca9cd02ee3f8203",
+      "sha256_matches_any_dataset_recording": false,
+      "max_xcorr_vs_dataset": 0.181,
+      "xcorr_vs_own_native_recording": 0.158,
+      "machine_intelligibility": {
+        "indicconformer-kn": {
+          "tts_hypothesis": "ಟ್ಯಾಂಕ್ ಕಸ್ದೆಪ್ಪರೆ ಒಂಡು",
+          "tts_cer": 0.364,
+          "native_hypothesis": "ಇಂಕ್ ಬ್ಯಾಂಕ್್ದ ಕಸ್ ದಬ್ಬರ ಉಂಡು",
+          "native_cer": 0.364
+        }
+      }
+    },
+    {
+      "id": "W01",
+      "dataset": "withdrawal",
+      "role": "assistant",
+      "text": "Sari..alpa withdrawal slip dethonle.",
+      "native_audio": "C:\\Users\\Prathviraj Bhat\\OneDrive\\Desktop\\bank-ai\\bank-assistive-ai-tulu-work\\withdraw_conversation\\W01_Assistant.wav.wav",
+      "status": "verified",
+      "spoken_kannada_script": "ಸರಿ..ಅಲ್ಪ ವಿತ್‌ಡ್ರಾಯಲ್ ಸ್ಲಿಪ್ ದೆತೊನ್ಲೆ.",
+      "voice_id": "tcy-text/kn-IN-SapnaNeural",
+      "generated_file": "evaluation\\reports\\tulu_tts_audio\\W01_generated.mp3",
+      "bytes": 19440,
+      "content_type": "audio/mpeg",
+      "duration_s": 3.24,
+      "sha256": "d0f0edd0b688ca9bde35c0e918ef89b88a08bd86604cf935e925d32b07521f00",
+      "sha256_matches_any_dataset_recording": false,
+      "max_xcorr_vs_dataset": 0.22,
+      "xcorr_vs_own_native_recording": 0.128,
+      "machine_intelligibility": {
+        "indicconformer-kn": {
+          "tts_hypothesis": "ಅಲ್ಪಬ್ ವಿಡ್ ಡ್ರಾಯಲ್ ಸ್ಲೀಪ್ ದ ತೊಂದ",
+          "tts_cer": 0.393,
+          "native_hypothesis": "ಅಲ್ಪ ವಿಡ್್ರಾಲ್ ಸ್ಲಿಪ್ ದ ತೊಂದಲೆ",
+          "native_cer": 0.357
+        }
+      }
+    },
+    {
+      "id": "W02a",
+      "dataset": "withdrawal",
+      "role": "customer",
+      "text": "Account number olpa bareyodu?",
+      "native_audio": "C:\\Users\\Prathviraj Bhat\\OneDrive\\Desktop\\bank-ai\\bank-assistive-ai-tulu-work\\withdraw_conversation\\W02a_Customer.wav.wav",
+      "status": "verified",
+      "spoken_kannada_script": "ಅಕೌಂಟ್ ನಂಬರ್ ಒಲ್ಪ ಬರೆಯೊಡು?",
+      "voice_id": "tcy-text/kn-IN-SapnaNeural",
+      "generated_file": "evaluation\\reports\\tulu_tts_audio\\W02a_generated.mp3",
+      "bytes": 16704,
+      "content_type": "audio/mpeg",
+      "duration_s": 2.78,
+      "sha256": "fa290f53582f7972335bc7d09958224a8523dd463dd6234a50b9f9cea523888a",
+      "sha256_matches_any_dataset_recording": false,
+      "max_xcorr_vs_dataset": 0.118,
+      "xcorr_vs_own_native_recording": 0.099,
+      "machine_intelligibility": {
+        "indicconformer-kn": {
+          "tts_hypothesis": "ನಂಬರ್ ವಲ್ಪ ಬರೆಯೊಡು",
+          "tts_cer": 0.417,
+          "native_hypothesis": "ಅಕೌಂಟ್ ನಂಬರ್ ಒಲ್ಪ ಬರೆಯೋಡು",
+          "native_cer": 0.167
+        }
+      }
+    },
+    {
+      "id": "W02",
+      "dataset": "withdrawal",
+      "role": "assistant",
+      "text": "Ait erna account number barele.",
+      "native_audio": "C:\\Users\\Prathviraj Bhat\\OneDrive\\Desktop\\bank-ai\\bank-assistive-ai-tulu-work\\withdraw_conversation\\W02_Assistant.wav.wav",
+      "status": "verified",
+      "spoken_kannada_script": "ಐಟ್ ಎರ್ನ ಅಕೌಂಟ್ ನಂಬರ್ ಬರೆಲೆ.",
+      "voice_id": "tcy-text/kn-IN-SapnaNeural",
+      "generated_file": "evaluation\\reports\\tulu_tts_audio\\W02_generated.mp3",
+      "bytes": 18144,
+      "content_type": "audio/mpeg",
+      "duration_s": 3.02,
+      "sha256": "ef56ec180fba89ae6adbba20a258850939f9c54db207b9b4f560a2ba9c6ff172",
+      "sha256_matches_any_dataset_recording": false,
+      "max_xcorr_vs_dataset": 0.168,
+      "xcorr_vs_own_native_recording": 0.168,
+      "machine_intelligibility": {
+        "indicconformer-kn": {
+          "tts_hypothesis": "ರ್ ನ ಅಕೌಂಟ್ ನಂಬರ್ ಬರಲೆ",
+          "tts_cer": 0.36,
+          "native_hypothesis": "ಟಿರ್ ನ ಅಕೌಂಟ್ ನಂಬರ್ ಬರಲಿ",
+          "native_cer": 0.36
+        }
+      }
+    },
+    {
+      "id": "W03a",
+      "dataset": "withdrawal",
+      "role": "customer",
+      "text": "Yaan account number fill malthe? Nana dada malpodu?",
+      "native_audio": "C:\\Users\\Prathviraj Bhat\\OneDrive\\Desktop\\bank-ai\\bank-assistive-ai-tulu-work\\withdraw_conversation\\W03a_customer.wav.wav",
+      "status": "verified",
+      "spoken_kannada_script": "ಯಾನ್ ಅಕೌಂಟ್ ನಂಬರ್ ಫಿಲ್ ಮಲ್ತೆ? ನನ ದಡ ಮಲ್ಪೊಡು?",
+      "voice_id": "tcy-text/kn-IN-SapnaNeural",
+      "generated_file": "evaluation\\reports\\tulu_tts_audio\\W03a_generated.mp3",
+      "bytes": 28944,
+      "content_type": "audio/mpeg",
+      "duration_s": 4.82,
+      "sha256": "4dded295e8da7295c27ba663f6a2ebe6d1f867cac035104674dda3fb6daae6d7",
+      "sha256_matches_any_dataset_recording": false,
+      "max_xcorr_vs_dataset": 0.173,
+      "xcorr_vs_own_native_recording": 0.108,
+      "machine_intelligibility": {
+        "indicconformer-kn": {
+          "tts_hypothesis": "ಅಕೌಂಟ್ ನಂಬರ್ ಫಿಲ್ಮಲ್ದೆ ನ ದಡ ಮಲ್ಪೋಡು",
+          "tts_cer": 0.289,
+          "native_hypothesis": "ಯನ್ ಅಕೌಂಟ್ ನಂಬರ್ ಫಿಲ್ಮ ಅಲ್ತೆ ನನ್ನದಾದ ಮಲ್ಪೋಡು",
+          "native_cer": 0.158
+        }
+      }
+    },
+    {
+      "id": "W03",
+      "dataset": "withdrawal",
+      "role": "assistant",
+      "text": "Bokka yeth amount deppere undu aven barele.",
+      "native_audio": "C:\\Users\\Prathviraj Bhat\\OneDrive\\Desktop\\bank-ai\\bank-assistive-ai-tulu-work\\withdraw_conversation\\W03_Assistant.wav.wav",
+      "status": "verified",
+      "spoken_kannada_script": "ಬೊಕ್ಕ ಯೆತ್ ಅಮೌಂಟ್ ದೆಪ್ಪೆರೆ ಉಂಡು ಅವೆನ್ ಬರೆಲೆ.",
+      "voice_id": "tcy-text/kn-IN-SapnaNeural",
+      "generated_file": "evaluation\\reports\\tulu_tts_audio\\W03_generated.mp3",
+      "bytes": 21888,
+      "content_type": "audio/mpeg",
+      "duration_s": 3.65,
+      "sha256": "033e6dcc704a13383f81d7db4fef3c1f0634cbaa7afa21ce90b15b569a1f365e",
+      "sha256_matches_any_dataset_recording": false,
+      "max_xcorr_vs_dataset": 0.158,
+      "xcorr_vs_own_native_recording": 0.143,
+      "machine_intelligibility": {
+        "indicconformer-kn": {
+          "tts_hypothesis": "ಎತ್ ಅಮ ದಬರೆ ಒಂದು ಅವೆನ್ ಬರಲೆ",
+          "tts_cer": 0.424,
+          "native_hypothesis": "ಬುಕ್ ಏತ್ ಅಮೌಂಟ್ ದಪ್ಪರಿ ಉಂಡು ಅವನ್ ಬರಲಿ",
+          "native_cer": 0.303
+        }
+      }
+    },
+    {
+      "id": "W03b",
+      "dataset": "withdrawal",
+      "role": "customer",
+      "text": "Yaan yeth kaas deppodu andh barethe? Nana dada malpodu yaan?",
+      "native_audio": "C:\\Users\\Prathviraj Bhat\\OneDrive\\Desktop\\bank-ai\\bank-assistive-ai-tulu-work\\withdraw_conversation\\W03b_customer.wav.wav",
+      "status": "verified",
+      "spoken_kannada_script": "ಯಾನ್ ಯೆತ್ ಕಾಸ್ ದೆಪ್ಪೊಡು ಅಂದ್ ಬರೆತೆ? ನನ ದಡ ಮಲ್ಪೊಡು ಯಾನ್?",
+      "voice_id": "tcy-text/kn-IN-SapnaNeural",
+      "generated_file": "evaluation\\reports\\tulu_tts_audio\\W03b_generated.mp3",
+      "bytes": 31680,
+      "content_type": "audio/mpeg",
+      "duration_s": 5.28,
+      "sha256": "9714668488e603d03fa637c105b700011063151d90febe20e8be36812c9d6b7d",
+      "sha256_matches_any_dataset_recording": false,
+      "max_xcorr_vs_dataset": 0.175,
+      "xcorr_vs_own_native_recording": 0.095,
+      "machine_intelligibility": {
+        "indicconformer-kn": {
+          "tts_hypothesis": "ಕಾಸ್ ದೆಪ್ಪುಡು ಅಂದು ಬರೆತೆ ದಡ ಮಲ್ಪುಡು ಯಾನ್",
+          "tts_cer": 0.31,
+          "native_hypothesis": "ಏತ್ ಕಸ್ ದೆಪ್ಪುಡಂದು ಬರೆತೆ ನನ್ನದಾದ ಮಲ್ಪೋಡ ಯಾನು",
+          "native_cer": 0.214
+        }
+      }
+    },
+    {
+      "id": "W04",
+      "dataset": "withdrawal",
+      "role": "assistant",
+      "text": "Withdrawal slip-g sign malpule.",
+      "native_audio": "C:\\Users\\Prathviraj Bhat\\OneDrive\\Desktop\\bank-ai\\bank-assistive-ai-tulu-work\\withdraw_conversation\\w04_assistant.wav.wav",
+      "status": "verified",
+      "spoken_kannada_script": "ವಿತ್‌ಡ್ರಾಯಲ್ ಸ್ಲಿಪ್‌ಗ್ ಸೈನ್ ಮಲ್ಪುಲೆ.",
+      "voice_id": "tcy-text/kn-IN-SapnaNeural",
+      "generated_file": "evaluation\\reports\\tulu_tts_audio\\W04_generated.mp3",
+      "bytes": 17568,
+      "content_type": "audio/mpeg",
+      "duration_s": 2.93,
+      "sha256": "82078bc5797bdaf26a45cd19041976d1ad94158c83abb3c409199eb3c427544a",
+      "sha256_matches_any_dataset_recording": false,
+      "max_xcorr_vs_dataset": 0.182,
+      "xcorr_vs_own_native_recording": 0.135,
+      "machine_intelligibility": {
+        "indicconformer-kn": {
+          "tts_hypothesis": "ಟ್ರಾಯಲ್ ಸ್ಲಿಪ್ ಸೈನ್ ಮಲ್ ಪುಲೆ",
+          "tts_cer": 0.28,
+          "native_hypothesis": "ಮಚಲ್ ಸ್ಲಿಪ್ಗೆ ಸೈನ್ ಮಲ್ಪಲೆ",
+          "native_cer": 0.4
+        }
+      }
+    },
+    {
+      "id": "W04a",
+      "dataset": "withdrawal",
+      "role": "customer",
+      "text": "Yaan slip g sign padeye? Eth ol submit malpodu?",
+      "native_audio": "C:\\Users\\Prathviraj Bhat\\OneDrive\\Desktop\\bank-ai\\bank-assistive-ai-tulu-work\\withdraw_conversation\\W04a_Customer.wav.wav",
+      "status": "verified",
+      "spoken_kannada_script": "ಯಾನ್ ಸ್ಲಿಪ್‌ಗ್ ಸೈನ್ ಪಡೆಯೆ? ಎತ್ ಒಲ್ ಸಬ್ಮಿಟ್ ಮಲ್ಪೊಡು?",
+      "voice_id": "tcy-text/kn-IN-SapnaNeural",
+      "generated_file": "evaluation\\reports\\tulu_tts_audio\\W04a_generated.mp3",
+      "bytes": 27504,
+      "content_type": "audio/mpeg",
+      "duration_s": 4.58,
+      "sha256": "f2ee1096c79f3196cc25ddc0eb701297f5f68204f4e1e575340dd14fe75bbdc6",
+      "sha256_matches_any_dataset_recording": false,
+      "max_xcorr_vs_dataset": 0.168,
+      "xcorr_vs_own_native_recording": 0.111,
+      "machine_intelligibility": {
+        "indicconformer-kn": {
+          "tts_hypothesis": "ಸ್ಿಫ ಸೈನ್ ಪಡೆ ಎತ್ ಲ್ ಸಬ್ಮಿಟ್ ಮಲ್ಬೋಡ",
+          "tts_cer": 0.371,
+          "native_hypothesis": "ಸ್ಲಿಪ್ಪಗ ಸೈನ್ ಮಾಡಡಿಿ ಇತ್ತೆ ಹೋಲ್ ಸಬ್ಮಿಟ್ ಮಾಡಬೋಡ",
+          "native_cer": 0.543
+        }
+      }
+    },
+    {
+      "id": "W05",
+      "dataset": "withdrawal",
+      "role": "assistant",
+      "text": "Slip cashier-g submit malpule.",
+      "native_audio": "C:\\Users\\Prathviraj Bhat\\OneDrive\\Desktop\\bank-ai\\bank-assistive-ai-tulu-work\\withdraw_conversation\\W05_Assistant.wav.wav",
+      "status": "verified",
+      "spoken_kannada_script": "ಸ್ಲಿಪ್ ಕ್ಯಾಶಿಯರ್‌ಗ್ ಸಬ್ಮಿಟ್ ಮಲ್ಪುಲೆ.",
+      "voice_id": "tcy-text/kn-IN-SapnaNeural",
+      "generated_file": "evaluation\\reports\\tulu_tts_audio\\W05_generated.mp3",
+      "bytes": 18288,
+      "content_type": "audio/mpeg",
+      "duration_s": 3.05,
+      "sha256": "352777e6fd56704bbfc3cfa0e0c15610c89fbee0020542cd76fda93a93b6d1de",
+      "sha256_matches_any_dataset_recording": false,
+      "max_xcorr_vs_dataset": 0.141,
+      "xcorr_vs_own_native_recording": 0.117,
+      "machine_intelligibility": {
+        "indicconformer-kn": {
+          "tts_hypothesis": "ಕ್ಯಾಶಿಯರ್ ಸಬ್ಮಿಟ್ ಮಲ್ ಪುಲೆ",
+          "tts_cer": 0.375,
+          "native_hypothesis": "ಸ್ಲಿಪ್ ಕ್ಯಾಶಿಯರ್ ಗ ಸಬ್ಮಿಟ್ ಮಲ್ಪ್ಲೇ",
+          "native_cer": 0.25
+        }
+      }
+    },
+    {
+      "id": "D04-disputed-v1",
+      "dataset": "deposit",
+      "role": "assistant",
+      "text": "Slip Boka amount n cash counter d korle.",
+      "native_audio": null,
+      "status": "disputed (dataset table, row D04 / Assistant) -- listening only",
+      "spoken_kannada_script": "ಸ್ಲಿಪ್ ಬೊಕ ಅಮೌಂಟ್‌ನ್ ಕ್ಯಾಶ್ ಕೌಂಟರ್‌ಡ್ ಕೊರ್ಲೆ.",
+      "voice_id": "tcy-text/kn-IN-SapnaNeural",
+      "generated_file": "evaluation\\reports\\tulu_tts_audio\\D04-disputed-v1_generated.mp3",
+      "bytes": 21168,
+      "content_type": "audio/mpeg",
+      "duration_s": 3.53,
+      "sha256": "8643c6bf450f76b85213fd54e6ff16a8432f1032083398096b2f511c05578a18",
+      "sha256_matches_any_dataset_recording": false,
+      "max_xcorr_vs_dataset": 0.158,
+      "xcorr_vs_own_native_recording": null,
+      "machine_intelligibility": {
+        "indicconformer-kn": {
+          "tts_hypothesis": "ಬೋಕ್ ಅಮೌಂಟ್ ಕ್ಯಾಶ್ ಕೌಂಟೆಡ್ ಕೊಲ್ಲೇ",
+          "tts_cer": 0.355
+        }
+      }
+    },
+    {
+      "id": "D04-disputed-v2",
+      "dataset": "deposit",
+      "role": "assistant",
+      "text": "Slip Boka amount n korle.",
+      "native_audio": null,
+      "status": "disputed (Workflow and recording notes (stated as the confirmed wording)) -- listening only",
+      "spoken_kannada_script": "ಸ್ಲಿಪ್ ಬೊಕ ಅಮೌಂಟ್‌ನ್ ಕೊರ್ಲೆ.",
+      "voice_id": "tcy-text/kn-IN-SapnaNeural",
+      "generated_file": "evaluation\\reports\\tulu_tts_audio\\D04-disputed-v2_generated.mp3",
+      "bytes": 16992,
+      "content_type": "audio/mpeg",
+      "duration_s": 2.83,
+      "sha256": "5c1b7d21ee3b5f48d5d162d879727070986184f886c711f90633b3ecdd569ebd",
+      "sha256_matches_any_dataset_recording": false,
+      "max_xcorr_vs_dataset": 0.193,
+      "xcorr_vs_own_native_recording": null,
+      "machine_intelligibility": {
+        "indicconformer-kn": {
+          "tts_hypothesis": "ಬೋಕ್ ಅಮೌಂಟ್ ಕೊಡೇ",
+          "tts_cer": 0.45
+        }
+      }
+    }
+  ]
+}

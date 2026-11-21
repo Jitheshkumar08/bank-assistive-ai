@@ -21,6 +21,6 @@ export class RegisterDto {
   phone?: string;
 
   @IsOptional()
-  @IsIn(['en', 'kn', 'hi'], { message: 'Language must be one of: en, kn, hi.' })
+  @IsIn(['en', 'kn', 'hi', 'tcy'], { message: 'Language must be one of: en, kn, hi, tcy.' })
   preferredLanguage?: string;
 }

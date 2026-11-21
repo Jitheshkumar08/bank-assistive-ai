@@ -1,0 +1,2886 @@
+{
+  "summary": {
+    "passed": 271,
+    "failed": 0,
+    "failures": [],
+    "engine_start_s": 7.6,
+    "memory_end": {
+      "current_mb": 372.2,
+      "peak_mb": 730.0
+    }
+  },
+  "checks": [
+    {
+      "check": "deposit audio D01a-D02a-D03a-D04a: D01a (speech) -> step 1",
+      "passed": true,
+      "detail": "reply='ಓಕೆ, ಫಸ್ಟ್ ಎರ್ ಕ್ಯಾಶ್ ಡೆಪಾಸಿಟ್\\u200cದ ಸ್ಲಿಪ್ ದೆತೊನ್ಲೆ.' workflow={'name': 'deposit money', 'state': 'active', 'step': 1, 'total_steps': 4}"
+    },
+    {
+      "check": "  D01a: accepted transcript is a verified utterance with the same meaning",
+      "passed": true,
+      "detail": "Yank duddu padare undu?"
+    },
+    {
+      "check": "  D01a: /tts returned newly generated MP3",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "  D01a: generated audio is not any dataset recording (SHA-256)",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "  D01a: generated audio is not the input recording (xcorr 0.074 < 0.5)",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "deposit audio D01a-D02a-D03a-D04a: D02a (speech) -> step 2",
+      "passed": true,
+      "detail": "reply='ಐಟ್ ಎರ್ನ ಅಕೌಂಟ್ ನಂಬರ್ ಬರೆಲೆ.' workflow={'name': 'deposit money', 'state': 'active', 'step': 2, 'total_steps': 4}"
+    },
+    {
+      "check": "  D02a: accepted transcript is a verified utterance with the same meaning",
+      "passed": true,
+      "detail": "Slip dethond aand?"
+    },
+    {
+      "check": "  D02a: /tts returned newly generated MP3",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "  D02a: generated audio is not any dataset recording (SHA-256)",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "  D02a: generated audio is not the input recording (xcorr 0.090 < 0.5)",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "deposit audio D01a-D02a-D03a-D04a: D03a (typed fallback after ASR refusal) -> step 3",
+      "passed": true,
+      "detail": "reply='ಬೊಕ್ಕ ಎತ್ ಅಮೌಂಟ್ ದೆಪ್ಪೆರೆ ಉಂಡು ಅವೆನ್ ಬರೆಲೆ.' workflow={'name': 'deposit money', 'state': 'active', 'step': 3, 'total_steps': 4}"
+    },
+    {
+      "check": "  D03a: /tts returned newly generated MP3",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "  D03a: generated audio is not any dataset recording (SHA-256)",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "  D03a: generated audio is not the input recording (xcorr 0.054 < 0.5)",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "deposit audio D01a-D02a-D03a-D04a: D04a (speech) -> step 4",
+      "passed": true,
+      "detail": "reply='Submit the slip along with the cash.' workflow={'name': 'deposit money', 'state': 'active', 'step': 4, 'total_steps': 4}"
+    },
+    {
+      "check": "  D04a: accepted transcript is a verified utterance with the same meaning",
+      "passed": true,
+      "detail": "Slip pura fill malthaand next dada malpodu?"
+    },
+    {
+      "check": "  D04a: /tts returned newly generated MP3",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "  D04a: generated audio is not any dataset recording (SHA-256)",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "  D04a: generated audio is not the input recording (xcorr 0.052 < 0.5)",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "deposit audio D01b-D02b-D03b-D04b: D01b (speech) -> step 1",
+      "passed": true,
+      "detail": "reply='ಓಕೆ, ಫಸ್ಟ್ ಎರ್ ಕ್ಯಾಶ್ ಡೆಪಾಸಿಟ್\\u200cದ ಸ್ಲಿಪ್ ದೆತೊನ್ಲೆ.' workflow={'name': 'deposit money', 'state': 'active', 'step': 1, 'total_steps': 4}"
+    },
+    {
+      "check": "  D01b: accepted transcript is a verified utterance with the same meaning",
+      "passed": true,
+      "detail": "Yank duddu deposit malpodu?"
+    },
+    {
+      "check": "  D01b: /tts returned newly generated MP3",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "  D01b: generated audio is not any dataset recording (SHA-256)",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "  D01b: generated audio is not the input recording (xcorr 0.088 < 0.5)",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "deposit audio D01b-D02b-D03b-D04b: D02b (speech) -> step 2",
+      "passed": true,
+      "detail": "reply='ಐಟ್ ಎರ್ನ ಅಕೌಂಟ್ ನಂಬರ್ ಬರೆಲೆ.' workflow={'name': 'deposit money', 'state': 'active', 'step': 2, 'total_steps': 4}"
+    },
+    {
+      "check": "  D02b: accepted transcript is a verified utterance with the same meaning",
+      "passed": true,
+      "detail": "Dethe nana dada malpodu?"
+    },
+    {
+      "check": "  D02b: /tts returned newly generated MP3",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "  D02b: generated audio is not any dataset recording (SHA-256)",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "  D02b: generated audio is not the input recording (xcorr 0.075 < 0.5)",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "deposit audio D01b-D02b-D03b-D04b: D03b (speech) -> step 3",
+      "passed": true,
+      "detail": "reply='ಬೊಕ್ಕ ಎತ್ ಅಮೌಂಟ್ ದೆಪ್ಪೆರೆ ಉಂಡು ಅವೆನ್ ಬರೆಲೆ.' workflow={'name': 'deposit money', 'state': 'active', 'step': 3, 'total_steps': 4}"
+    },
+    {
+      "check": "  D03b: accepted transcript is a verified utterance with the same meaning",
+      "passed": true,
+      "detail": "Yan deposit malpuna amount n olpa bareyodu?"
+    },
+    {
+      "check": "  D03b: /tts returned newly generated MP3",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "  D03b: generated audio is not any dataset recording (SHA-256)",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "  D03b: generated audio is not the input recording (xcorr 0.066 < 0.5)",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "deposit audio D01b-D02b-D03b-D04b: D04b (typed fallback after ASR refusal) -> step 4",
+      "passed": true,
+      "detail": "reply='Submit the slip along with the cash.' workflow={'name': 'deposit money', 'state': 'active', 'step': 4, 'total_steps': 4}"
+    },
+    {
+      "check": "  D04b: /tts returned newly generated MP3",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "  D04b: generated audio is not any dataset recording (SHA-256)",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "  D04b: generated audio is not the input recording (xcorr 0.067 < 0.5)",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "deposit audio D01c-D02c-D03a-D04c: D01c (speech) -> step 1",
+      "passed": true,
+      "detail": "reply='ಓಕೆ, ಫಸ್ಟ್ ಎರ್ ಕ್ಯಾಶ್ ಡೆಪಾಸಿಟ್\\u200cದ ಸ್ಲಿಪ್ ದೆತೊನ್ಲೆ.' workflow={'name': 'deposit money', 'state': 'active', 'step': 1, 'total_steps': 4}"
+    },
+    {
+      "check": "  D01c: accepted transcript is a verified utterance with the same meaning",
+      "passed": true,
+      "detail": "Yank duddu padodu?"
+    },
+    {
+      "check": "  D01c: /tts returned newly generated MP3",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "  D01c: generated audio is not any dataset recording (SHA-256)",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "  D01c: generated audio is not the input recording (xcorr 0.069 < 0.5)",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "deposit audio D01c-D02c-D03a-D04c: D02c (speech) -> step 2",
+      "passed": true,
+      "detail": "reply='ಐಟ್ ಎರ್ನ ಅಕೌಂಟ್ ನಂಬರ್ ಬರೆಲೆ.' workflow={'name': 'deposit money', 'state': 'active', 'step': 2, 'total_steps': 4}"
+    },
+    {
+      "check": "  D02c: accepted transcript is a verified utterance with the same meaning",
+      "passed": true,
+      "detail": "Ethe dada malpodu?"
+    },
+    {
+      "check": "  D02c: /tts returned newly generated MP3",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "  D02c: generated audio is not any dataset recording (SHA-256)",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "  D02c: generated audio is not the input recording (xcorr 0.064 < 0.5)",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "deposit audio D01c-D02c-D03a-D04c: D03a (typed fallback after ASR refusal) -> step 3",
+      "passed": true,
+      "detail": "reply='ಬೊಕ್ಕ ಎತ್ ಅಮೌಂಟ್ ದೆಪ್ಪೆರೆ ಉಂಡು ಅವೆನ್ ಬರೆಲೆ.' workflow={'name': 'deposit money', 'state': 'active', 'step': 3, 'total_steps': 4}"
+    },
+    {
+      "check": "  D03a: /tts returned newly generated MP3",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "  D03a: generated audio is not any dataset recording (SHA-256)",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "  D03a: generated audio is not the input recording (xcorr 0.054 < 0.5)",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "deposit audio D01c-D02c-D03a-D04c: D04c (speech) -> step 4",
+      "passed": true,
+      "detail": "reply='Submit the slip along with the cash.' workflow={'name': 'deposit money', 'state': 'active', 'step': 4, 'total_steps': 4}"
+    },
+    {
+      "check": "  D04c: accepted transcript is a verified utterance with the same meaning",
+      "passed": true,
+      "detail": "Yan deposit malpuna amount bareye. Next dada malpodu?"
+    },
+    {
+      "check": "  D04c: /tts returned newly generated MP3",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "  D04c: generated audio is not any dataset recording (SHA-256)",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "  D04c: generated audio is not the input recording (xcorr 0.087 < 0.5)",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "deposit audio D01c-D02d-D03b-D04a: D01c (speech) -> step 1",
+      "passed": true,
+      "detail": "reply='ಓಕೆ, ಫಸ್ಟ್ ಎರ್ ಕ್ಯಾಶ್ ಡೆಪಾಸಿಟ್\\u200cದ ಸ್ಲಿಪ್ ದೆತೊನ್ಲೆ.' workflow={'name': 'deposit money', 'state': 'active', 'step': 1, 'total_steps': 4}"
+    },
+    {
+      "check": "  D01c: accepted transcript is a verified utterance with the same meaning",
+      "passed": true,
+      "detail": "Yank duddu padodu?"
+    },
+    {
+      "check": "  D01c: /tts returned newly generated MP3",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "  D01c: generated audio is not any dataset recording (SHA-256)",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "  D01c: generated audio is not the input recording (xcorr 0.069 < 0.5)",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "deposit audio D01c-D02d-D03b-D04a: D02d (speech) -> step 2",
+      "passed": true,
+      "detail": "reply='ಐಟ್ ಎರ್ನ ಅಕೌಂಟ್ ನಂಬರ್ ಬರೆಲೆ.' workflow={'name': 'deposit money', 'state': 'active', 'step': 2, 'total_steps': 4}"
+    },
+    {
+      "check": "  D02d: accepted transcript is a verified utterance with the same meaning",
+      "passed": true,
+      "detail": "Yaan slip dethoni ye ethe dada poora fill malthonodu?"
+    },
+    {
+      "check": "  D02d: /tts returned newly generated MP3",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "  D02d: generated audio is not any dataset recording (SHA-256)",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "  D02d: generated audio is not the input recording (xcorr 0.058 < 0.5)",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "deposit audio D01c-D02d-D03b-D04a: D03b (speech) -> step 3",
+      "passed": true,
+      "detail": "reply='ಬೊಕ್ಕ ಎತ್ ಅಮೌಂಟ್ ದೆಪ್ಪೆರೆ ಉಂಡು ಅವೆನ್ ಬರೆಲೆ.' workflow={'name': 'deposit money', 'state': 'active', 'step': 3, 'total_steps': 4}"
+    },
+    {
+      "check": "  D03b: accepted transcript is a verified utterance with the same meaning",
+      "passed": true,
+      "detail": "Yan deposit malpuna amount n olpa bareyodu?"
+    },
+    {
+      "check": "  D03b: /tts returned newly generated MP3",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "  D03b: generated audio is not any dataset recording (SHA-256)",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "  D03b: generated audio is not the input recording (xcorr 0.066 < 0.5)",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "deposit audio D01c-D02d-D03b-D04a: D04a (speech) -> step 4",
+      "passed": true,
+      "detail": "reply='Submit the slip along with the cash.' workflow={'name': 'deposit money', 'state': 'active', 'step': 4, 'total_steps': 4}"
+    },
+    {
+      "check": "  D04a: accepted transcript is a verified utterance with the same meaning",
+      "passed": true,
+      "detail": "Slip pura fill malthaand next dada malpodu?"
+    },
+    {
+      "check": "  D04a: /tts returned newly generated MP3",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "  D04a: generated audio is not any dataset recording (SHA-256)",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "  D04a: generated audio is not the input recording (xcorr 0.051 < 0.5)",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "deposit typed D01a 'Yank duddu padare undu?' -> step 1",
+      "passed": true,
+      "detail": "reply='ಓಕೆ, ಫಸ್ಟ್ ಎರ್ ಕ್ಯಾಶ್ ಡೆಪಾಸಿಟ್\\u200cದ ಸ್ಲಿಪ್ ದೆತೊನ್ಲೆ.' workflow={'name': 'deposit money', 'state': 'active', 'step': 1, 'total_steps': 4}"
+    },
+    {
+      "check": "deposit typed D02b 'Dethe nana dada malpodu?' -> step 2",
+      "passed": true,
+      "detail": "reply='ಐಟ್ ಎರ್ನ ಅಕೌಂಟ್ ನಂಬರ್ ಬರೆಲೆ.' workflow={'name': 'deposit money', 'state': 'active', 'step': 2, 'total_steps': 4}"
+    },
+    {
+      "check": "deposit typed D03b 'Yan deposit malpuna amount n olpa bareyodu?' -> step 3",
+      "passed": true,
+      "detail": "reply='ಬೊಕ್ಕ ಎತ್ ಅಮೌಂಟ್ ದೆಪ್ಪೆರೆ ಉಂಡು ಅವೆನ್ ಬರೆಲೆ.' workflow={'name': 'deposit money', 'state': 'active', 'step': 3, 'total_steps': 4}"
+    },
+    {
+      "check": "deposit typed D04b 'Amount n bareye.' -> step 4",
+      "passed": true,
+      "detail": "reply='Submit the slip along with the cash.' workflow={'name': 'deposit money', 'state': 'active', 'step': 4, 'total_steps': 4}"
+    },
+    {
+      "check": "deposit typed D01b 'Yank duddu deposit malpodu?' -> step 1",
+      "passed": true,
+      "detail": "reply='ಓಕೆ, ಫಸ್ಟ್ ಎರ್ ಕ್ಯಾಶ್ ಡೆಪಾಸಿಟ್\\u200cದ ಸ್ಲಿಪ್ ದೆತೊನ್ಲೆ.' workflow={'name': 'deposit money', 'state': 'active', 'step': 1, 'total_steps': 4}"
+    },
+    {
+      "check": "deposit typed D02c 'Ethe dada malpodu?' -> step 2",
+      "passed": true,
+      "detail": "reply='ಐಟ್ ಎರ್ನ ಅಕೌಂಟ್ ನಂಬರ್ ಬರೆಲೆ.' workflow={'name': 'deposit money', 'state': 'active', 'step': 2, 'total_steps': 4}"
+    },
+    {
+      "check": "deposit typed D03a 'Account number fill malthaand, nana dada malpodu?' -> step 3",
+      "passed": true,
+      "detail": "reply='ಬೊಕ್ಕ ಎತ್ ಅಮೌಂಟ್ ದೆಪ್ಪೆರೆ ಉಂಡು ಅವೆನ್ ಬರೆಲೆ.' workflow={'name': 'deposit money', 'state': 'active', 'step': 3, 'total_steps': 4}"
+    },
+    {
+      "check": "deposit typed D04c 'Yan deposit malpuna amount bareye. Next dada malpodu?' -> step 4",
+      "passed": true,
+      "detail": "reply='Submit the slip along with the cash.' workflow={'name': 'deposit money', 'state': 'active', 'step': 4, 'total_steps': 4}"
+    },
+    {
+      "check": "deposit typed D01c 'Yank duddu padodu?' -> step 1",
+      "passed": true,
+      "detail": "reply='ಓಕೆ, ಫಸ್ಟ್ ಎರ್ ಕ್ಯಾಶ್ ಡೆಪಾಸಿಟ್\\u200cದ ಸ್ಲಿಪ್ ದೆತೊನ್ಲೆ.' workflow={'name': 'deposit money', 'state': 'active', 'step': 1, 'total_steps': 4}"
+    },
+    {
+      "check": "deposit typed D02d 'Yaan slip dethoni ye ethe dada poora fill malthonodu?' -> step 2",
+      "passed": true,
+      "detail": "reply='ಐಟ್ ಎರ್ನ ಅಕೌಂಟ್ ನಂಬರ್ ಬರೆಲೆ.' workflow={'name': 'deposit money', 'state': 'active', 'step': 2, 'total_steps': 4}"
+    },
+    {
+      "check": "deposit typed D03a 'Account number fill malthaand, nana dada malpodu?' -> step 3",
+      "passed": true,
+      "detail": "reply='ಬೊಕ್ಕ ಎತ್ ಅಮೌಂಟ್ ದೆಪ್ಪೆರೆ ಉಂಡು ಅವೆನ್ ಬರೆಲೆ.' workflow={'name': 'deposit money', 'state': 'active', 'step': 3, 'total_steps': 4}"
+    },
+    {
+      "check": "deposit typed D04a 'Slip pura fill malthaand next dada malpodu?' -> step 4",
+      "passed": true,
+      "detail": "reply='Submit the slip along with the cash.' workflow={'name': 'deposit money', 'state': 'active', 'step': 4, 'total_steps': 4}"
+    },
+    {
+      "check": "deposit typed D01a 'Yank duddu padare undu?' -> step 1",
+      "passed": true,
+      "detail": "reply='ಓಕೆ, ಫಸ್ಟ್ ಎರ್ ಕ್ಯಾಶ್ ಡೆಪಾಸಿಟ್\\u200cದ ಸ್ಲಿಪ್ ದೆತೊನ್ಲೆ.' workflow={'name': 'deposit money', 'state': 'active', 'step': 1, 'total_steps': 4}"
+    },
+    {
+      "check": "deposit typed D02a 'Slip dethond aand?' -> step 2",
+      "passed": true,
+      "detail": "reply='ಐಟ್ ಎರ್ನ ಅಕೌಂಟ್ ನಂಬರ್ ಬರೆಲೆ.' workflow={'name': 'deposit money', 'state': 'active', 'step': 2, 'total_steps': 4}"
+    },
+    {
+      "check": "deposit typed D03b 'Yan deposit malpuna amount n olpa bareyodu?' -> step 3",
+      "passed": true,
+      "detail": "reply='ಬೊಕ್ಕ ಎತ್ ಅಮೌಂಟ್ ದೆಪ್ಪೆರೆ ಉಂಡು ಅವೆನ್ ಬರೆಲೆ.' workflow={'name': 'deposit money', 'state': 'active', 'step': 3, 'total_steps': 4}"
+    },
+    {
+      "check": "deposit typed D04a 'Slip pura fill malthaand next dada malpodu?' -> step 4",
+      "passed": true,
+      "detail": "reply='Submit the slip along with the cash.' workflow={'name': 'deposit money', 'state': 'active', 'step': 4, 'total_steps': 4}"
+    },
+    {
+      "check": "withdraw audio W01a-W02a-W03a-W03b-W04a: W01a (typed fallback after ASR refusal) -> step 1",
+      "passed": true,
+      "detail": "reply='ಸರಿ..ಅಲ್ಪ ವಿತ್\\u200cಡ್ರಾಯಲ್ ಸ್ಲಿಪ್ ದೆತೊನ್ಲೆ.' workflow={'name': 'withdraw money', 'state': 'active', 'step': 1, 'total_steps': 5}"
+    },
+    {
+      "check": "  W01a: /tts returned newly generated MP3",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "  W01a: generated audio is not any dataset recording (SHA-256)",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "  W01a: generated audio is not the input recording (xcorr 0.220 < 0.5)",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "withdraw audio W01a-W02a-W03a-W03b-W04a: W02a (speech) -> step 2",
+      "passed": true,
+      "detail": "reply='ಐಟ್ ಎರ್ನ ಅಕೌಂಟ್ ನಂಬರ್ ಬರೆಲೆ.' workflow={'name': 'withdraw money', 'state': 'active', 'step': 2, 'total_steps': 5}"
+    },
+    {
+      "check": "  W02a: accepted transcript is a verified utterance with the same meaning",
+      "passed": true,
+      "detail": "Account number olpa bareyodu?"
+    },
+    {
+      "check": "  W02a: /tts returned newly generated MP3",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "  W02a: generated audio is not any dataset recording (SHA-256)",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "  W02a: generated audio is not the input recording (xcorr 0.111 < 0.5)",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "withdraw audio W01a-W02a-W03a-W03b-W04a: W03a (speech) -> step 3",
+      "passed": true,
+      "detail": "reply='ಬೊಕ್ಕ ಯೆತ್ ಅಮೌಂಟ್ ದೆಪ್ಪೆರೆ ಉಂಡು ಅವೆನ್ ಬರೆಲೆ.' workflow={'name': 'withdraw money', 'state': 'active', 'step': 3, 'total_steps': 5}"
+    },
+    {
+      "check": "  W03a: accepted transcript is a verified utterance with the same meaning",
+      "passed": true,
+      "detail": "Yaan account number fill malthe? Nana dada malpodu?"
+    },
+    {
+      "check": "  W03a: /tts returned newly generated MP3",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "  W03a: generated audio is not any dataset recording (SHA-256)",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "  W03a: generated audio is not the input recording (xcorr 0.136 < 0.5)",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "withdraw audio W01a-W02a-W03a-W03b-W04a: W03b (speech) -> step 4",
+      "passed": true,
+      "detail": "reply='ವಿತ್\\u200cಡ್ರಾಯಲ್ ಸ್ಲಿಪ್\\u200cಗ್ ಸೈನ್ ಮಲ್ಪುಲೆ.' workflow={'name': 'withdraw money', 'state': 'active', 'step': 4, 'total_steps': 5}"
+    },
+    {
+      "check": "  W03b: accepted transcript is a verified utterance with the same meaning",
+      "passed": true,
+      "detail": "Yaan yeth kaas deppodu andh barethe? Nana dada malpodu yaan?"
+    },
+    {
+      "check": "  W03b: /tts returned newly generated MP3",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "  W03b: generated audio is not any dataset recording (SHA-256)",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "  W03b: generated audio is not the input recording (xcorr 0.114 < 0.5)",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "withdraw audio W01a-W02a-W03a-W03b-W04a: W04a (typed fallback after ASR refusal) -> step 5",
+      "passed": true,
+      "detail": "reply='ಸ್ಲಿಪ್ ಕ್ಯಾಶಿಯರ್\\u200cಗ್ ಸಬ್ಮಿಟ್ ಮಲ್ಪುಲೆ.' workflow={'name': 'withdraw money', 'state': 'active', 'step': 5, 'total_steps': 5}"
+    },
+    {
+      "check": "  W04a: /tts returned newly generated MP3",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "  W04a: generated audio is not any dataset recording (SHA-256)",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "  W04a: generated audio is not the input recording (xcorr 0.118 < 0.5)",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "withdraw audio W01b-W02a-W03a-W03b-W04a: W01b (typed fallback after ASR refusal) -> step 1",
+      "passed": true,
+      "detail": "reply='ಸರಿ..ಅಲ್ಪ ವಿತ್\\u200cಡ್ರಾಯಲ್ ಸ್ಲಿಪ್ ದೆತೊನ್ಲೆ.' workflow={'name': 'withdraw money', 'state': 'active', 'step': 1, 'total_steps': 5}"
+    },
+    {
+      "check": "  W01b: /tts returned newly generated MP3",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "  W01b: generated audio is not any dataset recording (SHA-256)",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "  W01b: generated audio is not the input recording (xcorr 0.147 < 0.5)",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "withdraw audio W01b-W02a-W03a-W03b-W04a: W02a (speech) -> step 2",
+      "passed": true,
+      "detail": "reply='ಐಟ್ ಎರ್ನ ಅಕೌಂಟ್ ನಂಬರ್ ಬರೆಲೆ.' workflow={'name': 'withdraw money', 'state': 'active', 'step': 2, 'total_steps': 5}"
+    },
+    {
+      "check": "  W02a: accepted transcript is a verified utterance with the same meaning",
+      "passed": true,
+      "detail": "Account number olpa bareyodu?"
+    },
+    {
+      "check": "  W02a: /tts returned newly generated MP3",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "  W02a: generated audio is not any dataset recording (SHA-256)",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "  W02a: generated audio is not the input recording (xcorr 0.111 < 0.5)",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "withdraw audio W01b-W02a-W03a-W03b-W04a: W03a (speech) -> step 3",
+      "passed": true,
+      "detail": "reply='ಬೊಕ್ಕ ಯೆತ್ ಅಮೌಂಟ್ ದೆಪ್ಪೆರೆ ಉಂಡು ಅವೆನ್ ಬರೆಲೆ.' workflow={'name': 'withdraw money', 'state': 'active', 'step': 3, 'total_steps': 5}"
+    },
+    {
+      "check": "  W03a: accepted transcript is a verified utterance with the same meaning",
+      "passed": true,
+      "detail": "Yaan account number fill malthe? Nana dada malpodu?"
+    },
+    {
+      "check": "  W03a: /tts returned newly generated MP3",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "  W03a: generated audio is not any dataset recording (SHA-256)",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "  W03a: generated audio is not the input recording (xcorr 0.136 < 0.5)",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "withdraw audio W01b-W02a-W03a-W03b-W04a: W03b (speech) -> step 4",
+      "passed": true,
+      "detail": "reply='ವಿತ್\\u200cಡ್ರಾಯಲ್ ಸ್ಲಿಪ್\\u200cಗ್ ಸೈನ್ ಮಲ್ಪುಲೆ.' workflow={'name': 'withdraw money', 'state': 'active', 'step': 4, 'total_steps': 5}"
+    },
+    {
+      "check": "  W03b: accepted transcript is a verified utterance with the same meaning",
+      "passed": true,
+      "detail": "Yaan yeth kaas deppodu andh barethe? Nana dada malpodu yaan?"
+    },
+    {
+      "check": "  W03b: /tts returned newly generated MP3",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "  W03b: generated audio is not any dataset recording (SHA-256)",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "  W03b: generated audio is not the input recording (xcorr 0.113 < 0.5)",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "withdraw audio W01b-W02a-W03a-W03b-W04a: W04a (typed fallback after ASR refusal) -> step 5",
+      "passed": true,
+      "detail": "reply='ಸ್ಲಿಪ್ ಕ್ಯಾಶಿಯರ್\\u200cಗ್ ಸಬ್ಮಿಟ್ ಮಲ್ಪುಲೆ.' workflow={'name': 'withdraw money', 'state': 'active', 'step': 5, 'total_steps': 5}"
+    },
+    {
+      "check": "  W04a: /tts returned newly generated MP3",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "  W04a: generated audio is not any dataset recording (SHA-256)",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "  W04a: generated audio is not the input recording (xcorr 0.118 < 0.5)",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "withdraw audio W01c-W02a-W03a-W03b-W04a: W01c (typed fallback after ASR refusal) -> step 1",
+      "passed": true,
+      "detail": "reply='ಸರಿ..ಅಲ್ಪ ವಿತ್\\u200cಡ್ರಾಯಲ್ ಸ್ಲಿಪ್ ದೆತೊನ್ಲೆ.' workflow={'name': 'withdraw money', 'state': 'active', 'step': 1, 'total_steps': 5}"
+    },
+    {
+      "check": "  W01c: /tts returned newly generated MP3",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "  W01c: generated audio is not any dataset recording (SHA-256)",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "  W01c: generated audio is not the input recording (xcorr 0.152 < 0.5)",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "withdraw audio W01c-W02a-W03a-W03b-W04a: W02a (speech) -> step 2",
+      "passed": true,
+      "detail": "reply='ಐಟ್ ಎರ್ನ ಅಕೌಂಟ್ ನಂಬರ್ ಬರೆಲೆ.' workflow={'name': 'withdraw money', 'state': 'active', 'step': 2, 'total_steps': 5}"
+    },
+    {
+      "check": "  W02a: accepted transcript is a verified utterance with the same meaning",
+      "passed": true,
+      "detail": "Account number olpa bareyodu?"
+    },
+    {
+      "check": "  W02a: /tts returned newly generated MP3",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "  W02a: generated audio is not any dataset recording (SHA-256)",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "  W02a: generated audio is not the input recording (xcorr 0.111 < 0.5)",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "withdraw audio W01c-W02a-W03a-W03b-W04a: W03a (speech) -> step 3",
+      "passed": true,
+      "detail": "reply='ಬೊಕ್ಕ ಯೆತ್ ಅಮೌಂಟ್ ದೆಪ್ಪೆರೆ ಉಂಡು ಅವೆನ್ ಬರೆಲೆ.' workflow={'name': 'withdraw money', 'state': 'active', 'step': 3, 'total_steps': 5}"
+    },
+    {
+      "check": "  W03a: accepted transcript is a verified utterance with the same meaning",
+      "passed": true,
+      "detail": "Yaan account number fill malthe? Nana dada malpodu?"
+    },
+    {
+      "check": "  W03a: /tts returned newly generated MP3",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "  W03a: generated audio is not any dataset recording (SHA-256)",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "  W03a: generated audio is not the input recording (xcorr 0.136 < 0.5)",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "withdraw audio W01c-W02a-W03a-W03b-W04a: W03b (speech) -> step 4",
+      "passed": true,
+      "detail": "reply='ವಿತ್\\u200cಡ್ರಾಯಲ್ ಸ್ಲಿಪ್\\u200cಗ್ ಸೈನ್ ಮಲ್ಪುಲೆ.' workflow={'name': 'withdraw money', 'state': 'active', 'step': 4, 'total_steps': 5}"
+    },
+    {
+      "check": "  W03b: accepted transcript is a verified utterance with the same meaning",
+      "passed": true,
+      "detail": "Yaan yeth kaas deppodu andh barethe? Nana dada malpodu yaan?"
+    },
+    {
+      "check": "  W03b: /tts returned newly generated MP3",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "  W03b: generated audio is not any dataset recording (SHA-256)",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "  W03b: generated audio is not the input recording (xcorr 0.114 < 0.5)",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "withdraw audio W01c-W02a-W03a-W03b-W04a: W04a (typed fallback after ASR refusal) -> step 5",
+      "passed": true,
+      "detail": "reply='ಸ್ಲಿಪ್ ಕ್ಯಾಶಿಯರ್\\u200cಗ್ ಸಬ್ಮಿಟ್ ಮಲ್ಪುಲೆ.' workflow={'name': 'withdraw money', 'state': 'active', 'step': 5, 'total_steps': 5}"
+    },
+    {
+      "check": "  W04a: /tts returned newly generated MP3",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "  W04a: generated audio is not any dataset recording (SHA-256)",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "  W04a: generated audio is not the input recording (xcorr 0.117 < 0.5)",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "withdraw audio W01b-W02b-W03a1-W03b1-W04b: W01b (typed fallback after ASR refusal) -> step 1",
+      "passed": true,
+      "detail": "reply='ಸರಿ..ಅಲ್ಪ ವಿತ್\\u200cಡ್ರಾಯಲ್ ಸ್ಲಿಪ್ ದೆತೊನ್ಲೆ.' workflow={'name': 'withdraw money', 'state': 'active', 'step': 1, 'total_steps': 5}"
+    },
+    {
+      "check": "  W01b: /tts returned newly generated MP3",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "  W01b: generated audio is not any dataset recording (SHA-256)",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "  W01b: generated audio is not the input recording (xcorr 0.147 < 0.5)",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "withdraw audio W01b-W02b-W03a1-W03b1-W04b: W02b (speech) -> step 2",
+      "passed": true,
+      "detail": "reply='ಐಟ್ ಎರ್ನ ಅಕೌಂಟ್ ನಂಬರ್ ಬರೆಲೆ.' workflow={'name': 'withdraw money', 'state': 'active', 'step': 2, 'total_steps': 5}"
+    },
+    {
+      "check": "  W02b: accepted transcript is a verified utterance with the same meaning",
+      "passed": true,
+      "detail": "yan slip dethonde. Nana dada malpodu"
+    },
+    {
+      "check": "  W02b: /tts returned newly generated MP3",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "  W02b: generated audio is not any dataset recording (SHA-256)",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "  W02b: generated audio is not the input recording (xcorr 0.050 < 0.5)",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "withdraw audio W01b-W02b-W03a1-W03b1-W04b: W03a1 (typed fallback after ASR refusal) -> step 3",
+      "passed": true,
+      "detail": "reply='ಬೊಕ್ಕ ಯೆತ್ ಅಮೌಂಟ್ ದೆಪ್ಪೆರೆ ಉಂಡು ಅವೆನ್ ಬರೆಲೆ.' workflow={'name': 'withdraw money', 'state': 'active', 'step': 3, 'total_steps': 5}"
+    },
+    {
+      "check": "  W03a1: /tts returned newly generated MP3",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "  W03a1: generated audio is not any dataset recording (SHA-256)",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "  W03a1: generated audio is not the input recording (xcorr 0.065 < 0.5)",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "withdraw audio W01b-W02b-W03a1-W03b1-W04b: W03b1 (typed fallback after ASR refusal) -> step 4",
+      "passed": true,
+      "detail": "reply='ವಿತ್\\u200cಡ್ರಾಯಲ್ ಸ್ಲಿಪ್\\u200cಗ್ ಸೈನ್ ಮಲ್ಪುಲೆ.' workflow={'name': 'withdraw money', 'state': 'active', 'step': 4, 'total_steps': 5}"
+    },
+    {
+      "check": "  W03b1: /tts returned newly generated MP3",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "  W03b1: generated audio is not any dataset recording (SHA-256)",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "  W03b1: generated audio is not the input recording (xcorr 0.078 < 0.5)",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "withdraw audio W01b-W02b-W03a1-W03b1-W04b: W04b (typed fallback after ASR refusal) -> step 5",
+      "passed": true,
+      "detail": "reply='ಸ್ಲಿಪ್ ಕ್ಯಾಶಿಯರ್\\u200cಗ್ ಸಬ್ಮಿಟ್ ಮಲ್ಪುಲೆ.' workflow={'name': 'withdraw money', 'state': 'active', 'step': 5, 'total_steps': 5}"
+    },
+    {
+      "check": "  W04b: /tts returned newly generated MP3",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "  W04b: generated audio is not any dataset recording (SHA-256)",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "  W04b: generated audio is not the input recording (xcorr 0.104 < 0.5)",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "withdraw audio W01c-W02c-W03a1-W03b2-W04c: W01c (typed fallback after ASR refusal) -> step 1",
+      "passed": true,
+      "detail": "reply='ಸರಿ..ಅಲ್ಪ ವಿತ್\\u200cಡ್ರಾಯಲ್ ಸ್ಲಿಪ್ ದೆತೊನ್ಲೆ.' workflow={'name': 'withdraw money', 'state': 'active', 'step': 1, 'total_steps': 5}"
+    },
+    {
+      "check": "  W01c: /tts returned newly generated MP3",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "  W01c: generated audio is not any dataset recording (SHA-256)",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "  W01c: generated audio is not the input recording (xcorr 0.152 < 0.5)",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "withdraw audio W01c-W02c-W03a1-W03b2-W04c: W02c (speech) -> step 2",
+      "passed": true,
+      "detail": "reply='ಐಟ್ ಎರ್ನ ಅಕೌಂಟ್ ನಂಬರ್ ಬರೆಲೆ.' workflow={'name': 'withdraw money', 'state': 'active', 'step': 2, 'total_steps': 5}"
+    },
+    {
+      "check": "  W02c: accepted transcript is a verified utterance with the same meaning",
+      "passed": true,
+      "detail": "yan slip dethonde."
+    },
+    {
+      "check": "  W02c: /tts returned newly generated MP3",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "  W02c: generated audio is not any dataset recording (SHA-256)",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "  W02c: generated audio is not the input recording (xcorr 0.088 < 0.5)",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "withdraw audio W01c-W02c-W03a1-W03b2-W04c: W03a1 (typed fallback after ASR refusal) -> step 3",
+      "passed": true,
+      "detail": "reply='ಬೊಕ್ಕ ಯೆತ್ ಅಮೌಂಟ್ ದೆಪ್ಪೆರೆ ಉಂಡು ಅವೆನ್ ಬರೆಲೆ.' workflow={'name': 'withdraw money', 'state': 'active', 'step': 3, 'total_steps': 5}"
+    },
+    {
+      "check": "  W03a1: /tts returned newly generated MP3",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "  W03a1: generated audio is not any dataset recording (SHA-256)",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "  W03a1: generated audio is not the input recording (xcorr 0.065 < 0.5)",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "withdraw audio W01c-W02c-W03a1-W03b2-W04c: W03b2 (speech) -> step 4",
+      "passed": true,
+      "detail": "reply='ವಿತ್\\u200cಡ್ರಾಯಲ್ ಸ್ಲಿಪ್\\u200cಗ್ ಸೈನ್ ಮಲ್ಪುಲೆ.' workflow={'name': 'withdraw money', 'state': 'active', 'step': 4, 'total_steps': 5}"
+    },
+    {
+      "check": "  W03b2: accepted transcript is a verified utterance with the same meaning",
+      "passed": true,
+      "detail": "yeth duddu deppodu annd bareye"
+    },
+    {
+      "check": "  W03b2: /tts returned newly generated MP3",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "  W03b2: generated audio is not any dataset recording (SHA-256)",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "  W03b2: generated audio is not the input recording (xcorr 0.077 < 0.5)",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "withdraw audio W01c-W02c-W03a1-W03b2-W04c: W04c (typed fallback after ASR refusal) -> step 5",
+      "passed": true,
+      "detail": "reply='ಸ್ಲಿಪ್ ಕ್ಯಾಶಿಯರ್\\u200cಗ್ ಸಬ್ಮಿಟ್ ಮಲ್ಪುಲೆ.' workflow={'name': 'withdraw money', 'state': 'active', 'step': 5, 'total_steps': 5}"
+    },
+    {
+      "check": "  W04c: /tts returned newly generated MP3",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "  W04c: generated audio is not any dataset recording (SHA-256)",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "  W04c: generated audio is not the input recording (xcorr 0.096 < 0.5)",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "withdraw audio W01a-W02d-W03a1-W03b2-W04b: W01a (typed fallback after ASR refusal) -> step 1",
+      "passed": true,
+      "detail": "reply='ಸರಿ..ಅಲ್ಪ ವಿತ್\\u200cಡ್ರಾಯಲ್ ಸ್ಲಿಪ್ ದೆತೊನ್ಲೆ.' workflow={'name': 'withdraw money', 'state': 'active', 'step': 1, 'total_steps': 5}"
+    },
+    {
+      "check": "  W01a: /tts returned newly generated MP3",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "  W01a: generated audio is not any dataset recording (SHA-256)",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "  W01a: generated audio is not the input recording (xcorr 0.219 < 0.5)",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "withdraw audio W01a-W02d-W03a1-W03b2-W04b: W02d (typed fallback after ASR refusal) -> step 2",
+      "passed": true,
+      "detail": "reply='ಐಟ್ ಎರ್ನ ಅಕೌಂಟ್ ನಂಬರ್ ಬರೆಲೆ.' workflow={'name': 'withdraw money', 'state': 'active', 'step': 2, 'total_steps': 5}"
+    },
+    {
+      "check": "  W02d: /tts returned newly generated MP3",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "  W02d: generated audio is not any dataset recording (SHA-256)",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "  W02d: generated audio is not the input recording (xcorr 0.076 < 0.5)",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "withdraw audio W01a-W02d-W03a1-W03b2-W04b: W03a1 (typed fallback after ASR refusal) -> step 3",
+      "passed": true,
+      "detail": "reply='ಬೊಕ್ಕ ಯೆತ್ ಅಮೌಂಟ್ ದೆಪ್ಪೆರೆ ಉಂಡು ಅವೆನ್ ಬರೆಲೆ.' workflow={'name': 'withdraw money', 'state': 'active', 'step': 3, 'total_steps': 5}"
+    },
+    {
+      "check": "  W03a1: /tts returned newly generated MP3",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "  W03a1: generated audio is not any dataset recording (SHA-256)",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "  W03a1: generated audio is not the input recording (xcorr 0.065 < 0.5)",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "withdraw audio W01a-W02d-W03a1-W03b2-W04b: W03b2 (speech) -> step 4",
+      "passed": true,
+      "detail": "reply='ವಿತ್\\u200cಡ್ರಾಯಲ್ ಸ್ಲಿಪ್\\u200cಗ್ ಸೈನ್ ಮಲ್ಪುಲೆ.' workflow={'name': 'withdraw money', 'state': 'active', 'step': 4, 'total_steps': 5}"
+    },
+    {
+      "check": "  W03b2: accepted transcript is a verified utterance with the same meaning",
+      "passed": true,
+      "detail": "yeth duddu deppodu annd bareye"
+    },
+    {
+      "check": "  W03b2: /tts returned newly generated MP3",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "  W03b2: generated audio is not any dataset recording (SHA-256)",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "  W03b2: generated audio is not the input recording (xcorr 0.077 < 0.5)",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "withdraw audio W01a-W02d-W03a1-W03b2-W04b: W04b (typed fallback after ASR refusal) -> step 5",
+      "passed": true,
+      "detail": "reply='ಸ್ಲಿಪ್ ಕ್ಯಾಶಿಯರ್\\u200cಗ್ ಸಬ್ಮಿಟ್ ಮಲ್ಪುಲೆ.' workflow={'name': 'withdraw money', 'state': 'active', 'step': 5, 'total_steps': 5}"
+    },
+    {
+      "check": "  W04b: /tts returned newly generated MP3",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "  W04b: generated audio is not any dataset recording (SHA-256)",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "  W04b: generated audio is not the input recording (xcorr 0.106 < 0.5)",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "withdraw typed W01a 'Yenk kaas deppere undu?' -> step 1",
+      "passed": true,
+      "detail": "reply='ಸರಿ..ಅಲ್ಪ ವಿತ್\\u200cಡ್ರಾಯಲ್ ಸ್ಲಿಪ್ ದೆತೊನ್ಲೆ.' workflow={'name': 'withdraw money', 'state': 'active', 'step': 1, 'total_steps': 5}"
+    },
+    {
+      "check": "withdraw typed W02a 'Account number olpa bareyodu?' -> step 2",
+      "passed": true,
+      "detail": "reply='ಐಟ್ ಎರ್ನ ಅಕೌಂಟ್ ನಂಬರ್ ಬರೆಲೆ.' workflow={'name': 'withdraw money', 'state': 'active', 'step': 2, 'total_steps': 5}"
+    },
+    {
+      "check": "withdraw typed W03a 'Yaan account number fill malthe? Nana dada malpodu?' -> step 3",
+      "passed": true,
+      "detail": "reply='ಬೊಕ್ಕ ಯೆತ್ ಅಮೌಂಟ್ ದೆಪ್ಪೆರೆ ಉಂಡು ಅವೆನ್ ಬರೆಲೆ.' workflow={'name': 'withdraw money', 'state': 'active', 'step': 3, 'total_steps': 5}"
+    },
+    {
+      "check": "withdraw typed W03b 'Yaan yeth kaas deppodu andh barethe? Nana dada malpodu yaan?' -> step 4",
+      "passed": true,
+      "detail": "reply='ವಿತ್\\u200cಡ್ರಾಯಲ್ ಸ್ಲಿಪ್\\u200cಗ್ ಸೈನ್ ಮಲ್ಪುಲೆ.' workflow={'name': 'withdraw money', 'state': 'active', 'step': 4, 'total_steps': 5}"
+    },
+    {
+      "check": "withdraw typed W04a 'Yaan slip g sign padeye? Eth ol submit malpodu?' -> step 5",
+      "passed": true,
+      "detail": "reply='ಸ್ಲಿಪ್ ಕ್ಯಾಶಿಯರ್\\u200cಗ್ ಸಬ್ಮಿಟ್ ಮಲ್ಪುಲೆ.' workflow={'name': 'withdraw money', 'state': 'active', 'step': 5, 'total_steps': 5}"
+    },
+    {
+      "check": "withdraw typed W01b 'Yenk yenna account d dh kaas/amount deppere undu?' -> step 1",
+      "passed": true,
+      "detail": "reply='ಸರಿ..ಅಲ್ಪ ವಿತ್\\u200cಡ್ರಾಯಲ್ ಸ್ಲಿಪ್ ದೆತೊನ್ಲೆ.' workflow={'name': 'withdraw money', 'state': 'active', 'step': 1, 'total_steps': 5}"
+    },
+    {
+      "check": "withdraw typed W02a 'Account number olpa bareyodu?' -> step 2",
+      "passed": true,
+      "detail": "reply='ಐಟ್ ಎರ್ನ ಅಕೌಂಟ್ ನಂಬರ್ ಬರೆಲೆ.' workflow={'name': 'withdraw money', 'state': 'active', 'step': 2, 'total_steps': 5}"
+    },
+    {
+      "check": "withdraw typed W03a 'Yaan account number fill malthe? Nana dada malpodu?' -> step 3",
+      "passed": true,
+      "detail": "reply='ಬೊಕ್ಕ ಯೆತ್ ಅಮೌಂಟ್ ದೆಪ್ಪೆರೆ ಉಂಡು ಅವೆನ್ ಬರೆಲೆ.' workflow={'name': 'withdraw money', 'state': 'active', 'step': 3, 'total_steps': 5}"
+    },
+    {
+      "check": "withdraw typed W03b 'Yaan yeth kaas deppodu andh barethe? Nana dada malpodu yaan?' -> step 4",
+      "passed": true,
+      "detail": "reply='ವಿತ್\\u200cಡ್ರಾಯಲ್ ಸ್ಲಿಪ್\\u200cಗ್ ಸೈನ್ ಮಲ್ಪುಲೆ.' workflow={'name': 'withdraw money', 'state': 'active', 'step': 4, 'total_steps': 5}"
+    },
+    {
+      "check": "withdraw typed W04a 'Yaan slip g sign padeye? Eth ol submit malpodu?' -> step 5",
+      "passed": true,
+      "detail": "reply='ಸ್ಲಿಪ್ ಕ್ಯಾಶಿಯರ್\\u200cಗ್ ಸಬ್ಮಿಟ್ ಮಲ್ಪುಲೆ.' workflow={'name': 'withdraw money', 'state': 'active', 'step': 5, 'total_steps': 5}"
+    },
+    {
+      "check": "withdraw typed W01c 'Yenk bank dh kaas deppere undu?' -> step 1",
+      "passed": true,
+      "detail": "reply='ಸರಿ..ಅಲ್ಪ ವಿತ್\\u200cಡ್ರಾಯಲ್ ಸ್ಲಿಪ್ ದೆತೊನ್ಲೆ.' workflow={'name': 'withdraw money', 'state': 'active', 'step': 1, 'total_steps': 5}"
+    },
+    {
+      "check": "withdraw typed W02a 'Account number olpa bareyodu?' -> step 2",
+      "passed": true,
+      "detail": "reply='ಐಟ್ ಎರ್ನ ಅಕೌಂಟ್ ನಂಬರ್ ಬರೆಲೆ.' workflow={'name': 'withdraw money', 'state': 'active', 'step': 2, 'total_steps': 5}"
+    },
+    {
+      "check": "withdraw typed W03a 'Yaan account number fill malthe? Nana dada malpodu?' -> step 3",
+      "passed": true,
+      "detail": "reply='ಬೊಕ್ಕ ಯೆತ್ ಅಮೌಂಟ್ ದೆಪ್ಪೆರೆ ಉಂಡು ಅವೆನ್ ಬರೆಲೆ.' workflow={'name': 'withdraw money', 'state': 'active', 'step': 3, 'total_steps': 5}"
+    },
+    {
+      "check": "withdraw typed W03b 'Yaan yeth kaas deppodu andh barethe? Nana dada malpodu yaan?' -> step 4",
+      "passed": true,
+      "detail": "reply='ವಿತ್\\u200cಡ್ರಾಯಲ್ ಸ್ಲಿಪ್\\u200cಗ್ ಸೈನ್ ಮಲ್ಪುಲೆ.' workflow={'name': 'withdraw money', 'state': 'active', 'step': 4, 'total_steps': 5}"
+    },
+    {
+      "check": "withdraw typed W04a 'Yaan slip g sign padeye? Eth ol submit malpodu?' -> step 5",
+      "passed": true,
+      "detail": "reply='ಸ್ಲಿಪ್ ಕ್ಯಾಶಿಯರ್\\u200cಗ್ ಸಬ್ಮಿಟ್ ಮಲ್ಪುಲೆ.' workflow={'name': 'withdraw money', 'state': 'active', 'step': 5, 'total_steps': 5}"
+    },
+    {
+      "check": "withdraw typed W01a 'Yenk kaas deppere undu?' -> step 1",
+      "passed": true,
+      "detail": "reply='ಸರಿ..ಅಲ್ಪ ವಿತ್\\u200cಡ್ರಾಯಲ್ ಸ್ಲಿಪ್ ದೆತೊನ್ಲೆ.' workflow={'name': 'withdraw money', 'state': 'active', 'step': 1, 'total_steps': 5}"
+    },
+    {
+      "check": "withdraw typed W02b 'yan slip dethonde. Nana dada malpodu' -> step 2",
+      "passed": true,
+      "detail": "reply='ಐಟ್ ಎರ್ನ ಅಕೌಂಟ್ ನಂಬರ್ ಬರೆಲೆ.' workflow={'name': 'withdraw money', 'state': 'active', 'step': 2, 'total_steps': 5}"
+    },
+    {
+      "check": "withdraw typed W03a1 'account number bareye.' -> step 3",
+      "passed": true,
+      "detail": "reply='ಬೊಕ್ಕ ಯೆತ್ ಅಮೌಂಟ್ ದೆಪ್ಪೆರೆ ಉಂಡು ಅವೆನ್ ಬರೆಲೆ.' workflow={'name': 'withdraw money', 'state': 'active', 'step': 3, 'total_steps': 5}"
+    },
+    {
+      "check": "withdraw typed W03b1 'amount n bareye' -> step 4",
+      "passed": true,
+      "detail": "reply='ವಿತ್\\u200cಡ್ರಾಯಲ್ ಸ್ಲಿಪ್\\u200cಗ್ ಸೈನ್ ಮಲ್ಪುಲೆ.' workflow={'name': 'withdraw money', 'state': 'active', 'step': 4, 'total_steps': 5}"
+    },
+    {
+      "check": "withdraw typed W04b 'slip gu sign padiye.' -> step 5",
+      "passed": true,
+      "detail": "reply='ಸ್ಲಿಪ್ ಕ್ಯಾಶಿಯರ್\\u200cಗ್ ಸಬ್ಮಿಟ್ ಮಲ್ಪುಲೆ.' workflow={'name': 'withdraw money', 'state': 'active', 'step': 5, 'total_steps': 5}"
+    },
+    {
+      "check": "withdraw typed W01c 'Yenk bank dh kaas deppere undu?' -> step 1",
+      "passed": true,
+      "detail": "reply='ಸರಿ..ಅಲ್ಪ ವಿತ್\\u200cಡ್ರಾಯಲ್ ಸ್ಲಿಪ್ ದೆತೊನ್ಲೆ.' workflow={'name': 'withdraw money', 'state': 'active', 'step': 1, 'total_steps': 5}"
+    },
+    {
+      "check": "withdraw typed W02c 'yan slip dethonde.' -> step 2",
+      "passed": true,
+      "detail": "reply='ಐಟ್ ಎರ್ನ ಅಕೌಂಟ್ ನಂಬರ್ ಬರೆಲೆ.' workflow={'name': 'withdraw money', 'state': 'active', 'step': 2, 'total_steps': 5}"
+    },
+    {
+      "check": "withdraw typed W03a1 'account number bareye.' -> step 3",
+      "passed": true,
+      "detail": "reply='ಬೊಕ್ಕ ಯೆತ್ ಅಮೌಂಟ್ ದೆಪ್ಪೆರೆ ಉಂಡು ಅವೆನ್ ಬರೆಲೆ.' workflow={'name': 'withdraw money', 'state': 'active', 'step': 3, 'total_steps': 5}"
+    },
+    {
+      "check": "withdraw typed W03b2 'yeth duddu deppodu annd bareye' -> step 4",
+      "passed": true,
+      "detail": "reply='ವಿತ್\\u200cಡ್ರಾಯಲ್ ಸ್ಲಿಪ್\\u200cಗ್ ಸೈನ್ ಮಲ್ಪುಲೆ.' workflow={'name': 'withdraw money', 'state': 'active', 'step': 4, 'total_steps': 5}"
+    },
+    {
+      "check": "withdraw typed W04c 'sign padiye.' -> step 5",
+      "passed": true,
+      "detail": "reply='ಸ್ಲಿಪ್ ಕ್ಯಾಶಿಯರ್\\u200cಗ್ ಸಬ್ಮಿಟ್ ಮಲ್ಪುಲೆ.' workflow={'name': 'withdraw money', 'state': 'active', 'step': 5, 'total_steps': 5}"
+    },
+    {
+      "check": "withdraw typed W01b 'Yenk yenna account d dh kaas/amount deppere undu?' -> step 1",
+      "passed": true,
+      "detail": "reply='ಸರಿ..ಅಲ್ಪ ವಿತ್\\u200cಡ್ರಾಯಲ್ ಸ್ಲಿಪ್ ದೆತೊನ್ಲೆ.' workflow={'name': 'withdraw money', 'state': 'active', 'step': 1, 'total_steps': 5}"
+    },
+    {
+      "check": "withdraw typed W02d 'slip dethon d annd.' -> step 2",
+      "passed": true,
+      "detail": "reply='ಐಟ್ ಎರ್ನ ಅಕೌಂಟ್ ನಂಬರ್ ಬರೆಲೆ.' workflow={'name': 'withdraw money', 'state': 'active', 'step': 2, 'total_steps': 5}"
+    },
+    {
+      "check": "withdraw typed W03a 'Yaan account number fill malthe? Nana dada malpodu?' -> step 3",
+      "passed": true,
+      "detail": "reply='ಬೊಕ್ಕ ಯೆತ್ ಅಮೌಂಟ್ ದೆಪ್ಪೆರೆ ಉಂಡು ಅವೆನ್ ಬರೆಲೆ.' workflow={'name': 'withdraw money', 'state': 'active', 'step': 3, 'total_steps': 5}"
+    },
+    {
+      "check": "withdraw typed W03b2 'yeth duddu deppodu annd bareye' -> step 4",
+      "passed": true,
+      "detail": "reply='ವಿತ್\\u200cಡ್ರಾಯಲ್ ಸ್ಲಿಪ್\\u200cಗ್ ಸೈನ್ ಮಲ್ಪುಲೆ.' workflow={'name': 'withdraw money', 'state': 'active', 'step': 4, 'total_steps': 5}"
+    },
+    {
+      "check": "withdraw typed W04b 'slip gu sign padiye.' -> step 5",
+      "passed": true,
+      "detail": "reply='ಸ್ಲಿಪ್ ಕ್ಯಾಶಿಯರ್\\u200cಗ್ ಸಬ್ಮಿಟ್ ಮಲ್ಪುಲೆ.' workflow={'name': 'withdraw money', 'state': 'active', 'step': 5, 'total_steps': 5}"
+    },
+    {
+      "check": "deposit-set progress phrase advances a WITHDRAWAL visit (neutral pivot), no conflict",
+      "passed": true,
+      "detail": "{'reply': 'ಐಟ್ ಎರ್ನ ಅಕೌಂಟ್ ನಂಬರ್ ಬರೆಲೆ.', 'transcript': None, 'workflow': {'name': 'withdraw money', 'state': 'active', 'step': 2, 'total_steps': 5}, 'ended': False, 'domain': 'banking', 'intent': None, 'outcome': None, 'sources': None, 'steps': None, 'action': None}"
+    },
+    {
+      "check": "probe 'Yank duddu deppere undu?' rejected as ambiguous: clarification, no workflow started",
+      "passed": true,
+      "detail": "{'reply': 'Sorry, I could not tell which service you need. Please say again whether you want to deposit or withdraw money.', 'transcript': None, 'workflow': {'name': None, 'state': 'none', 'step': None, 'total_steps': None}, 'ended': False, 'domain': 'banking', 'intent': None, 'outcome': 'clarify', 'sources': None, 'steps': None, 'action': None}"
+    },
+    {
+      "check": "probe with both service verbs rejected as ambiguous",
+      "passed": true,
+      "detail": "{'reply': 'Sorry, I could not tell which service you need. Please say again whether you want to deposit or withdraw money.', 'transcript': None, 'workflow': {'name': None, 'state': 'none', 'step': None, 'total_steps': None}, 'ended': False, 'domain': 'banking', 'intent': None, 'outcome': 'clarify', 'sources': None, 'steps': None, 'action': None}"
+    },
+    {
+      "check": "loan in a Tulu session: existing workflow started",
+      "passed": true,
+      "detail": "{'name': 'apply for loan', 'state': 'active', 'step': 1, 'total_steps': 3}"
+    },
+    {
+      "check": "loan reply is English, not presented as Tulu",
+      "passed": true,
+      "detail": "Please proceed to the loan assistance desk."
+    },
+    {
+      "check": "loan reply still spoken (English voice), 200",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "deposit step 4 (disputed D04) answered in English",
+      "passed": true,
+      "detail": "Submit the slip along with the cash."
+    },
+    {
+      "check": "English deposit -> English step 1",
+      "passed": true,
+      "detail": "Please take a deposit slip."
+    },
+    {
+      "check": "English withdraw -> English step 1",
+      "passed": true,
+      "detail": "Please take a withdrawal slip."
+    },
+    {
+      "check": "Kannada deposit -> Kannada catalog step 1 (not Tulu)",
+      "passed": true,
+      "detail": "ದಯವಿಟ್ಟು ಒಂದು ಹಣ ಜಮಾ ಚೀಟಿ (ಡೆಪಾಸಿಟ್ ಸ್ಲಿಪ್) ತೆಗೆದುಕೊಳ್ಳಿ."
+    },
+    {
+      "check": "Kannada /tts unchanged",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "unsupported language still refused by /tts (400)",
+      "passed": true,
+      "detail": "400"
+    },
+    {
+      "check": "/tulu/capabilities lists deposit and withdraw",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "/tulu/tts generated audio + disclosure header",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "/tulu/understand W01c -> withdraw",
+      "passed": true,
+      "detail": ""
+    }
+  ],
+  "audio_runs": [
+    {
+      "workflow": "deposit",
+      "sequence": [
+        "D01a",
+        "D02a",
+        "D03a",
+        "D04a"
+      ],
+      "turns": [
+        {
+          "id": "D01a",
+          "status": 200,
+          "turn_latency_s": 3.02,
+          "transcript": "Yank duddu padare undu?",
+          "reply": "ಓಕೆ, ಫಸ್ಟ್ ಎರ್ ಕ್ಯಾಶ್ ಡೆಪಾಸಿಟ್‌ದ ಸ್ಲಿಪ್ ದೆತೊನ್ಲೆ.",
+          "workflow": {
+            "name": "deposit money",
+            "state": "active",
+            "step": 1,
+            "total_steps": 4
+          },
+          "input_mode": "speech",
+          "tts_status": 200,
+          "tts_bytes": 25056,
+          "tts_sha256": "75774abac6d966f09c682dfcd1c5820e991d5bab298b637fe028a2dd458f9a68",
+          "xcorr_vs_input_recording": 0.074
+        },
+        {
+          "id": "D02a",
+          "status": 200,
+          "turn_latency_s": 1.09,
+          "transcript": "Slip dethond aand?",
+          "reply": "ಐಟ್ ಎರ್ನ ಅಕೌಂಟ್ ನಂಬರ್ ಬರೆಲೆ.",
+          "workflow": {
+            "name": "deposit money",
+            "state": "active",
+            "step": 2,
+            "total_steps": 4
+          },
+          "input_mode": "speech",
+          "tts_status": 200,
+          "tts_bytes": 18144,
+          "tts_sha256": "4faee98bba5669e95a636aa2d5f342dee15d89096f7c73778ca3fb8b82e6d666",
+          "xcorr_vs_input_recording": 0.09
+        },
+        {
+          "id": "D03a",
+          "status": 422,
+          "turn_latency_s": 1.68,
+          "asr_refusal": "Tulu speech could not be recognised reliably. Please type your request in Tulu (Roman or Kannada script).",
+          "transcript": null,
+          "reply": "ಬೊಕ್ಕ ಎತ್ ಅಮೌಂಟ್ ದೆಪ್ಪೆರೆ ಉಂಡು ಅವೆನ್ ಬರೆಲೆ.",
+          "workflow": {
+            "name": "deposit money",
+            "state": "active",
+            "step": 3,
+            "total_steps": 4
+          },
+          "input_mode": "typed fallback after ASR refusal",
+          "tts_status": 200,
+          "tts_bytes": 21744,
+          "tts_sha256": "18299bb3fbe2cd35b3f945cb499b5bae714c09962cd71d3159f394087d80d0d2",
+          "xcorr_vs_input_recording": 0.054
+        },
+        {
+          "id": "D04a",
+          "status": 200,
+          "turn_latency_s": 1.84,
+          "transcript": "Slip pura fill malthaand next dada malpodu?",
+          "reply": "Submit the slip along with the cash.",
+          "workflow": {
+            "name": "deposit money",
+            "state": "active",
+            "step": 4,
+            "total_steps": 4
+          },
+          "input_mode": "speech",
+          "tts_status": 200,
+          "tts_bytes": 19728,
+          "tts_sha256": "6ac4e909b3917a2237389dbea043cd35dc9e7ef5cf85f3e1503525ce195df8a3",
+          "xcorr_vs_input_recording": 0.052
+        }
+      ]
+    },
+    {
+      "workflow": "deposit",
+      "sequence": [
+        "D01b",
+        "D02b",
+        "D03b",
+        "D04b"
+      ],
+      "turns": [
+        {
+          "id": "D01b",
+          "status": 200,
+          "turn_latency_s": 0.97,
+          "transcript": "Yank duddu deposit malpodu?",
+          "reply": "ಓಕೆ, ಫಸ್ಟ್ ಎರ್ ಕ್ಯಾಶ್ ಡೆಪಾಸಿಟ್‌ದ ಸ್ಲಿಪ್ ದೆತೊನ್ಲೆ.",
+          "workflow": {
+            "name": "deposit money",
+            "state": "active",
+            "step": 1,
+            "total_steps": 4
+          },
+          "input_mode": "speech",
+          "tts_status": 200,
+          "tts_bytes": 25056,
+          "tts_sha256": "7290d3096a313d8a76a37a8364ebdce981829aa71e260edd26992b6e18c21c08",
+          "xcorr_vs_input_recording": 0.088
+        },
+        {
+          "id": "D02b",
+          "status": 200,
+          "turn_latency_s": 1.14,
+          "transcript": "Dethe nana dada malpodu?",
+          "reply": "ಐಟ್ ಎರ್ನ ಅಕೌಂಟ್ ನಂಬರ್ ಬರೆಲೆ.",
+          "workflow": {
+            "name": "deposit money",
+            "state": "active",
+            "step": 2,
+            "total_steps": 4
+          },
+          "input_mode": "speech",
+          "tts_status": 200,
+          "tts_bytes": 18144,
+          "tts_sha256": "2c969e3e2f2c41fdb02a9fb7fb96e212bc856f5d56f8cab4e2d58fdfd242662f",
+          "xcorr_vs_input_recording": 0.075
+        },
+        {
+          "id": "D03b",
+          "status": 200,
+          "turn_latency_s": 2.13,
+          "transcript": "Yan deposit malpuna amount n olpa bareyodu?",
+          "reply": "ಬೊಕ್ಕ ಎತ್ ಅಮೌಂಟ್ ದೆಪ್ಪೆರೆ ಉಂಡು ಅವೆನ್ ಬರೆಲೆ.",
+          "workflow": {
+            "name": "deposit money",
+            "state": "active",
+            "step": 3,
+            "total_steps": 4
+          },
+          "input_mode": "speech",
+          "tts_status": 200,
+          "tts_bytes": 21744,
+          "tts_sha256": "1fe5a2a27668634e3462f0c6f0010336dfba2175f5ce73f7617ecd6aac6f0796",
+          "xcorr_vs_input_recording": 0.066
+        },
+        {
+          "id": "D04b",
+          "status": 422,
+          "turn_latency_s": 1.16,
+          "asr_refusal": "Tulu speech could not be recognised reliably. Please type your request in Tulu (Roman or Kannada script).",
+          "transcript": null,
+          "reply": "Submit the slip along with the cash.",
+          "workflow": {
+            "name": "deposit money",
+            "state": "active",
+            "step": 4,
+            "total_steps": 4
+          },
+          "input_mode": "typed fallback after ASR refusal",
+          "tts_status": 200,
+          "tts_bytes": 19728,
+          "tts_sha256": "e25d2be5c1c58a49f186fdbfcfca78402db21a8a72af6c6009e5ee18df443de8",
+          "xcorr_vs_input_recording": 0.067
+        }
+      ]
+    },
+    {
+      "workflow": "deposit",
+      "sequence": [
+        "D01c",
+        "D02c",
+        "D03a",
+        "D04c"
+      ],
+      "turns": [
+        {
+          "id": "D01c",
+          "status": 200,
+          "turn_latency_s": 0.86,
+          "transcript": "Yank duddu padodu?",
+          "reply": "ಓಕೆ, ಫಸ್ಟ್ ಎರ್ ಕ್ಯಾಶ್ ಡೆಪಾಸಿಟ್‌ದ ಸ್ಲಿಪ್ ದೆತೊನ್ಲೆ.",
+          "workflow": {
+            "name": "deposit money",
+            "state": "active",
+            "step": 1,
+            "total_steps": 4
+          },
+          "input_mode": "speech",
+          "tts_status": 200,
+          "tts_bytes": 25056,
+          "tts_sha256": "3bf1fad15ee4fccc7d868f65c99b2dd6ad0d5db2abe1db87e18efcb2644b5153",
+          "xcorr_vs_input_recording": 0.069
+        },
+        {
+          "id": "D02c",
+          "status": 200,
+          "turn_latency_s": 1.12,
+          "transcript": "Ethe dada malpodu?",
+          "reply": "ಐಟ್ ಎರ್ನ ಅಕೌಂಟ್ ನಂಬರ್ ಬರೆಲೆ.",
+          "workflow": {
+            "name": "deposit money",
+            "state": "active",
+            "step": 2,
+            "total_steps": 4
+          },
+          "input_mode": "speech",
+          "tts_status": 200,
+          "tts_bytes": 18144,
+          "tts_sha256": "01017ea0475c2e72bf72c8f2540982fd388951bc3b8d32c965a5e778fb601a42",
+          "xcorr_vs_input_recording": 0.064
+        },
+        {
+          "id": "D03a",
+          "status": 422,
+          "turn_latency_s": 1.69,
+          "asr_refusal": "Tulu speech could not be recognised reliably. Please type your request in Tulu (Roman or Kannada script).",
+          "transcript": null,
+          "reply": "ಬೊಕ್ಕ ಎತ್ ಅಮೌಂಟ್ ದೆಪ್ಪೆರೆ ಉಂಡು ಅವೆನ್ ಬರೆಲೆ.",
+          "workflow": {
+            "name": "deposit money",
+            "state": "active",
+            "step": 3,
+            "total_steps": 4
+          },
+          "input_mode": "typed fallback after ASR refusal",
+          "tts_status": 200,
+          "tts_bytes": 21744,
+          "tts_sha256": "94f079bef3de31a287e4285310778a6f46bd2d83dc44c1f8522d8d346ca11755",
+          "xcorr_vs_input_recording": 0.054
+        },
+        {
+          "id": "D04c",
+          "status": 200,
+          "turn_latency_s": 2.1,
+          "transcript": "Yan deposit malpuna amount bareye. Next dada malpodu?",
+          "reply": "Submit the slip along with the cash.",
+          "workflow": {
+            "name": "deposit money",
+            "state": "active",
+            "step": 4,
+            "total_steps": 4
+          },
+          "input_mode": "speech",
+          "tts_status": 200,
+          "tts_bytes": 19728,
+          "tts_sha256": "7ee0e0d8b422b0e4fe570b13ea3443688a83b0be4ca2f96713b9abc97687addc",
+          "xcorr_vs_input_recording": 0.087
+        }
+      ]
+    },
+    {
+      "workflow": "deposit",
+      "sequence": [
+        "D01c",
+        "D02d",
+        "D03b",
+        "D04a"
+      ],
+      "turns": [
+        {
+          "id": "D01c",
+          "status": 200,
+          "turn_latency_s": 0.82,
+          "transcript": "Yank duddu padodu?",
+          "reply": "ಓಕೆ, ಫಸ್ಟ್ ಎರ್ ಕ್ಯಾಶ್ ಡೆಪಾಸಿಟ್‌ದ ಸ್ಲಿಪ್ ದೆತೊನ್ಲೆ.",
+          "workflow": {
+            "name": "deposit money",
+            "state": "active",
+            "step": 1,
+            "total_steps": 4
+          },
+          "input_mode": "speech",
+          "tts_status": 200,
+          "tts_bytes": 25056,
+          "tts_sha256": "5ae25145a480ff1650f14ee34f7852b488d5bbf0eda10c97108aeb8f2d5cb181",
+          "xcorr_vs_input_recording": 0.069
+        },
+        {
+          "id": "D02d",
+          "status": 200,
+          "turn_latency_s": 1.79,
+          "transcript": "Yaan slip dethoni ye ethe dada poora fill malthonodu?",
+          "reply": "ಐಟ್ ಎರ್ನ ಅಕೌಂಟ್ ನಂಬರ್ ಬರೆಲೆ.",
+          "workflow": {
+            "name": "deposit money",
+            "state": "active",
+            "step": 2,
+            "total_steps": 4
+          },
+          "input_mode": "speech",
+          "tts_status": 200,
+          "tts_bytes": 18144,
+          "tts_sha256": "c7f0517007bdc108d6c031603c15643dcd165e2a7e0d84ea491cf26b2c8699dc",
+          "xcorr_vs_input_recording": 0.058
+        },
+        {
+          "id": "D03b",
+          "status": 200,
+          "turn_latency_s": 2.03,
+          "transcript": "Yan deposit malpuna amount n olpa bareyodu?",
+          "reply": "ಬೊಕ್ಕ ಎತ್ ಅಮೌಂಟ್ ದೆಪ್ಪೆರೆ ಉಂಡು ಅವೆನ್ ಬರೆಲೆ.",
+          "workflow": {
+            "name": "deposit money",
+            "state": "active",
+            "step": 3,
+            "total_steps": 4
+          },
+          "input_mode": "speech",
+          "tts_status": 200,
+          "tts_bytes": 21744,
+          "tts_sha256": "ea7f5653b0e144e61824863e20a7152bb029e5257968be5f306d3bd750bf6f5f",
+          "xcorr_vs_input_recording": 0.066
+        },
+        {
+          "id": "D04a",
+          "status": 200,
+          "turn_latency_s": 1.87,
+          "transcript": "Slip pura fill malthaand next dada malpodu?",
+          "reply": "Submit the slip along with the cash.",
+          "workflow": {
+            "name": "deposit money",
+            "state": "active",
+            "step": 4,
+            "total_steps": 4
+          },
+          "input_mode": "speech",
+          "tts_status": 200,
+          "tts_bytes": 19728,
+          "tts_sha256": "6ceb708f361282da412ebca0403ce98b716501e48bab096933530634ae6c0580",
+          "xcorr_vs_input_recording": 0.051
+        }
+      ]
+    },
+    {
+      "workflow": "withdraw",
+      "sequence": [
+        "W01a",
+        "W02a",
+        "W03a",
+        "W03b",
+        "W04a"
+      ],
+      "turns": [
+        {
+          "id": "W01a",
+          "status": 422,
+          "turn_latency_s": 2.35,
+          "asr_refusal": "Tulu speech could not be recognised reliably. Please type your request in Tulu (Roman or Kannada script).",
+          "transcript": null,
+          "reply": "ಸರಿ..ಅಲ್ಪ ವಿತ್‌ಡ್ರಾಯಲ್ ಸ್ಲಿಪ್ ದೆತೊನ್ಲೆ.",
+          "workflow": {
+            "name": "withdraw money",
+            "state": "active",
+            "step": 1,
+            "total_steps": 5
+          },
+          "input_mode": "typed fallback after ASR refusal",
+          "tts_status": 200,
+          "tts_bytes": 19440,
+          "tts_sha256": "c9ae8ae946ad58a07abc171de2c559d8d90943c2cdcfa0afe5b40de5858032a5",
+          "xcorr_vs_input_recording": 0.22
+        },
+        {
+          "id": "W02a",
+          "status": 200,
+          "turn_latency_s": 2.22,
+          "transcript": "Account number olpa bareyodu?",
+          "reply": "ಐಟ್ ಎರ್ನ ಅಕೌಂಟ್ ನಂಬರ್ ಬರೆಲೆ.",
+          "workflow": {
+            "name": "withdraw money",
+            "state": "active",
+            "step": 2,
+            "total_steps": 5
+          },
+          "input_mode": "speech",
+          "tts_status": 200,
+          "tts_bytes": 18144,
+          "tts_sha256": "8f062c7e7acf63c6ff3c3dac3231d6ddf013efdbb067e3a6af86d04d74599a42",
+          "xcorr_vs_input_recording": 0.111
+        },
+        {
+          "id": "W03a",
+          "status": 200,
+          "turn_latency_s": 2.46,
+          "transcript": "Yaan account number fill malthe? Nana dada malpodu?",
+          "reply": "ಬೊಕ್ಕ ಯೆತ್ ಅಮೌಂಟ್ ದೆಪ್ಪೆರೆ ಉಂಡು ಅವೆನ್ ಬರೆಲೆ.",
+          "workflow": {
+            "name": "withdraw money",
+            "state": "active",
+            "step": 3,
+            "total_steps": 5
+          },
+          "input_mode": "speech",
+          "tts_status": 200,
+          "tts_bytes": 21888,
+          "tts_sha256": "b4fe8db5afb3193e75aecf39de2093cfd1c8a39c2a7843cc99c07f7384a56e0f",
+          "xcorr_vs_input_recording": 0.136
+        },
+        {
+          "id": "W03b",
+          "status": 200,
+          "turn_latency_s": 2.54,
+          "transcript": "Yaan yeth kaas deppodu andh barethe? Nana dada malpodu yaan?",
+          "reply": "ವಿತ್‌ಡ್ರಾಯಲ್ ಸ್ಲಿಪ್‌ಗ್ ಸೈನ್ ಮಲ್ಪುಲೆ.",
+          "workflow": {
+            "name": "withdraw money",
+            "state": "active",
+            "step": 4,
+            "total_steps": 5
+          },
+          "input_mode": "speech",
+          "tts_status": 200,
+          "tts_bytes": 17568,
+          "tts_sha256": "56a40dbc590bf5e0726458843dd008d48988b356382d289d11f34bd617ff846c",
+          "xcorr_vs_input_recording": 0.114
+        },
+        {
+          "id": "W04a",
+          "status": 422,
+          "turn_latency_s": 2.7,
+          "asr_refusal": "Tulu speech could not be recognised reliably. Please type your request in Tulu (Roman or Kannada script).",
+          "transcript": null,
+          "reply": "ಸ್ಲಿಪ್ ಕ್ಯಾಶಿಯರ್‌ಗ್ ಸಬ್ಮಿಟ್ ಮಲ್ಪುಲೆ.",
+          "workflow": {
+            "name": "withdraw money",
+            "state": "active",
+            "step": 5,
+            "total_steps": 5
+          },
+          "input_mode": "typed fallback after ASR refusal",
+          "tts_status": 200,
+          "tts_bytes": 18288,
+          "tts_sha256": "76a877326143aeeed5ad3a784b1b8bd332339fe8204c368f2dd58ac2cfa3a6a4",
+          "xcorr_vs_input_recording": 0.118
+        }
+      ]
+    },
+    {
+      "workflow": "withdraw",
+      "sequence": [
+        "W01b",
+        "W02a",
+        "W03a",
+        "W03b",
+        "W04a"
+      ],
+      "turns": [
+        {
+          "id": "W01b",
+          "status": 422,
+          "turn_latency_s": 2.63,
+          "asr_refusal": "Tulu speech could not be recognised reliably. Please type your request in Tulu (Roman or Kannada script).",
+          "transcript": null,
+          "reply": "ಸರಿ..ಅಲ್ಪ ವಿತ್‌ಡ್ರಾಯಲ್ ಸ್ಲಿಪ್ ದೆತೊನ್ಲೆ.",
+          "workflow": {
+            "name": "withdraw money",
+            "state": "active",
+            "step": 1,
+            "total_steps": 5
+          },
+          "input_mode": "typed fallback after ASR refusal",
+          "tts_status": 200,
+          "tts_bytes": 19440,
+          "tts_sha256": "f87a976d5384d442c17c6489758bbe04b2f4fa2bfa834221f010783f82a17da5",
+          "xcorr_vs_input_recording": 0.147
+        },
+        {
+          "id": "W02a",
+          "status": 200,
+          "turn_latency_s": 2.23,
+          "transcript": "Account number olpa bareyodu?",
+          "reply": "ಐಟ್ ಎರ್ನ ಅಕೌಂಟ್ ನಂಬರ್ ಬರೆಲೆ.",
+          "workflow": {
+            "name": "withdraw money",
+            "state": "active",
+            "step": 2,
+            "total_steps": 5
+          },
+          "input_mode": "speech",
+          "tts_status": 200,
+          "tts_bytes": 18144,
+          "tts_sha256": "2370c0f62f354b5c2703fdb68f9c323c3b96048fd88436504abedbfd9ae9bd12",
+          "xcorr_vs_input_recording": 0.111
+        },
+        {
+          "id": "W03a",
+          "status": 200,
+          "turn_latency_s": 2.53,
+          "transcript": "Yaan account number fill malthe? Nana dada malpodu?",
+          "reply": "ಬೊಕ್ಕ ಯೆತ್ ಅಮೌಂಟ್ ದೆಪ್ಪೆರೆ ಉಂಡು ಅವೆನ್ ಬರೆಲೆ.",
+          "workflow": {
+            "name": "withdraw money",
+            "state": "active",
+            "step": 3,
+            "total_steps": 5
+          },
+          "input_mode": "speech",
+          "tts_status": 200,
+          "tts_bytes": 21888,
+          "tts_sha256": "e09344cf179dc320b9fd5e9c501935209e4f1c852d16c4f85e401b630267abdb",
+          "xcorr_vs_input_recording": 0.136
+        },
+        {
+          "id": "W03b",
+          "status": 200,
+          "turn_latency_s": 2.64,
+          "transcript": "Yaan yeth kaas deppodu andh barethe? Nana dada malpodu yaan?",
+          "reply": "ವಿತ್‌ಡ್ರಾಯಲ್ ಸ್ಲಿಪ್‌ಗ್ ಸೈನ್ ಮಲ್ಪುಲೆ.",
+          "workflow": {
+            "name": "withdraw money",
+            "state": "active",
+            "step": 4,
+            "total_steps": 5
+          },
+          "input_mode": "speech",
+          "tts_status": 200,
+          "tts_bytes": 17568,
+          "tts_sha256": "8a66dab88e553acd2c28c51252a68567fb780158a55b3bd838398d80d8f3f4e1",
+          "xcorr_vs_input_recording": 0.113
+        },
+        {
+          "id": "W04a",
+          "status": 422,
+          "turn_latency_s": 2.64,
+          "asr_refusal": "Tulu speech could not be recognised reliably. Please type your request in Tulu (Roman or Kannada script).",
+          "transcript": null,
+          "reply": "ಸ್ಲಿಪ್ ಕ್ಯಾಶಿಯರ್‌ಗ್ ಸಬ್ಮಿಟ್ ಮಲ್ಪುಲೆ.",
+          "workflow": {
+            "name": "withdraw money",
+            "state": "active",
+            "step": 5,
+            "total_steps": 5
+          },
+          "input_mode": "typed fallback after ASR refusal",
+          "tts_status": 200,
+          "tts_bytes": 18288,
+          "tts_sha256": "f08d8f7772525b7edc225c4e79a532f1c2bd334766fe7597469bd13ddb188e91",
+          "xcorr_vs_input_recording": 0.118
+        }
+      ]
+    },
+    {
+      "workflow": "withdraw",
+      "sequence": [
+        "W01c",
+        "W02a",
+        "W03a",
+        "W03b",
+        "W04a"
+      ],
+      "turns": [
+        {
+          "id": "W01c",
+          "status": 422,
+          "turn_latency_s": 2.47,
+          "asr_refusal": "Tulu speech could not be recognised reliably. Please type your request in Tulu (Roman or Kannada script).",
+          "transcript": null,
+          "reply": "ಸರಿ..ಅಲ್ಪ ವಿತ್‌ಡ್ರಾಯಲ್ ಸ್ಲಿಪ್ ದೆತೊನ್ಲೆ.",
+          "workflow": {
+            "name": "withdraw money",
+            "state": "active",
+            "step": 1,
+            "total_steps": 5
+          },
+          "input_mode": "typed fallback after ASR refusal",
+          "tts_status": 200,
+          "tts_bytes": 19440,
+          "tts_sha256": "0a43f89d6448bc7e8b73fdf2f4bf304cf059b21b5183c3931bfdf8351cb46ca6",
+          "xcorr_vs_input_recording": 0.152
+        },
+        {
+          "id": "W02a",
+          "status": 200,
+          "turn_latency_s": 2.16,
+          "transcript": "Account number olpa bareyodu?",
+          "reply": "ಐಟ್ ಎರ್ನ ಅಕೌಂಟ್ ನಂಬರ್ ಬರೆಲೆ.",
+          "workflow": {
+            "name": "withdraw money",
+            "state": "active",
+            "step": 2,
+            "total_steps": 5
+          },
+          "input_mode": "speech",
+          "tts_status": 200,
+          "tts_bytes": 18144,
+          "tts_sha256": "74c51cae746b7054511979b1946a42bc2dffa748f58139f69f92fe7c342e2f86",
+          "xcorr_vs_input_recording": 0.111
+        },
+        {
+          "id": "W03a",
+          "status": 200,
+          "turn_latency_s": 2.53,
+          "transcript": "Yaan account number fill malthe? Nana dada malpodu?",
+          "reply": "ಬೊಕ್ಕ ಯೆತ್ ಅಮೌಂಟ್ ದೆಪ್ಪೆರೆ ಉಂಡು ಅವೆನ್ ಬರೆಲೆ.",
+          "workflow": {
+            "name": "withdraw money",
+            "state": "active",
+            "step": 3,
+            "total_steps": 5
+          },
+          "input_mode": "speech",
+          "tts_status": 200,
+          "tts_bytes": 21888,
+          "tts_sha256": "64ef9c5950ff63c25cf2660fd717c69c3f4f705f75dbfcb62e9099f37acec80f",
+          "xcorr_vs_input_recording": 0.136
+        },
+        {
+          "id": "W03b",
+          "status": 200,
+          "turn_latency_s": 2.49,
+          "transcript": "Yaan yeth kaas deppodu andh barethe? Nana dada malpodu yaan?",
+          "reply": "ವಿತ್‌ಡ್ರಾಯಲ್ ಸ್ಲಿಪ್‌ಗ್ ಸೈನ್ ಮಲ್ಪುಲೆ.",
+          "workflow": {
+            "name": "withdraw money",
+            "state": "active",
+            "step": 4,
+            "total_steps": 5
+          },
+          "input_mode": "speech",
+          "tts_status": 200,
+          "tts_bytes": 17568,
+          "tts_sha256": "26935611387d0b90db77fc8974f8c6df4e43a7a0f8d24034db7baf17632440ff",
+          "xcorr_vs_input_recording": 0.114
+        },
+        {
+          "id": "W04a",
+          "status": 422,
+          "turn_latency_s": 2.62,
+          "asr_refusal": "Tulu speech could not be recognised reliably. Please type your request in Tulu (Roman or Kannada script).",
+          "transcript": null,
+          "reply": "ಸ್ಲಿಪ್ ಕ್ಯಾಶಿಯರ್‌ಗ್ ಸಬ್ಮಿಟ್ ಮಲ್ಪುಲೆ.",
+          "workflow": {
+            "name": "withdraw money",
+            "state": "active",
+            "step": 5,
+            "total_steps": 5
+          },
+          "input_mode": "typed fallback after ASR refusal",
+          "tts_status": 200,
+          "tts_bytes": 18288,
+          "tts_sha256": "930084afb30c92fde5f4a7c317cd07dd90b5e5a2da85c0a3bd9a0006f6a7e4d7",
+          "xcorr_vs_input_recording": 0.117
+        }
+      ]
+    },
+    {
+      "workflow": "withdraw",
+      "sequence": [
+        "W01b",
+        "W02b",
+        "W03a1",
+        "W03b1",
+        "W04b"
+      ],
+      "turns": [
+        {
+          "id": "W01b",
+          "status": 422,
+          "turn_latency_s": 2.69,
+          "asr_refusal": "Tulu speech could not be recognised reliably. Please type your request in Tulu (Roman or Kannada script).",
+          "transcript": null,
+          "reply": "ಸರಿ..ಅಲ್ಪ ವಿತ್‌ಡ್ರಾಯಲ್ ಸ್ಲಿಪ್ ದೆತೊನ್ಲೆ.",
+          "workflow": {
+            "name": "withdraw money",
+            "state": "active",
+            "step": 1,
+            "total_steps": 5
+          },
+          "input_mode": "typed fallback after ASR refusal",
+          "tts_status": 200,
+          "tts_bytes": 19440,
+          "tts_sha256": "b6caed90f1a032ee60591d1eb17543aa5900aefd7ab57d9b3573ac81e53f39d3",
+          "xcorr_vs_input_recording": 0.147
+        },
+        {
+          "id": "W02b",
+          "status": 200,
+          "turn_latency_s": 1.38,
+          "transcript": "yan slip dethonde. Nana dada malpodu",
+          "reply": "ಐಟ್ ಎರ್ನ ಅಕೌಂಟ್ ನಂಬರ್ ಬರೆಲೆ.",
+          "workflow": {
+            "name": "withdraw money",
+            "state": "active",
+            "step": 2,
+            "total_steps": 5
+          },
+          "input_mode": "speech",
+          "tts_status": 200,
+          "tts_bytes": 18144,
+          "tts_sha256": "21f1f0fca62dcc0ea04f7f5987d2b7d227914b32550f68ea3c2ce3f8a65944bb",
+          "xcorr_vs_input_recording": 0.05
+        },
+        {
+          "id": "W03a1",
+          "status": 422,
+          "turn_latency_s": 1.13,
+          "asr_refusal": "Tulu speech could not be recognised reliably. Please type your request in Tulu (Roman or Kannada script).",
+          "transcript": null,
+          "reply": "ಬೊಕ್ಕ ಯೆತ್ ಅಮೌಂಟ್ ದೆಪ್ಪೆರೆ ಉಂಡು ಅವೆನ್ ಬರೆಲೆ.",
+          "workflow": {
+            "name": "withdraw money",
+            "state": "active",
+            "step": 3,
+            "total_steps": 5
+          },
+          "input_mode": "typed fallback after ASR refusal",
+          "tts_status": 200,
+          "tts_bytes": 21888,
+          "tts_sha256": "4dd9c6d0257c1b0c174d5ddceabb26940f5c030b874c8da669d93e26bbd411dd",
+          "xcorr_vs_input_recording": 0.065
+        },
+        {
+          "id": "W03b1",
+          "status": 422,
+          "turn_latency_s": 1.12,
+          "asr_refusal": "Tulu speech could not be recognised reliably. Please type your request in Tulu (Roman or Kannada script).",
+          "transcript": null,
+          "reply": "ವಿತ್‌ಡ್ರಾಯಲ್ ಸ್ಲಿಪ್‌ಗ್ ಸೈನ್ ಮಲ್ಪುಲೆ.",
+          "workflow": {
+            "name": "withdraw money",
+            "state": "active",
+            "step": 4,
+            "total_steps": 5
+          },
+          "input_mode": "typed fallback after ASR refusal",
+          "tts_status": 200,
+          "tts_bytes": 17568,
+          "tts_sha256": "2cf09271c2656ed0bb489d7e0d12ddaaecb8cfa5bc5c7fdd14a38ccda3bef83b",
+          "xcorr_vs_input_recording": 0.078
+        },
+        {
+          "id": "W04b",
+          "status": 422,
+          "turn_latency_s": 1.3,
+          "asr_refusal": "Tulu speech could not be recognised reliably. Please type your request in Tulu (Roman or Kannada script).",
+          "transcript": null,
+          "reply": "ಸ್ಲಿಪ್ ಕ್ಯಾಶಿಯರ್‌ಗ್ ಸಬ್ಮಿಟ್ ಮಲ್ಪುಲೆ.",
+          "workflow": {
+            "name": "withdraw money",
+            "state": "active",
+            "step": 5,
+            "total_steps": 5
+          },
+          "input_mode": "typed fallback after ASR refusal",
+          "tts_status": 200,
+          "tts_bytes": 18288,
+          "tts_sha256": "b4d5e1132a190fe54075e46b9a9c724c56d523af680bc6525d4bb8c0d3844ee9",
+          "xcorr_vs_input_recording": 0.104
+        }
+      ]
+    },
+    {
+      "workflow": "withdraw",
+      "sequence": [
+        "W01c",
+        "W02c",
+        "W03a1",
+        "W03b2",
+        "W04c"
+      ],
+      "turns": [
+        {
+          "id": "W01c",
+          "status": 422,
+          "turn_latency_s": 2.58,
+          "asr_refusal": "Tulu speech could not be recognised reliably. Please type your request in Tulu (Roman or Kannada script).",
+          "transcript": null,
+          "reply": "ಸರಿ..ಅಲ್ಪ ವಿತ್‌ಡ್ರಾಯಲ್ ಸ್ಲಿಪ್ ದೆತೊನ್ಲೆ.",
+          "workflow": {
+            "name": "withdraw money",
+            "state": "active",
+            "step": 1,
+            "total_steps": 5
+          },
+          "input_mode": "typed fallback after ASR refusal",
+          "tts_status": 200,
+          "tts_bytes": 19440,
+          "tts_sha256": "affea5be0a594abed1b9a079dd883c565a3b4fc758bf652586ba0017a5590ca1",
+          "xcorr_vs_input_recording": 0.152
+        },
+        {
+          "id": "W02c",
+          "status": 200,
+          "turn_latency_s": 1.05,
+          "transcript": "yan slip dethonde.",
+          "reply": "ಐಟ್ ಎರ್ನ ಅಕೌಂಟ್ ನಂಬರ್ ಬರೆಲೆ.",
+          "workflow": {
+            "name": "withdraw money",
+            "state": "active",
+            "step": 2,
+            "total_steps": 5
+          },
+          "input_mode": "speech",
+          "tts_status": 200,
+          "tts_bytes": 18144,
+          "tts_sha256": "14c9b07e4861424795e35f22693acc979932d399c35ea92ce99172eeea239778",
+          "xcorr_vs_input_recording": 0.088
+        },
+        {
+          "id": "W03a1",
+          "status": 422,
+          "turn_latency_s": 1.11,
+          "asr_refusal": "Tulu speech could not be recognised reliably. Please type your request in Tulu (Roman or Kannada script).",
+          "transcript": null,
+          "reply": "ಬೊಕ್ಕ ಯೆತ್ ಅಮೌಂಟ್ ದೆಪ್ಪೆರೆ ಉಂಡು ಅವೆನ್ ಬರೆಲೆ.",
+          "workflow": {
+            "name": "withdraw money",
+            "state": "active",
+            "step": 3,
+            "total_steps": 5
+          },
+          "input_mode": "typed fallback after ASR refusal",
+          "tts_status": 200,
+          "tts_bytes": 21888,
+          "tts_sha256": "a072d1d5783670a1df5114c26fc30efdcab6b840edd0580ec0240a70b1b9fc97",
+          "xcorr_vs_input_recording": 0.065
+        },
+        {
+          "id": "W03b2",
+          "status": 200,
+          "turn_latency_s": 1.5,
+          "transcript": "yeth duddu deppodu annd bareye",
+          "reply": "ವಿತ್‌ಡ್ರಾಯಲ್ ಸ್ಲಿಪ್‌ಗ್ ಸೈನ್ ಮಲ್ಪುಲೆ.",
+          "workflow": {
+            "name": "withdraw money",
+            "state": "active",
+            "step": 4,
+            "total_steps": 5
+          },
+          "input_mode": "speech",
+          "tts_status": 200,
+          "tts_bytes": 17568,
+          "tts_sha256": "d6379bed555d25106e0e84b65d309d2e98f42e2ef530f8b7a2d1866206f61084",
+          "xcorr_vs_input_recording": 0.077
+        },
+        {
+          "id": "W04c",
+          "status": 422,
+          "turn_latency_s": 1.08,
+          "asr_refusal": "Tulu speech could not be recognised reliably. Please type your request in Tulu (Roman or Kannada script).",
+          "transcript": null,
+          "reply": "ಸ್ಲಿಪ್ ಕ್ಯಾಶಿಯರ್‌ಗ್ ಸಬ್ಮಿಟ್ ಮಲ್ಪುಲೆ.",
+          "workflow": {
+            "name": "withdraw money",
+            "state": "active",
+            "step": 5,
+            "total_steps": 5
+          },
+          "input_mode": "typed fallback after ASR refusal",
+          "tts_status": 200,
+          "tts_bytes": 18288,
+          "tts_sha256": "04b09a8aaeb9f6ee946b48514bfb42157f7fdd74d85a9ee9c48c8460d034ef73",
+          "xcorr_vs_input_recording": 0.096
+        }
+      ]
+    },
+    {
+      "workflow": "withdraw",
+      "sequence": [
+        "W01a",
+        "W02d",
+        "W03a1",
+        "W03b2",
+        "W04b"
+      ],
+      "turns": [
+        {
+          "id": "W01a",
+          "status": 422,
+          "turn_latency_s": 2.46,
+          "asr_refusal": "Tulu speech could not be recognised reliably. Please type your request in Tulu (Roman or Kannada script).",
+          "transcript": null,
+          "reply": "ಸರಿ..ಅಲ್ಪ ವಿತ್‌ಡ್ರಾಯಲ್ ಸ್ಲಿಪ್ ದೆತೊನ್ಲೆ.",
+          "workflow": {
+            "name": "withdraw money",
+            "state": "active",
+            "step": 1,
+            "total_steps": 5
+          },
+          "input_mode": "typed fallback after ASR refusal",
+          "tts_status": 200,
+          "tts_bytes": 19440,
+          "tts_sha256": "4667543268ba717a3776df57c31496c9d62650cd40d66bacd10e86b8ddde2e44",
+          "xcorr_vs_input_recording": 0.219
+        },
+        {
+          "id": "W02d",
+          "status": 422,
+          "turn_latency_s": 1.47,
+          "asr_refusal": "Tulu speech could not be recognised reliably. Please type your request in Tulu (Roman or Kannada script).",
+          "transcript": null,
+          "reply": "ಐಟ್ ಎರ್ನ ಅಕೌಂಟ್ ನಂಬರ್ ಬರೆಲೆ.",
+          "workflow": {
+            "name": "withdraw money",
+            "state": "active",
+            "step": 2,
+            "total_steps": 5
+          },
+          "input_mode": "typed fallback after ASR refusal",
+          "tts_status": 200,
+          "tts_bytes": 18144,
+          "tts_sha256": "b76132cdd2dce55243115d2751843fc0689b615298291c4cb303cd060c58aece",
+          "xcorr_vs_input_recording": 0.076
+        },
+        {
+          "id": "W03a1",
+          "status": 422,
+          "turn_latency_s": 1.12,
+          "asr_refusal": "Tulu speech could not be recognised reliably. Please type your request in Tulu (Roman or Kannada script).",
+          "transcript": null,
+          "reply": "ಬೊಕ್ಕ ಯೆತ್ ಅಮೌಂಟ್ ದೆಪ್ಪೆರೆ ಉಂಡು ಅವೆನ್ ಬರೆಲೆ.",
+          "workflow": {
+            "name": "withdraw money",
+            "state": "active",
+            "step": 3,
+            "total_steps": 5
+          },
+          "input_mode": "typed fallback after ASR refusal",
+          "tts_status": 200,
+          "tts_bytes": 21888,
+          "tts_sha256": "22ff8399b7e335a9291a304a29b854d071ee6ad9aacb8a2d75ac66fb4b03531f",
+          "xcorr_vs_input_recording": 0.065
+        },
+        {
+          "id": "W03b2",
+          "status": 200,
+          "turn_latency_s": 1.5,
+          "transcript": "yeth duddu deppodu annd bareye",
+          "reply": "ವಿತ್‌ಡ್ರಾಯಲ್ ಸ್ಲಿಪ್‌ಗ್ ಸೈನ್ ಮಲ್ಪುಲೆ.",
+          "workflow": {
+            "name": "withdraw money",
+            "state": "active",
+            "step": 4,
+            "total_steps": 5
+          },
+          "input_mode": "speech",
+          "tts_status": 200,
+          "tts_bytes": 17568,
+          "tts_sha256": "0fb925fa15b9b55a8d59999a0339584a1d1f5a7ff6d440f6d9bfa97b8b32e9b0",
+          "xcorr_vs_input_recording": 0.077
+        },
+        {
+          "id": "W04b",
+          "status": 422,
+          "turn_latency_s": 1.27,
+          "asr_refusal": "Tulu speech could not be recognised reliably. Please type your request in Tulu (Roman or Kannada script).",
+          "transcript": null,
+          "reply": "ಸ್ಲಿಪ್ ಕ್ಯಾಶಿಯರ್‌ಗ್ ಸಬ್ಮಿಟ್ ಮಲ್ಪುಲೆ.",
+          "workflow": {
+            "name": "withdraw money",
+            "state": "active",
+            "step": 5,
+            "total_steps": 5
+          },
+          "input_mode": "typed fallback after ASR refusal",
+          "tts_status": 200,
+          "tts_bytes": 18288,
+          "tts_sha256": "5c8da88adde757dac63939c3664e289c69dab3e451a7abb6865a785f24459095",
+          "xcorr_vs_input_recording": 0.106
+        }
+      ]
+    }
+  ],
+  "typed_runs": [
+    {
+      "workflow": "deposit",
+      "id": "D01a",
+      "reply": "ಓಕೆ, ಫಸ್ಟ್ ಎರ್ ಕ್ಯಾಶ್ ಡೆಪಾಸಿಟ್‌ದ ಸ್ಲಿಪ್ ದೆತೊನ್ಲೆ.",
+      "workflow_state": {
+        "name": "deposit money",
+        "state": "active",
+        "step": 1,
+        "total_steps": 4
+      }
+    },
+    {
+      "workflow": "deposit",
+      "id": "D02b",
+      "reply": "ಐಟ್ ಎರ್ನ ಅಕೌಂಟ್ ನಂಬರ್ ಬರೆಲೆ.",
+      "workflow_state": {
+        "name": "deposit money",
+        "state": "active",
+        "step": 2,
+        "total_steps": 4
+      }
+    },
+    {
+      "workflow": "deposit",
+      "id": "D03b",
+      "reply": "ಬೊಕ್ಕ ಎತ್ ಅಮೌಂಟ್ ದೆಪ್ಪೆರೆ ಉಂಡು ಅವೆನ್ ಬರೆಲೆ.",
+      "workflow_state": {
+        "name": "deposit money",
+        "state": "active",
+        "step": 3,
+        "total_steps": 4
+      }
+    },
+    {
+      "workflow": "deposit",
+      "id": "D04b",
+      "reply": "Submit the slip along with the cash.",
+      "workflow_state": {
+        "name": "deposit money",
+        "state": "active",
+        "step": 4,
+        "total_steps": 4
+      }
+    },
+    {
+      "workflow": "deposit",
+      "id": "D01b",
+      "reply": "ಓಕೆ, ಫಸ್ಟ್ ಎರ್ ಕ್ಯಾಶ್ ಡೆಪಾಸಿಟ್‌ದ ಸ್ಲಿಪ್ ದೆತೊನ್ಲೆ.",
+      "workflow_state": {
+        "name": "deposit money",
+        "state": "active",
+        "step": 1,
+        "total_steps": 4
+      }
+    },
+    {
+      "workflow": "deposit",
+      "id": "D02c",
+      "reply": "ಐಟ್ ಎರ್ನ ಅಕೌಂಟ್ ನಂಬರ್ ಬರೆಲೆ.",
+      "workflow_state": {
+        "name": "deposit money",
+        "state": "active",
+        "step": 2,
+        "total_steps": 4
+      }
+    },
+    {
+      "workflow": "deposit",
+      "id": "D03a",
+      "reply": "ಬೊಕ್ಕ ಎತ್ ಅಮೌಂಟ್ ದೆಪ್ಪೆರೆ ಉಂಡು ಅವೆನ್ ಬರೆಲೆ.",
+      "workflow_state": {
+        "name": "deposit money",
+        "state": "active",
+        "step": 3,
+        "total_steps": 4
+      }
+    },
+    {
+      "workflow": "deposit",
+      "id": "D04c",
+      "reply": "Submit the slip along with the cash.",
+      "workflow_state": {
+        "name": "deposit money",
+        "state": "active",
+        "step": 4,
+        "total_steps": 4
+      }
+    },
+    {
+      "workflow": "deposit",
+      "id": "D01c",
+      "reply": "ಓಕೆ, ಫಸ್ಟ್ ಎರ್ ಕ್ಯಾಶ್ ಡೆಪಾಸಿಟ್‌ದ ಸ್ಲಿಪ್ ದೆತೊನ್ಲೆ.",
+      "workflow_state": {
+        "name": "deposit money",
+        "state": "active",
+        "step": 1,
+        "total_steps": 4
+      }
+    },
+    {
+      "workflow": "deposit",
+      "id": "D02d",
+      "reply": "ಐಟ್ ಎರ್ನ ಅಕೌಂಟ್ ನಂಬರ್ ಬರೆಲೆ.",
+      "workflow_state": {
+        "name": "deposit money",
+        "state": "active",
+        "step": 2,
+        "total_steps": 4
+      }
+    },
+    {
+      "workflow": "deposit",
+      "id": "D03a",
+      "reply": "ಬೊಕ್ಕ ಎತ್ ಅಮೌಂಟ್ ದೆಪ್ಪೆರೆ ಉಂಡು ಅವೆನ್ ಬರೆಲೆ.",
+      "workflow_state": {
+        "name": "deposit money",
+        "state": "active",
+        "step": 3,
+        "total_steps": 4
+      }
+    },
+    {
+      "workflow": "deposit",
+      "id": "D04a",
+      "reply": "Submit the slip along with the cash.",
+      "workflow_state": {
+        "name": "deposit money",
+        "state": "active",
+        "step": 4,
+        "total_steps": 4
+      }
+    },
+    {
+      "workflow": "deposit",
+      "id": "D01a",
+      "reply": "ಓಕೆ, ಫಸ್ಟ್ ಎರ್ ಕ್ಯಾಶ್ ಡೆಪಾಸಿಟ್‌ದ ಸ್ಲಿಪ್ ದೆತೊನ್ಲೆ.",
+      "workflow_state": {
+        "name": "deposit money",
+        "state": "active",
+        "step": 1,
+        "total_steps": 4
+      }
+    },
+    {
+      "workflow": "deposit",
+      "id": "D02a",
+      "reply": "ಐಟ್ ಎರ್ನ ಅಕೌಂಟ್ ನಂಬರ್ ಬರೆಲೆ.",
+      "workflow_state": {
+        "name": "deposit money",
+        "state": "active",
+        "step": 2,
+        "total_steps": 4
+      }
+    },
+    {
+      "workflow": "deposit",
+      "id": "D03b",
+      "reply": "ಬೊಕ್ಕ ಎತ್ ಅಮೌಂಟ್ ದೆಪ್ಪೆರೆ ಉಂಡು ಅವೆನ್ ಬರೆಲೆ.",
+      "workflow_state": {
+        "name": "deposit money",
+        "state": "active",
+        "step": 3,
+        "total_steps": 4
+      }
+    },
+    {
+      "workflow": "deposit",
+      "id": "D04a",
+      "reply": "Submit the slip along with the cash.",
+      "workflow_state": {
+        "name": "deposit money",
+        "state": "active",
+        "step": 4,
+        "total_steps": 4
+      }
+    },
+    {
+      "workflow": "withdraw",
+      "id": "W01a",
+      "reply": "ಸರಿ..ಅಲ್ಪ ವಿತ್‌ಡ್ರಾಯಲ್ ಸ್ಲಿಪ್ ದೆತೊನ್ಲೆ.",
+      "workflow_state": {
+        "name": "withdraw money",
+        "state": "active",
+        "step": 1,
+        "total_steps": 5
+      }
+    },
+    {
+      "workflow": "withdraw",
+      "id": "W02a",
+      "reply": "ಐಟ್ ಎರ್ನ ಅಕೌಂಟ್ ನಂಬರ್ ಬರೆಲೆ.",
+      "workflow_state": {
+        "name": "withdraw money",
+        "state": "active",
+        "step": 2,
+        "total_steps": 5
+      }
+    },
+    {
+      "workflow": "withdraw",
+      "id": "W03a",
+      "reply": "ಬೊಕ್ಕ ಯೆತ್ ಅಮೌಂಟ್ ದೆಪ್ಪೆರೆ ಉಂಡು ಅವೆನ್ ಬರೆಲೆ.",
+      "workflow_state": {
+        "name": "withdraw money",
+        "state": "active",
+        "step": 3,
+        "total_steps": 5
+      }
+    },
+    {
+      "workflow": "withdraw",
+      "id": "W03b",
+      "reply": "ವಿತ್‌ಡ್ರಾಯಲ್ ಸ್ಲಿಪ್‌ಗ್ ಸೈನ್ ಮಲ್ಪುಲೆ.",
+      "workflow_state": {
+        "name": "withdraw money",
+        "state": "active",
+        "step": 4,
+        "total_steps": 5
+      }
+    },
+    {
+      "workflow": "withdraw",
+      "id": "W04a",
+      "reply": "ಸ್ಲಿಪ್ ಕ್ಯಾಶಿಯರ್‌ಗ್ ಸಬ್ಮಿಟ್ ಮಲ್ಪುಲೆ.",
+      "workflow_state": {
+        "name": "withdraw money",
+        "state": "active",
+        "step": 5,
+        "total_steps": 5
+      }
+    },
+    {
+      "workflow": "withdraw",
+      "id": "W01b",
+      "reply": "ಸರಿ..ಅಲ್ಪ ವಿತ್‌ಡ್ರಾಯಲ್ ಸ್ಲಿಪ್ ದೆತೊನ್ಲೆ.",
+      "workflow_state": {
+        "name": "withdraw money",
+        "state": "active",
+        "step": 1,
+        "total_steps": 5
+      }
+    },
+    {
+      "workflow": "withdraw",
+      "id": "W02a",
+      "reply": "ಐಟ್ ಎರ್ನ ಅಕೌಂಟ್ ನಂಬರ್ ಬರೆಲೆ.",
+      "workflow_state": {
+        "name": "withdraw money",
+        "state": "active",
+        "step": 2,
+        "total_steps": 5
+      }
+    },
+    {
+      "workflow": "withdraw",
+      "id": "W03a",
+      "reply": "ಬೊಕ್ಕ ಯೆತ್ ಅಮೌಂಟ್ ದೆಪ್ಪೆರೆ ಉಂಡು ಅವೆನ್ ಬರೆಲೆ.",
+      "workflow_state": {
+        "name": "withdraw money",
+        "state": "active",
+        "step": 3,
+        "total_steps": 5
+      }
+    },
+    {
+      "workflow": "withdraw",
+      "id": "W03b",
+      "reply": "ವಿತ್‌ಡ್ರಾಯಲ್ ಸ್ಲಿಪ್‌ಗ್ ಸೈನ್ ಮಲ್ಪುಲೆ.",
+      "workflow_state": {
+        "name": "withdraw money",
+        "state": "active",
+        "step": 4,
+        "total_steps": 5
+      }
+    },
+    {
+      "workflow": "withdraw",
+      "id": "W04a",
+      "reply": "ಸ್ಲಿಪ್ ಕ್ಯಾಶಿಯರ್‌ಗ್ ಸಬ್ಮಿಟ್ ಮಲ್ಪುಲೆ.",
+      "workflow_state": {
+        "name": "withdraw money",
+        "state": "active",
+        "step": 5,
+        "total_steps": 5
+      }
+    },
+    {
+      "workflow": "withdraw",
+      "id": "W01c",
+      "reply": "ಸರಿ..ಅಲ್ಪ ವಿತ್‌ಡ್ರಾಯಲ್ ಸ್ಲಿಪ್ ದೆತೊನ್ಲೆ.",
+      "workflow_state": {
+        "name": "withdraw money",
+        "state": "active",
+        "step": 1,
+        "total_steps": 5
+      }
+    },
+    {
+      "workflow": "withdraw",
+      "id": "W02a",
+      "reply": "ಐಟ್ ಎರ್ನ ಅಕೌಂಟ್ ನಂಬರ್ ಬರೆಲೆ.",
+      "workflow_state": {
+        "name": "withdraw money",
+        "state": "active",
+        "step": 2,
+        "total_steps": 5
+      }
+    },
+    {
+      "workflow": "withdraw",
+      "id": "W03a",
+      "reply": "ಬೊಕ್ಕ ಯೆತ್ ಅಮೌಂಟ್ ದೆಪ್ಪೆರೆ ಉಂಡು ಅವೆನ್ ಬರೆಲೆ.",
+      "workflow_state": {
+        "name": "withdraw money",
+        "state": "active",
+        "step": 3,
+        "total_steps": 5
+      }
+    },
+    {
+      "workflow": "withdraw",
+      "id": "W03b",
+      "reply": "ವಿತ್‌ಡ್ರಾಯಲ್ ಸ್ಲಿಪ್‌ಗ್ ಸೈನ್ ಮಲ್ಪುಲೆ.",
+      "workflow_state": {
+        "name": "withdraw money",
+        "state": "active",
+        "step": 4,
+        "total_steps": 5
+      }
+    },
+    {
+      "workflow": "withdraw",
+      "id": "W04a",
+      "reply": "ಸ್ಲಿಪ್ ಕ್ಯಾಶಿಯರ್‌ಗ್ ಸಬ್ಮಿಟ್ ಮಲ್ಪುಲೆ.",
+      "workflow_state": {
+        "name": "withdraw money",
+        "state": "active",
+        "step": 5,
+        "total_steps": 5
+      }
+    },
+    {
+      "workflow": "withdraw",
+      "id": "W01a",
+      "reply": "ಸರಿ..ಅಲ್ಪ ವಿತ್‌ಡ್ರಾಯಲ್ ಸ್ಲಿಪ್ ದೆತೊನ್ಲೆ.",
+      "workflow_state": {
+        "name": "withdraw money",
+        "state": "active",
+        "step": 1,
+        "total_steps": 5
+      }
+    },
+    {
+      "workflow": "withdraw",
+      "id": "W02b",
+      "reply": "ಐಟ್ ಎರ್ನ ಅಕೌಂಟ್ ನಂಬರ್ ಬರೆಲೆ.",
+      "workflow_state": {
+        "name": "withdraw money",
+        "state": "active",
+        "step": 2,
+        "total_steps": 5
+      }
+    },
+    {
+      "workflow": "withdraw",
+      "id": "W03a1",
+      "reply": "ಬೊಕ್ಕ ಯೆತ್ ಅಮೌಂಟ್ ದೆಪ್ಪೆರೆ ಉಂಡು ಅವೆನ್ ಬರೆಲೆ.",
+      "workflow_state": {
+        "name": "withdraw money",
+        "state": "active",
+        "step": 3,
+        "total_steps": 5
+      }
+    },
+    {
+      "workflow": "withdraw",
+      "id": "W03b1",
+      "reply": "ವಿತ್‌ಡ್ರಾಯಲ್ ಸ್ಲಿಪ್‌ಗ್ ಸೈನ್ ಮಲ್ಪುಲೆ.",
+      "workflow_state": {
+        "name": "withdraw money",
+        "state": "active",
+        "step": 4,
+        "total_steps": 5
+      }
+    },
+    {
+      "workflow": "withdraw",
+      "id": "W04b",
+      "reply": "ಸ್ಲಿಪ್ ಕ್ಯಾಶಿಯರ್‌ಗ್ ಸಬ್ಮಿಟ್ ಮಲ್ಪುಲೆ.",
+      "workflow_state": {
+        "name": "withdraw money",
+        "state": "active",
+        "step": 5,
+        "total_steps": 5
+      }
+    },
+    {
+      "workflow": "withdraw",
+      "id": "W01c",
+      "reply": "ಸರಿ..ಅಲ್ಪ ವಿತ್‌ಡ್ರಾಯಲ್ ಸ್ಲಿಪ್ ದೆತೊನ್ಲೆ.",
+      "workflow_state": {
+        "name": "withdraw money",
+        "state": "active",
+        "step": 1,
+        "total_steps": 5
+      }
+    },
+    {
+      "workflow": "withdraw",
+      "id": "W02c",
+      "reply": "ಐಟ್ ಎರ್ನ ಅಕೌಂಟ್ ನಂಬರ್ ಬರೆಲೆ.",
+      "workflow_state": {
+        "name": "withdraw money",
+        "state": "active",
+        "step": 2,
+        "total_steps": 5
+      }
+    },
+    {
+      "workflow": "withdraw",
+      "id": "W03a1",
+      "reply": "ಬೊಕ್ಕ ಯೆತ್ ಅಮೌಂಟ್ ದೆಪ್ಪೆರೆ ಉಂಡು ಅವೆನ್ ಬರೆಲೆ.",
+      "workflow_state": {
+        "name": "withdraw money",
+        "state": "active",
+        "step": 3,
+        "total_steps": 5
+      }
+    },
+    {
+      "workflow": "withdraw",
+      "id": "W03b2",
+      "reply": "ವಿತ್‌ಡ್ರಾಯಲ್ ಸ್ಲಿಪ್‌ಗ್ ಸೈನ್ ಮಲ್ಪುಲೆ.",
+      "workflow_state": {
+        "name": "withdraw money",
+        "state": "active",
+        "step": 4,
+        "total_steps": 5
+      }
+    },
+    {
+      "workflow": "withdraw",
+      "id": "W04c",
+      "reply": "ಸ್ಲಿಪ್ ಕ್ಯಾಶಿಯರ್‌ಗ್ ಸಬ್ಮಿಟ್ ಮಲ್ಪುಲೆ.",
+      "workflow_state": {
+        "name": "withdraw money",
+        "state": "active",
+        "step": 5,
+        "total_steps": 5
+      }
+    },
+    {
+      "workflow": "withdraw",
+      "id": "W01b",
+      "reply": "ಸರಿ..ಅಲ್ಪ ವಿತ್‌ಡ್ರಾಯಲ್ ಸ್ಲಿಪ್ ದೆತೊನ್ಲೆ.",
+      "workflow_state": {
+        "name": "withdraw money",
+        "state": "active",
+        "step": 1,
+        "total_steps": 5
+      }
+    },
+    {
+      "workflow": "withdraw",
+      "id": "W02d",
+      "reply": "ಐಟ್ ಎರ್ನ ಅಕೌಂಟ್ ನಂಬರ್ ಬರೆಲೆ.",
+      "workflow_state": {
+        "name": "withdraw money",
+        "state": "active",
+        "step": 2,
+        "total_steps": 5
+      }
+    },
+    {
+      "workflow": "withdraw",
+      "id": "W03a",
+      "reply": "ಬೊಕ್ಕ ಯೆತ್ ಅಮೌಂಟ್ ದೆಪ್ಪೆರೆ ಉಂಡು ಅವೆನ್ ಬರೆಲೆ.",
+      "workflow_state": {
+        "name": "withdraw money",
+        "state": "active",
+        "step": 3,
+        "total_steps": 5
+      }
+    },
+    {
+      "workflow": "withdraw",
+      "id": "W03b2",
+      "reply": "ವಿತ್‌ಡ್ರಾಯಲ್ ಸ್ಲಿಪ್‌ಗ್ ಸೈನ್ ಮಲ್ಪುಲೆ.",
+      "workflow_state": {
+        "name": "withdraw money",
+        "state": "active",
+        "step": 4,
+        "total_steps": 5
+      }
+    },
+    {
+      "workflow": "withdraw",
+      "id": "W04b",
+      "reply": "ಸ್ಲಿಪ್ ಕ್ಯಾಶಿಯರ್‌ಗ್ ಸಬ್ಮಿಟ್ ಮಲ್ಪುಲೆ.",
+      "workflow_state": {
+        "name": "withdraw money",
+        "state": "active",
+        "step": 5,
+        "total_steps": 5
+      }
+    }
+  ],
+  "rejections": [
+    {
+      "input": "Yank duddu deppere undu?",
+      "reply": "Sorry, I could not tell which service you need. Please say again whether you want to deposit or withdraw money.",
+      "workflow": {
+        "name": null,
+        "state": "none",
+        "step": null,
+        "total_steps": null
+      }
+    },
+    {
+      "input": "Yenk kaas padodu deppere?",
+      "reply": "Sorry, I could not tell which service you need. Please say again whether you want to deposit or withdraw money."
+    }
+  ],
+  "fallbacks": [
+    {
+      "case": "loan",
+      "reply": "Please proceed to the loan assistance desk.",
+      "workflow": {
+        "name": "apply for loan",
+        "state": "active",
+        "step": 1,
+        "total_steps": 3
+      }
+    },
+    {
+      "case": "deposit step 4 (D04 disputed)",
+      "reply": "Submit the slip along with the cash."
+    }
+  ],
+  "regressions": [
+    {
+      "language": "kn",
+      "reply": "ದಯವಿಟ್ಟು ಒಂದು ಹಣ ಜಮಾ ಚೀಟಿ (ಡೆಪಾಸಿಟ್ ಸ್ಲಿಪ್) ತೆಗೆದುಕೊಳ್ಳಿ."
+    }
+  ],
+  "engine_start_s": 7.6,
+  "memory_end": {
+    "current_mb": 372.2,
+    "peak_mb": 730.0
+  }
+}

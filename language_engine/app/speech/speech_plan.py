@@ -37,7 +37,13 @@ import unicodedata
 from dataclasses import dataclass
 
 #: The languages the engine has a voice for.
-SPOKEN_LANGUAGES = ("en", "kn", "hi")
+#:
+#: Tulu (tcy) has no voice of its own. A Tulu session's reply carries
+#: verified Tulu in Kannada script plus any English fallback, so the script
+#: rule below reads the Tulu with the Kannada-trained voice and the English
+#: with the English voice. That is a Kannada voice reading Tulu text, not
+#: native Tulu TTS (app/tulu/tts/synthesizer.py).
+SPOKEN_LANGUAGES = ("en", "kn", "hi", "tcy")
 
 #: Script -> the language whose voice reads it.
 SCRIPT_LANGUAGE = {"latin": "en", "kannada": "kn", "devanagari": "hi"}

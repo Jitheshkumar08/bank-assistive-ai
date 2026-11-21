@@ -1,0 +1,125 @@
+{
+ "checks": [
+  {
+   "check": "kannada routes to indicconformer first",
+   "ok": true,
+   "detail": "['indicconformer', 'whisper']"
+  },
+  {
+   "check": "hindi routes to indicconformer first",
+   "ok": true,
+   "detail": "['indicconformer', 'whisper']"
+  },
+  {
+   "check": "english routes to whisper",
+   "ok": true,
+   "detail": "['whisper']"
+  },
+  {
+   "check": "tulu is not claimed by any provider",
+   "ok": true,
+   "detail": "[]"
+  },
+  {
+   "check": "kn: legacy contract keys present",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "check": "kn: non-empty transcript",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "check": "kn: provider is indicconformer",
+   "ok": true,
+   "detail": "indicconformer"
+  },
+  {
+   "check": "kn: output in the expected script",
+   "ok": true,
+   "detail": "script_share=1.0"
+  },
+  {
+   "check": "kn: no silent fallback",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "check": "hi: legacy contract keys present",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "check": "hi: non-empty transcript",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "check": "hi: provider is indicconformer",
+   "ok": true,
+   "detail": "indicconformer"
+  },
+  {
+   "check": "hi: output in the expected script",
+   "ok": true,
+   "detail": "script_share=1.0"
+  },
+  {
+   "check": "hi: no silent fallback",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "check": "english transcription",
+   "ok": null,
+   "detail": "no clip"
+  },
+  {
+   "check": "unsupported language raises instead of guessing",
+   "ok": true,
+   "detail": "RuntimeError"
+  }
+ ],
+ "routing": {
+  "en": [
+   "whisper"
+  ],
+  "kn": [
+   "indicconformer",
+   "whisper"
+  ],
+  "hi": [
+   "indicconformer",
+   "whisper"
+  ],
+  "ta": [
+   "whisper"
+  ],
+  "tcy": []
+ },
+ "results": {
+  "kn": {
+   "id": "ivb_kn_001",
+   "provider": "indicconformer",
+   "model": "OpenVoiceOS/ai4bharat-indicconformer-kn-onnx",
+   "fallback_used": false,
+   "seconds": 284.33,
+   "rtf": 13.567,
+   "script_share": 1.0,
+   "text_preview": "ವಾರಕ್ಕೊಮ್ಮೆ ಸರ್ವ ಹರಿಯಾಣ ಗ್ರಾಮೀಣ ಬ್ಯಾಂಕ್ನಲ್ಲಿರೋ ನನ್ನ ಅಕೌಂಟ್ ಒಂದು ಆರು ಒಂಬತ್ತು ಒಂಬತ್ತು ಎರಡು ಐ"
+  },
+  "hi": {
+   "id": "ivb_hi_001",
+   "provider": "indicconformer",
+   "model": "OpenVoiceOS/ai4bharat-indicconformer-hi-onnx",
+   "fallback_used": false,
+   "seconds": 9.75,
+   "rtf": 0.866,
+   "script_share": 1.0,
+   "text_preview": "क्या एन जि ओ की सूची में उड़ान इंडिया फाउंडेशन उपलब्ध है यदि हाँ तो कृपया रुपये पाँच हजार "
+  }
+ },
+ "failures": [],
+ "status": "pass"
+}

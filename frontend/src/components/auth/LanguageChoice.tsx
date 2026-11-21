@@ -16,6 +16,7 @@ export const LANGUAGES = [
   { code: 'en', name: 'English', native: 'English' },
   { code: 'kn', name: 'Kannada', native: 'ಕನ್ನಡ' },
   { code: 'hi', name: 'Hindi', native: 'हिन्दी' },
+  { code: 'tcy', name: 'Tulu', native: 'ತಳು' },
 ] as const;
 
 export type LanguageCode = (typeof LANGUAGES)[number]['code'];

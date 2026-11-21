@@ -1,0 +1,5 @@
+{
+  "excludes": [
+    "bank-assistive-ai/language_engine-old"
+  ]
+}

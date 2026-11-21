@@ -1,0 +1,1283 @@
+{
+ "meta": {
+  "name": "m10_before_m5",
+  "fixtures": "m5_fresh.json"
+ },
+ "summary": {
+  "all_settled": {
+   "fixtures": 42,
+   "scored": 40,
+   "llm_gated": 2,
+   "correct": 27,
+   "correct_intent": "21/26",
+   "correct_intent_rate": 80.8,
+   "wrong_service": 2,
+   "false_starts": "7/14",
+   "false_start_rate": 50.0,
+   "false_starts_into_real_workflow": 6,
+   "clarify_correct": "0/4",
+   "decline_correct": "0/0",
+   "decline_no_start": "0/0",
+   "question_correct": "2/6",
+   "gated_no_start_expected": 2,
+   "gated_would_start": 1,
+   "outcomes": {
+    "correct": 27,
+    "false_start": 7,
+    "missed (answer)": 3,
+    "wrong_service": 2,
+    "llm_gated": 2,
+    "no_start_other_reply (answer)": 1
+   }
+  },
+  "pending_policy": {
+   "fixtures": 0,
+   "scored": 0,
+   "llm_gated": 0,
+   "correct": 0,
+   "correct_intent": "0/0",
+   "correct_intent_rate": null,
+   "wrong_service": 0,
+   "false_starts": "0/0",
+   "false_start_rate": null,
+   "false_starts_into_real_workflow": 0,
+   "clarify_correct": "0/0",
+   "decline_correct": "0/0",
+   "decline_no_start": "0/0",
+   "question_correct": "0/0",
+   "gated_no_start_expected": 0,
+   "gated_would_start": 0,
+   "outcomes": {}
+  },
+  "by_family": {
+   "ambiguous_request": {
+    "fixtures": 4,
+    "scored": 4,
+    "llm_gated": 0,
+    "correct": 0,
+    "correct_intent": "0/0",
+    "correct_intent_rate": null,
+    "wrong_service": 0,
+    "false_starts": "3/4",
+    "false_start_rate": 75.0,
+    "false_starts_into_real_workflow": 3,
+    "clarify_correct": "0/4",
+    "decline_correct": "0/0",
+    "decline_no_start": "0/0",
+    "question_correct": "0/0",
+    "gated_no_start_expected": 0,
+    "gated_would_start": 0,
+    "outcomes": {
+     "false_start": 3,
+     "no_start_other_reply (answer)": 1
+    }
+   },
+   "knowledge_question": {
+    "fixtures": 8,
+    "scored": 6,
+    "llm_gated": 2,
+    "correct": 2,
+    "correct_intent": "0/0",
+    "correct_intent_rate": null,
+    "wrong_service": 0,
+    "false_starts": "4/6",
+    "false_start_rate": 66.7,
+    "false_starts_into_real_workflow": 3,
+    "clarify_correct": "0/0",
+    "decline_correct": "0/0",
+    "decline_no_start": "0/0",
+    "question_correct": "2/6",
+    "gated_no_start_expected": 2,
+    "gated_would_start": 1,
+    "outcomes": {
+     "false_start": 4,
+     "correct": 2,
+     "llm_gated": 2
+    }
+   },
+   "refusal": {
+    "fixtures": 4,
+    "scored": 4,
+    "llm_gated": 0,
+    "correct": 4,
+    "correct_intent": "0/0",
+    "correct_intent_rate": null,
+    "wrong_service": 0,
+    "false_starts": "0/4",
+    "false_start_rate": 0.0,
+    "false_starts_into_real_workflow": 0,
+    "clarify_correct": "0/0",
+    "decline_correct": "0/0",
+    "decline_no_start": "0/0",
+    "question_correct": "0/0",
+    "gated_no_start_expected": 0,
+    "gated_would_start": 0,
+    "outcomes": {
+     "correct": 4
+    }
+   },
+   "service_request": {
+    "fixtures": 26,
+    "scored": 26,
+    "llm_gated": 0,
+    "correct": 21,
+    "correct_intent": "21/26",
+    "correct_intent_rate": 80.8,
+    "wrong_service": 2,
+    "false_starts": "0/0",
+    "false_start_rate": null,
+    "false_starts_into_real_workflow": 0,
+    "clarify_correct": "0/0",
+    "decline_correct": "0/0",
+    "decline_no_start": "0/0",
+    "question_correct": "0/0",
+    "gated_no_start_expected": 0,
+    "gated_would_start": 0,
+    "outcomes": {
+     "correct": 21,
+     "missed (answer)": 3,
+     "wrong_service": 2
+    }
+   }
+  },
+  "by_language": {
+   "en": {
+    "fixtures": 6,
+    "scored": 6,
+    "llm_gated": 0,
+    "correct": 4,
+    "correct_intent": "3/3",
+    "correct_intent_rate": 100.0,
+    "wrong_service": 0,
+    "false_starts": "2/3",
+    "false_start_rate": 66.7,
+    "false_starts_into_real_workflow": 2,
+    "clarify_correct": "0/1",
+    "decline_correct": "0/0",
+    "decline_no_start": "0/0",
+    "question_correct": "0/1",
+    "gated_no_start_expected": 0,
+    "gated_would_start": 0,
+    "outcomes": {
+     "correct": 4,
+     "false_start": 2
+    }
+   },
+   "kn": {
+    "fixtures": 5,
+    "scored": 5,
+    "llm_gated": 0,
+    "correct": 1,
+    "correct_intent": "1/2",
+    "correct_intent_rate": 50.0,
+    "wrong_service": 1,
+    "false_starts": "2/3",
+    "false_start_rate": 66.7,
+    "false_starts_into_real_workflow": 2,
+    "clarify_correct": "0/2",
+    "decline_correct": "0/0",
+    "decline_no_start": "0/0",
+    "question_correct": "0/1",
+    "gated_no_start_expected": 0,
+    "gated_would_start": 0,
+    "outcomes": {
+     "false_start": 2,
+     "correct": 1,
+     "wrong_service": 1,
+     "no_start_other_reply (answer)": 1
+    }
+   },
+   "hi": {
+    "fixtures": 6,
+    "scored": 6,
+    "llm_gated": 0,
+    "correct": 3,
+    "correct_intent": "3/4",
+    "correct_intent_rate": 75.0,
+    "wrong_service": 0,
+    "false_starts": "2/2",
+    "false_start_rate": 100.0,
+    "false_starts_into_real_workflow": 1,
+    "clarify_correct": "0/1",
+    "decline_correct": "0/0",
+    "decline_no_start": "0/0",
+    "question_correct": "0/1",
+    "gated_no_start_expected": 0,
+    "gated_would_start": 0,
+    "outcomes": {
+     "correct": 3,
+     "false_start": 2,
+     "missed (answer)": 1
+    }
+   },
+   "kn-en": {
+    "fixtures": 9,
+    "scored": 8,
+    "llm_gated": 1,
+    "correct": 7,
+    "correct_intent": "5/6",
+    "correct_intent_rate": 83.3,
+    "wrong_service": 0,
+    "false_starts": "0/2",
+    "false_start_rate": 0.0,
+    "false_starts_into_real_workflow": 0,
+    "clarify_correct": "0/0",
+    "decline_correct": "0/0",
+    "decline_no_start": "0/0",
+    "question_correct": "1/1",
+    "gated_no_start_expected": 1,
+    "gated_would_start": 0,
+    "outcomes": {
+     "correct": 7,
+     "missed (answer)": 1,
+     "llm_gated": 1
+    }
+   },
+   "hi-en": {
+    "fixtures": 8,
+    "scored": 7,
+    "llm_gated": 1,
+    "correct": 7,
+    "correct_intent": "5/5",
+    "correct_intent_rate": 100.0,
+    "wrong_service": 0,
+    "false_starts": "0/2",
+    "false_start_rate": 0.0,
+    "false_starts_into_real_workflow": 0,
+    "clarify_correct": "0/0",
+    "decline_correct": "0/0",
+    "decline_no_start": "0/0",
+    "question_correct": "1/1",
+    "gated_no_start_expected": 1,
+    "gated_would_start": 1,
+    "outcomes": {
+     "correct": 7,
+     "llm_gated": 1
+    }
+   },
+   "rom-kn": {
+    "fixtures": 3,
+    "scored": 3,
+    "llm_gated": 0,
+    "correct": 3,
+    "correct_intent": "3/3",
+    "correct_intent_rate": 100.0,
+    "wrong_service": 0,
+    "false_starts": "0/0",
+    "false_start_rate": null,
+    "false_starts_into_real_workflow": 0,
+    "clarify_correct": "0/0",
+    "decline_correct": "0/0",
+    "decline_no_start": "0/0",
+    "question_correct": "0/0",
+    "gated_no_start_expected": 0,
+    "gated_would_start": 0,
+    "outcomes": {
+     "correct": 3
+    }
+   },
+   "rom-hi": {
+    "fixtures": 5,
+    "scored": 5,
+    "llm_gated": 0,
+    "correct": 2,
+    "correct_intent": "1/3",
+    "correct_intent_rate": 33.3,
+    "wrong_service": 1,
+    "false_starts": "1/2",
+    "false_start_rate": 50.0,
+    "false_starts_into_real_workflow": 1,
+    "clarify_correct": "0/0",
+    "decline_correct": "0/0",
+    "decline_no_start": "0/0",
+    "question_correct": "0/1",
+    "gated_no_start_expected": 0,
+    "gated_would_start": 0,
+    "outcomes": {
+     "correct": 2,
+     "missed (answer)": 1,
+     "wrong_service": 1,
+     "false_start": 1
+    }
+   }
+  }
+ },
+ "rows": [
+  {
+   "id": "svc-kn-en-501",
+   "lang": "kn-en",
+   "family": "service_request",
+   "policy": "settled",
+   "text": "ನನ್ನ ಅಕೌಂಟ್‌ನಿಂದ ಕ್ಯಾಶ್ ವಿತ್‌ಡ್ರಾ ಮಾಡಬೇಕು",
+   "expect": "start:withdraw money",
+   "decision": "start:withdraw money",
+   "outcome": "correct",
+   "scored": true,
+   "real_workflow": true,
+   "detail": {
+    "decision": "start:withdraw money",
+    "stage": "detector",
+    "category": "BANKING_INTENT",
+    "margin": 0.127,
+    "evidence": [
+     "withdraw money"
+    ],
+    "intent": "withdraw money",
+    "withheld": null,
+    "negated": false
+   }
+  },
+  {
+   "id": "svc-kn-en-502",
+   "lang": "kn-en",
+   "family": "service_request",
+   "policy": "settled",
+   "text": "ಲೋನ್‌ಗಾಗಿ ಅರ್ಜಿ ಕೊಡಬೇಕು",
+   "expect": "start:apply for loan",
+   "decision": "start:apply for loan",
+   "outcome": "correct",
+   "scored": true,
+   "real_workflow": true,
+   "detail": {
+    "decision": "start:apply for loan",
+    "stage": "detector",
+    "category": "BANKING_INTENT",
+    "margin": 0.22,
+    "evidence": [
+     "apply for loan"
+    ],
+    "intent": "apply for loan",
+    "withheld": null,
+    "negated": false
+   }
+  },
+  {
+   "id": "svc-kn-en-503",
+   "lang": "kn-en",
+   "family": "service_request",
+   "policy": "settled",
+   "text": "ಅಕೌಂಟಿಗೆ ಹಣ ಡೆಪಾಸಿಟ್ ಮಾಡಬೇಕು",
+   "expect": "start:deposit money",
+   "decision": "start:deposit money",
+   "outcome": "correct",
+   "scored": true,
+   "real_workflow": true,
+   "detail": {
+    "decision": "start:deposit money",
+    "stage": "detector",
+    "category": "BANKING_INTENT",
+    "margin": 0.062,
+    "evidence": [
+     "deposit money"
+    ],
+    "intent": "deposit money",
+    "withheld": null,
+    "negated": false
+   }
+  },
+  {
+   "id": "svc-kn-en-504",
+   "lang": "kn-en",
+   "family": "service_request",
+   "policy": "settled",
+   "text": "ಬ್ಯಾಲೆನ್ಸ್‌ ಚೆಕ್ ಮಾಡಬೇಕಿತ್ತು",
+   "expect": "start:check account balance",
+   "decision": "answer",
+   "outcome": "missed (answer)",
+   "scored": true,
+   "real_workflow": false,
+   "detail": {
+    "decision": "answer",
+    "stage": "detector",
+    "category": "KNOWLEDGE_QUESTION",
+    "margin": -0.006,
+    "evidence": [
+     "check account balance"
+    ],
+    "intent": "check account balance",
+    "withheld": null,
+    "negated": false
+   }
+  },
+  {
+   "id": "svc-kn-en-505",
+   "lang": "kn-en",
+   "family": "service_request",
+   "policy": "settled",
+   "text": "ಹೊಸ ಅಕೌಂಟ್ ಓಪನ್ ಮಾಡಿಸಬೇಕು",
+   "expect": "start:open new account",
+   "decision": "start:open new account",
+   "outcome": "correct",
+   "scored": true,
+   "real_workflow": false,
+   "detail": {
+    "decision": "start:open new account",
+    "stage": "detector",
+    "category": "BANKING_INTENT",
+    "margin": 0.165,
+    "evidence": [
+     "open new account"
+    ],
+    "intent": "open new account",
+    "withheld": null,
+    "negated": false
+   }
+  },
+  {
+   "id": "svc-kn-en-506",
+   "lang": "kn-en",
+   "family": "service_request",
+   "policy": "settled",
+   "text": "ಕ್ಯಾಶ್‌ ಡೆಪಾಸಿಟ್ ಮಾಡಬೇಕು",
+   "expect": "start:deposit money",
+   "decision": "start:deposit money",
+   "outcome": "correct",
+   "scored": true,
+   "real_workflow": true,
+   "detail": {
+    "decision": "start:deposit money",
+    "stage": "detector",
+    "category": "BANKING_INTENT",
+    "margin": 0.104,
+    "evidence": [
+     "deposit money"
+    ],
+    "intent": "deposit money",
+    "withheld": null,
+    "negated": false
+   }
+  },
+  {
+   "id": "svc-hi-en-501",
+   "lang": "hi-en",
+   "family": "service_request",
+   "policy": "settled",
+   "text": "मुझे एकाउंट से कैश विड्रॉल करना है",
+   "expect": "start:withdraw money",
+   "decision": "start:withdraw money",
+   "outcome": "correct",
+   "scored": true,
+   "real_workflow": true,
+   "detail": {
+    "decision": "start:withdraw money",
+    "stage": "detector",
+    "category": "BANKING_INTENT",
+    "margin": 0.294,
+    "evidence": [
+     "withdraw money"
+    ],
+    "intent": "withdraw money",
+    "withheld": null,
+    "negated": false
+   }
+  },
+  {
+   "id": "svc-hi-en-502",
+   "lang": "hi-en",
+   "family": "service_request",
+   "policy": "settled",
+   "text": "मेरा बेलेंस चेक करना है",
+   "expect": "start:check account balance",
+   "decision": "start:check account balance",
+   "outcome": "correct",
+   "scored": true,
+   "real_workflow": false,
+   "detail": {
+    "decision": "start:check account balance",
+    "stage": "detector",
+    "category": "BANKING_INTENT",
+    "margin": 0.109,
+    "evidence": [
+     "check account balance"
+    ],
+    "intent": "check account balance",
+    "withheld": null,
+    "negated": false
+   }
+  },
+  {
+   "id": "svc-hi-en-503",
+   "lang": "hi-en",
+   "family": "service_request",
+   "policy": "settled",
+   "text": "डिपोजिट करना है",
+   "expect": "start:deposit money",
+   "decision": "start:deposit money",
+   "outcome": "correct",
+   "scored": true,
+   "real_workflow": true,
+   "detail": {
+    "decision": "start:deposit money",
+    "stage": "detector",
+    "category": "BANKING_INTENT",
+    "margin": 0.105,
+    "evidence": [
+     "deposit money"
+    ],
+    "intent": "deposit money",
+    "withheld": null,
+    "negated": false
+   }
+  },
+  {
+   "id": "svc-hi-en-504",
+   "lang": "hi-en",
+   "family": "service_request",
+   "policy": "settled",
+   "text": "नया एकाउंट खुलवाना है",
+   "expect": "start:open new account",
+   "decision": "start:open new account",
+   "outcome": "correct",
+   "scored": true,
+   "real_workflow": false,
+   "detail": {
+    "decision": "start:open new account",
+    "stage": "detector",
+    "category": "BANKING_INTENT",
+    "margin": 0.375,
+    "evidence": [
+     "open new account"
+    ],
+    "intent": "open new account",
+    "withheld": null,
+    "negated": false
+   }
+  },
+  {
+   "id": "svc-hi-en-505",
+   "lang": "hi-en",
+   "family": "service_request",
+   "policy": "settled",
+   "text": "मुझे होमलोन चाहिए",
+   "expect": "start:apply for loan",
+   "decision": "start:apply for loan",
+   "outcome": "correct",
+   "scored": true,
+   "real_workflow": true,
+   "detail": {
+    "decision": "start:apply for loan",
+    "stage": "detector",
+    "category": "BANKING_INTENT",
+    "margin": 0.095,
+    "evidence": [],
+    "intent": "apply for loan",
+    "withheld": null,
+    "negated": false
+   }
+  },
+  {
+   "id": "svc-hi-501",
+   "lang": "hi",
+   "family": "service_request",
+   "policy": "settled",
+   "text": "क़र्ज़ चाहिए",
+   "expect": "start:apply for loan",
+   "decision": "start:apply for loan",
+   "outcome": "correct",
+   "scored": true,
+   "real_workflow": true,
+   "detail": {
+    "decision": "start:apply for loan",
+    "stage": "detector",
+    "category": "BANKING_INTENT",
+    "margin": 0.214,
+    "evidence": [
+     "apply for loan"
+    ],
+    "intent": "apply for loan",
+    "withheld": null,
+    "negated": false
+   }
+  },
+  {
+   "id": "svc-hi-502",
+   "lang": "hi",
+   "family": "service_request",
+   "policy": "settled",
+   "text": "मुझे पैसे जमा करने हैं।",
+   "expect": "start:deposit money",
+   "decision": "start:deposit money",
+   "outcome": "correct",
+   "scored": true,
+   "real_workflow": true,
+   "detail": {
+    "decision": "start:deposit money",
+    "stage": "detector",
+    "category": "BANKING_INTENT",
+    "margin": 0.437,
+    "evidence": [
+     "deposit money"
+    ],
+    "intent": "deposit money",
+    "withheld": null,
+    "negated": false
+   }
+  },
+  {
+   "id": "svc-en-501",
+   "lang": "en",
+   "family": "service_request",
+   "policy": "settled",
+   "text": "I want to withdrawl money",
+   "expect": "start:withdraw money",
+   "decision": "start:withdraw money",
+   "outcome": "correct",
+   "scored": true,
+   "real_workflow": true,
+   "detail": {
+    "decision": "start:withdraw money",
+    "stage": "detector",
+    "category": "BANKING_INTENT",
+    "margin": 0.394,
+    "evidence": [
+     "withdraw money"
+    ],
+    "intent": "withdraw money",
+    "withheld": null,
+    "negated": false
+   }
+  },
+  {
+   "id": "svc-en-502",
+   "lang": "en",
+   "family": "service_request",
+   "policy": "settled",
+   "text": "need to deposite cash",
+   "expect": "start:deposit money",
+   "decision": "start:deposit money",
+   "outcome": "correct",
+   "scored": true,
+   "real_workflow": true,
+   "detail": {
+    "decision": "start:deposit money",
+    "stage": "detector",
+    "category": "BANKING_INTENT",
+    "margin": 0.21,
+    "evidence": [
+     "deposit money"
+    ],
+    "intent": "deposit money",
+    "withheld": null,
+    "negated": false
+   }
+  },
+  {
+   "id": "svc-en-503",
+   "lang": "en",
+   "family": "service_request",
+   "policy": "settled",
+   "text": "check my acount balence",
+   "expect": "start:check account balance",
+   "decision": "start:check account balance",
+   "outcome": "correct",
+   "scored": true,
+   "real_workflow": false,
+   "detail": {
+    "decision": "start:check account balance",
+    "stage": "detector",
+    "category": "BANKING_INTENT",
+    "margin": 0.355,
+    "evidence": [
+     "check account balance"
+    ],
+    "intent": "check account balance",
+    "withheld": null,
+    "negated": false
+   }
+  },
+  {
+   "id": "svc-rom-hi-501",
+   "lang": "rom-hi",
+   "family": "service_request",
+   "policy": "settled",
+   "text": "balence check karna hai",
+   "expect": "start:check account balance",
+   "decision": "start:check account balance",
+   "outcome": "correct",
+   "scored": true,
+   "real_workflow": false,
+   "detail": {
+    "decision": "start:check account balance",
+    "stage": "detector",
+    "category": "BANKING_INTENT",
+    "margin": 0.123,
+    "evidence": [
+     "check account balance"
+    ],
+    "intent": "check account balance",
+    "withheld": null,
+    "negated": false
+   }
+  },
+  {
+   "id": "svc-rom-hi-502",
+   "lang": "rom-hi",
+   "family": "service_request",
+   "policy": "settled",
+   "text": "mujhe lone chahiye",
+   "expect": "start:apply for loan",
+   "decision": "answer",
+   "outcome": "missed (answer)",
+   "scored": true,
+   "real_workflow": false,
+   "detail": {
+    "decision": "answer",
+    "stage": "detector",
+    "category": "KNOWLEDGE_QUESTION",
+    "margin": -0.04,
+    "evidence": [],
+    "intent": "apply for loan",
+    "withheld": null,
+    "negated": false
+   }
+  },
+  {
+   "id": "svc-rom-kn-501",
+   "lang": "rom-kn",
+   "family": "service_request",
+   "policy": "settled",
+   "text": "accont open madbeku",
+   "expect": "start:open new account",
+   "decision": "start:open new account",
+   "outcome": "correct",
+   "scored": true,
+   "real_workflow": false,
+   "detail": {
+    "decision": "start:open new account",
+    "stage": "detector",
+    "category": "BANKING_INTENT",
+    "margin": 0.322,
+    "evidence": [
+     "open new account"
+    ],
+    "intent": "open new account",
+    "withheld": null,
+    "negated": false
+   }
+  },
+  {
+   "id": "svc-rom-kn-502",
+   "lang": "rom-kn",
+   "family": "service_request",
+   "policy": "settled",
+   "text": "diposit maadbeku",
+   "expect": "start:deposit money",
+   "decision": "start:deposit money",
+   "outcome": "correct",
+   "scored": true,
+   "real_workflow": true,
+   "detail": {
+    "decision": "start:deposit money",
+    "stage": "detector",
+    "category": "BANKING_INTENT",
+    "margin": 0.254,
+    "evidence": [
+     "deposit money"
+    ],
+    "intent": "deposit money",
+    "withheld": null,
+    "negated": false
+   }
+  },
+  {
+   "id": "svc-kn-501",
+   "lang": "kn",
+   "family": "service_request",
+   "policy": "settled",
+   "text": "ಉಳಿತಾಯ ಖಾತೆಗೆ ಸಾವಿರ ರೂಪಾಯಿ ಹಾಕಬೇಕಿದೆ",
+   "expect": "start:deposit money",
+   "decision": "start:deposit money",
+   "outcome": "correct",
+   "scored": true,
+   "real_workflow": true,
+   "detail": {
+    "decision": "start:deposit money",
+    "stage": "detector",
+    "category": "BANKING_INTENT",
+    "margin": 0.06,
+    "evidence": [],
+    "intent": "deposit money",
+    "withheld": null,
+    "negated": false
+   }
+  },
+  {
+   "id": "svc-hi-503",
+   "lang": "hi",
+   "family": "service_request",
+   "policy": "settled",
+   "text": "खाते में पाँच सौ रुपये डालने हैं",
+   "expect": "start:deposit money",
+   "decision": "start:deposit money",
+   "outcome": "correct",
+   "scored": true,
+   "real_workflow": true,
+   "detail": {
+    "decision": "start:deposit money",
+    "stage": "detector",
+    "category": "BANKING_INTENT",
+    "margin": 0.106,
+    "evidence": [],
+    "intent": "deposit money",
+    "withheld": null,
+    "negated": false
+   }
+  },
+  {
+   "id": "svc-rom-hi-503",
+   "lang": "rom-hi",
+   "family": "service_request",
+   "policy": "settled",
+   "text": "khaate mein cash daalna hai",
+   "expect": "start:deposit money",
+   "decision": "start:open new account",
+   "outcome": "wrong_service",
+   "scored": true,
+   "real_workflow": false,
+   "detail": {
+    "decision": "start:open new account",
+    "stage": "detector",
+    "category": "BANKING_INTENT",
+    "margin": 0.259,
+    "evidence": [],
+    "intent": "open new account",
+    "withheld": null,
+    "negated": false
+   }
+  },
+  {
+   "id": "svc-rom-kn-503",
+   "lang": "rom-kn",
+   "family": "service_request",
+   "policy": "settled",
+   "text": "account ge cash haakbeku",
+   "expect": "start:deposit money",
+   "decision": "start:deposit money",
+   "outcome": "correct",
+   "scored": true,
+   "real_workflow": true,
+   "detail": {
+    "decision": "start:deposit money",
+    "stage": "detector",
+    "category": "BANKING_INTENT",
+    "margin": 0.219,
+    "evidence": [],
+    "intent": "deposit money",
+    "withheld": null,
+    "negated": false
+   }
+  },
+  {
+   "id": "svc-kn-502",
+   "lang": "kn",
+   "family": "service_request",
+   "policy": "settled",
+   "text": "ಖಾತೆಯಲ್ಲಿ ಉಳಿದ ಹಣ ತಿಳಿಸಿ",
+   "expect": "start:check account balance",
+   "decision": "start:deposit money",
+   "outcome": "wrong_service",
+   "scored": true,
+   "real_workflow": true,
+   "detail": {
+    "decision": "start:deposit money",
+    "stage": "detector",
+    "category": "BANKING_INTENT",
+    "margin": 0.098,
+    "evidence": [],
+    "intent": "deposit money",
+    "withheld": null,
+    "negated": false
+   }
+  },
+  {
+   "id": "svc-hi-504",
+   "lang": "hi",
+   "family": "service_request",
+   "policy": "settled",
+   "text": "खाते में बची राशि दिखाइए",
+   "expect": "start:check account balance",
+   "decision": "answer",
+   "outcome": "missed (answer)",
+   "scored": true,
+   "real_workflow": false,
+   "detail": {
+    "decision": "answer",
+    "stage": "detector",
+    "category": "KNOWLEDGE_QUESTION",
+    "margin": 0.018,
+    "evidence": [],
+    "intent": "check account balance",
+    "withheld": null,
+    "negated": false
+   }
+  },
+  {
+   "id": "kq-en-501",
+   "lang": "en",
+   "family": "knowledge_question",
+   "policy": "settled",
+   "text": "home loan interest rate",
+   "expect": "question",
+   "decision": "start:apply for loan",
+   "outcome": "false_start",
+   "scored": true,
+   "real_workflow": true,
+   "detail": {
+    "decision": "start:apply for loan",
+    "stage": "detector",
+    "category": "BANKING_INTENT",
+    "margin": 0.067,
+    "evidence": [
+     "apply for loan"
+    ],
+    "intent": "apply for loan",
+    "withheld": null,
+    "negated": false
+   }
+  },
+  {
+   "id": "kq-kn-501",
+   "lang": "kn",
+   "family": "knowledge_question",
+   "policy": "settled",
+   "text": "ಗೃಹ ಸಾಲದ ಅರ್ಹತೆ",
+   "expect": "question",
+   "decision": "start:apply for loan",
+   "outcome": "false_start",
+   "scored": true,
+   "real_workflow": true,
+   "detail": {
+    "decision": "start:apply for loan",
+    "stage": "detector",
+    "category": "BANKING_INTENT",
+    "margin": 0.058,
+    "evidence": [
+     "apply for loan"
+    ],
+    "intent": "apply for loan",
+    "withheld": null,
+    "negated": false
+   }
+  },
+  {
+   "id": "kq-hi-501",
+   "lang": "hi",
+   "family": "knowledge_question",
+   "policy": "settled",
+   "text": "चालू खाते के नियम",
+   "expect": "question",
+   "decision": "start:open new account",
+   "outcome": "false_start",
+   "scored": true,
+   "real_workflow": false,
+   "detail": {
+    "decision": "start:open new account",
+    "stage": "detector",
+    "category": "BANKING_INTENT",
+    "margin": 0.08,
+    "evidence": [],
+    "intent": "open new account",
+    "withheld": null,
+    "negated": false
+   }
+  },
+  {
+   "id": "kq-rom-hi-501",
+   "lang": "rom-hi",
+   "family": "knowledge_question",
+   "policy": "settled",
+   "text": "loan ki byaj dar",
+   "expect": "question",
+   "decision": "start:apply for loan",
+   "outcome": "false_start",
+   "scored": true,
+   "real_workflow": true,
+   "detail": {
+    "decision": "start:apply for loan",
+    "stage": "detector",
+    "category": "BANKING_INTENT",
+    "margin": 0.175,
+    "evidence": [
+     "apply for loan"
+    ],
+    "intent": "apply for loan",
+    "withheld": null,
+    "negated": false
+   }
+  },
+  {
+   "id": "kq-kn-en-501",
+   "lang": "kn-en",
+   "family": "knowledge_question",
+   "policy": "settled",
+   "text": "ಪಾಸ್‌ಬುಕ್ ಅಪ್ಡೇಟ್ ವಿಧಾನ",
+   "expect": "question",
+   "decision": "answer",
+   "outcome": "correct",
+   "scored": true,
+   "real_workflow": false,
+   "detail": {
+    "decision": "answer",
+    "stage": "detector",
+    "category": "KNOWLEDGE_QUESTION",
+    "margin": -0.007,
+    "evidence": [],
+    "intent": "deposit money",
+    "withheld": null,
+    "negated": false
+   }
+  },
+  {
+   "id": "kq-hi-en-501",
+   "lang": "hi-en",
+   "family": "knowledge_question",
+   "policy": "settled",
+   "text": "चेक बुक के नियम",
+   "expect": "question",
+   "decision": "answer",
+   "outcome": "correct",
+   "scored": true,
+   "real_workflow": false,
+   "detail": {
+    "decision": "answer",
+    "stage": "detector",
+    "category": "KNOWLEDGE_QUESTION",
+    "margin": -0.351,
+    "evidence": [],
+    "intent": "check account balance",
+    "withheld": null,
+    "negated": false
+   }
+  },
+  {
+   "id": "kq-kn-en-502",
+   "lang": "kn-en",
+   "family": "knowledge_question",
+   "policy": "settled",
+   "text": "ಚೆಕ್ ಬುಕ್ ಹೇಗೆ ಪಡೆಯುವುದು",
+   "expect": "question",
+   "decision": "llm_gate",
+   "outcome": "llm_gated",
+   "scored": false,
+   "real_workflow": false,
+   "detail": {
+    "decision": "llm_gate",
+    "if_handed_back": "answer",
+    "stage": "llm_gate",
+    "category": "KNOWLEDGE_QUESTION",
+    "margin": -0.195,
+    "evidence": [],
+    "intent": "check account balance",
+    "withheld": null,
+    "negated": false
+   }
+  },
+  {
+   "id": "kq-hi-en-502",
+   "lang": "hi-en",
+   "family": "knowledge_question",
+   "policy": "settled",
+   "text": "एकाउंट कैसे खोलें।",
+   "expect": "question",
+   "decision": "llm_gate",
+   "outcome": "llm_gated",
+   "scored": false,
+   "real_workflow": false,
+   "detail": {
+    "decision": "llm_gate",
+    "if_handed_back": "start:open new account",
+    "stage": "llm_gate",
+    "category": "BANKING_INTENT",
+    "margin": 0.186,
+    "evidence": [
+     "open new account"
+    ],
+    "intent": "open new account",
+    "withheld": null,
+    "negated": false
+   }
+  },
+  {
+   "id": "amb-kn-501",
+   "lang": "kn",
+   "family": "ambiguous_request",
+   "policy": "settled",
+   "text": "ನನಗೆ ದುಡ್ಡಿನ ಅವಶ್ಯಕತೆ ಇದೆ",
+   "expect": "clarify",
+   "decision": "start:withdraw money",
+   "outcome": "false_start",
+   "scored": true,
+   "real_workflow": true,
+   "detail": {
+    "decision": "start:withdraw money",
+    "stage": "detector",
+    "category": "BANKING_INTENT",
+    "margin": 0.181,
+    "evidence": [],
+    "intent": "withdraw money",
+    "withheld": null,
+    "negated": false
+   }
+  },
+  {
+   "id": "amb-hi-501",
+   "lang": "hi",
+   "family": "ambiguous_request",
+   "policy": "settled",
+   "text": "पैसों की ज़रूरत है",
+   "expect": "clarify",
+   "decision": "start:deposit money",
+   "outcome": "false_start",
+   "scored": true,
+   "real_workflow": true,
+   "detail": {
+    "decision": "start:deposit money",
+    "stage": "detector",
+    "category": "BANKING_INTENT",
+    "margin": 0.235,
+    "evidence": [],
+    "intent": "deposit money",
+    "withheld": null,
+    "negated": false
+   }
+  },
+  {
+   "id": "amb-kn-502",
+   "lang": "kn",
+   "family": "ambiguous_request",
+   "policy": "settled",
+   "text": "ಬ್ಯಾಂಕಿನಲ್ಲಿ ಸ್ವಲ್ಪ ಕೆಲಸ ಇದೆ",
+   "expect": "clarify",
+   "decision": "answer",
+   "outcome": "no_start_other_reply (answer)",
+   "scored": true,
+   "real_workflow": false,
+   "detail": {
+    "decision": "answer",
+    "stage": "detector",
+    "category": "KNOWLEDGE_QUESTION",
+    "margin": -0.017,
+    "evidence": [],
+    "intent": "check account balance",
+    "withheld": null,
+    "negated": false
+   }
+  },
+  {
+   "id": "amb-en-501",
+   "lang": "en",
+   "family": "ambiguous_request",
+   "policy": "settled",
+   "text": "I came for some banking work",
+   "expect": "clarify",
+   "decision": "start:deposit money",
+   "outcome": "false_start",
+   "scored": true,
+   "real_workflow": true,
+   "detail": {
+    "decision": "start:deposit money",
+    "stage": "detector",
+    "category": "BANKING_INTENT",
+    "margin": 0.056,
+    "evidence": [],
+    "intent": "deposit money",
+    "withheld": null,
+    "negated": false
+   }
+  },
+  {
+   "id": "ref-kn-en-501",
+   "lang": "kn-en",
+   "family": "refusal",
+   "policy": "settled",
+   "text": "ನನಗೆ ಲೋನ್‌ ಬೇಡ।",
+   "expect": "refusal",
+   "decision": "refused",
+   "outcome": "correct",
+   "scored": true,
+   "real_workflow": false,
+   "detail": {
+    "decision": "refused",
+    "stage": "detector",
+    "category": "BANKING_INTENT",
+    "margin": 0.089,
+    "evidence": [
+     "apply for loan"
+    ],
+    "intent": "apply for loan",
+    "withheld": null,
+    "negated": true
+   }
+  },
+  {
+   "id": "ref-hi-en-501",
+   "lang": "hi-en",
+   "family": "refusal",
+   "policy": "settled",
+   "text": "मुझे एकाउंट नहीं खुलवाना",
+   "expect": "refusal",
+   "decision": "clarify",
+   "outcome": "correct",
+   "scored": true,
+   "real_workflow": false,
+   "detail": {
+    "decision": "clarify",
+    "stage": "detector",
+    "category": "AMBIGUOUS_SERVICE",
+    "margin": 0.049,
+    "evidence": [
+     "open new account"
+    ],
+    "intent": "open new account",
+    "withheld": null,
+    "negated": true
+   }
+  },
+  {
+   "id": "ref-rom-hi-501",
+   "lang": "rom-hi",
+   "family": "refusal",
+   "policy": "settled",
+   "text": "mujhe lone nahi chahiye",
+   "expect": "refusal",
+   "decision": "refused",
+   "outcome": "correct",
+   "scored": true,
+   "real_workflow": false,
+   "detail": {
+    "decision": "refused",
+    "stage": "detector",
+    "category": "BANKING_INTENT",
+    "margin": 0.269,
+    "evidence": [],
+    "intent": "deposit money",
+    "withheld": null,
+    "negated": true
+   }
+  },
+  {
+   "id": "ref-en-501",
+   "lang": "en",
+   "family": "refusal",
+   "policy": "settled",
+   "text": "I don’t want to withdrawl",
+   "expect": "refusal",
+   "decision": "refused",
+   "outcome": "correct",
+   "scored": true,
+   "real_workflow": false,
+   "detail": {
+    "decision": "refused",
+    "stage": "detector",
+    "category": "BANKING_INTENT",
+    "margin": 0.433,
+    "evidence": [
+     "withdraw money"
+    ],
+    "intent": "withdraw money",
+    "withheld": null,
+    "negated": true
+   }
+  }
+ ]
+}

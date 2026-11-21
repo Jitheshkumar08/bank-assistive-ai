@@ -1,0 +1,15 @@
+{
+  "institution_id": "test-institute-b",
+  "note": "SYNTHETIC TEST FIXTURE. A fictional campus; no step describes a real place.",
+  "places": [
+    {"id": "main-gate", "names": {"en": "Main gate", "kn": "ಮುಖ್ಯ ದ್ವಾರ"}, "aliases": ["entrance gate"]},
+    {"id": "library", "names": {"en": "Library", "kn": "ಗ್ರಂಥಾಲಯ"}, "aliases": []},
+    {"id": "auditorium", "names": {"en": "Auditorium", "kn": "ಸಭಾಂಗಣ"}, "aliases": []}
+  ],
+  "routes": [
+    {"from": "main-gate", "to": "library", "steps": [
+      {"en": "Synthetic step Z1: walk past fixture post nine.", "kn": "ಕೃತಕ ಹಂತ Z1: ಪರೀಕ್ಷಾ ಕಂಬ ಒಂಬತ್ತನ್ನು ದಾಟಿ ನಡೆಯಿರಿ."},
+      {"en": "Synthetic step Z2: the fixture library of institute B is on the right.", "kn": "ಕೃತಕ ಹಂತ Z2: ಸಂಸ್ಥೆ B ಯ ಪರೀಕ್ಷಾ ಗ್ರಂಥಾಲಯ ಬಲಭಾಗದಲ್ಲಿದೆ."}
+    ]}
+  ]
+}

@@ -1,0 +1,5 @@
+{
+  "domain": "college",
+  "description": "Official College (CampusGuide) campus maps: places and step-by-step routes, one map per institution. EMPTY until an institution supplies and verifies its own map. See README.md before adding anything.",
+  "maps": []
+}

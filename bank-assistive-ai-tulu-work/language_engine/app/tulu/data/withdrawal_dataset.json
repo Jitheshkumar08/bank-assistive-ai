@@ -1,0 +1,497 @@
+{
+  "source": {
+    "folder": "withdraw_conversation",
+    "document": "Tulu_Cash_Withdrawal_Dataset_Workflow_Aligned_Final.docx",
+    "document_sha256": "cb07bc8f41626e7eebac56fcd4b08b51d318dea77d25834c0ecfd391ec2827b0",
+    "built_by": "app/tulu/data/build_dataset.py",
+    "note": "Faithful copy of the annotator's tables. Romanized Tulu is authoritative and unmodified."
+  },
+  "workflow": "withdraw",
+  "step_instructions": {
+    "1": {
+      "text": "Please take a withdrawal slip.",
+      "field": null
+    },
+    "2": {
+      "text": "Fill in your account number.",
+      "field": "account_number"
+    },
+    "3": {
+      "text": "Enter the withdrawal amount.",
+      "field": "amount"
+    },
+    "4": {
+      "text": "Sign the withdrawal slip.",
+      "field": "signature"
+    },
+    "5": {
+      "text": "Submit the slip to the cashier.",
+      "field": null
+    }
+  },
+  "utterances": [
+    {
+      "id": "W01a",
+      "group": "W01",
+      "workflow": "withdraw",
+      "step": 1,
+      "speaker_role": "customer",
+      "tulu_romanized": "Yenk kaas deppere undu?",
+      "english_meaning": "I want to withdraw money.",
+      "audio_listed_in_document": "W01a_CUSTOMER.wav",
+      "audio_file": "W01a_Customer.wav.wav",
+      "audio": {
+        "container": "wav",
+        "codec": "pcm_s24le",
+        "sample_rate": 48000,
+        "channels": 1,
+        "duration_s": 8.733,
+        "sha256": "41d6ca39c257f61d5ceffcd5af625795c9e8d45fc33940a9bfd3abeac40d67b6",
+        "name_matches_document": false
+      }
+    },
+    {
+      "id": "W01b",
+      "group": "W01",
+      "workflow": "withdraw",
+      "step": 1,
+      "speaker_role": "customer",
+      "tulu_romanized": "Yenk yenna account d dh kaas/amount deppere undu?",
+      "english_meaning": "I want to withdraw money from my account.",
+      "audio_listed_in_document": "W01b_CUSTOMER.wav",
+      "audio_file": "W01b_customer.wav.wav",
+      "audio": {
+        "container": "wav",
+        "codec": "pcm_s24le",
+        "sample_rate": 48000,
+        "channels": 1,
+        "duration_s": 10.094,
+        "sha256": "f278ed82742b24ca6cc1b213252bd4993ce1e7331c89be61511a19b0e9034f2d",
+        "name_matches_document": false
+      }
+    },
+    {
+      "id": "W01c",
+      "group": "W01",
+      "workflow": "withdraw",
+      "step": 1,
+      "speaker_role": "customer",
+      "tulu_romanized": "Yenk bank dh kaas deppere undu?",
+      "english_meaning": "I want to withdraw money from the bank.",
+      "audio_listed_in_document": "W01c_CUSTOMER.wav",
+      "audio_file": "W01c_Customer.wav.wav",
+      "audio": {
+        "container": "wav",
+        "codec": "pcm_s24le",
+        "sample_rate": 48000,
+        "channels": 1,
+        "duration_s": 9.793,
+        "sha256": "d81ac10d6fabfcdb961e972306affce82e5f76315ccab7915c709f4a550e8ad2",
+        "name_matches_document": false
+      }
+    },
+    {
+      "id": "W01",
+      "group": "W01",
+      "workflow": "withdraw",
+      "step": 1,
+      "speaker_role": "assistant",
+      "tulu_romanized": "Sari..alpa withdrawal slip dethonle.",
+      "english_meaning": "Please take a withdrawal slip.",
+      "audio_listed_in_document": "W01_ASSISTANT.wav",
+      "audio_file": "W01_Assistant.wav.wav",
+      "audio": {
+        "container": "wav",
+        "codec": "pcm_s24le",
+        "sample_rate": 48000,
+        "channels": 1,
+        "duration_s": 9.973,
+        "sha256": "6311ae49522644cefe007faf67291606474ad5283e7c2410cefcadb7c49ea57b",
+        "name_matches_document": false
+      }
+    },
+    {
+      "id": "W02a",
+      "group": "W02",
+      "workflow": "withdraw",
+      "step": 2,
+      "speaker_role": "customer",
+      "tulu_romanized": "Account number olpa bareyodu?",
+      "english_meaning": "Where should I write the account number?",
+      "audio_listed_in_document": "W02a_CUSTOMER.wav",
+      "audio_file": "W02a_Customer.wav.wav",
+      "audio": {
+        "container": "wav",
+        "codec": "pcm_s24le",
+        "sample_rate": 48000,
+        "channels": 1,
+        "duration_s": 8.454,
+        "sha256": "4b4bf83b4795e9669ba0e1541c0cfbc9b9535229f10603954f9334fd5a0f3f7d",
+        "name_matches_document": false
+      }
+    },
+    {
+      "id": "W02b",
+      "group": "W02",
+      "workflow": "withdraw",
+      "step": 2,
+      "speaker_role": "customer",
+      "tulu_romanized": "yan slip dethonde. Nana dada malpodu",
+      "english_meaning": "I took the slip. What should I do next?",
+      "audio_listed_in_document": "W02b_CUSTOMER.wav",
+      "audio_file": "W02b_CUSTOMER.wav",
+      "audio": {
+        "container": "wav",
+        "codec": "pcm_s16le",
+        "sample_rate": 48000,
+        "channels": 2,
+        "duration_s": 4.97,
+        "sha256": "842614cab9ef1d0743d3170a94c362be5c7bbadc815d84ea4d5d0298cf6649a8",
+        "name_matches_document": true
+      }
+    },
+    {
+      "id": "W02c",
+      "group": "W02",
+      "workflow": "withdraw",
+      "step": 2,
+      "speaker_role": "customer",
+      "tulu_romanized": "yan slip dethonde.",
+      "english_meaning": "I took the slip.",
+      "audio_listed_in_document": "W02c_CUSTOMER.wav",
+      "audio_file": "W02c_CUSTOMER.wav",
+      "audio": {
+        "container": "wav",
+        "codec": "pcm_s16le",
+        "sample_rate": 48000,
+        "channels": 2,
+        "duration_s": 3.99,
+        "sha256": "0570908df5056dfa4f22ad579a75611727e8ea793bf6eeb6606dd3020cda79b0",
+        "name_matches_document": true
+      }
+    },
+    {
+      "id": "W02d",
+      "group": "W02",
+      "workflow": "withdraw",
+      "step": 2,
+      "speaker_role": "customer",
+      "tulu_romanized": "slip dethon d annd.",
+      "english_meaning": "The slip has been taken.",
+      "audio_listed_in_document": "W02d_CUSTOMER.wav",
+      "audio_file": "W02d_CUSTOMER.wav",
+      "audio": {
+        "container": "wav",
+        "codec": "pcm_s16le",
+        "sample_rate": 48000,
+        "channels": 2,
+        "duration_s": 5.43,
+        "sha256": "80a111860aa995e320bbb8384b5e595b85a2eb5d9e58610ce13d1f992300280d",
+        "name_matches_document": true
+      }
+    },
+    {
+      "id": "W02",
+      "group": "W02",
+      "workflow": "withdraw",
+      "step": 2,
+      "speaker_role": "assistant",
+      "tulu_romanized": "Ait erna account number barele.",
+      "english_meaning": "Fill in your account number.",
+      "audio_listed_in_document": "W02_ASSISTANT.wav",
+      "audio_file": "W02_Assistant.wav.wav",
+      "audio": {
+        "container": "wav",
+        "codec": "pcm_s24le",
+        "sample_rate": 48000,
+        "channels": 1,
+        "duration_s": 8.754,
+        "sha256": "6cc9f5ee0ef8fa28f300f0473f3547ffabd621ab115b13da387dfc1001a5abae",
+        "name_matches_document": false
+      }
+    },
+    {
+      "id": "W03a",
+      "group": "W03",
+      "workflow": "withdraw",
+      "step": 3,
+      "speaker_role": "customer",
+      "tulu_romanized": "Yaan account number fill malthe? Nana dada malpodu?",
+      "english_meaning": "I have filled in the account number. What should I do next?",
+      "audio_listed_in_document": "W03a_CUSTOMER.wav",
+      "audio_file": "W03a_customer.wav.wav",
+      "audio": {
+        "container": "wav",
+        "codec": "pcm_s24le",
+        "sample_rate": 48000,
+        "channels": 1,
+        "duration_s": 9.653,
+        "sha256": "cb9d3acb0e4bdc7566b606005a5fde116d0aae23eadd43c72f7dc10f53e39447",
+        "name_matches_document": false
+      }
+    },
+    {
+      "id": "W03a1",
+      "group": "W03",
+      "workflow": "withdraw",
+      "step": 3,
+      "speaker_role": "customer",
+      "tulu_romanized": "account number bareye.",
+      "english_meaning": "I wrote the account number.",
+      "audio_listed_in_document": "W03a1_CUSTOMER.wav",
+      "audio_file": "W03a1_CUSTOMER.wav",
+      "audio": {
+        "container": "wav",
+        "codec": "pcm_s16le",
+        "sample_rate": 48000,
+        "channels": 2,
+        "duration_s": 4.17,
+        "sha256": "c1fc8ff888c70144d1c2d994152134a3ddba86da075605d237ff9ad3b08d8543",
+        "name_matches_document": true
+      }
+    },
+    {
+      "id": "W03",
+      "group": "W03",
+      "workflow": "withdraw",
+      "step": 3,
+      "speaker_role": "assistant",
+      "tulu_romanized": "Bokka yeth amount deppere undu aven barele.",
+      "english_meaning": "Enter the amount you want to withdraw.",
+      "audio_listed_in_document": "W03_ASSISTANT.wav",
+      "audio_file": "W03_Assistant.wav.wav",
+      "audio": {
+        "container": "wav",
+        "codec": "pcm_s24le",
+        "sample_rate": 48000,
+        "channels": 1,
+        "duration_s": 9.373,
+        "sha256": "43fee0b9cbffe1990b9f1f632ffb85c4210c12eb344d7eed0d101d92f3bbe37f",
+        "name_matches_document": false
+      }
+    },
+    {
+      "id": "W03b",
+      "group": "W04",
+      "workflow": "withdraw",
+      "step": 4,
+      "speaker_role": "customer",
+      "tulu_romanized": "Yaan yeth kaas deppodu andh barethe? Nana dada malpodu yaan?",
+      "english_meaning": "I have filled in the amount I want to withdraw. What should I do next?",
+      "audio_listed_in_document": "W03b_CUSTOMER.wav",
+      "audio_file": "W03b_customer.wav.wav",
+      "audio": {
+        "container": "wav",
+        "codec": "pcm_s24le",
+        "sample_rate": 48000,
+        "channels": 1,
+        "duration_s": 9.914,
+        "sha256": "167aab3bdfe2e97e982578215ee9771886515356e4ab675545a456cd83ad8986",
+        "name_matches_document": false
+      }
+    },
+    {
+      "id": "W03b1",
+      "group": "W04",
+      "workflow": "withdraw",
+      "step": 4,
+      "speaker_role": "customer",
+      "tulu_romanized": "amount n bareye",
+      "english_meaning": "I wrote the amount.",
+      "audio_listed_in_document": "W03b1_CUSTOMER.wav",
+      "audio_file": "W03b1_CUSTOMER.wav",
+      "audio": {
+        "container": "wav",
+        "codec": "pcm_s16le",
+        "sample_rate": 48000,
+        "channels": 2,
+        "duration_s": 4.22,
+        "sha256": "fc2060fc69d621951c6d1f56046ce3ef5d1fcad6b9818818da4a442fd92e70f5",
+        "name_matches_document": true
+      }
+    },
+    {
+      "id": "W03b2",
+      "group": "W04",
+      "workflow": "withdraw",
+      "step": 4,
+      "speaker_role": "customer",
+      "tulu_romanized": "yeth duddu deppodu annd bareye",
+      "english_meaning": "I wrote how much I want to withdraw.",
+      "audio_listed_in_document": "W03b2_CUSTOMER.wav",
+      "audio_file": "W03b2_CUSTOMER.wav",
+      "audio": {
+        "container": "wav",
+        "codec": "pcm_s16le",
+        "sample_rate": 48000,
+        "channels": 2,
+        "duration_s": 5.77,
+        "sha256": "cff75c2a8dc2eec4634156cf6af70fa847df2352372266feee6fc651140ee4a5",
+        "name_matches_document": true
+      }
+    },
+    {
+      "id": "W04",
+      "group": "W04",
+      "workflow": "withdraw",
+      "step": 4,
+      "speaker_role": "assistant",
+      "tulu_romanized": "Withdrawal slip-g sign malpule.",
+      "english_meaning": "Sign the withdrawal slip.",
+      "audio_listed_in_document": "W04_ASSISTANT.wav",
+      "audio_file": "w04_assistant.wav.wav",
+      "audio": {
+        "container": "wav",
+        "codec": "pcm_s24le",
+        "sample_rate": 48000,
+        "channels": 1,
+        "duration_s": 8.194,
+        "sha256": "624ed03fd764bbb5729991a710e17611732618351b4219faddbea463cd2732b1",
+        "name_matches_document": false
+      }
+    },
+    {
+      "id": "W04a",
+      "group": "W05",
+      "workflow": "withdraw",
+      "step": 5,
+      "speaker_role": "customer",
+      "tulu_romanized": "Yaan slip g sign padeye? Eth ol submit malpodu?",
+      "english_meaning": "I have signed the slip. Where should I submit it?",
+      "audio_listed_in_document": "W04a_CUSTOMER.wav",
+      "audio_file": "W04a_Customer.wav.wav",
+      "audio": {
+        "container": "wav",
+        "codec": "pcm_s24le",
+        "sample_rate": 48000,
+        "channels": 1,
+        "duration_s": 10.233,
+        "sha256": "1ef0436cfc7b8a5736f19dcbb443e5e1333e997a01c16c123f086c25d5ecdede",
+        "name_matches_document": false
+      }
+    },
+    {
+      "id": "W04b",
+      "group": "W05",
+      "workflow": "withdraw",
+      "step": 5,
+      "speaker_role": "customer",
+      "tulu_romanized": "slip gu sign padiye.",
+      "english_meaning": "I signed the slip.",
+      "audio_listed_in_document": "W04b_CUSTOMER.wav",
+      "audio_file": "W04b_CUSTOMER.wav",
+      "audio": {
+        "container": "wav",
+        "codec": "pcm_s16le",
+        "sample_rate": 48000,
+        "channels": 2,
+        "duration_s": 4.88,
+        "sha256": "d5d00975bbb291752ac3a7933b0f0568b00f50f31fe73f814700c1c59ef17294",
+        "name_matches_document": true
+      }
+    },
+    {
+      "id": "W04c",
+      "group": "W05",
+      "workflow": "withdraw",
+      "step": 5,
+      "speaker_role": "customer",
+      "tulu_romanized": "sign padiye.",
+      "english_meaning": "I signed it.",
+      "audio_listed_in_document": "W04c_CUSTOMER.wav",
+      "audio_file": "W04c_CUSTOMER.wav",
+      "audio": {
+        "container": "wav",
+        "codec": "pcm_s16le",
+        "sample_rate": 48000,
+        "channels": 2,
+        "duration_s": 4.14,
+        "sha256": "99ce3616a49c560f732368f88d10e9e31266536e7360b725bab88dce49087b3f",
+        "name_matches_document": true
+      }
+    },
+    {
+      "id": "W05",
+      "group": "W05",
+      "workflow": "withdraw",
+      "step": 5,
+      "speaker_role": "assistant",
+      "tulu_romanized": "Slip cashier-g submit malpule.",
+      "english_meaning": "Submit the slip to the cashier.",
+      "audio_listed_in_document": "W05_ASSISTANT.wav",
+      "audio_file": "W05_Assistant.wav.wav",
+      "audio": {
+        "container": "wav",
+        "codec": "pcm_s24le",
+        "sample_rate": 48000,
+        "channels": 1,
+        "duration_s": 9.414,
+        "sha256": "bf890c7d7b2f5db8e4e9640e616e9a2d8969d331eb66c33b2db29bbc3ba123db",
+        "name_matches_document": false
+      }
+    }
+  ],
+  "document_notes": [
+    "Workflow order is fixed: W01 take withdrawal slip → W02 fill account number → W03 enter withdrawal amount → W04 sign the withdrawal slip → W05 submit the slip to the cashier.",
+    "The customer sentence “Yaan account number fill malthe? Nana dada malpodu?” indicates the account-number field is completed and maps to W03.",
+    "The customer sentence “Yaan yeth kaas deppodu andh barethe? Nana dada malpodu yaan?” indicates the withdrawal amount has been filled and maps to W04.",
+    "The customer sentence “Yaan slip g sign padeye? Eth ol submit malpodu?” indicates the slip is signed and maps to W05.",
+    "Record each customer variation as its own CUSTOMER WAV. Record one ASSISTANT WAV per assistant workflow step.",
+    "Customer and assistant audio should both be in Tulu. English meanings are included as dataset labels/reference.",
+    "Do not add customer-name, date, cash-collection, or additional verification instructions; they are not included in the supplied withdraw.json workflow.",
+    "The spelling “yeth” is retained in W03b exactly as corrected by the user; “Eth” remains in W04a as originally supplied.",
+    "Assistant audio files",
+    "W01_ASSISTANT.wav · W02_ASSISTANT.wav · W03_ASSISTANT.wav · W04_ASSISTANT.wav · W05_ASSISTANT.wav"
+  ],
+  "discrepancies": [
+    {
+      "id": "NATIVE_SPEAKER_VERIFICATION_NOT_STATED",
+      "status": "awaiting_team_confirmation",
+      "description": "The document is titled 'Final' and records a user correction ('yeth' in W03b), but does not state explicitly that a native speaker verified every sentence.",
+      "effect": "Treated as the team's verified annotation, like the deposit document; to be confirmed."
+    },
+    {
+      "id": "FILENAMES_DIFFER_FROM_DOCUMENT",
+      "status": "documented",
+      "description": "Delivered files use mixed case and a doubled extension (e.g. 'W01a_Customer.wav.wav', 'w04_assistant.wav.wav') while the document lists 'W01a_CUSTOMER.wav' etc. Affected: W01a, W01b, W01c, W01, W02a, W02, W03a, W03, W03b, W04, W04a, W05.",
+      "effect": "Matched case-insensitively; files left as delivered."
+    },
+    {
+      "id": "W01B_ALTERNATIVE_WORDS",
+      "status": "awaiting_native_speaker_confirmation",
+      "description": "W01b is written 'Yenk yenna account d dh kaas/amount deppere undu?' -- two alternatives ('kaas/amount') in one sentence; which one the recording contains is not stated. 'account d dh' (two suffixes) is also unusual.",
+      "effect": "Kept exactly as written; matching sees both alternative words."
+    },
+    {
+      "id": "CUSTOMER_IDS_VS_STEPS",
+      "status": "documented",
+      "description": "W03b is filed in the W04 table and W04a in the W05 table; the document's notes confirm W03a->W03, W03b->W04, W04a->W05.",
+      "effect": "Groups follow the table (assistant step), not the id prefix."
+    },
+    {
+      "id": "SPELLING_YENK_YANK_ETH_YETH",
+      "status": "awaiting_native_speaker_confirmation",
+      "description": "'Yenk' here vs 'Yank' in the deposit set; 'yeth' (W03b, W03 assistant) vs 'Eth' (W04a) vs 'eth' (deposit D03). The document says 'yeth' in W03b was corrected by the user and 'Eth' in W04a kept as supplied.",
+      "effect": "Kept as written; not merged."
+    },
+    {
+      "id": "DIFFERENT_SPEAKER_FROM_DEPOSIT",
+      "status": "documented",
+      "description": "Median F0 199-229 Hz in the 12 original withdrawal recordings (24-bit mono) vs 102-117 Hz in the deposit set: very likely a different speaker (not verified with a speaker model).",
+      "effect": "Useful for ASR evaluation across speakers; irrelevant to TTS (no cloning)."
+    },
+    {
+      "id": "ADDED_RECORDINGS_SECOND_SPEAKER",
+      "status": "documented",
+      "description": "The 8 customer recordings added on 2026-11-19 (W02b-d, W03a1, W03b1-2, W04b-c) are 16-bit stereo with median F0 111-121 Hz -- consistent with the DEPOSIT speaker, not the original withdrawal speaker -- and the same heavily processed profile (energy above 8 kHz -55 to -75 dB). Not verified with a speaker model.",
+      "effect": "Withdrawal now has two speakers; matching and ASR treat all rows alike."
+    },
+    {
+      "id": "W03B1_SAME_TEXT_AS_D04B",
+      "status": "documented",
+      "description": "W03b1 'amount n bareye' and deposit D04b 'Amount n bareye.' are the same sentence; both mean 'I wrote the amount' and both map to the amount-entered progress step.",
+      "effect": "Same meaning and pivot in both datasets, so no ambiguity."
+    }
+  ],
+  "voice_use_consent": "not documented -- recordings must not be used for voice cloning"
+}

@@ -1,0 +1,650 @@
+{
+ "meta": {
+  "name": "m9_smoke",
+  "clips": 8,
+  "hypotheses": "m9_asr_hypotheses.jsonl"
+ },
+ "summary": {
+  "banking|dev|kn": {
+   "clips": 1,
+   "audio_minutes": 0.2,
+   "wer": 30.0,
+   "cer": 7.3,
+   "exact": 0,
+   "loanwords": 0,
+   "loanword_recall": null,
+   "banking_terms": 1,
+   "banking_term_recall": 100.0,
+   "amounts": 1,
+   "amounts_correct": 0,
+   "amounts_wrong": 0,
+   "amounts_lost": 1,
+   "amounts_invented": 0,
+   "asr_amount": {},
+   "intent": {
+    "service_invented": 1
+   },
+   "errors": 0,
+   "fallbacks": 0,
+   "latin_in_hypothesis": 0
+  },
+  "banking|dev|kn-en": {
+   "clips": 1,
+   "audio_minutes": 0.3,
+   "wer": 15.8,
+   "cer": 5.4,
+   "exact": 0,
+   "loanwords": 7,
+   "loanword_recall": 100.0,
+   "banking_terms": 1,
+   "banking_term_recall": 100.0,
+   "amounts": 1,
+   "amounts_correct": 1,
+   "amounts_wrong": 0,
+   "amounts_lost": 0,
+   "amounts_invented": 0,
+   "asr_amount": {
+    "correct": 1
+   },
+   "intent": {
+    "unchanged": 1
+   },
+   "errors": 0,
+   "fallbacks": 0,
+   "latin_in_hypothesis": 0
+  },
+  "banking|dev|hi": {
+   "clips": 1,
+   "audio_minutes": 0.2,
+   "wer": 9.1,
+   "cer": 2.4,
+   "exact": 0,
+   "loanwords": 0,
+   "loanword_recall": null,
+   "banking_terms": 0,
+   "banking_term_recall": null,
+   "amounts": 1,
+   "amounts_correct": 1,
+   "amounts_wrong": 0,
+   "amounts_lost": 0,
+   "amounts_invented": 0,
+   "asr_amount": {
+    "correct": 1
+   },
+   "intent": {
+    "unchanged": 1
+   },
+   "errors": 0,
+   "fallbacks": 0,
+   "latin_in_hypothesis": 0
+  },
+  "banking|dev|hi-en": {
+   "clips": 1,
+   "audio_minutes": 0.4,
+   "wer": 23.4,
+   "cer": 9.9,
+   "exact": 0,
+   "loanwords": 2,
+   "loanword_recall": 100.0,
+   "banking_terms": 0,
+   "banking_term_recall": null,
+   "amounts": 1,
+   "amounts_correct": 1,
+   "amounts_wrong": 0,
+   "amounts_lost": 0,
+   "amounts_invented": 0,
+   "asr_amount": {
+    "correct": 1
+   },
+   "intent": {
+    "unchanged": 1
+   },
+   "errors": 0,
+   "fallbacks": 0,
+   "latin_in_hypothesis": 0
+  },
+  "banking|dev|kn (all)": {
+   "clips": 2,
+   "audio_minutes": 0.5,
+   "wer": 20.7,
+   "cer": 6.1,
+   "exact": 0,
+   "loanwords": 7,
+   "loanword_recall": 100.0,
+   "banking_terms": 2,
+   "banking_term_recall": 100.0,
+   "amounts": 2,
+   "amounts_correct": 1,
+   "amounts_wrong": 0,
+   "amounts_lost": 1,
+   "amounts_invented": 0,
+   "asr_amount": {
+    "correct": 1
+   },
+   "intent": {
+    "service_invented": 1,
+    "unchanged": 1
+   },
+   "errors": 0,
+   "fallbacks": 0,
+   "latin_in_hypothesis": 0
+  },
+  "banking|dev|hi (all)": {
+   "clips": 2,
+   "audio_minutes": 0.6,
+   "wer": 18.8,
+   "cer": 7.5,
+   "exact": 0,
+   "loanwords": 2,
+   "loanword_recall": 100.0,
+   "banking_terms": 0,
+   "banking_term_recall": null,
+   "amounts": 2,
+   "amounts_correct": 2,
+   "amounts_wrong": 0,
+   "amounts_lost": 0,
+   "amounts_invented": 0,
+   "asr_amount": {
+    "correct": 2
+   },
+   "intent": {
+    "unchanged": 2
+   },
+   "errors": 0,
+   "fallbacks": 0,
+   "latin_in_hypothesis": 0
+  },
+  "general|held-out|kn": {
+   "clips": 1,
+   "audio_minutes": 0.4,
+   "wer": 10.0,
+   "cer": 1.6,
+   "exact": 0,
+   "loanwords": 0,
+   "loanword_recall": null,
+   "banking_terms": 0,
+   "banking_term_recall": null,
+   "amounts": 0,
+   "amounts_correct": 0,
+   "amounts_wrong": 0,
+   "amounts_lost": 0,
+   "amounts_invented": 0,
+   "asr_amount": {},
+   "intent": {
+    "unchanged": 1
+   },
+   "errors": 0,
+   "fallbacks": 0,
+   "latin_in_hypothesis": 0
+  },
+  "general|held-out|kn-en": {
+   "clips": 1,
+   "audio_minutes": 0.4,
+   "wer": 8.8,
+   "cer": 4.0,
+   "exact": 0,
+   "loanwords": 1,
+   "loanword_recall": 100.0,
+   "banking_terms": 0,
+   "banking_term_recall": null,
+   "amounts": 1,
+   "amounts_correct": 1,
+   "amounts_wrong": 0,
+   "amounts_lost": 0,
+   "amounts_invented": 0,
+   "asr_amount": {
+    "correct": 1
+   },
+   "intent": {
+    "unchanged": 1
+   },
+   "errors": 0,
+   "fallbacks": 0,
+   "latin_in_hypothesis": 0
+  },
+  "general|held-out|hi": {
+   "clips": 1,
+   "audio_minutes": 0.1,
+   "wer": 41.7,
+   "cer": 18.0,
+   "exact": 0,
+   "loanwords": 0,
+   "loanword_recall": null,
+   "banking_terms": 0,
+   "banking_term_recall": null,
+   "amounts": 0,
+   "amounts_correct": 0,
+   "amounts_wrong": 0,
+   "amounts_lost": 0,
+   "amounts_invented": 0,
+   "asr_amount": {},
+   "intent": {
+    "unchanged": 1
+   },
+   "errors": 0,
+   "fallbacks": 0,
+   "latin_in_hypothesis": 0
+  },
+  "general|held-out|hi-en": {
+   "clips": 1,
+   "audio_minutes": 0.3,
+   "wer": 6.2,
+   "cer": 2.9,
+   "exact": 0,
+   "loanwords": 3,
+   "loanword_recall": 100.0,
+   "banking_terms": 1,
+   "banking_term_recall": 100.0,
+   "amounts": 0,
+   "amounts_correct": 0,
+   "amounts_wrong": 0,
+   "amounts_lost": 0,
+   "amounts_invented": 0,
+   "asr_amount": {},
+   "intent": {
+    "unchanged": 1
+   },
+   "errors": 0,
+   "fallbacks": 0,
+   "latin_in_hypothesis": 0
+  },
+  "general|held-out|kn (all)": {
+   "clips": 2,
+   "audio_minutes": 0.8,
+   "wer": 9.1,
+   "cer": 3.2,
+   "exact": 0,
+   "loanwords": 1,
+   "loanword_recall": 100.0,
+   "banking_terms": 0,
+   "banking_term_recall": null,
+   "amounts": 1,
+   "amounts_correct": 1,
+   "amounts_wrong": 0,
+   "amounts_lost": 0,
+   "amounts_invented": 0,
+   "asr_amount": {
+    "correct": 1
+   },
+   "intent": {
+    "unchanged": 2
+   },
+   "errors": 0,
+   "fallbacks": 0,
+   "latin_in_hypothesis": 0
+  },
+  "general|held-out|hi (all)": {
+   "clips": 2,
+   "audio_minutes": 0.4,
+   "wer": 15.9,
+   "cer": 7.7,
+   "exact": 0,
+   "loanwords": 3,
+   "loanword_recall": 100.0,
+   "banking_terms": 1,
+   "banking_term_recall": 100.0,
+   "amounts": 0,
+   "amounts_correct": 0,
+   "amounts_wrong": 0,
+   "amounts_lost": 0,
+   "amounts_invented": 0,
+   "asr_amount": {},
+   "intent": {
+    "unchanged": 2
+   },
+   "errors": 0,
+   "fallbacks": 0,
+   "latin_in_hypothesis": 0
+  }
+ },
+ "limits": [
+  "No English audio and no recording with English in Latin script exist on disk: English and Latin-script code-switching are not measured from speech.",
+  "'Code-mixed' here means English words SPOKEN inside Kannada / Hindi and written in native script in the reference (LOANWORD_MARKERS). It is the only code-mixing the corpus contains.",
+  "Banking clips come from the IndicVoices train split (likely in IndicConformer's training data): optimistic.",
+  "IndicVoices clips are read prompts, mostly clean; branch-counter noise, accents and spontaneous speech are not represented.",
+  "Downstream routing is compared reference-vs-hypothesis through the offline router; the LLM gate is not called, so LLM-gated turns count as unchanged when both sides are gated."
+ ],
+ "rows": [
+  {
+   "id": "ivb_kn_001",
+   "set": "banking",
+   "split": "dev",
+   "language": "kn",
+   "category": "kn-en",
+   "reference": "ವಾರಕ್ಕೊಮ್ಮೆ ಸರ್ವ ಹರಿಯಾಣ ಗ್ರಾಮೀಣ ಬ್ಯಾಂಕ್ನಲ್ಲಿರೋ ನನ್ನ ಅಕೌಂಟ್ ಒಂದು ಆರು ಒಂಬತ್ತು ಒಂಬತ್ತು ಎರಡು ಐದು ಎರಡು ನಾಲ್ಕು ಮೂರು ಐದು ಎಂಟಕ್ಕೆ ಎಂಟು ಇದಕ್ಕೆ ಗೂಗಲ್ ಪೇ ಮೂಲಕ ಹತ್ತು ಸಾವಿರ ರೂಪಾಯಿ ಟ್ರಾನ್ಸ್ಫರ್ ಮಾಡುಕಾಗುತ್ತೆ ಹಾಗೆ ಅಕಸ್ಮಾತು ಬ್ಯಾಲೆನ್ಸ್ ಏನಾದರು ಅದಕ್ಕಿಂತ ಕಡ್ಮೆ ಆದರೆ ನನಗೆ ಅಲರ್ಟ್ ಮಾಡು",
+   "hypothesis": "ವಾರಕ್ಕೊಮ್ಮೆ ಸರ್ವ ಹರಿಯಾಣ ಗ್ರಾಮೀಣ ಬ್ಯಾಂಕ್ನಲ್ಲಿರೋ ನನ್ನ ಅಕೌಂಟ್ ಒಂದು ಆರು ಒಂಬತ್ತು ಒಂಬತ್ತು ಎರಡು ಐದು ಎರಡು ನಾಲ್ಕು ಮೂರು ಐದು ಎಂಟು ಎಂಟು ಇದಕ್ಕೆ ಗೂಗಲ್ ಪೇ ಮೂಲಕ ಹತ್ತು ಸಾವಿರ ರೂಪಾಯಿ ಟ್ರಾನ್ಸ್ಫರ್ ಮಾಡೋಕ್ಕಾಗುತ್ತಾ ಹಾಗೇ ಅಕಸ್ಮಾತ್ ಬ್ಯಾಲೆನ್ಸ್ ಏನಾದರೂ ಅದಕ್ಕಿಂತ ಕಡಿಮೆ ಆದರೆ ನನಗೆ ಅಲರ್ಟ್ ಮಾಡು",
+   "provider": "indicconformer",
+   "fallback_used": false,
+   "error": null,
+   "audio_seconds": 20.958,
+   "seconds": 8.447,
+   "ref_words": 38,
+   "word_edits": 6,
+   "subs": 6,
+   "dels": 0,
+   "ins": 0,
+   "ref_chars": 223,
+   "char_edits": 12,
+   "exact": false,
+   "latin_in_hypothesis": false,
+   "loanwords_ref": 7,
+   "loanwords_hit": 7,
+   "terms_ref": [
+    "check account balance"
+   ],
+   "terms_hyp": [
+    "check account balance"
+   ],
+   "target_amount": 10000,
+   "ref_amount": 10000,
+   "hyp_amount": 10000,
+   "has_amount": true,
+   "amount_effect": "correct",
+   "asr_amount_effect": "correct",
+   "ref_decision": [
+    "start",
+    "check account balance"
+   ],
+   "hyp_decision": [
+    "start",
+    "check account balance"
+   ],
+   "intent_effect": "unchanged"
+  },
+  {
+   "id": "ivb_kn_002",
+   "set": "banking",
+   "split": "dev",
+   "language": "kn",
+   "category": "kn",
+   "reference": "ಮೊಬಿಕ್ವಿಕ್ ಆ್ಯಪಿನಲ್ಲಿ ಮಾರುತಿ ಕಾಮತ್ ಅವರಿಗೆ ತಿಂಗಳಿಗೊಮ್ಮೆ ಅಟೋಮೆಟಿಕ್ ಆಗಿ ಕಳಿಸ್ತಿರೋ ಒಂದು ಸಾವಿರ ರೂಪಾಯನ್ನು ನಿಲ್ಲಿಸಿ ಅದರ ಬದ್ ಬದಲಿಗೆ ಎರಡು ಸಾವಿರ ರೂಪಾಯಿ ಕಳ್ಸಕ್ಕಾಗುತ್ತಾ",
+   "hypothesis": "ಮೊಬಿಕ್ವಿಕ್ ಆ್ಯಪ್ನಲ್ಲಿ ಮಾರುತಿ ಕಾಮತ್ ಅವರಿಗೆ ತಿಂಗಳಿಗೊಮ್ಮೆ ಆಟೋಮೆಟಿಕ್ಕಾಗಿ ಕಳಿಸ್ತಿರೋ ಒಂದು ಸಾವಿರ ರೂಪಾಯಿಯನ್ನು ನಿಲ್ಲಿಸಿ ಅದರ ಬ ಬದಲಿಗೆ ಎರಡು ಸಾವಿರ ರೂಪಾಯಿ ಕಳ್ಸೋಕ್ಕಾಗತ್ತಾ",
+   "provider": "indicconformer",
+   "fallback_used": false,
+   "error": null,
+   "audio_seconds": 10.513,
+   "seconds": 2.812,
+   "ref_words": 20,
+   "word_edits": 6,
+   "subs": 5,
+   "dels": 1,
+   "ins": 0,
+   "ref_chars": 137,
+   "char_edits": 10,
+   "exact": false,
+   "latin_in_hypothesis": false,
+   "loanwords_ref": 0,
+   "loanwords_hit": 0,
+   "terms_ref": [
+    "transfer"
+   ],
+   "terms_hyp": [
+    "transfer"
+   ],
+   "target_amount": 2000,
+   "ref_amount": null,
+   "hyp_amount": null,
+   "has_amount": true,
+   "amount_effect": "lost",
+   "asr_amount_effect": "correct",
+   "ref_decision": [
+    "llm_gate"
+   ],
+   "hyp_decision": [
+    "start",
+    "withdraw money"
+   ],
+   "intent_effect": "service_invented"
+  },
+  {
+   "id": "ivb_hi_001",
+   "set": "banking",
+   "split": "dev",
+   "language": "hi",
+   "category": "hi",
+   "reference": "क्या एन जी ओ की सूची में उड़ान इंडिया फाउंडेशन उपलब्ध है यदि हाँ तो कृपया रूपये पाँच हजार इसको दान करें",
+   "hypothesis": "क्या एन जि ओ की सूची में उड़ान इंडिया फाउंडेशन उपलब्ध है यदि हाँ तो कृपया रुपये पाँच हजार इसको दान करें",
+   "provider": "indicconformer",
+   "fallback_used": false,
+   "error": null,
+   "audio_seconds": 11.258,
+   "seconds": 4.781,
+   "ref_words": 22,
+   "word_edits": 2,
+   "subs": 2,
+   "dels": 0,
+   "ins": 0,
+   "ref_chars": 82,
+   "char_edits": 2,
+   "exact": false,
+   "latin_in_hypothesis": false,
+   "loanwords_ref": 0,
+   "loanwords_hit": 0,
+   "terms_ref": [],
+   "terms_hyp": [],
+   "target_amount": 5000,
+   "ref_amount": 5000,
+   "hyp_amount": 5000,
+   "has_amount": true,
+   "amount_effect": "correct",
+   "asr_amount_effect": "correct",
+   "ref_decision": [
+    "llm_gate"
+   ],
+   "hyp_decision": [
+    "llm_gate"
+   ],
+   "intent_effect": "unchanged"
+  },
+  {
+   "id": "ivb_hi_002",
+   "set": "banking",
+   "split": "dev",
+   "language": "hi",
+   "category": "hi-en",
+   "reference": "क्या आप दो सौ रुपये मेरे सी फाइव नाइन ऐट फोर ऐट फोर सेवन ऐट टू सेवन सिक्स वन फाइव सेवन सिक्स को पंजाब ग्रामीण बैंक द्विसप्ताहिक में जीयो मनी के ज़रिए ट्रांसफ़र कर सकते है और बैलैंस इससे कम होने पर मुझे सचेत कर सकते है",
+   "hypothesis": "क्या आप दो सौ रुपये मेरे थ्री फाइव नाइन एऐट फोर एट फोर सेवन एट टू सेवन सिक्स वन फ़ाइव सेवन सिक्स को पंजाब ग्रामीण बैंक दसाप्ताहिक में जिियो मनी के जरिए ट्रांसफ़र कर सकते हैं और बैलेंस इससे कम होने पर मुझे सचेत कर सकते हैं",
+   "provider": "indicconformer",
+   "fallback_used": false,
+   "error": null,
+   "audio_seconds": 23.252,
+   "seconds": 6.536,
+   "ref_words": 47,
+   "word_edits": 11,
+   "subs": 11,
+   "dels": 0,
+   "ins": 0,
+   "ref_chars": 171,
+   "char_edits": 17,
+   "exact": false,
+   "latin_in_hypothesis": false,
+   "loanwords_ref": 2,
+   "loanwords_hit": 2,
+   "terms_ref": [],
+   "terms_hyp": [
+    "check account balance"
+   ],
+   "target_amount": 200,
+   "ref_amount": 200,
+   "hyp_amount": 200,
+   "has_amount": true,
+   "amount_effect": "correct",
+   "asr_amount_effect": "correct",
+   "ref_decision": [
+    "llm_gate"
+   ],
+   "hyp_decision": [
+    "llm_gate"
+   ],
+   "intent_effect": "unchanged"
+  },
+  {
+   "id": "iv_kn_001",
+   "set": "general",
+   "split": "held-out",
+   "language": "kn",
+   "category": "kn",
+   "reference": "ನಾನು ಹಬ್ಬಗಳಲ್ಲಿ ಬಳಸುವ ಸಾಮಗ್ರಿಗಳ ಆರ್ಡರ್ ಶಿಪ್ ಆಗಿದೆಯಾ ಯಾವಾಗ ಡೆಲಿವರ್ ಆಗುತ್ತೆ",
+   "hypothesis": "ನಾನು ಹಬ್ಬಗಳಲ್ಲಿ ಬಳಸುವ ಸಾಮಗ್ರಿಗಳ ಆರ್ಡರ್ ಶಿಪ್ ಆಗಿದೆಯಾ ಯಾವಾಗ ಡೆಲಿವರ್ ಆಗತ್ತೆ",
+   "provider": "indicconformer",
+   "fallback_used": false,
+   "error": null,
+   "audio_seconds": 25.082,
+   "seconds": 6.908,
+   "ref_words": 10,
+   "word_edits": 1,
+   "subs": 1,
+   "dels": 0,
+   "ins": 0,
+   "ref_chars": 64,
+   "char_edits": 1,
+   "exact": false,
+   "latin_in_hypothesis": false,
+   "loanwords_ref": 0,
+   "loanwords_hit": 0,
+   "terms_ref": [],
+   "terms_hyp": [],
+   "target_amount": null,
+   "ref_amount": null,
+   "hyp_amount": null,
+   "has_amount": false,
+   "amount_effect": "correct",
+   "asr_amount_effect": "correct",
+   "ref_decision": [
+    "llm_gate"
+   ],
+   "hyp_decision": [
+    "llm_gate"
+   ],
+   "intent_effect": "unchanged"
+  },
+  {
+   "id": "iv_kn_002",
+   "set": "general",
+   "split": "held-out",
+   "language": "kn",
+   "category": "kn-en",
+   "reference": "ಆರು ಒಂಬತ್ತು ಒಂಬತ್ತು ಐದು ಎರಡು ಏಳು ಸೊನ್ನೆ ಎರಡು ಒಂಬತ್ತು ನಾಲ್ಕು ಆರು ಆ್ಯಟ್ ದಿ ರೇಟ್ ಓ ಕೆ ಸಿ ಐ ಸಿ ಐ ಈ ಯು ಪಿ ಐ ಐ ಡಿಯಿಂದ ನನಗೆ ನಾಲ್ಕು ಸಾವಿರ ರೂಪಾಯಿ ಬಂದಿದೆಯಾ ಅಂತ ಚೆಕ್ ಮಾಡು",
+   "hypothesis": "ಆರು ಒಂಬತ್ತು ಒಂಬತ್ತು ಐದು ಎರಡು ಏಳು ಸೊನ್ನೆ ಎರಡು ಒಂಬತ್ತು ನಾಲ್ಕು ಆರು ಎಟ್ ದ ರೇಟ್ ಒಓ ಕೆ ಸಿ ಐ ಸಿ ಐ ಈ ಯು ಪಿ ಐ ಐ ಡಿಯಿಂದ ನನಗೆ ನಾಲ್ಕು ಸಾವಿರ ರೂಪಾಯಿ ಬಂದಿದೆಯಾ ಅಂತ ಚೆಕ್ ಮಾಡು",
+   "provider": "indicconformer",
+   "fallback_used": false,
+   "error": null,
+   "audio_seconds": 24.193,
+   "seconds": 6.686,
+   "ref_words": 34,
+   "word_edits": 3,
+   "subs": 3,
+   "dels": 0,
+   "ins": 0,
+   "ref_chars": 126,
+   "char_edits": 5,
+   "exact": false,
+   "latin_in_hypothesis": false,
+   "loanwords_ref": 1,
+   "loanwords_hit": 1,
+   "terms_ref": [],
+   "terms_hyp": [],
+   "target_amount": 4000,
+   "ref_amount": 4000,
+   "hyp_amount": 4000,
+   "has_amount": true,
+   "amount_effect": "correct",
+   "asr_amount_effect": "correct",
+   "ref_decision": [
+    "start",
+    "withdraw money"
+   ],
+   "hyp_decision": [
+    "start",
+    "withdraw money"
+   ],
+   "intent_effect": "unchanged"
+  },
+  {
+   "id": "iv_hi_001",
+   "set": "general",
+   "split": "held-out",
+   "language": "hi",
+   "category": "hi-en",
+   "reference": "मोबाइल नंबर सेवन टू टू एट वन फाइव वन थ्री फोर फाइव सिक्स के लिए टीका पंजीकरण जारी रखने के लिए आपका पी एन पी पिन सी टू सिक्स नाइन सेवन है",
+   "hypothesis": "मोबाइल नंबर सेवन टू टू ट वन फाइव वन थ्री फोर फाइव सिक्स के लिए टीका पंजीकरण जारी रखने के लिए आपका पी एन पी पिन टू सिक्स नाइन सेवन है",
+   "provider": "indicconformer",
+   "fallback_used": false,
+   "error": null,
+   "audio_seconds": 15.178,
+   "seconds": 4.119,
+   "ref_words": 32,
+   "word_edits": 2,
+   "subs": 1,
+   "dels": 1,
+   "ins": 0,
+   "ref_chars": 105,
+   "char_edits": 3,
+   "exact": false,
+   "latin_in_hypothesis": false,
+   "loanwords_ref": 3,
+   "loanwords_hit": 3,
+   "terms_ref": [
+    "number"
+   ],
+   "terms_hyp": [
+    "number"
+   ],
+   "target_amount": null,
+   "ref_amount": null,
+   "hyp_amount": null,
+   "has_amount": false,
+   "amount_effect": "correct",
+   "asr_amount_effect": "correct",
+   "ref_decision": [
+    "no-start",
+    "KNOWLEDGE_QUESTION"
+   ],
+   "hyp_decision": [
+    "no-start",
+    "KNOWLEDGE_QUESTION"
+   ],
+   "intent_effect": "unchanged"
+  },
+  {
+   "id": "iv_hi_002",
+   "set": "general",
+   "split": "held-out",
+   "language": "hi",
+   "category": "hi",
+   "reference": "नहीं मुझे पास्ता पसन्द नहीं है क्या आपके यहाँ वीगन पिज्ज़ा है",
+   "hypothesis": "नहीं मुझे पस्ता पसंद नहीं है क्या आपके यहा पिज्जा है",
+   "provider": "indicconformer",
+   "fallback_used": false,
+   "error": null,
+   "audio_seconds": 8.543,
+   "seconds": 2.321,
+   "ref_words": 12,
+   "word_edits": 5,
+   "subs": 4,
+   "dels": 1,
+   "ins": 0,
+   "ref_chars": 50,
+   "char_edits": 9,
+   "exact": false,
+   "latin_in_hypothesis": false,
+   "loanwords_ref": 0,
+   "loanwords_hit": 0,
+   "terms_ref": [],
+   "terms_hyp": [],
+   "target_amount": null,
+   "ref_amount": null,
+   "hyp_amount": null,
+   "has_amount": false,
+   "amount_effect": "correct",
+   "asr_amount_effect": "correct",
+   "ref_decision": [
+    "llm_gate"
+   ],
+   "hyp_decision": [
+    "llm_gate"
+   ],
+   "intent_effect": "unchanged"
+  }
+ ]
+}

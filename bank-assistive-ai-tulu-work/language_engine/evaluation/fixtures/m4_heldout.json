@@ -1,0 +1,72 @@
+{
+  "version": "m4_heldout",
+  "description": "M4 HELD-OUT set. Written before any M4 change and never used to choose intent examples: it measures whether the M4 changes generalise beyond the M0/M3 sentences they were tuned against. Balanced across the five services and seven language groups, plus ambiguous requests (which must not start a workflow) and knowledge questions with no question word (which reach the intent detector directly). Labels come from what each sentence means.",
+  "sources": {
+    "m4-heldout": "written for the M4 held-out set before tuning"
+  },
+  "fixtures": [
+    {"id": "svc-en-401", "lang": "en", "category": "service_request", "text": "I have brought cash to deposit", "expected": {"intent": "deposit money"}, "gloss": "", "source": "m4-heldout"},
+    {"id": "svc-kn-401", "lang": "kn", "category": "service_request", "text": "ನನ್ನ ಖಾತೆಗೆ ಐನೂರು ರೂಪಾಯಿ ಹಾಕಬೇಕು", "expected": {"intent": "deposit money"}, "gloss": "I need to put 500 rupees into my account", "source": "m4-heldout"},
+    {"id": "svc-kn-en-401", "lang": "kn-en", "category": "service_request", "text": "ನಾನು ಸ್ವಲ್ಪ ಕ್ಯಾಶ್ ಜಮಾ ಮಾಡ್ಬೇಕು", "expected": {"intent": "deposit money"}, "gloss": "I need to deposit some cash (colloquial ಮಾಡ್ಬೇಕು)", "source": "m4-heldout"},
+    {"id": "svc-kn-en-402", "lang": "kn-en", "category": "service_request", "text": "account ಗೆ ಹಣ deposit ಮಾಡ್ಬೇಕು", "expected": {"intent": "deposit money"}, "gloss": "I need to deposit money into the account", "source": "m4-heldout"},
+    {"id": "svc-hi-401", "lang": "hi", "category": "service_request", "text": "मेरे खाते में दो हज़ार डालने हैं", "expected": {"intent": "deposit money"}, "gloss": "I need to put two thousand into my account", "source": "m4-heldout"},
+    {"id": "svc-hi-en-401", "lang": "hi-en", "category": "service_request", "text": "मुझे पैसे deposit करने हैं", "expected": {"intent": "deposit money"}, "gloss": "I need to deposit money", "source": "m4-heldout"},
+    {"id": "svc-rom-hi-401", "lang": "rom-hi", "category": "service_request", "text": "mere khate mein paise daalne hain", "expected": {"intent": "deposit money"}, "gloss": "I need to put money into my account", "source": "m4-heldout"},
+    {"id": "svc-rom-kn-401", "lang": "rom-kn", "category": "service_request", "text": "nanna account ge duddu haakbeku", "expected": {"intent": "deposit money"}, "gloss": "I need to put money into my account", "source": "m4-heldout"},
+
+    {"id": "svc-en-402", "lang": "en", "category": "service_request", "text": "I want to take out two thousand rupees", "expected": {"intent": "withdraw money"}, "gloss": "", "source": "m4-heldout"},
+    {"id": "svc-kn-402", "lang": "kn", "category": "service_request", "text": "ನನಗೆ ಸ್ವಲ್ಪ ದುಡ್ಡು ತೆಗೆಯಬೇಕು", "expected": {"intent": "withdraw money"}, "gloss": "I need to withdraw some money", "source": "m4-heldout"},
+    {"id": "svc-kn-en-403", "lang": "kn-en", "category": "service_request", "text": "ನನ್ನ account ಇಂದ ಹಣ withdraw ಮಾಡ್ಬೇಕು", "expected": {"intent": "withdraw money"}, "gloss": "I need to withdraw money from my account", "source": "m4-heldout"},
+    {"id": "svc-kn-en-404", "lang": "kn-en", "category": "service_request", "text": "ನಾನು ಕ್ಯಾಶ್ ವಿತ್‌ಡ್ರಾ ಮಾಡ್ಬೇಕು", "expected": {"intent": "withdraw money"}, "gloss": "I need to withdraw cash", "source": "m4-heldout"},
+    {"id": "svc-hi-402", "lang": "hi", "category": "service_request", "text": "मुझे खाते से तीन हज़ार निकालने हैं", "expected": {"intent": "withdraw money"}, "gloss": "I need to withdraw three thousand from the account", "source": "m4-heldout"},
+    {"id": "svc-hi-en-402", "lang": "hi-en", "category": "service_request", "text": "मुझे cash निकालना है", "expected": {"intent": "withdraw money"}, "gloss": "I need to withdraw cash", "source": "m4-heldout"},
+    {"id": "svc-rom-hi-402", "lang": "rom-hi", "category": "service_request", "text": "mujhe khate se paise nikalne hain", "expected": {"intent": "withdraw money"}, "gloss": "I need to withdraw money from the account", "source": "m4-heldout"},
+    {"id": "svc-rom-kn-402", "lang": "rom-kn", "category": "service_request", "text": "nanage duddu withdraw madbeku", "expected": {"intent": "withdraw money"}, "gloss": "I need to withdraw money", "source": "m4-heldout"},
+
+    {"id": "svc-en-403", "lang": "en", "category": "service_request", "text": "show my account balance please", "expected": {"intent": "check account balance"}, "gloss": "", "source": "m4-heldout"},
+    {"id": "svc-kn-403", "lang": "kn", "category": "service_request", "text": "ನನ್ನ ಖಾತೆಯಲ್ಲಿರುವ ಹಣ ತಿಳಿಸಿ", "expected": {"intent": "check account balance"}, "gloss": "tell me the money in my account", "source": "m4-heldout"},
+    {"id": "svc-kn-en-405", "lang": "kn-en", "category": "service_request", "text": "ನನ್ನ ಬ್ಯಾಲೆನ್ಸ್ ಚೆಕ್ ಮಾಡಬೇಕು", "expected": {"intent": "check account balance"}, "gloss": "I need to check my balance", "source": "m4-heldout"},
+    {"id": "svc-hi-403", "lang": "hi", "category": "service_request", "text": "मेरे खाते में बची रकम बताइए", "expected": {"intent": "check account balance"}, "gloss": "tell me the amount left in my account", "source": "m4-heldout"},
+    {"id": "svc-hi-en-403", "lang": "hi-en", "category": "service_request", "text": "मुझे अपना balance देखना है", "expected": {"intent": "check account balance"}, "gloss": "I want to see my balance", "source": "m4-heldout"},
+    {"id": "svc-rom-hi-403", "lang": "rom-hi", "category": "service_request", "text": "mera account balance dikhao", "expected": {"intent": "check account balance"}, "gloss": "show my account balance", "source": "m4-heldout"},
+    {"id": "svc-rom-kn-403", "lang": "rom-kn", "category": "service_request", "text": "nanna khate balance check madbeku", "expected": {"intent": "check account balance"}, "gloss": "I need to check my account balance", "source": "m4-heldout"},
+
+    {"id": "svc-en-404", "lang": "en", "category": "service_request", "text": "I'd like a personal loan", "expected": {"intent": "apply for loan"}, "gloss": "", "source": "m4-heldout"},
+    {"id": "svc-kn-404", "lang": "kn", "category": "service_request", "text": "ವ್ಯವಸಾಯಕ್ಕಾಗಿ ಸಾಲ ಬೇಕು", "expected": {"intent": "apply for loan"}, "gloss": "I need a loan for farming", "source": "m4-heldout"},
+    {"id": "svc-kn-en-406", "lang": "kn-en", "category": "service_request", "text": "ನನಗೆ ಪರ್ಸನಲ್ ಲೋನ್ ಬೇಕು", "expected": {"intent": "apply for loan"}, "gloss": "I need a personal loan", "source": "m4-heldout"},
+    {"id": "svc-kn-en-407", "lang": "kn-en", "category": "service_request", "text": "ಬೈಕ್ ಖರೀದಿಸಲು ಲೋನ್ ಬೇಕು", "expected": {"intent": "apply for loan"}, "gloss": "I need a loan to buy a bike", "source": "m4-heldout"},
+    {"id": "svc-hi-404", "lang": "hi", "category": "service_request", "text": "मुझे खेती के लिए कर्ज चाहिए", "expected": {"intent": "apply for loan"}, "gloss": "I need a loan for farming", "source": "m4-heldout"},
+    {"id": "svc-hi-en-404", "lang": "hi-en", "category": "service_request", "text": "मुझे गाड़ी के लिए loan चाहिए", "expected": {"intent": "apply for loan"}, "gloss": "I need a loan for a vehicle", "source": "m4-heldout"},
+    {"id": "svc-rom-hi-404", "lang": "rom-hi", "category": "service_request", "text": "mujhe personal loan chahiye", "expected": {"intent": "apply for loan"}, "gloss": "I need a personal loan", "source": "m4-heldout"},
+    {"id": "svc-rom-kn-404", "lang": "rom-kn", "category": "service_request", "text": "nanage vehicle loan beku", "expected": {"intent": "apply for loan"}, "gloss": "I need a vehicle loan", "source": "m4-heldout"},
+
+    {"id": "svc-en-405", "lang": "en", "category": "service_request", "text": "I need a new bank account", "expected": {"intent": "open new account"}, "gloss": "", "source": "m4-heldout"},
+    {"id": "svc-kn-405", "lang": "kn", "category": "service_request", "text": "ನನಗೆ ಹೊಸ ಬ್ಯಾಂಕ್ ಖಾತೆ ಬೇಕು", "expected": {"intent": "open new account"}, "gloss": "I need a new bank account", "source": "m4-heldout"},
+    {"id": "svc-kn-en-408", "lang": "kn-en", "category": "service_request", "text": "ನನಗೆ ಹೊಸ savings account ಬೇಕು", "expected": {"intent": "open new account"}, "gloss": "I need a new savings account", "source": "m4-heldout"},
+    {"id": "svc-kn-en-409", "lang": "kn-en", "category": "service_request", "text": "ನಾನು ಹೊಸ ಅಕೌಂಟ್ ತೆರೆಯಬೇಕು", "expected": {"intent": "open new account"}, "gloss": "I need to open a new account", "source": "m4-heldout"},
+    {"id": "svc-hi-405", "lang": "hi", "category": "service_request", "text": "मुझे बैंक में खाता खुलवाना है", "expected": {"intent": "open new account"}, "gloss": "I want to get an account opened at the bank", "source": "m4-heldout"},
+    {"id": "svc-hi-en-405", "lang": "hi-en", "category": "service_request", "text": "मुझे नया account खुलवाना है", "expected": {"intent": "open new account"}, "gloss": "I want to get a new account opened", "source": "m4-heldout"},
+    {"id": "svc-rom-hi-405", "lang": "rom-hi", "category": "service_request", "text": "mujhe naya bank account chahiye", "expected": {"intent": "open new account"}, "gloss": "I need a new bank account", "source": "m4-heldout"},
+    {"id": "svc-rom-kn-405", "lang": "rom-kn", "category": "service_request", "text": "nanage hosa account beku", "expected": {"intent": "open new account"}, "gloss": "I need a new account", "source": "m4-heldout"},
+
+    {"id": "amb-en-401", "lang": "en", "category": "ambiguous_request", "text": "I need money", "expected": {"starts_workflow": false}, "gloss": "withdrawal or loan? names no single service", "source": "m4-heldout"},
+    {"id": "amb-en-402", "lang": "en", "category": "ambiguous_request", "text": "I have some work with my account", "expected": {"starts_workflow": false}, "gloss": "names no service", "source": "m4-heldout"},
+    {"id": "amb-kn-401", "lang": "kn", "category": "ambiguous_request", "text": "ನನಗೆ ಹಣ ಬೇಕು", "expected": {"starts_workflow": false}, "gloss": "I need money", "source": "m4-heldout"},
+    {"id": "amb-hi-401", "lang": "hi", "category": "ambiguous_request", "text": "मुझे पैसे चाहिए", "expected": {"starts_workflow": false}, "gloss": "I need money", "source": "m4-heldout"},
+    {"id": "amb-kn-en-401", "lang": "kn-en", "category": "ambiguous_request", "text": "ಅಕೌಂಟ್ ಕೆಲಸ ಇದೆ", "expected": {"starts_workflow": false}, "gloss": "I have some account work", "source": "m4-heldout"},
+    {"id": "amb-hi-en-401", "lang": "hi-en", "category": "ambiguous_request", "text": "bank का काम है", "expected": {"starts_workflow": false}, "gloss": "I have bank work", "source": "m4-heldout"},
+    {"id": "amb-rom-hi-401", "lang": "rom-hi", "category": "ambiguous_request", "text": "paise chahiye", "expected": {"starts_workflow": false}, "gloss": "I need money", "source": "m4-heldout"},
+    {"id": "amb-rom-kn-401", "lang": "rom-kn", "category": "ambiguous_request", "text": "duddu beku", "expected": {"starts_workflow": false}, "gloss": "I need money", "source": "m4-heldout"},
+
+    {"id": "kq-en-401", "lang": "en", "category": "knowledge_question", "text": "loan eligibility criteria", "expected": {"route": "knowledge", "sources": ["loan.md", "loan_basics.md"]}, "gloss": "no question word: reaches the detector", "source": "m4-heldout"},
+    {"id": "kq-en-402", "lang": "en", "category": "knowledge_question", "text": "fixed deposit rules", "expected": {"route": "knowledge", "sources": null}, "gloss": "no question word", "source": "m4-heldout"},
+    {"id": "kq-kn-401", "lang": "kn", "category": "knowledge_question", "text": "ಶಿಕ್ಷಣ ಸಾಲದ ನಿಯಮಗಳು", "expected": {"route": "knowledge", "sources": ["loan.md", "loan_basics.md"]}, "gloss": "education loan rules", "source": "m4-heldout"},
+    {"id": "kq-kn-402", "lang": "kn", "category": "knowledge_question", "text": "ಉಳಿತಾಯ ಖಾತೆಯ ಬಡ್ಡಿ ದರ", "expected": {"route": "knowledge", "sources": ["savings_account.md"]}, "gloss": "savings account interest rate", "source": "m4-heldout"},
+    {"id": "kq-hi-401", "lang": "hi", "category": "knowledge_question", "text": "बचत खाते की ब्याज दर", "expected": {"route": "knowledge", "sources": ["savings_account.md"]}, "gloss": "savings account interest rate", "source": "m4-heldout"},
+    {"id": "kq-hi-402", "lang": "hi", "category": "knowledge_question", "text": "कर्ज की पात्रता शर्तें", "expected": {"route": "knowledge", "sources": ["loan.md", "loan_basics.md"]}, "gloss": "loan eligibility conditions", "source": "m4-heldout"},
+    {"id": "kq-kn-en-401", "lang": "kn-en", "category": "knowledge_question", "text": "loan eligibility ನಿಯಮಗಳು", "expected": {"route": "knowledge", "sources": ["loan.md", "loan_basics.md"]}, "gloss": "loan eligibility rules", "source": "m4-heldout"},
+    {"id": "kq-hi-en-401", "lang": "hi-en", "category": "knowledge_question", "text": "loan की eligibility शर्तें", "expected": {"route": "knowledge", "sources": ["loan.md", "loan_basics.md"]}, "gloss": "loan eligibility conditions", "source": "m4-heldout"},
+    {"id": "kq-rom-hi-401", "lang": "rom-hi", "category": "knowledge_question", "text": "loan ki eligibility conditions", "expected": {"route": "knowledge", "sources": ["loan.md", "loan_basics.md"]}, "gloss": "loan eligibility conditions", "source": "m4-heldout"},
+    {"id": "kq-rom-kn-401", "lang": "rom-kn", "category": "knowledge_question", "text": "loan eligibility niyamagalu", "expected": {"route": "knowledge", "sources": ["loan.md", "loan_basics.md"]}, "gloss": "loan eligibility rules", "source": "m4-heldout"}
+  ]
+}

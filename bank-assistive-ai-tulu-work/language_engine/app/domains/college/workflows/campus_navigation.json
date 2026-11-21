@@ -1,0 +1,18 @@
+{
+  "workflow": "campus navigation",
+  "topic": "the directions",
+  "description": "Directions from where the student is (the location their CampusGuide QR code identifies) to a destination in the institution's verified campus map, one step at a time. Only routes written and verified in the map are ever given.",
+  "steps": [
+    {
+      "step": 1,
+      "kind": "destination",
+      "field": "destination",
+      "instruction": "Where would you like to go?"
+    },
+    {
+      "step": 2,
+      "kind": "directions",
+      "instruction": "Say next for the next step."
+    }
+  ]
+}

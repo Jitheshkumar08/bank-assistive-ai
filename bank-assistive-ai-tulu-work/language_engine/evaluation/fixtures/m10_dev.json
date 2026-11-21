@@ -1,0 +1,2072 @@
+{
+ "version": "m10_dev",
+ "description": "M10 DEVELOPMENT fixtures for routing safety. New sentences written for M10 under evaluation/fixtures/M10_LABEL_POLICY.md; author-labelled, not reviewed by a native speaker. Rows with policy 'approved:Dn' depended on a team decision (annotation review D1, D3, D5) that the team has since approved (reports/m10_policy_decisions.md); their labels were already the approved ones and are unchanged. Text only: no audio.",
+ "fixtures": [
+  {
+   "id": "svc-en-1001",
+   "lang": "en",
+   "category": "service_request",
+   "text": "could you look up the balance on my account",
+   "expected": {
+    "intent": "check account balance"
+   },
+   "gloss": "",
+   "source": "m10-dev",
+   "family": "balance_direct",
+   "m10_expect": "start:check account balance",
+   "policy": "settled",
+   "label_status": "author-labelled, not native-speaker reviewed"
+  },
+  {
+   "id": "svc-en-1002",
+   "lang": "en",
+   "category": "service_request",
+   "text": "I'd like to know my current account balance",
+   "expected": {
+    "intent": "check account balance"
+   },
+   "gloss": "",
+   "source": "m10-dev",
+   "family": "balance_direct",
+   "m10_expect": "start:check account balance",
+   "policy": "settled",
+   "label_status": "author-labelled, not native-speaker reviewed"
+  },
+  {
+   "id": "svc-kn-1001",
+   "lang": "kn",
+   "category": "service_request",
+   "text": "ನನ್ನ ಉಳಿತಾಯ ಖಾತೆಯಲ್ಲಿರೋ ಶಿಲ್ಕು ನೋಡಿ ಹೇಳಿ",
+   "expected": {
+    "intent": "check account balance"
+   },
+   "gloss": "look up and tell me the balance in my savings account (formal word)",
+   "source": "m10-dev",
+   "family": "balance_direct",
+   "m10_expect": "start:check account balance",
+   "policy": "settled",
+   "label_status": "author-labelled, not native-speaker reviewed"
+  },
+  {
+   "id": "svc-kn-en-1001",
+   "lang": "kn-en",
+   "category": "service_request",
+   "text": "ನನ್ನ ಬ್ಯಾಲೆನ್ಸ್ ಚೆಕ್ ಮಾಡಿ ಕೊಡಿ",
+   "expected": {
+    "intent": "check account balance"
+   },
+   "gloss": "please check my balance for me",
+   "source": "m10-dev",
+   "family": "balance_direct",
+   "m10_expect": "start:check account balance",
+   "policy": "settled",
+   "label_status": "author-labelled, not native-speaker reviewed"
+  },
+  {
+   "id": "svc-kn-en-1002",
+   "lang": "kn-en",
+   "category": "service_request",
+   "text": "ಅಕೌಂಟ್ ಬ್ಯಾಲೆನ್ಸ್ ನೋಡಬೇಕಿತ್ತು",
+   "expected": {
+    "intent": "check account balance"
+   },
+   "gloss": "I wanted to see the account balance",
+   "source": "m10-dev",
+   "family": "balance_direct",
+   "m10_expect": "start:check account balance",
+   "policy": "settled",
+   "label_status": "author-labelled, not native-speaker reviewed"
+  },
+  {
+   "id": "svc-hi-1001",
+   "lang": "hi",
+   "category": "service_request",
+   "text": "मुझे अपने खाते की शेष राशि जाननी है",
+   "expected": {
+    "intent": "check account balance"
+   },
+   "gloss": "I want to know my account's remaining amount (formal)",
+   "source": "m10-dev",
+   "family": "balance_direct",
+   "m10_expect": "start:check account balance",
+   "policy": "settled",
+   "label_status": "author-labelled, not native-speaker reviewed"
+  },
+  {
+   "id": "svc-hi-en-1001",
+   "lang": "hi-en",
+   "category": "service_request",
+   "text": "मेरा बैलेंस चेक कर दीजिए",
+   "expected": {
+    "intent": "check account balance"
+   },
+   "gloss": "please check my balance",
+   "source": "m10-dev",
+   "family": "balance_direct",
+   "m10_expect": "start:check account balance",
+   "policy": "settled",
+   "label_status": "author-labelled, not native-speaker reviewed"
+  },
+  {
+   "id": "svc-hi-en-1002",
+   "lang": "hi-en",
+   "category": "service_request",
+   "text": "अकाउंट बैलेंस बताइए",
+   "expected": {
+    "intent": "check account balance"
+   },
+   "gloss": "tell me the account balance",
+   "source": "m10-dev",
+   "family": "balance_direct",
+   "m10_expect": "start:check account balance",
+   "policy": "settled",
+   "label_status": "author-labelled, not native-speaker reviewed"
+  },
+  {
+   "id": "svc-rom-hi-1001",
+   "lang": "rom-hi",
+   "category": "service_request",
+   "text": "apna account balance dekhna tha",
+   "expected": {
+    "intent": "check account balance"
+   },
+   "gloss": "I wanted to see my account balance",
+   "source": "m10-dev",
+   "family": "balance_direct",
+   "m10_expect": "start:check account balance",
+   "policy": "settled",
+   "label_status": "author-labelled, not native-speaker reviewed"
+  },
+  {
+   "id": "svc-rom-kn-1001",
+   "lang": "rom-kn",
+   "category": "service_request",
+   "text": "nanna balance check maadi",
+   "expected": {
+    "intent": "check account balance"
+   },
+   "gloss": "check my balance",
+   "source": "m10-dev",
+   "family": "balance_direct",
+   "m10_expect": "start:check account balance",
+   "policy": "settled",
+   "label_status": "author-labelled, not native-speaker reviewed"
+  },
+  {
+   "id": "svc-en-1003",
+   "lang": "en",
+   "category": "service_request",
+   "text": "uh yeah could you just pull up my balance",
+   "expected": {
+    "intent": "check account balance"
+   },
+   "gloss": "with fillers",
+   "source": "m10-dev",
+   "family": "balance_direct",
+   "m10_expect": "start:check account balance",
+   "policy": "settled",
+   "label_status": "author-labelled, not native-speaker reviewed"
+  },
+  {
+   "id": "svc-en-1004",
+   "lang": "en",
+   "category": "service_request",
+   "text": "how much money do I have in my account",
+   "expected": {
+    "intent": "check account balance"
+   },
+   "gloss": "",
+   "source": "m10-dev",
+   "family": "balance_paraphrase",
+   "m10_expect": "start:check account balance",
+   "policy": "settled",
+   "label_status": "author-labelled, not native-speaker reviewed"
+  },
+  {
+   "id": "svc-en-1005",
+   "lang": "en",
+   "category": "service_request",
+   "text": "can you tell me how much is left in my savings account",
+   "expected": {
+    "intent": "check account balance"
+   },
+   "gloss": "",
+   "source": "m10-dev",
+   "family": "balance_paraphrase",
+   "m10_expect": "start:check account balance",
+   "policy": "settled",
+   "label_status": "author-labelled, not native-speaker reviewed"
+  },
+  {
+   "id": "svc-en-1006",
+   "lang": "en",
+   "category": "service_request",
+   "text": "do I have at least five thousand rupees in my account",
+   "expected": {
+    "intent": "check account balance"
+   },
+   "gloss": "yes/no form (policy rule 1)",
+   "source": "m10-dev",
+   "family": "balance_paraphrase",
+   "m10_expect": "start:check account balance",
+   "policy": "settled",
+   "label_status": "author-labelled, not native-speaker reviewed"
+  },
+  {
+   "id": "svc-kn-1002",
+   "lang": "kn",
+   "category": "service_request",
+   "text": "ನನ್ನ ಖಾತೆಯಲ್ಲಿ ಇನ್ನೂ ಎಷ್ಟು ದುಡ್ಡು ಉಳಿದಿದೆ",
+   "expected": {
+    "intent": "check account balance"
+   },
+   "gloss": "how much money is still left in my account",
+   "source": "m10-dev",
+   "family": "balance_paraphrase",
+   "m10_expect": "start:check account balance",
+   "policy": "settled",
+   "label_status": "author-labelled, not native-speaker reviewed"
+  },
+  {
+   "id": "svc-kn-1003",
+   "lang": "kn",
+   "category": "service_request",
+   "text": "ಉಳಿತಾಯ ಖಾತೆಯಲ್ಲಿ ಎಷ್ಟು ಹಣ ಇದೆ ಅಂತ ಹೇಳ್ತೀರಾ",
+   "expected": {
+    "intent": "check account balance"
+   },
+   "gloss": "will you tell me how much money is in the savings account",
+   "source": "m10-dev",
+   "family": "balance_paraphrase",
+   "m10_expect": "start:check account balance",
+   "policy": "settled",
+   "label_status": "author-labelled, not native-speaker reviewed"
+  },
+  {
+   "id": "svc-kn-en-1003",
+   "lang": "kn-en",
+   "category": "service_request",
+   "text": "ನನ್ನ ಅಕೌಂಟಲ್ಲಿ ಸಾವಿರ ರೂಪಾಯಿ ಆದರೂ ಇದೆಯಾ",
+   "expected": {
+    "intent": "check account balance"
+   },
+   "gloss": "is there at least a thousand rupees in my account",
+   "source": "m10-dev",
+   "family": "balance_paraphrase",
+   "m10_expect": "start:check account balance",
+   "policy": "settled",
+   "label_status": "author-labelled, not native-speaker reviewed"
+  },
+  {
+   "id": "svc-hi-1002",
+   "lang": "hi",
+   "category": "service_request",
+   "text": "मेरे खाते में अभी कितना पैसा बचा है",
+   "expected": {
+    "intent": "check account balance"
+   },
+   "gloss": "how much money is left in my account now",
+   "source": "m10-dev",
+   "family": "balance_paraphrase",
+   "m10_expect": "start:check account balance",
+   "policy": "settled",
+   "label_status": "author-labelled, not native-speaker reviewed"
+  },
+  {
+   "id": "svc-hi-1003",
+   "lang": "hi",
+   "category": "service_request",
+   "text": "बताइए मेरे बचत खाते में कितनी रकम है",
+   "expected": {
+    "intent": "check account balance"
+   },
+   "gloss": "tell me how much is in my savings account",
+   "source": "m10-dev",
+   "family": "balance_paraphrase",
+   "m10_expect": "start:check account balance",
+   "policy": "settled",
+   "label_status": "author-labelled, not native-speaker reviewed"
+  },
+  {
+   "id": "svc-hi-1004",
+   "lang": "hi",
+   "category": "service_request",
+   "text": "क्या मेरे खाते में दस हज़ार रुपये हैं",
+   "expected": {
+    "intent": "check account balance"
+   },
+   "gloss": "are there ten thousand rupees in my account",
+   "source": "m10-dev",
+   "family": "balance_paraphrase",
+   "m10_expect": "start:check account balance",
+   "policy": "settled",
+   "label_status": "author-labelled, not native-speaker reviewed"
+  },
+  {
+   "id": "svc-hi-en-1003",
+   "lang": "hi-en",
+   "category": "service_request",
+   "text": "मेरे अकाउंट में कितने रुपये पड़े हैं",
+   "expected": {
+    "intent": "check account balance"
+   },
+   "gloss": "how many rupees are lying in my account",
+   "source": "m10-dev",
+   "family": "balance_paraphrase",
+   "m10_expect": "start:check account balance",
+   "policy": "settled",
+   "label_status": "author-labelled, not native-speaker reviewed"
+  },
+  {
+   "id": "svc-rom-hi-1002",
+   "lang": "rom-hi",
+   "category": "service_request",
+   "text": "mere khate mein kitne paise bache hain",
+   "expected": {
+    "intent": "check account balance"
+   },
+   "gloss": "how much money is left in my account",
+   "source": "m10-dev",
+   "family": "balance_paraphrase",
+   "m10_expect": "start:check account balance",
+   "policy": "settled",
+   "label_status": "author-labelled, not native-speaker reviewed"
+  },
+  {
+   "id": "svc-rom-kn-1002",
+   "lang": "rom-kn",
+   "category": "service_request",
+   "text": "nanna khateli eshtu duddu ide",
+   "expected": {
+    "intent": "check account balance"
+   },
+   "gloss": "how much money is in my account",
+   "source": "m10-dev",
+   "family": "balance_paraphrase",
+   "m10_expect": "start:check account balance",
+   "policy": "settled",
+   "label_status": "author-labelled, not native-speaker reviewed"
+  },
+  {
+   "id": "svc-en-1007",
+   "lang": "en",
+   "category": "service_request",
+   "text": "I'd like to deposit five thousand rupees",
+   "expected": {
+    "intent": "deposit money"
+   },
+   "gloss": "",
+   "source": "m10-dev",
+   "family": "deposit",
+   "m10_expect": "start:deposit money",
+   "policy": "settled",
+   "label_status": "author-labelled, not native-speaker reviewed"
+  },
+  {
+   "id": "svc-en-1008",
+   "lang": "en",
+   "category": "service_request",
+   "text": "I want to put some cash into my savings account",
+   "expected": {
+    "intent": "deposit money"
+   },
+   "gloss": "",
+   "source": "m10-dev",
+   "family": "deposit",
+   "m10_expect": "start:deposit money",
+   "policy": "settled",
+   "label_status": "author-labelled, not native-speaker reviewed"
+  },
+  {
+   "id": "svc-en-1009",
+   "lang": "en",
+   "category": "service_request",
+   "text": "I want to pay in two thousand rupees cash",
+   "expected": {
+    "intent": "deposit money"
+   },
+   "gloss": "'pay in' is the British/Indian English for a deposit",
+   "source": "m10-dev",
+   "family": "deposit",
+   "m10_expect": "start:deposit money",
+   "policy": "settled",
+   "label_status": "author-labelled, not native-speaker reviewed"
+  },
+  {
+   "id": "svc-kn-1004",
+   "lang": "kn",
+   "category": "service_request",
+   "text": "ನನ್ನ ಖಾತೆಗೆ ಎರಡು ಸಾವಿರ ರೂಪಾಯಿ ಕಟ್ಟಬೇಕು",
+   "expected": {
+    "intent": "deposit money"
+   },
+   "gloss": "I need to pay two thousand rupees into my account",
+   "source": "m10-dev",
+   "family": "deposit",
+   "m10_expect": "start:deposit money",
+   "policy": "settled",
+   "label_status": "author-labelled, not native-speaker reviewed"
+  },
+  {
+   "id": "svc-kn-1005",
+   "lang": "kn",
+   "category": "service_request",
+   "text": "ಹಣ ಜಮಾ ಮಾಡೋಕೆ ಬಂದಿದೀನಿ",
+   "expected": {
+    "intent": "deposit money"
+   },
+   "gloss": "I have come to deposit money",
+   "source": "m10-dev",
+   "family": "deposit",
+   "m10_expect": "start:deposit money",
+   "policy": "settled",
+   "label_status": "author-labelled, not native-speaker reviewed"
+  },
+  {
+   "id": "svc-kn-1006",
+   "lang": "kn",
+   "category": "service_request",
+   "text": "ಉಳಿತಾಯ ಖಾತೆಗೆ ಸ್ವಲ್ಪ ದುಡ್ಡು ಹಾಕ್ಬೇಕು",
+   "expected": {
+    "intent": "deposit money"
+   },
+   "gloss": "I need to put a little money into the savings account",
+   "source": "m10-dev",
+   "family": "deposit",
+   "m10_expect": "start:deposit money",
+   "policy": "settled",
+   "label_status": "author-labelled, not native-speaker reviewed"
+  },
+  {
+   "id": "svc-kn-1007",
+   "lang": "kn",
+   "category": "service_request",
+   "text": "ಹಾಂ ಸರ್ ನನ್ನ ಖಾತೆಗೆ ಮೂರು ಸಾವಿರ ಜಮಾ ಮಾಡ್ಬೇಕು",
+   "expected": {
+    "intent": "deposit money"
+   },
+   "gloss": "uh sir, I need to deposit three thousand into my account",
+   "source": "m10-dev",
+   "family": "deposit",
+   "m10_expect": "start:deposit money",
+   "policy": "settled",
+   "label_status": "author-labelled, not native-speaker reviewed"
+  },
+  {
+   "id": "svc-kn-en-1004",
+   "lang": "kn-en",
+   "category": "service_request",
+   "text": "ಕ್ಯಾಶ್ ಡೆಪಾಸಿಟ್ ಮಾಡೋದಿದೆ",
+   "expected": {
+    "intent": "deposit money"
+   },
+   "gloss": "I have a cash deposit to make",
+   "source": "m10-dev",
+   "family": "deposit",
+   "m10_expect": "start:deposit money",
+   "policy": "settled",
+   "label_status": "author-labelled, not native-speaker reviewed"
+  },
+  {
+   "id": "svc-kn-en-1005",
+   "lang": "kn-en",
+   "category": "service_request",
+   "text": "ನನ್ನ ಅಕೌಂಟ್ಗೆ ಹತ್ತು ಸಾವಿರ ಕ್ಯಾಶ್ ಹಾಕಬೇಕು",
+   "expected": {
+    "intent": "deposit money"
+   },
+   "gloss": "I need to put ten thousand cash into my account",
+   "source": "m10-dev",
+   "family": "deposit",
+   "m10_expect": "start:deposit money",
+   "policy": "settled",
+   "label_status": "author-labelled, not native-speaker reviewed"
+  },
+  {
+   "id": "svc-hi-1005",
+   "lang": "hi",
+   "category": "service_request",
+   "text": "मुझे अपने खाते में दो हज़ार रुपये जमा करवाने हैं",
+   "expected": {
+    "intent": "deposit money"
+   },
+   "gloss": "I want to get two thousand rupees deposited in my account",
+   "source": "m10-dev",
+   "family": "deposit",
+   "m10_expect": "start:deposit money",
+   "policy": "settled",
+   "label_status": "author-labelled, not native-speaker reviewed"
+  },
+  {
+   "id": "svc-hi-1006",
+   "lang": "hi",
+   "category": "service_request",
+   "text": "अपने सेविंग खाते में थोड़ी रकम डलवानी है",
+   "expected": {
+    "intent": "deposit money"
+   },
+   "gloss": "I want a small amount put into my savings account",
+   "source": "m10-dev",
+   "family": "deposit",
+   "m10_expect": "start:deposit money",
+   "policy": "settled",
+   "label_status": "author-labelled, not native-speaker reviewed"
+  },
+  {
+   "id": "svc-hi-en-1004",
+   "lang": "hi-en",
+   "category": "service_request",
+   "text": "आज कैश डिपॉज़िट करवाना है",
+   "expected": {
+    "intent": "deposit money"
+   },
+   "gloss": "I want to get cash deposited today",
+   "source": "m10-dev",
+   "family": "deposit",
+   "m10_expect": "start:deposit money",
+   "policy": "settled",
+   "label_status": "author-labelled, not native-speaker reviewed"
+  },
+  {
+   "id": "svc-hi-en-1005",
+   "lang": "hi-en",
+   "category": "service_request",
+   "text": "अकाउंट में पाँच हज़ार कैश डालना है",
+   "expected": {
+    "intent": "deposit money"
+   },
+   "gloss": "I need to put five thousand cash in the account",
+   "source": "m10-dev",
+   "family": "deposit",
+   "m10_expect": "start:deposit money",
+   "policy": "settled",
+   "label_status": "author-labelled, not native-speaker reviewed"
+  },
+  {
+   "id": "svc-rom-hi-1003",
+   "lang": "rom-hi",
+   "category": "service_request",
+   "text": "khate mein do hazaar daalne hain",
+   "expected": {
+    "intent": "deposit money"
+   },
+   "gloss": "I need to put two thousand in the account",
+   "source": "m10-dev",
+   "family": "deposit",
+   "m10_expect": "start:deposit money",
+   "policy": "settled",
+   "label_status": "author-labelled, not native-speaker reviewed"
+  },
+  {
+   "id": "svc-rom-kn-1003",
+   "lang": "rom-kn",
+   "category": "service_request",
+   "text": "nanna khatege hana jama maadbeku",
+   "expected": {
+    "intent": "deposit money"
+   },
+   "gloss": "I need to deposit money into my account",
+   "source": "m10-dev",
+   "family": "deposit",
+   "m10_expect": "start:deposit money",
+   "policy": "settled",
+   "label_status": "author-labelled, not native-speaker reviewed"
+  },
+  {
+   "id": "svc-en-1010",
+   "lang": "en",
+   "category": "service_request",
+   "text": "I need to withdraw three thousand rupees",
+   "expected": {
+    "intent": "withdraw money"
+   },
+   "gloss": "",
+   "source": "m10-dev",
+   "family": "withdraw",
+   "m10_expect": "start:withdraw money",
+   "policy": "settled",
+   "label_status": "author-labelled, not native-speaker reviewed"
+  },
+  {
+   "id": "svc-en-1011",
+   "lang": "en",
+   "category": "service_request",
+   "text": "I want to take some cash out of my account",
+   "expected": {
+    "intent": "withdraw money"
+   },
+   "gloss": "",
+   "source": "m10-dev",
+   "family": "withdraw",
+   "m10_expect": "start:withdraw money",
+   "policy": "settled",
+   "label_status": "author-labelled, not native-speaker reviewed"
+  },
+  {
+   "id": "svc-en-1012",
+   "lang": "en",
+   "category": "service_request",
+   "text": "can I get two thousand in cash from my savings account",
+   "expected": {
+    "intent": "withdraw money"
+   },
+   "gloss": "a request phrased as a question",
+   "source": "m10-dev",
+   "family": "withdraw",
+   "m10_expect": "start:withdraw money",
+   "policy": "settled",
+   "label_status": "author-labelled, not native-speaker reviewed"
+  },
+  {
+   "id": "svc-kn-1008",
+   "lang": "kn",
+   "category": "service_request",
+   "text": "ನನ್ನ ಖಾತೆಯಿಂದ ಐದು ಸಾವಿರ ರೂಪಾಯಿ ಬಿಡಿಸಿಕೊಳ್ಳಬೇಕು",
+   "expected": {
+    "intent": "withdraw money"
+   },
+   "gloss": "I need to draw five thousand out of my account",
+   "source": "m10-dev",
+   "family": "withdraw",
+   "m10_expect": "start:withdraw money",
+   "policy": "settled",
+   "label_status": "author-labelled, not native-speaker reviewed"
+  },
+  {
+   "id": "svc-kn-1009",
+   "lang": "kn",
+   "category": "service_request",
+   "text": "ಹಣ ತೆಗೆಯೋಕೆ ಬಂದೆ",
+   "expected": {
+    "intent": "withdraw money"
+   },
+   "gloss": "I came to take out money",
+   "source": "m10-dev",
+   "family": "withdraw",
+   "m10_expect": "start:withdraw money",
+   "policy": "settled",
+   "label_status": "author-labelled, not native-speaker reviewed"
+  },
+  {
+   "id": "svc-kn-en-1006",
+   "lang": "kn-en",
+   "category": "service_request",
+   "text": "ಕ್ಯಾಶ್ ವಿತ್‌ಡ್ರಾ ಮಾಡಬೇಕು ಸರ್",
+   "expected": {
+    "intent": "withdraw money"
+   },
+   "gloss": "I need to withdraw cash, sir",
+   "source": "m10-dev",
+   "family": "withdraw",
+   "m10_expect": "start:withdraw money",
+   "policy": "settled",
+   "label_status": "author-labelled, not native-speaker reviewed"
+  },
+  {
+   "id": "svc-kn-en-1007",
+   "lang": "kn-en",
+   "category": "service_request",
+   "text": "ಅಕೌಂಟಿಂದ ಎರಡು ಸಾವಿರ ಡ್ರಾ ಮಾಡ್ಬೇಕು",
+   "expected": {
+    "intent": "withdraw money"
+   },
+   "gloss": "I need to draw two thousand from the account",
+   "source": "m10-dev",
+   "family": "withdraw",
+   "m10_expect": "start:withdraw money",
+   "policy": "settled",
+   "label_status": "author-labelled, not native-speaker reviewed"
+  },
+  {
+   "id": "svc-hi-1007",
+   "lang": "hi",
+   "category": "service_request",
+   "text": "मुझे खाते से चार हज़ार रुपये निकलवाने हैं",
+   "expected": {
+    "intent": "withdraw money"
+   },
+   "gloss": "I want to get four thousand rupees withdrawn from my account",
+   "source": "m10-dev",
+   "family": "withdraw",
+   "m10_expect": "start:withdraw money",
+   "policy": "settled",
+   "label_status": "author-labelled, not native-speaker reviewed"
+  },
+  {
+   "id": "svc-hi-1008",
+   "lang": "hi",
+   "category": "service_request",
+   "text": "अच्छा तो मुझे दो हज़ार निकालने हैं",
+   "expected": {
+    "intent": "withdraw money"
+   },
+   "gloss": "okay so I need to withdraw two thousand (fillers)",
+   "source": "m10-dev",
+   "family": "withdraw",
+   "m10_expect": "start:withdraw money",
+   "policy": "settled",
+   "label_status": "author-labelled, not native-speaker reviewed"
+  },
+  {
+   "id": "svc-hi-en-1006",
+   "lang": "hi-en",
+   "category": "service_request",
+   "text": "कैश विड्रॉ करना है",
+   "expected": {
+    "intent": "withdraw money"
+   },
+   "gloss": "I need to withdraw cash",
+   "source": "m10-dev",
+   "family": "withdraw",
+   "m10_expect": "start:withdraw money",
+   "policy": "settled",
+   "label_status": "author-labelled, not native-speaker reviewed"
+  },
+  {
+   "id": "svc-rom-hi-1004",
+   "lang": "rom-hi",
+   "category": "service_request",
+   "text": "khate se teen hazaar nikalwane hain",
+   "expected": {
+    "intent": "withdraw money"
+   },
+   "gloss": "I want to get three thousand withdrawn",
+   "source": "m10-dev",
+   "family": "withdraw",
+   "m10_expect": "start:withdraw money",
+   "policy": "settled",
+   "label_status": "author-labelled, not native-speaker reviewed"
+  },
+  {
+   "id": "svc-rom-kn-1004",
+   "lang": "rom-kn",
+   "category": "service_request",
+   "text": "nanna khateyinda duddu tegiyoke bandidini",
+   "expected": {
+    "intent": "withdraw money"
+   },
+   "gloss": "I have come to take money out of my account",
+   "source": "m10-dev",
+   "family": "withdraw",
+   "m10_expect": "start:withdraw money",
+   "policy": "settled",
+   "label_status": "author-labelled, not native-speaker reviewed"
+  },
+  {
+   "id": "svc-en-1013",
+   "lang": "en",
+   "category": "service_request",
+   "text": "I'd like to apply for a home loan",
+   "expected": {
+    "intent": "apply for loan"
+   },
+   "gloss": "",
+   "source": "m10-dev",
+   "family": "loan",
+   "m10_expect": "start:apply for loan",
+   "policy": "settled",
+   "label_status": "author-labelled, not native-speaker reviewed"
+  },
+  {
+   "id": "svc-kn-1010",
+   "lang": "kn",
+   "category": "service_request",
+   "text": "ನನಗೆ ಮನೆ ಕಟ್ಟೋಕೆ ಸಾಲ ಬೇಕು",
+   "expected": {
+    "intent": "apply for loan"
+   },
+   "gloss": "I need a loan to build a house",
+   "source": "m10-dev",
+   "family": "loan",
+   "m10_expect": "start:apply for loan",
+   "policy": "settled",
+   "label_status": "author-labelled, not native-speaker reviewed"
+  },
+  {
+   "id": "svc-hi-1009",
+   "lang": "hi",
+   "category": "service_request",
+   "text": "मकान बनवाने के लिए कर्ज़ लेना है",
+   "expected": {
+    "intent": "apply for loan"
+   },
+   "gloss": "I want to take a loan to build a house",
+   "source": "m10-dev",
+   "family": "loan",
+   "m10_expect": "start:apply for loan",
+   "policy": "settled",
+   "label_status": "author-labelled, not native-speaker reviewed"
+  },
+  {
+   "id": "svc-hi-en-1007",
+   "lang": "hi-en",
+   "category": "service_request",
+   "text": "बिज़नेस लोन के लिए अप्लाई करना है",
+   "expected": {
+    "intent": "apply for loan"
+   },
+   "gloss": "I need to apply for a business loan",
+   "source": "m10-dev",
+   "family": "loan",
+   "m10_expect": "start:apply for loan",
+   "policy": "settled",
+   "label_status": "author-labelled, not native-speaker reviewed"
+  },
+  {
+   "id": "svc-en-1014",
+   "lang": "en",
+   "category": "service_request",
+   "text": "I'd like to set up a new savings account with you",
+   "expected": {
+    "intent": "open new account"
+   },
+   "gloss": "",
+   "source": "m10-dev",
+   "family": "open_account",
+   "m10_expect": "start:open new account",
+   "policy": "settled",
+   "label_status": "author-labelled, not native-speaker reviewed"
+  },
+  {
+   "id": "svc-kn-1011",
+   "lang": "kn",
+   "category": "service_request",
+   "text": "ನನ್ನ ಮಗಳ ಹೆಸರಲ್ಲಿ ಒಂದು ಹೊಸ ಖಾತೆ ಮಾಡಿಸಬೇಕು",
+   "expected": {
+    "intent": "open new account"
+   },
+   "gloss": "I need to get a new account made in my daughter's name",
+   "source": "m10-dev",
+   "family": "open_account",
+   "m10_expect": "start:open new account",
+   "policy": "settled",
+   "label_status": "author-labelled, not native-speaker reviewed"
+  },
+  {
+   "id": "svc-hi-1010",
+   "lang": "hi",
+   "category": "service_request",
+   "text": "मुझे नया खाता खुलवाना है",
+   "expected": {
+    "intent": "open new account"
+   },
+   "gloss": "I want to get a new account opened",
+   "source": "m10-dev",
+   "family": "open_account",
+   "m10_expect": "start:open new account",
+   "policy": "settled",
+   "label_status": "author-labelled, not native-speaker reviewed"
+  },
+  {
+   "id": "svc-kn-en-1008",
+   "lang": "kn-en",
+   "category": "service_request",
+   "text": "ಸೇವಿಂಗ್ಸ್ ಅಕೌಂಟ್ ಓಪನ್ ಮಾಡಿಸೋಕೆ ಬಂದೆ",
+   "expected": {
+    "intent": "open new account"
+   },
+   "gloss": "I came to get a savings account opened",
+   "source": "m10-dev",
+   "family": "open_account",
+   "m10_expect": "start:open new account",
+   "policy": "settled",
+   "label_status": "author-labelled, not native-speaker reviewed"
+  },
+  {
+   "id": "kq-en-1001",
+   "lang": "en",
+   "category": "knowledge_question",
+   "text": "how do I fill in a deposit slip",
+   "expected": {
+    "route": "knowledge",
+    "sources": [
+     "deposit_slip.md",
+     "deposit.md"
+    ]
+   },
+   "gloss": "",
+   "source": "m10-dev",
+   "family": "service_question",
+   "m10_expect": "question",
+   "policy": "settled",
+   "label_status": "author-labelled, not native-speaker reviewed"
+  },
+  {
+   "id": "kq-en-1002",
+   "lang": "en",
+   "category": "knowledge_question",
+   "text": "what is the maximum amount I can withdraw in one day",
+   "expected": {
+    "route": "knowledge",
+    "sources": [
+     "withdrawal.md",
+     "withdrawal_slip.md"
+    ]
+   },
+   "gloss": "a limit question",
+   "source": "m10-dev",
+   "family": "service_question",
+   "m10_expect": "question",
+   "policy": "settled",
+   "label_status": "author-labelled, not native-speaker reviewed"
+  },
+  {
+   "id": "kq-en-1003",
+   "lang": "en",
+   "category": "knowledge_question",
+   "text": "what interest does a fixed deposit earn",
+   "expected": {
+    "route": "knowledge",
+    "sources": null
+   },
+   "gloss": "names 'deposit' but asks about a product",
+   "source": "m10-dev",
+   "family": "service_question",
+   "m10_expect": "question",
+   "policy": "settled",
+   "label_status": "author-labelled, not native-speaker reviewed"
+  },
+  {
+   "id": "kq-en-1004",
+   "lang": "en",
+   "category": "knowledge_question",
+   "text": "is there a charge for withdrawing cash at the branch",
+   "expected": {
+    "route": "knowledge",
+    "sources": null
+   },
+   "gloss": "a charges question",
+   "source": "m10-dev",
+   "family": "service_question",
+   "m10_expect": "question",
+   "policy": "settled",
+   "label_status": "author-labelled, not native-speaker reviewed"
+  },
+  {
+   "id": "kq-en-1005",
+   "lang": "en",
+   "category": "knowledge_question",
+   "text": "which documents are required for opening a savings account",
+   "expected": {
+    "route": "knowledge",
+    "sources": [
+     "account_opening_requirements.md",
+     "account_opening.md"
+    ]
+   },
+   "gloss": "",
+   "source": "m10-dev",
+   "family": "service_question",
+   "m10_expect": "question",
+   "policy": "settled",
+   "label_status": "author-labelled, not native-speaker reviewed"
+  },
+  {
+   "id": "kq-kn-1001",
+   "lang": "kn",
+   "category": "knowledge_question",
+   "text": "ಹಣ ಜಮಾ ಮಾಡೋಕೆ ಯಾವ ಫಾರ್ಮ್ ತುಂಬಬೇಕು",
+   "expected": {
+    "route": "knowledge",
+    "sources": [
+     "deposit_slip.md",
+     "deposit.md"
+    ]
+   },
+   "gloss": "which form must I fill to deposit money",
+   "source": "m10-dev",
+   "family": "service_question",
+   "m10_expect": "question",
+   "policy": "settled",
+   "label_status": "author-labelled, not native-speaker reviewed"
+  },
+  {
+   "id": "kq-kn-1002",
+   "lang": "kn",
+   "category": "knowledge_question",
+   "text": "ಒಂದು ದಿನದಲ್ಲಿ ಗರಿಷ್ಠ ಎಷ್ಟು ಹಣ ತೆಗೆಯಬಹುದು",
+   "expected": {
+    "route": "knowledge",
+    "sources": [
+     "withdrawal.md",
+     "withdrawal_slip.md"
+    ]
+   },
+   "gloss": "at most how much money can be withdrawn in a day",
+   "source": "m10-dev",
+   "family": "service_question",
+   "m10_expect": "question",
+   "policy": "settled",
+   "label_status": "author-labelled, not native-speaker reviewed"
+  },
+  {
+   "id": "kq-kn-en-1001",
+   "lang": "kn-en",
+   "category": "knowledge_question",
+   "text": "ಲೋನ್ ಗೆ ಅಪ್ಲೈ ಮಾಡೋದು ಹೇಗೆ",
+   "expected": {
+    "route": "knowledge",
+    "sources": [
+     "loan.md",
+     "loan_basics.md"
+    ]
+   },
+   "gloss": "how does one apply for a loan",
+   "source": "m10-dev",
+   "family": "service_question",
+   "m10_expect": "question",
+   "policy": "settled",
+   "label_status": "author-labelled, not native-speaker reviewed"
+  },
+  {
+   "id": "kq-hi-1001",
+   "lang": "hi",
+   "category": "knowledge_question",
+   "text": "पैसे जमा करने की प्रक्रिया क्या है",
+   "expected": {
+    "route": "knowledge",
+    "sources": [
+     "deposit.md",
+     "deposit_slip.md"
+    ]
+   },
+   "gloss": "what is the procedure to deposit money",
+   "source": "m10-dev",
+   "family": "service_question",
+   "m10_expect": "question",
+   "policy": "settled",
+   "label_status": "author-labelled, not native-speaker reviewed"
+  },
+  {
+   "id": "kq-hi-1002",
+   "lang": "hi",
+   "category": "knowledge_question",
+   "text": "लोन पर ब्याज कितना लगता है",
+   "expected": {
+    "route": "knowledge",
+    "sources": [
+     "loan.md",
+     "loan_basics.md"
+    ]
+   },
+   "gloss": "how much interest is charged on a loan",
+   "source": "m10-dev",
+   "family": "service_question",
+   "m10_expect": "question",
+   "policy": "settled",
+   "label_status": "author-labelled, not native-speaker reviewed"
+  },
+  {
+   "id": "kq-hi-1003",
+   "lang": "hi",
+   "category": "knowledge_question",
+   "text": "खाता खोलने के लिए न्यूनतम कितनी राशि चाहिए",
+   "expected": {
+    "route": "knowledge",
+    "sources": [
+     "account_opening_requirements.md",
+     "account_opening.md",
+     "savings_account.md"
+    ]
+   },
+   "gloss": "what minimum amount is needed to open an account",
+   "source": "m10-dev",
+   "family": "service_question",
+   "m10_expect": "question",
+   "policy": "settled",
+   "label_status": "author-labelled, not native-speaker reviewed"
+  },
+  {
+   "id": "kq-hi-en-1001",
+   "lang": "hi-en",
+   "category": "knowledge_question",
+   "text": "अकाउंट ओपन करने के लिए कौन से डॉक्यूमेंट चाहिए",
+   "expected": {
+    "route": "knowledge",
+    "sources": [
+     "account_opening_requirements.md",
+     "account_opening.md"
+    ]
+   },
+   "gloss": "which documents are needed to open an account",
+   "source": "m10-dev",
+   "family": "service_question",
+   "m10_expect": "question",
+   "policy": "settled",
+   "label_status": "author-labelled, not native-speaker reviewed"
+  },
+  {
+   "id": "kq-rom-kn-1001",
+   "lang": "rom-kn",
+   "category": "knowledge_question",
+   "text": "loan ge yaava documents beku",
+   "expected": {
+    "route": "knowledge",
+    "sources": [
+     "loan.md",
+     "loan_basics.md"
+    ]
+   },
+   "gloss": "which documents are needed for a loan",
+   "source": "m10-dev",
+   "family": "service_question",
+   "m10_expect": "question",
+   "policy": "settled",
+   "label_status": "author-labelled, not native-speaker reviewed"
+  },
+  {
+   "id": "kq-rom-hi-1001",
+   "lang": "rom-hi",
+   "category": "knowledge_question",
+   "text": "paise nikalne ki limit kitni hai",
+   "expected": {
+    "route": "knowledge",
+    "sources": [
+     "withdrawal.md"
+    ]
+   },
+   "gloss": "what is the limit for withdrawing money",
+   "source": "m10-dev",
+   "family": "service_question",
+   "m10_expect": "question",
+   "policy": "settled",
+   "label_status": "author-labelled, not native-speaker reviewed"
+  },
+  {
+   "id": "amb-en-1001",
+   "lang": "en",
+   "category": "ambiguous_request",
+   "text": "send two thousand rupees to my brother",
+   "expected": {
+    "starts_workflow": false
+   },
+   "gloss": "a transfer to a person",
+   "source": "m10-dev",
+   "family": "unsupported",
+   "m10_expect": "decline",
+   "policy": "settled",
+   "label_status": "author-labelled, not native-speaker reviewed"
+  },
+  {
+   "id": "amb-en-1002",
+   "lang": "en",
+   "category": "ambiguous_request",
+   "text": "I want to pay my electricity bill",
+   "expected": {
+    "starts_workflow": false
+   },
+   "gloss": "a bill payment",
+   "source": "m10-dev",
+   "family": "unsupported",
+   "m10_expect": "decline",
+   "policy": "settled",
+   "label_status": "author-labelled, not native-speaker reviewed"
+  },
+  {
+   "id": "amb-en-1003",
+   "lang": "en",
+   "category": "ambiguous_request",
+   "text": "please block my debit card",
+   "expected": {
+    "starts_workflow": false
+   },
+   "gloss": "card management",
+   "source": "m10-dev",
+   "family": "unsupported",
+   "m10_expect": "decline",
+   "policy": "settled",
+   "label_status": "author-labelled, not native-speaker reviewed"
+  },
+  {
+   "id": "amb-en-1004",
+   "lang": "en",
+   "category": "ambiguous_request",
+   "text": "recharge my mobile for two hundred and ninety nine rupees",
+   "expected": {
+    "starts_workflow": false
+   },
+   "gloss": "a recharge",
+   "source": "m10-dev",
+   "family": "unsupported",
+   "m10_expect": "decline",
+   "policy": "settled",
+   "label_status": "author-labelled, not native-speaker reviewed"
+  },
+  {
+   "id": "amb-en-1005",
+   "lang": "en",
+   "category": "ambiguous_request",
+   "text": "transfer five thousand to my wife's account",
+   "expected": {
+    "starts_workflow": false
+   },
+   "gloss": "a transfer to another account",
+   "source": "m10-dev",
+   "family": "unsupported",
+   "m10_expect": "decline",
+   "policy": "settled",
+   "label_status": "author-labelled, not native-speaker reviewed"
+  },
+  {
+   "id": "amb-en-1006",
+   "lang": "en",
+   "category": "ambiguous_request",
+   "text": "I want to buy health insurance",
+   "expected": {
+    "starts_workflow": false
+   },
+   "gloss": "insurance",
+   "source": "m10-dev",
+   "family": "unsupported",
+   "m10_expect": "decline",
+   "policy": "settled",
+   "label_status": "author-labelled, not native-speaker reviewed"
+  },
+  {
+   "id": "amb-en-1007",
+   "lang": "en",
+   "category": "ambiguous_request",
+   "text": "I want to invest in a mutual fund",
+   "expected": {
+    "starts_workflow": false
+   },
+   "gloss": "an investment",
+   "source": "m10-dev",
+   "family": "unsupported",
+   "m10_expect": "decline",
+   "policy": "settled",
+   "label_status": "author-labelled, not native-speaker reviewed"
+  },
+  {
+   "id": "amb-en-1008",
+   "lang": "en",
+   "category": "ambiguous_request",
+   "text": "add one thousand rupees to my Paytm wallet from my bank account",
+   "expected": {
+    "starts_workflow": false
+   },
+   "gloss": "wallet top-up (D1)",
+   "source": "m10-dev",
+   "family": "unsupported",
+   "m10_expect": "decline",
+   "policy": "approved:D1",
+   "label_status": "author-labelled, not native-speaker reviewed"
+  },
+  {
+   "id": "amb-kn-1001",
+   "lang": "kn",
+   "category": "ambiguous_request",
+   "text": "ನನ್ನ ತಮ್ಮನಿಗೆ ಐದು ಸಾವಿರ ರೂಪಾಯಿ ಕಳಿಸಬೇಕು",
+   "expected": {
+    "starts_workflow": false
+   },
+   "gloss": "I need to send five thousand to my younger brother",
+   "source": "m10-dev",
+   "family": "unsupported",
+   "m10_expect": "decline",
+   "policy": "settled",
+   "label_status": "author-labelled, not native-speaker reviewed"
+  },
+  {
+   "id": "amb-kn-1002",
+   "lang": "kn",
+   "category": "ambiguous_request",
+   "text": "ಕರೆಂಟ್ ಬಿಲ್ ಕಟ್ಟಬೇಕು",
+   "expected": {
+    "starts_workflow": false
+   },
+   "gloss": "I need to pay the electricity bill",
+   "source": "m10-dev",
+   "family": "unsupported",
+   "m10_expect": "decline",
+   "policy": "settled",
+   "label_status": "author-labelled, not native-speaker reviewed"
+  },
+  {
+   "id": "amb-kn-1003",
+   "lang": "kn",
+   "category": "ambiguous_request",
+   "text": "ನನಗೆ ಆರೋಗ್ಯ ವಿಮೆ ಬೇಕು",
+   "expected": {
+    "starts_workflow": false
+   },
+   "gloss": "I need health insurance",
+   "source": "m10-dev",
+   "family": "unsupported",
+   "m10_expect": "decline",
+   "policy": "settled",
+   "label_status": "author-labelled, not native-speaker reviewed"
+  },
+  {
+   "id": "amb-kn-en-1001",
+   "lang": "kn-en",
+   "category": "ambiguous_request",
+   "text": "ನನ್ನ ಕ್ರೆಡಿಟ್ ಕಾರ್ಡ್ ಬ್ಲಾಕ್ ಮಾಡಿ",
+   "expected": {
+    "starts_workflow": false
+   },
+   "gloss": "block my credit card",
+   "source": "m10-dev",
+   "family": "unsupported",
+   "m10_expect": "decline",
+   "policy": "settled",
+   "label_status": "author-labelled, not native-speaker reviewed"
+  },
+  {
+   "id": "amb-kn-en-1002",
+   "lang": "kn-en",
+   "category": "ambiguous_request",
+   "text": "ಯುಪಿಐ ಪಿನ್ ಮರೆತುಹೋಗಿದೆ ರೀಸೆಟ್ ಮಾಡಿ",
+   "expected": {
+    "starts_workflow": false
+   },
+   "gloss": "I forgot my UPI PIN, reset it",
+   "source": "m10-dev",
+   "family": "unsupported",
+   "m10_expect": "decline",
+   "policy": "settled",
+   "label_status": "author-labelled, not native-speaker reviewed"
+  },
+  {
+   "id": "amb-kn-en-1003",
+   "lang": "kn-en",
+   "category": "ambiguous_request",
+   "text": "ಫೋನ್‌ಪೇ ಮೂಲಕ ಹಣ ಟ್ರಾನ್ಸ್‌ಫರ್ ಮಾಡಬೇಕು",
+   "expected": {
+    "starts_workflow": false
+   },
+   "gloss": "I need to transfer money through PhonePe",
+   "source": "m10-dev",
+   "family": "unsupported",
+   "m10_expect": "decline",
+   "policy": "settled",
+   "label_status": "author-labelled, not native-speaker reviewed"
+  },
+  {
+   "id": "amb-hi-1001",
+   "lang": "hi",
+   "category": "ambiguous_request",
+   "text": "मेरे भाई के खाते में तीन हज़ार रुपये भेज दो",
+   "expected": {
+    "starts_workflow": false
+   },
+   "gloss": "send three thousand rupees to my brother's account",
+   "source": "m10-dev",
+   "family": "unsupported",
+   "m10_expect": "decline",
+   "policy": "settled",
+   "label_status": "author-labelled, not native-speaker reviewed"
+  },
+  {
+   "id": "amb-hi-1002",
+   "lang": "hi",
+   "category": "ambiguous_request",
+   "text": "बिजली का बिल भरना है",
+   "expected": {
+    "starts_workflow": false
+   },
+   "gloss": "I need to pay the electricity bill",
+   "source": "m10-dev",
+   "family": "unsupported",
+   "m10_expect": "decline",
+   "policy": "settled",
+   "label_status": "author-labelled, not native-speaker reviewed"
+  },
+  {
+   "id": "amb-hi-1003",
+   "lang": "hi",
+   "category": "ambiguous_request",
+   "text": "मुझे जीवन बीमा लेना है",
+   "expected": {
+    "starts_workflow": false
+   },
+   "gloss": "I want to take life insurance",
+   "source": "m10-dev",
+   "family": "unsupported",
+   "m10_expect": "decline",
+   "policy": "settled",
+   "label_status": "author-labelled, not native-speaker reviewed"
+  },
+  {
+   "id": "amb-hi-1004",
+   "lang": "hi",
+   "category": "ambiguous_request",
+   "text": "म्यूचुअल फंड में निवेश करना है",
+   "expected": {
+    "starts_workflow": false
+   },
+   "gloss": "I want to invest in a mutual fund",
+   "source": "m10-dev",
+   "family": "unsupported",
+   "m10_expect": "decline",
+   "policy": "settled",
+   "label_status": "author-labelled, not native-speaker reviewed"
+  },
+  {
+   "id": "amb-hi-en-1001",
+   "lang": "hi-en",
+   "category": "ambiguous_request",
+   "text": "गूगल पे से पैसे भेजने हैं",
+   "expected": {
+    "starts_workflow": false
+   },
+   "gloss": "I need to send money with Google Pay",
+   "source": "m10-dev",
+   "family": "unsupported",
+   "m10_expect": "decline",
+   "policy": "settled",
+   "label_status": "author-labelled, not native-speaker reviewed"
+  },
+  {
+   "id": "amb-hi-en-1002",
+   "lang": "hi-en",
+   "category": "ambiguous_request",
+   "text": "मेरा डेबिट कार्ड ब्लॉक कर दो",
+   "expected": {
+    "starts_workflow": false
+   },
+   "gloss": "block my debit card",
+   "source": "m10-dev",
+   "family": "unsupported",
+   "m10_expect": "decline",
+   "policy": "settled",
+   "label_status": "author-labelled, not native-speaker reviewed"
+  },
+  {
+   "id": "amb-hi-en-1003",
+   "lang": "hi-en",
+   "category": "ambiguous_request",
+   "text": "मोबाइल रिचार्ज करना है",
+   "expected": {
+    "starts_workflow": false
+   },
+   "gloss": "I need a mobile recharge",
+   "source": "m10-dev",
+   "family": "unsupported",
+   "m10_expect": "decline",
+   "policy": "settled",
+   "label_status": "author-labelled, not native-speaker reviewed"
+  },
+  {
+   "id": "amb-rom-hi-1001",
+   "lang": "rom-hi",
+   "category": "ambiguous_request",
+   "text": "google pay se paise bhejne hain",
+   "expected": {
+    "starts_workflow": false
+   },
+   "gloss": "I need to send money with Google Pay",
+   "source": "m10-dev",
+   "family": "unsupported",
+   "m10_expect": "decline",
+   "policy": "settled",
+   "label_status": "author-labelled, not native-speaker reviewed"
+  },
+  {
+   "id": "amb-rom-kn-1001",
+   "lang": "rom-kn",
+   "category": "ambiguous_request",
+   "text": "phonepe inda duddu kalisbeku",
+   "expected": {
+    "starts_workflow": false
+   },
+   "gloss": "I need to send money with PhonePe",
+   "source": "m10-dev",
+   "family": "unsupported",
+   "m10_expect": "decline",
+   "policy": "settled",
+   "label_status": "author-labelled, not native-speaker reviewed"
+  },
+  {
+   "id": "amb-kn-1004",
+   "lang": "kn",
+   "category": "ambiguous_request",
+   "text": "ಗೂಗಲ್ ಪೇ ಮೂಲಕ ಗೃಹ ಸಾಲದ ಕಂತು ಕಟ್ಟಬಹುದಾ",
+   "expected": {
+    "starts_workflow": false
+   },
+   "gloss": "can I pay the home-loan instalment through Google Pay (D3)",
+   "source": "m10-dev",
+   "family": "unsupported",
+   "m10_expect": "decline",
+   "policy": "approved:D3",
+   "label_status": "author-labelled, not native-speaker reviewed"
+  },
+  {
+   "id": "amb-hi-1005",
+   "lang": "hi",
+   "category": "ambiguous_request",
+   "text": "पेटीएम वॉलेट में अपने खाते से पाँच सौ रुपये डालने हैं",
+   "expected": {
+    "starts_workflow": false
+   },
+   "gloss": "put 500 from my account into my Paytm wallet (D1)",
+   "source": "m10-dev",
+   "family": "unsupported",
+   "m10_expect": "decline",
+   "policy": "approved:D1",
+   "label_status": "author-labelled, not native-speaker reviewed"
+  },
+  {
+   "id": "amb-en-1009",
+   "lang": "en",
+   "category": "ambiguous_request",
+   "text": "money",
+   "expected": {
+    "starts_workflow": false
+   },
+   "gloss": "a single word",
+   "source": "m10-dev",
+   "family": "vague",
+   "m10_expect": "clarify",
+   "policy": "settled",
+   "label_status": "author-labelled, not native-speaker reviewed"
+  },
+  {
+   "id": "amb-en-1010",
+   "lang": "en",
+   "category": "ambiguous_request",
+   "text": "I have a question about my account",
+   "expected": {
+    "starts_workflow": false
+   },
+   "gloss": "names no service",
+   "source": "m10-dev",
+   "family": "vague",
+   "m10_expect": "clarify",
+   "policy": "settled",
+   "label_status": "author-labelled, not native-speaker reviewed"
+  },
+  {
+   "id": "amb-en-1011",
+   "lang": "en",
+   "category": "ambiguous_request",
+   "text": "I need some help with the bank",
+   "expected": {
+    "starts_workflow": false
+   },
+   "gloss": "",
+   "source": "m10-dev",
+   "family": "vague",
+   "m10_expect": "clarify",
+   "policy": "settled",
+   "label_status": "author-labelled, not native-speaker reviewed"
+  },
+  {
+   "id": "amb-kn-1005",
+   "lang": "kn",
+   "category": "ambiguous_request",
+   "text": "ದುಡ್ಡು",
+   "expected": {
+    "starts_workflow": false
+   },
+   "gloss": "money",
+   "source": "m10-dev",
+   "family": "vague",
+   "m10_expect": "clarify",
+   "policy": "settled",
+   "label_status": "author-labelled, not native-speaker reviewed"
+  },
+  {
+   "id": "amb-kn-1006",
+   "lang": "kn",
+   "category": "ambiguous_request",
+   "text": "ಖಾತೆ ವಿಚಾರ ಒಂದು ಕೇಳಬೇಕಿತ್ತು",
+   "expected": {
+    "starts_workflow": false
+   },
+   "gloss": "I wanted to ask something about the account",
+   "source": "m10-dev",
+   "family": "vague",
+   "m10_expect": "clarify",
+   "policy": "settled",
+   "label_status": "author-labelled, not native-speaker reviewed"
+  },
+  {
+   "id": "amb-kn-1007",
+   "lang": "kn",
+   "category": "ambiguous_request",
+   "text": "ನನಗೆ ಬ್ಯಾಂಕ್ ವಿಷಯದಲ್ಲಿ ಸ್ವಲ್ಪ ಸಹಾಯ ಬೇಕು",
+   "expected": {
+    "starts_workflow": false
+   },
+   "gloss": "I need a little help with a bank matter",
+   "source": "m10-dev",
+   "family": "vague",
+   "m10_expect": "clarify",
+   "policy": "settled",
+   "label_status": "author-labelled, not native-speaker reviewed"
+  },
+  {
+   "id": "amb-kn-en-1004",
+   "lang": "kn-en",
+   "category": "ambiguous_request",
+   "text": "ನನ್ನ ಅಕೌಂಟ್ ಸಮಸ್ಯೆ ಇದೆ",
+   "expected": {
+    "starts_workflow": false
+   },
+   "gloss": "there is a problem with my account",
+   "source": "m10-dev",
+   "family": "vague",
+   "m10_expect": "clarify",
+   "policy": "settled",
+   "label_status": "author-labelled, not native-speaker reviewed"
+  },
+  {
+   "id": "amb-hi-1006",
+   "lang": "hi",
+   "category": "ambiguous_request",
+   "text": "पैसे",
+   "expected": {
+    "starts_workflow": false
+   },
+   "gloss": "money",
+   "source": "m10-dev",
+   "family": "vague",
+   "m10_expect": "clarify",
+   "policy": "settled",
+   "label_status": "author-labelled, not native-speaker reviewed"
+  },
+  {
+   "id": "amb-hi-1007",
+   "lang": "hi",
+   "category": "ambiguous_request",
+   "text": "मेरे खाते का एक काम है",
+   "expected": {
+    "starts_workflow": false
+   },
+   "gloss": "I have a task related to my account",
+   "source": "m10-dev",
+   "family": "vague",
+   "m10_expect": "clarify",
+   "policy": "settled",
+   "label_status": "author-labelled, not native-speaker reviewed"
+  },
+  {
+   "id": "amb-hi-1008",
+   "lang": "hi",
+   "category": "ambiguous_request",
+   "text": "बस सात सौ रुपये",
+   "expected": {
+    "starts_workflow": false
+   },
+   "gloss": "just seven hundred rupees: a bare amount",
+   "source": "m10-dev",
+   "family": "vague",
+   "m10_expect": "clarify",
+   "policy": "settled",
+   "label_status": "author-labelled, not native-speaker reviewed"
+  },
+  {
+   "id": "amb-hi-en-1004",
+   "lang": "hi-en",
+   "category": "ambiguous_request",
+   "text": "अकाउंट का कुछ काम था",
+   "expected": {
+    "starts_workflow": false
+   },
+   "gloss": "there was some account work",
+   "source": "m10-dev",
+   "family": "vague",
+   "m10_expect": "clarify",
+   "policy": "settled",
+   "label_status": "author-labelled, not native-speaker reviewed"
+  },
+  {
+   "id": "amb-rom-kn-1002",
+   "lang": "rom-kn",
+   "category": "ambiguous_request",
+   "text": "duddu",
+   "expected": {
+    "starts_workflow": false
+   },
+   "gloss": "money",
+   "source": "m10-dev",
+   "family": "vague",
+   "m10_expect": "clarify",
+   "policy": "settled",
+   "label_status": "author-labelled, not native-speaker reviewed"
+  },
+  {
+   "id": "amb-rom-hi-1002",
+   "lang": "rom-hi",
+   "category": "ambiguous_request",
+   "text": "paise ka kaam hai",
+   "expected": {
+    "starts_workflow": false
+   },
+   "gloss": "it's about money",
+   "source": "m10-dev",
+   "family": "vague",
+   "m10_expect": "clarify",
+   "policy": "settled",
+   "label_status": "author-labelled, not native-speaker reviewed"
+  },
+  {
+   "id": "amb-en-1012",
+   "lang": "en",
+   "category": "ambiguous_request",
+   "text": "transfer some money and check my balance",
+   "expected": {
+    "starts_workflow": false
+   },
+   "gloss": "a supported and an unsupported request (D5)",
+   "source": "m10-dev",
+   "family": "mixed",
+   "m10_expect": "clarify",
+   "policy": "approved:D5",
+   "label_status": "author-labelled, not native-speaker reviewed"
+  },
+  {
+   "id": "amb-hi-1009",
+   "lang": "hi",
+   "category": "ambiguous_request",
+   "text": "मेरा बैलेंस बताओ और भाई को पैसे भेज दो",
+   "expected": {
+    "starts_workflow": false
+   },
+   "gloss": "tell my balance and send money to my brother (D5)",
+   "source": "m10-dev",
+   "family": "mixed",
+   "m10_expect": "clarify",
+   "policy": "approved:D5",
+   "label_status": "author-labelled, not native-speaker reviewed"
+  },
+  {
+   "id": "ref-kn-1001",
+   "lang": "kn",
+   "category": "refusal",
+   "text": "ಈಗ ಹಣ ಜಮಾ ಮಾಡೋದು ಬೇಡ",
+   "expected": {
+    "starts_workflow": false
+   },
+   "gloss": "I don't want to deposit money now",
+   "source": "m10-dev",
+   "family": "refusal",
+   "m10_expect": "refusal",
+   "policy": "settled",
+   "label_status": "author-labelled, not native-speaker reviewed",
+   "context": {
+    "active_workflow": "deposit money"
+   }
+  },
+  {
+   "id": "ref-hi-1001",
+   "lang": "hi",
+   "category": "refusal",
+   "text": "मुझे अभी लोन नहीं लेना",
+   "expected": {
+    "starts_workflow": false
+   },
+   "gloss": "I don't want to take a loan now",
+   "source": "m10-dev",
+   "family": "refusal",
+   "m10_expect": "refusal",
+   "policy": "settled",
+   "label_status": "author-labelled, not native-speaker reviewed",
+   "context": {
+    "active_workflow": "deposit money"
+   }
+  },
+  {
+   "id": "ref-en-1001",
+   "lang": "en",
+   "category": "refusal",
+   "text": "please don't start any withdrawal",
+   "expected": {
+    "starts_workflow": false
+   },
+   "gloss": "",
+   "source": "m10-dev",
+   "family": "refusal",
+   "m10_expect": "refusal",
+   "policy": "settled",
+   "label_status": "author-labelled, not native-speaker reviewed",
+   "context": {
+    "active_workflow": "deposit money"
+   }
+  },
+  {
+   "id": "ref-kn-en-1001",
+   "lang": "kn-en",
+   "category": "refusal",
+   "text": "ಲೋನ್ ಬೇಡ ಸರ್",
+   "expected": {
+    "starts_workflow": false
+   },
+   "gloss": "no loan, sir",
+   "source": "m10-dev",
+   "family": "refusal",
+   "m10_expect": "refusal",
+   "policy": "settled",
+   "label_status": "author-labelled, not native-speaker reviewed",
+   "context": {
+    "active_workflow": "deposit money"
+   }
+  },
+  {
+   "id": "ref-hi-1002",
+   "lang": "hi",
+   "category": "refusal",
+   "text": "मुझे पैसे ट्रांसफर नहीं करने",
+   "expected": {
+    "starts_workflow": false
+   },
+   "gloss": "I don't want to transfer money",
+   "source": "m10-dev",
+   "family": "refusal",
+   "m10_expect": "refusal",
+   "policy": "settled",
+   "label_status": "author-labelled, not native-speaker reviewed",
+   "context": {
+    "active_workflow": "deposit money"
+   }
+  },
+  {
+   "id": "ref-hi-en-1001",
+   "lang": "hi-en",
+   "category": "refusal",
+   "text": "बैलेंस चेक मत करो",
+   "expected": {
+    "starts_workflow": false
+   },
+   "gloss": "don't check the balance",
+   "source": "m10-dev",
+   "family": "refusal",
+   "m10_expect": "refusal",
+   "policy": "settled",
+   "label_status": "author-labelled, not native-speaker reviewed",
+   "context": {
+    "active_workflow": "deposit money"
+   }
+  },
+  {
+   "id": "ref-rom-kn-1001",
+   "lang": "rom-kn",
+   "category": "refusal",
+   "text": "deposit beda",
+   "expected": {
+    "starts_workflow": false
+   },
+   "gloss": "no deposit",
+   "source": "m10-dev",
+   "family": "refusal",
+   "m10_expect": "refusal",
+   "policy": "settled",
+   "label_status": "author-labelled, not native-speaker reviewed",
+   "context": {
+    "active_workflow": "deposit money"
+   }
+  },
+  {
+   "id": "svc-kn-1012",
+   "lang": "kn",
+   "category": "service_request",
+   "text": "ಎಟಿಎಂ ಕಾರ್ಡ್ ಕೆಲಸ ಮಾಡ್ತಿಲ್ಲ ಕೌಂಟರಲ್ಲೇ ಹಣ ತೆಗೆಯಬೇಕು",
+   "expected": {
+    "intent": "withdraw money"
+   },
+   "gloss": "the ATM card is not working, I need to take out money at the counter (rule 6: known refusal-gate miss)",
+   "source": "m10-dev",
+   "family": "problem_with_request",
+   "m10_expect": "start:withdraw money",
+   "policy": "settled",
+   "label_status": "author-labelled, not native-speaker reviewed"
+  },
+  {
+   "id": "svc-hi-en-1008",
+   "lang": "hi-en",
+   "category": "service_request",
+   "text": "एटीएम से नहीं यहीं काउंटर से पैसे निकालने हैं",
+   "expected": {
+    "intent": "withdraw money"
+   },
+   "gloss": "not from the ATM, I need to withdraw money here at the counter (rule 6)",
+   "source": "m10-dev",
+   "family": "problem_with_request",
+   "m10_expect": "start:withdraw money",
+   "policy": "settled",
+   "label_status": "author-labelled, not native-speaker reviewed"
+  },
+  {
+   "id": "svc-en-1015",
+   "lang": "en",
+   "category": "service_request",
+   "text": "the cash machine isn't working so I need to withdraw money here",
+   "expected": {
+    "intent": "withdraw money"
+   },
+   "gloss": "(rule 6)",
+   "source": "m10-dev",
+   "family": "problem_with_request",
+   "m10_expect": "start:withdraw money",
+   "policy": "settled",
+   "label_status": "author-labelled, not native-speaker reviewed"
+  },
+  {
+   "id": "svc-hi-1011",
+   "lang": "hi",
+   "category": "service_request",
+   "text": "पासबुक नहीं है लेकिन पैसे जमा करने हैं",
+   "expected": {
+    "intent": "deposit money"
+   },
+   "gloss": "I don't have the passbook but I need to deposit money (rule 6)",
+   "source": "m10-dev",
+   "family": "problem_with_request",
+   "m10_expect": "start:deposit money",
+   "policy": "settled",
+   "label_status": "author-labelled, not native-speaker reviewed"
+  },
+  {
+   "id": "amt-kn-1001",
+   "lang": "kn",
+   "category": "amount",
+   "text": "ಅಂದ್ರೆ ಹದಿನೈದು ಸಾವಿರ ರೂಪಾಯಿ",
+   "expected": {
+    "amount": 15000
+   },
+   "gloss": "I mean fifteen thousand rupees",
+   "source": "m10-dev",
+   "family": "amount",
+   "m10_expect": "amount:15000",
+   "policy": "settled",
+   "label_status": "author-labelled, not native-speaker reviewed"
+  },
+  {
+   "id": "amt-hi-1001",
+   "lang": "hi",
+   "category": "amount",
+   "text": "हाँ जी साढ़े छह सौ",
+   "expected": {
+    "amount": 650
+   },
+   "gloss": "yes, six and a half hundred",
+   "source": "m10-dev",
+   "family": "amount",
+   "m10_expect": "amount:650",
+   "policy": "settled",
+   "label_status": "author-labelled, not native-speaker reviewed"
+  },
+  {
+   "id": "amt-en-1001",
+   "lang": "en",
+   "category": "amount",
+   "text": "um twelve hundred rupees",
+   "expected": {
+    "amount": 1200
+   },
+   "gloss": "English number words (M1 does not parse these)",
+   "source": "m10-dev",
+   "family": "amount",
+   "m10_expect": "amount:1200",
+   "policy": "settled",
+   "label_status": "author-labelled, not native-speaker reviewed"
+  },
+  {
+   "id": "amt-hi-en-1001",
+   "lang": "hi-en",
+   "category": "amount",
+   "text": "5 हज़ार कैश",
+   "expected": {
+    "amount": 5000
+   },
+   "gloss": "5 thousand cash",
+   "source": "m10-dev",
+   "family": "amount",
+   "m10_expect": "amount:5000",
+   "policy": "settled",
+   "label_status": "author-labelled, not native-speaker reviewed"
+  },
+  {
+   "id": "amt-rom-hi-1001",
+   "lang": "rom-hi",
+   "category": "amount",
+   "text": "paanch sau rupaye",
+   "expected": {
+    "amount": 500
+   },
+   "gloss": "five hundred rupees",
+   "source": "m10-dev",
+   "family": "amount",
+   "m10_expect": "amount:500",
+   "policy": "settled",
+   "label_status": "author-labelled, not native-speaker reviewed"
+  },
+  {
+   "id": "amt-kn-en-1001",
+   "lang": "kn-en",
+   "category": "amount",
+   "text": "ನಾಲ್ಕು ಸಾವಿರದ ಎಂಟುನೂರು ರೂಪಾಯಿ ಡೆಪಾಸಿಟ್",
+   "expected": {
+    "amount": 4800
+   },
+   "gloss": "deposit four thousand eight hundred rupees",
+   "source": "m10-dev",
+   "family": "amount",
+   "m10_expect": "amount:4800",
+   "policy": "settled",
+   "label_status": "author-labelled, not native-speaker reviewed"
+  },
+  {
+   "id": "ctl-kn-1001",
+   "lang": "kn",
+   "category": "control",
+   "text": "ಸ್ವಲ್ಪ ನಿಲ್ಲಿಸಿ",
+   "expected": {
+    "command": "pause"
+   },
+   "gloss": "stop for a bit",
+   "source": "m10-dev",
+   "family": "control",
+   "m10_expect": "control:pause",
+   "policy": "settled",
+   "label_status": "author-labelled, not native-speaker reviewed"
+  },
+  {
+   "id": "ctl-hi-1001",
+   "lang": "hi",
+   "category": "control",
+   "text": "फिर से बोलिए",
+   "expected": {
+    "command": "repeat"
+   },
+   "gloss": "say it again",
+   "source": "m10-dev",
+   "family": "control",
+   "m10_expect": "control:repeat",
+   "policy": "settled",
+   "label_status": "author-labelled, not native-speaker reviewed"
+  },
+  {
+   "id": "ctl-en-1001",
+   "lang": "en",
+   "category": "control",
+   "text": "cancel that please",
+   "expected": {
+    "command": "cancel"
+   },
+   "gloss": "",
+   "source": "m10-dev",
+   "family": "control",
+   "m10_expect": "control:cancel",
+   "policy": "settled",
+   "label_status": "author-labelled, not native-speaker reviewed"
+  },
+  {
+   "id": "ctl-kn-1002",
+   "lang": "kn",
+   "category": "control",
+   "text": "ಮುಂದೆ ಹೋಗೋಣ",
+   "expected": {
+    "command": "resume"
+   },
+   "gloss": "let's go ahead",
+   "source": "m10-dev",
+   "family": "control",
+   "m10_expect": "control:resume",
+   "policy": "settled",
+   "label_status": "author-labelled, not native-speaker reviewed"
+  }
+ ]
+}
